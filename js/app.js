@@ -43,6 +43,7 @@ function buildNav() {
       </nav>
 
       <div class="nav-right">
+        <button class="nav-tools-btn" data-route="#/arafah"      aria-label="Day of Arafah page">Arafah</button>
         <button class="nav-tools-btn" data-route="#/inheritance" aria-label="Islamic Inheritance Calculator">⚖️ Inheritance</button>
         <button class="nav-tools-btn" data-route="#/about"       aria-label="About IslamicHub">About</button>
         <a href="${GITHUB_REPO}" target="_blank" rel="noopener noreferrer"
@@ -94,6 +95,9 @@ function buildNav() {
       </button>
       <button class="nav-mobile-item" data-route="#/changelog">
         <span class="icon" aria-hidden="true">📋</span> Changelog
+      </button>
+      <button class="nav-mobile-item" data-route="#/arafah">
+        <span class="icon" aria-hidden="true">🗓️</span> Day of Arafah
       </button>
       <a href="${GITHUB_REPO}" target="_blank" rel="noopener noreferrer"
          class="nav-mobile-item" style="text-decoration:none;color:inherit">
@@ -314,6 +318,12 @@ export function bootstrap() {
         '#/inheritance': () => import('../pages/tools/Inheritance.js'),
         '#/about': () => import('../pages/tools/About.js'),
         '#/changelog': () => import('../pages/tools/Changelog.js'), // ← restored
+        '#/arafah': () => Promise.resolve({
+            render() {
+                window.location.assign('/pages/arafah.html');
+                return () => {};
+            },
+        }),
     }, outlet);
 
     // Run scroll animations after every page render
