@@ -31,15 +31,18 @@ export const useZakatStore = defineStore('zakat', () => {
   )
 
   function fmt(n) {
-    return sym.value + Number(n).toLocaleString('en-GB', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
+    return (
+      sym.value +
+      Number(n).toLocaleString('en-GB', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    )
   }
 
   // ── Actions ──────────────────────────────────────────────────
   function setCurrency(c, s) {
-    currency.value = c;
+    currency.value = c
     sym.value = s
   }
 
@@ -62,7 +65,8 @@ export const useZakatStore = defineStore('zakat', () => {
       FX.value.GBP = d.rates.GBP || 0.773
       FX.value.EUR = d.rates.EUR || 0.922
       FX.value.SAR = d.rates.SAR || 3.75
-    } catch { /* use fallback */
+    } catch {
+      // use fallback values already set
     }
   }
 
@@ -75,63 +79,65 @@ export const useZakatStore = defineStore('zakat', () => {
     try {
       const r = await fetch('https://api.metals.live/v1/spot/gold,silver')
       if (!r.ok) {
-        throw new Error()
+        throw new Error('prices fetch failed')
       }
 
       const d = await r.json()
-      const gU = d.find?.(x => x.gold)?.gold || (Array.isArray(d) && d[0]?.gold)
-      const sU = d.find?.(x => x.silver)?.silver || (Array.isArray(d) && d[1]?.silver)
+      const gU = d.find?.((x) => x.gold)?.gold || (Array.isArray(d) && d[0]?.gold)
+      const sU = d.find?.((x) => x.silver)?.silver || (Array.isArray(d) && d[1]?.silver)
       if (gU && sU) {
         await fetchFX()
         goldGBP.value = (gU / 31.1035) * FX.value.GBP
         silverGBP.value = (sU / 31.1035) * FX.value.GBP
         pricesLive.value = true
+        pricesLoading.value = false
         return
       }
-    } catch { /* fall through */
+    } catch {
+      // fall through to defaults
     }
     await fetchFX()
     goldGBP.value = 113.42
     silverGBP.value = 1.07
     pricesLive.value = false
+    pricesLoading.value = false
   }
 
   async function requestLocation() {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        locationError.value = 'Geolocation not supported'
+        locationError.value = 'Geolocation not supported by your browser'
         return reject(locationError.value)
       }
 
       navigator.geolocation.getCurrentPosition(
-        async pos => {
+        async (pos) => {
           const {latitude: lat, longitude: lng} = pos.coords
           let name = 'Your location'
           try {
             const r = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
             )
-
             if (r.ok) {
               const d = await r.json()
-              name = d.address?.city || d.address?.town || d.address?.county || name
+              name =
+                d.address?.city ||
+                d.address?.town ||
+                d.address?.county ||
+                name
             }
-          } catch { /* ignore */
+          } catch {
+            // ignore — use default name
           }
-          location.value = {
-            lat,
-            lng,
-            name
-          }
-
+          location.value = {lat, lng, name}
           locationError.value = null
           resolve(location.value)
         },
-        err => {
+        () => {
           locationError.value = 'Location access denied. Enter coordinates manually.'
           reject(locationError.value)
         },
-        {timeout: 10000}
+        { timeout: 10000 },
       )
     })
   }

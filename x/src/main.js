@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { createHead } from '@unhead/vue'
+import { createHead } from '@unhead/vue/client'
 import { useZakatStore } from './stores/zakat.js'
 
 import App from './App.vue'

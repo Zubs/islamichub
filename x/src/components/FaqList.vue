@@ -13,7 +13,10 @@
 <script setup>
 import { ref } from 'vue'
 
-defineProps({ faqs: { type: Array, required: true }})
+defineProps({
+  faqs: { type: Array, required: true },
+})
+
 const openIndex = ref(null)
 
 function toggle(i) {
