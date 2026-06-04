@@ -46,10 +46,11 @@ const routes = [
     name: 'changelog',
     component: () => import('@/views/ChangelogView.vue'),
   },
-  // Catch-all → home
+  // 404 — must be last
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/',
+    name: 'not-found',
+    component: () => import('@/views/NotFoundView.vue'),
   },
 ]
 
