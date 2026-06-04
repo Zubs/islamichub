@@ -1,10 +1,15 @@
-# netlify.toml — IslamicHub deployment configuration
-# Domain: islamichub.xyz
-
 [build]
-publish = "."
+command = "npm run build"
+publish = "dist"
 
-# ── Security + SEO headers on all routes ─────────────────────────────────────
+# ── SPA redirect — all paths serve index.html ────────────────────────────────
+# Required for Vue Router createWebHistory (clean URLs like /zakat, not #/zakat)
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+# ── Security & SEO headers ───────────────────────────────────────────────────
 [[headers]]
 for = "/*"
 [headers.values]
@@ -12,49 +17,22 @@ X-Frame-Options = "DENY"
 X-Content-Type-Options = "nosniff"
 X-XSS-Protection = "1; mode=block"
 Referrer-Policy = "strict-origin-when-cross-origin"
-# Geolocation allowed (self) for prayer times and Qibla
 Permissions-Policy = "geolocation=(self), camera=(), microphone=(), payment=()"
-# CSP: allow fonts from Google, API calls to metals/frankfurter/nominatim
 Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://api.metals.live https://api.frankfurter.app https://nominatim.openstreetmap.org; img-src 'self' https://avatars.githubusercontent.com data:; frame-ancestors 'none';"
 
-# ── Long cache for hashed static assets ──────────────────────────────────────
+# ── Long cache for Vite-hashed assets (/assets/xxx.abc123.js) ────────────────
 [[headers]]
-for = "/css/*"
+for = "/assets/*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable"
 
-[[headers]]
-for = "/js/*"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "*.woff2"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-for = "/favicon*"
-[headers.values]
-Cache-Control = "public, max-age=604800"
-
-[[headers]]
-for = "/og-image.png"
-[headers.values]
-Cache-Control = "public, max-age=604800"
-
-# ── Short cache for HTML — ensures deploys go live instantly ─────────────────
-[[headers]]
-for = "/*.html"
-[headers.values]
-Cache-Control = "public, max-age=0, must-revalidate"
-
+# ── No cache for index.html — deploys go live immediately ────────────────────
 [[headers]]
 for = "/index.html"
 [headers.values]
 Cache-Control = "public, max-age=0, must-revalidate"
 
-# ── Short cache for SEO files — update quickly ───────────────────────────────
+# ── Short cache for SEO & PWA files ──────────────────────────────────────────
 [[headers]]
 for = "/sitemap.xml"
 [headers.values]
@@ -72,9 +50,7 @@ for = "/site.webmanifest"
 Cache-Control = "public, max-age=86400"
 Content-Type = "application/manifest+json"
 
-# ── SPA redirect: all paths serve index.html (status 200, not 301) ───────────
-# This is what makes deep links like islamichub.xyz/#/zakat work correctly.
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+[[headers]]
+for = "/favicon*"
+[headers.values]
+Cache-Control = "public, max-age=604800"

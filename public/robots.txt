@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://islamichub.xyz/sitemap.xml
+
+Disallow: /cdn-cgi/
