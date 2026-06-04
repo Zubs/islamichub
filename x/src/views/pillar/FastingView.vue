@@ -20,7 +20,8 @@
       <QuranBlock
         arabic="يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ"
         reference="Qur'an 2:183"
-        translation="O you who have believed, decreed upon you is fasting as it was decreed upon those before you so that you may become righteous."
+        translation="O you who have believed, decreed upon you is fasting as it was decreed upon those before you so that you may become righteous (muttaqin)."
+        :framed="true"
         class="anim-target"
       />
 
@@ -136,13 +137,15 @@
       <h2 class="section-title" style="font-size:clamp(1.5rem,2.5vw,1.9rem)">The obligation of
         fasting</h2>
       <div class="prose">
-        <p>Sawm (صَوْم) in Islamic law refers specifically to the obligatory fast of the month of
-          Ramadan — the ninth month of the Islamic lunar calendar. It is obligatory on every adult
-          Muslim who is sane, healthy, resident (not travelling), and not experiencing menstruation
-          or post-natal bleeding.</p>
+        <p>Sawm (صَوْم, fasting) in Islamic law refers specifically to the obligatory fast of the
+          month of Ramadan — the ninth month of the Islamic lunar calendar. It is one of the five
+          pillars and is obligatory on every adult Muslim who is sane, healthy, resident (not
+          travelling), and not experiencing menstruation or post-natal bleeding.</p>
         <p>The fast begins at the break of true dawn (Fajr) and ends at sunset (Maghrib). During
           this time, one must completely abstain from food, drink (including water), smoking, and
-          sexual relations. It is also important to guard one's tongue, eyes, and behaviour.</p>
+          sexual relations. It is also highly important to guard one's tongue, eyes, and behaviour —
+          the Prophet ﷺ warned that a person who does not abandon false speech while fasting has no
+          need to abandon food and drink (Sahih Bukhari 1903).</p>
       </div>
 
       <div class="hadith-block anim-target">
@@ -175,6 +178,24 @@
           <div v-for="c in excuses" :key="c"
                style="font-size:13.5px;color:var(--muted);padding:4px 0;border-bottom:1px solid #fde9e7">
             · {{ c }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Invalidators of the fast -->
+      <div style="margin-top:1.5rem">
+        <span class="eyebrow">Invalidators</span>
+        <h2 class="section-title" style="font-size:clamp(1.5rem,2.5vw,1.9rem);margin-bottom:1rem">
+          Invalidators of the fast (Muftirat)
+        </h2>
+        <div class="card-grid anim-target"
+             style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+          <div v-for="m in muftirat" :key="m.title" class="card">
+            <h4
+              style="font-family:var(--serif);font-size:.9rem;font-weight:600;margin-bottom:.35rem">
+              {{ m.title }}
+            </h4>
+            <p style="font-size:12.5px;color:var(--muted);line-height:1.55">{{ m.desc }}</p>
           </div>
         </div>
       </div>
@@ -320,6 +341,29 @@ const excuses = [
   'Old age or chronic illness (fidya instead)'
 ]
 
+const muftirat = [
+  {
+    title: 'Eating or drinking',
+    desc: 'Anything consumed intentionally by mouth, nose, or throat during fasting hours',
+  },
+  {
+    title: 'Sexual intercourse',
+    desc: "Requires both make-up (qada) and expiation (kaffarah) — freeing a slave, fasting 60 consecutive days, or feeding 60 poor people",
+  },
+  {
+    title: 'Deliberate vomiting',
+    desc: "If one deliberately induces vomiting, the fast is broken",
+  },
+  {
+    title: 'Menstruation / Nifas',
+    desc: "The fast is broken and must be made up — no kaffarah required",
+  },
+  {
+    title: 'Intention at night',
+    desc: "Forgetting to make the intention (niyyah) for Ramadan fasting invalidates it per majority scholars",
+  },
+]
+
 const virtues = [
   {
     icon: '🌙',
@@ -345,7 +389,7 @@ const virtues = [
 
 const faqs = [
   {
-    q: "Does using a miswak break the fast?",
+    q: "Does using a miswak (toothbrush) break the fast?",
     a: "No — using a miswak or dry toothbrush does not break the fast. Toothpaste should be avoided as it could be swallowed. Using mouthwash is makruh (disliked) according to many scholars."
   },
   {

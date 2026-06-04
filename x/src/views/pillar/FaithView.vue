@@ -52,7 +52,7 @@
       <div class="hadith-block anim-target">
         <div class="hadith-source">Sahih Bukhari 128 · Sahih Muslim 26</div>
         <div class="hadith-text">"Whoever dies knowing that there is no god but Allah will enter
-          Paradise." — The Prophet Muhammad ﷺ
+          Paradise." — The Prophet Muhammad ﷺ (narrated by Uthman ibn Affan RA)
         </div>
       </div>
 
