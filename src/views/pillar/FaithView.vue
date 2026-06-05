@@ -141,6 +141,34 @@
         FAQ</h2>
       <FaqList :faqs="faqs"/>
 
+      <!-- Six Articles of Faith card -->
+      <div class="divider"></div>
+      <span class="eyebrow">Go deeper</span>
+      <h2 class="section-title" style="font-size:clamp(1.5rem,2.5vw,1.9rem);margin-bottom:1rem">The
+        Six Articles of Faith (Arkan al-Iman)</h2>
+      <p class="prose" style="margin-bottom:1.5rem">
+        Alongside the Shahada, a Muslim must hold six fundamental beliefs — the pillars of Iman
+        defined in the Hadith of Jibril. They cover belief in Allah, the angels, the revealed
+        scriptures, the prophets, the Day of Judgement, and divine decree (Qadr).
+      </p>
+      <RouterLink to="/faith/articles" class="aof-teaser-card anim-target">
+        <div class="aof-teaser-left">
+          <div class="aof-teaser-badge">أركان الإيمان</div>
+          <h3 class="aof-teaser-title">The Six Articles of Faith</h3>
+          <p class="aof-teaser-desc">A full in-depth guide to each article — with Qur'anic evidence,
+            scholarly explanation, and key points for each belief.</p>
+          <div class="aof-teaser-pills">
+            <span v-for="a in articlePreviews" :key="a" class="aof-teaser-pill">{{ a }}</span>
+          </div>
+        </div>
+        <div class="aof-teaser-arrow" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </RouterLink>
+
       <div class="cta-strip anim-target" style="margin-top:2.5rem">
         <GeoPattern/>
         <h2>Continue to the second pillar</h2>
@@ -238,4 +266,100 @@ const faqs = [
     a: "The Qur'an mentions 25 prophets by name. Hadith literature mentions 124,000 prophets were sent throughout history. Muhammad ﷺ is the last and final prophet — no prophet comes after him."
   },
 ]
+
+const articlePreviews = [
+  'Allah',
+  'Angels',
+  'Scriptures',
+  'Prophets',
+  'Day of Judgement',
+  'Divine Decree'
+]
+
 </script>
+
+<style scoped>
+.aof-teaser-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  background: linear-gradient(135deg, var(--faith-light) 0%, #fff 100%);
+  border: 1.5px solid var(--faith-color);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: inherit;
+  transition: all .2s;
+  margin-bottom: .5rem;
+}
+
+.aof-teaser-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #e8e4f8 0%, #fff 100%);
+}
+
+.aof-teaser-left {
+  flex: 1;
+}
+
+.aof-teaser-badge {
+  font-family: var(--serif);
+  font-size: .95rem;
+  color: var(--faith-color);
+  opacity: .7;
+  margin-bottom: .4rem;
+  direction: rtl;
+  display: inline-block;
+}
+
+.aof-teaser-title {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .4rem;
+}
+
+.aof-teaser-desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: .75rem;
+  max-width: 520px;
+}
+
+.aof-teaser-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.aof-teaser-pill {
+  font-size: 11.5px;
+  padding: 3px 10px;
+  background: rgba(99, 71, 178, .08);
+  color: var(--faith-color);
+  border-radius: 100px;
+  font-weight: 500;
+}
+
+.aof-teaser-arrow {
+  color: var(--faith-color);
+  opacity: .6;
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+
+.aof-teaser-card:hover .aof-teaser-arrow {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+@media (max-width: 540px) {
+  .aof-teaser-arrow {
+    display: none;
+  }
+}
+</style>

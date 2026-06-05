@@ -12,6 +12,11 @@ const routes = [
     component: () => import('@/views/pillar/FaithView.vue'),
   },
   {
+    path: '/faith/articles',
+    name: 'articles',
+    component: () => import('@/views/pillar/ArticlesOfFaithView.vue'),
+  },
+  {
     path: '/prayer',
     name: 'prayer',
     component: () => import('@/views/pillar/PrayerView.vue'),
