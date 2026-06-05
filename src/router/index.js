@@ -13,7 +13,7 @@ const routes = [
   },
   {
     path: '/faith/articles',
-    name: 'articles',
+    name: 'articles-of-faith',
     component: () => import('@/views/pillar/ArticlesOfFaithView.vue'),
   },
   {
@@ -50,6 +50,16 @@ const routes = [
     path: '/changelog',
     name: 'changelog',
     component: () => import('@/views/ChangelogView.vue'),
+  },
+  {
+    path: '/hadith',
+    name: 'hadith',
+    component: () => import('@/views/hadith/HadithHomeView.vue'),
+  },
+  {
+    path: '/hadith/books',
+    name: 'hadith-books',
+    component: () => import('@/views/hadith/HadithHomeView.vue'),
   },
   // 404 — must be last
   {
