@@ -30,6 +30,7 @@ async function get(path, params = {}) {
 // ── Books ──────────────────────────────────────────────────────────────────
 // Returns: { status, books: [{ id, bookName, writerName, writerDeath, aboutWriter, aboutBook, hadithCount, ... }] }
 export async function fetchBooks() {
+  console.log('Key length:', import.meta.env.VITE_HADITH_API_KEY?.length)
   return get('/books')
 }
 
