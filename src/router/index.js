@@ -59,7 +59,7 @@ const routes = [
   {
     path: '/hadith/books',
     name: 'hadith-books',
-    component: () => import('@/views/hadith/HadithHomeView.vue'),
+    component: () => import('@/views/hadith/HadithBooksView.vue'),
   },
   // 404 — must be last
   {
