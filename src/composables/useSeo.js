@@ -3,6 +3,16 @@ import { useHead } from '@unhead/vue'
 const BASE = 'https://islamichub.xyz'
 
 const ROUTE_META = {
+  hadith: {
+    title: 'Hadith — Prophetic Tradition, Sciences & Library | IslamicHub',
+    description:
+      "Learn what Hadith is, how it was preserved through isnad, the six grades (Sahih, Hasan, Da'eef), the great scholars, and browse 9 authenticated collections including Sahih Bukhari and Sahih Muslim.",
+  },
+  'hadith-books': {
+    title: 'Hadith Library — All Collections | IslamicHub',
+    description:
+      'Browse all 9 major hadith collections — Sahih Bukhari, Sahih Muslim, the four Sunan, Musnad Ahmad, and more — by chapter and individual hadith.',
+  },
   home: {
     title: 'IslamicHub — Islamic Education, Prayer Times, Zakat Calculator & Five Pillars Guide',
     description: "Free Islamic learning platform covering all Five Pillars of Islam. Accurate prayer times and Qibla direction, Zakat calculator with live gold prices, Islamic inheritance (Fara'id) calculator, and Hadith-based scholarly guides. No account needed.",
