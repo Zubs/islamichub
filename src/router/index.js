@@ -7,6 +7,26 @@ const routes = [
     component: () => import('@/views/HomeView.vue'),
   },
   {
+    path: '/hadith',
+    name: 'hadith',
+    component: () => import('@/views/hadith/HadithHomeView.vue'),
+  },
+  {
+    path: '/hadith/books',
+    name: 'hadith-books',
+    component: () => import('@/views/hadith/HadithBooksView.vue'),
+  },
+  {
+    path: '/hadith/books/:bookSlug',
+    name: 'hadith-book',
+    component: () => import('@/views/hadith/HadithBookView.vue'),
+  },
+  {
+    path: '/hadith/books/:bookSlug/:chapterNumber',
+    name: 'hadith-chapter',
+    component: () => import('@/views/hadith/HadithChapterView.vue'),
+  },
+  {
     path: '/faith',
     name: 'faith',
     component: () => import('@/views/pillar/FaithView.vue'),
@@ -50,16 +70,6 @@ const routes = [
     path: '/changelog',
     name: 'changelog',
     component: () => import('@/views/ChangelogView.vue'),
-  },
-  {
-    path: '/hadith',
-    name: 'hadith',
-    component: () => import('@/views/hadith/HadithHomeView.vue'),
-  },
-  {
-    path: '/hadith/books',
-    name: 'hadith-books',
-    component: () => import('@/views/hadith/HadithBooksView.vue'),
   },
   // 404 — must be last
   {

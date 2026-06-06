@@ -127,7 +127,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import {
+  ref,
+  computed,
+  onMounted,
+  watch
+} from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
@@ -159,7 +164,10 @@ const chapters = ref([])
 const search = ref('')
 
 const filteredChapters = computed(() => {
-  if (!search.value.trim()) return chapters.value
+  if (!search.value.trim()) {
+    return chapters.value
+  }
+
   const q = search.value.toLowerCase()
   return chapters.value.filter(
     (c) => c.chapterEnglish?.toLowerCase().includes(q) || c.chapterArabic?.includes(search.value),

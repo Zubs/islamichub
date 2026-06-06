@@ -77,7 +77,7 @@
             <!-- Header row -->
             <div class="hc-header" @click="toggleExpand(h.id)">
               <div class="hc-meta-left">
-                <div class="hc-number"># {{ h.hadithNumber }}</div>
+                <div class="hc-number"># {{ h.hadithNumber }} {{ h.headingEnglish }}</div>
                 <div class="hc-status" :style="gradeStyle(h.status)">
                   {{ h.status || 'Ungraded' }}
                 </div>
@@ -112,11 +112,7 @@
               <div v-if="expanded.has(h.id)" class="hc-body">
                 <div class="hc-english">
                   <div class="hc-lang-label">English</div>
-                  <div class="hc-text">{{ h.hadithEnglish }}</div>
-                </div>
-                <div v-if="h.hadithUrdu" class="hc-urdu">
-                  <div class="hc-lang-label">اردو</div>
-                  <div class="hc-text" lang="ur" dir="rtl">{{ h.hadithUrdu }}</div>
+                  <div class="hc-text">{{ h.englishNarrator }} "{{ h.hadithEnglish }}"</div>
                 </div>
                 <div class="hc-footer">
                   <div class="hc-ref">
@@ -195,22 +191,12 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  onMounted,
-  watch,
-  reactive
-} from 'vue'
+import { ref, computed, onMounted, watch, reactive } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import {
-  fetchHadiths,
-  fetchChapters,
-  BOOKS_META
-} from '@/composables/useHadithApi.js'
+import { fetchHadiths, fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
 
 useScrollReveal()
 
@@ -280,6 +266,7 @@ const GRADE_STYLES = {
   Daif: { background: '#FDE9E7', color: '#c0392b' },
   Mawdu: { background: '#fde8e8', color: '#922b21' },
 }
+
 function gradeStyle(status) {
   return GRADE_STYLES[status] || { background: 'var(--cream-dark)', color: 'var(--muted)' }
 }

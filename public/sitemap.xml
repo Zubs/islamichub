@@ -4,57 +4,71 @@
 
     <url>
         <loc>https://islamichub.xyz/</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="en" href="https://islamichub.xyz/"/>
     </url>
 
     <url>
+        <loc>https://islamichub.xyz/hadith</loc>
+        <lastmod>2026-05-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+
+    <url>
+        <loc>https://islamichub.xyz/hadith/books</loc>
+        <lastmod>2026-05-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+
+    <url>
         <loc>https://islamichub.xyz/faith</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
         <loc>https://islamichub.xyz/prayer</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.95</priority>
     </url>
 
     <url>
         <loc>https://islamichub.xyz/zakat</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.95</priority>
     </url>
 
     <url>
         <loc>https://islamichub.xyz/fasting</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.85</priority>
     </url>
 
     <url>
         <loc>https://islamichub.xyz/hajj</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.85</priority>
     </url>
 
     <url>
         <loc>https://islamichub.xyz/inheritance</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.85</priority>
     </url>
 
     <url>
         <loc>https://islamichub.xyz/about</loc>
-        <lastmod>2026-06-01</lastmod>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
