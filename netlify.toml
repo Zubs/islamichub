@@ -18,7 +18,7 @@ X-Content-Type-Options = "nosniff"
 X-XSS-Protection = "1; mode=block"
 Referrer-Policy = "strict-origin-when-cross-origin"
 Permissions-Policy = "geolocation=(self), camera=(), microphone=(), payment=()"
-Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://api.metals.live https://hadithapi.com/api https://api.frankfurter.app https://nominatim.openstreetmap.org; img-src 'self' https://avatars.githubusercontent.com data:; frame-ancestors 'none';"
+Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://api.metals.live https://hadithapi.com https://api.frankfurter.app https://nominatim.openstreetmap.org; img-src 'self' https://avatars.githubusercontent.com data:; frame-ancestors 'none';"
 
 # ── Long cache for Vite-hashed assets (/assets/xxx.abc123.js) ────────────────
 [[headers]]
