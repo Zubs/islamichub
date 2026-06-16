@@ -34,10 +34,12 @@
 
       <!-- Desktop right links -->
       <div class="nav-right">
+        <RouterLink to="/hadith" class="nav-tools-btn">📖 Hadith</RouterLink>
+        <RouterLink to="/calendar" class="nav-tools-btn">📅 Calendar</RouterLink>
         <RouterLink to="/inheritance" class="nav-tools-btn">⚖️ Inheritance</RouterLink>
         <RouterLink to="/about" class="nav-tools-btn">About</RouterLink>
         <a
-          :href="GITHUB_REPO"
+          href="https://github.com/Zubs/pillarsofislam"
           target="_blank"
           rel="noopener noreferrer"
           class="nav-tools-btn"
@@ -81,11 +83,9 @@
         <span class="icon" aria-hidden="true">{{ item.icon }}</span>
         {{ item.label }}
       </RouterLink>
-
       <hr style="border: none; border-top: 1px solid var(--border); margin: 6px 0" />
-
       <a
-        :href="GITHUB_REPO"
+        href="https://github.com/Zubs/pillarsofislam"
         target="_blank"
         rel="noopener noreferrer"
         class="nav-mobile-item"
@@ -109,7 +109,6 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-const GITHUB_REPO = 'https://github.com/Zubs/pillarsofislam'
 const menuOpen = ref(false)
 
 const pillars = [
@@ -142,12 +141,6 @@ const pillars = [
     icon: '🕋',
     name: 'Hajj',
     label: 'Hajj — Pilgrimage guide'
-  },
-  {
-    to: '/hadith',
-    icon: '📖',
-    name: 'Hadith',
-    label: 'Hadith — Prophetic tradition and library'
   },
 ]
 
@@ -191,6 +184,11 @@ const allLinks = [
     to: '/hadith/books',
     icon: '📚',
     label: 'Hadith Library'
+  },
+  {
+    to: '/calendar',
+    icon: '📅',
+    label: 'Islamic Hijri Calendar'
   },
   {
     to: '/inheritance',

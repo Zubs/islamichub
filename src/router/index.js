@@ -7,6 +7,11 @@ const routes = [
     component: () => import('@/views/HomeView.vue'),
   },
   {
+    path: '/calendar',
+    name: 'calendar',
+    component: () => import('@/views/IslamicCalendarView.vue'),
+  },
+  {
     path: '/hadith',
     name: 'hadith',
     component: () => import('@/views/hadith/HadithHomeView.vue'),
