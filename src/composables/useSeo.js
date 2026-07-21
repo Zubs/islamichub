@@ -13,6 +13,16 @@ const ROUTE_META = {
     description:
       'Browse all 9 major hadith collections — Sahih Bukhari, Sahih Muslim, the four Sunan, Musnad Ahmad, and more — by chapter and individual hadith.',
   },
+  adhkar: {
+    title: 'Adhkar & Duas — Morning, Evening & Daily Supplications | IslamicHub',
+    description:
+      'Morning and evening adhkar, remembrance after prayer, before sleep, and daily dhikr — with Arabic, transliteration, translation, and a tap-to-count tracker.',
+  },
+  'adhkar-category': {
+    title: 'Adhkar | IslamicHub',
+    description:
+      'Recite and track a category of daily Islamic supplications with Arabic, transliteration, and translation.',
+  },
   home: {
     title: 'IslamicHub — Islamic Education, Prayer Times, Zakat Calculator & Five Pillars Guide',
     description: "Free Islamic learning platform covering all Five Pillars of Islam. Accurate prayer times and Qibla direction, Zakat calculator with live gold prices, Islamic inheritance (Fara'id) calculator, and Hadith-based scholarly guides. No account needed.",

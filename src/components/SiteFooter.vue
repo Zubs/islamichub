@@ -68,6 +68,7 @@
           <RouterLink to="/prayer">Qibla Finder</RouterLink>
           <RouterLink to="/inheritance">Inheritance Calculator</RouterLink>
           <RouterLink to="/fasting">Ramadan Tracker</RouterLink>
+          <RouterLink to="/adhkar">Adhkar &amp; Duas</RouterLink>
           <RouterLink to="/hadith/books">Hadith Library</RouterLink>
         </div>
 
