@@ -34,6 +34,7 @@
 
       <!-- Desktop right links -->
       <div class="nav-right">
+        <RouterLink to="/adhkar" class="nav-tools-btn">📿 Adhkar</RouterLink>
         <RouterLink to="/inheritance" class="nav-tools-btn">⚖️ Inheritance</RouterLink>
         <RouterLink to="/about" class="nav-tools-btn">About</RouterLink>
         <a
@@ -191,6 +192,11 @@ const allLinks = [
     to: '/hadith/books',
     icon: '📚',
     label: 'Hadith Library'
+  },
+  {
+    to: '/adhkar',
+    icon: '📿',
+    label: 'Adhkar & Duas',
   },
   {
     to: '/inheritance',

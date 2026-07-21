@@ -27,6 +27,16 @@ const routes = [
     component: () => import('@/views/hadith/HadithChapterView.vue'),
   },
   {
+    path: '/adhkar',
+    name: 'adhkar',
+    component: () => import('@/views/adhkar/AdhkarHomeView.vue'),
+  },
+  {
+    path: '/adhkar/:categorySlug',
+    name: 'adhkar-category',
+    component: () => import('@/views/adhkar/AdhkarCategoryView.vue'),
+  },
+  {
     path: '/faith',
     name: 'faith',
     component: () => import('@/views/pillar/FaithView.vue'),
