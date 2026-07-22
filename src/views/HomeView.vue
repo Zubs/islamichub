@@ -8,19 +8,16 @@
       <div class="hero-inner">
         <div>
           <div class="hero-badge" role="note">Free · Scholarly · No account needed</div>
-          <h1 class="hero-title">
-            Learn &amp; live the<br><em>Five Pillars of Islam</em>
-          </h1>
+          <h1 class="hero-title">Learn &amp; live the<br /><em>Five Pillars of Islam</em></h1>
           <p class="hero-body">
             IslamicHub is a free Islamic education and tools platform — accurate prayer times with
-            Qibla
-            finder, Zakat calculator with live gold and silver prices, Islamic inheritance (Fara'id)
-            calculator, and in-depth guides for all five pillars, grounded in Qur'an, Hadith, and
-            all four
-            schools of thought.
+            Qibla finder, Zakat calculator with live gold and silver prices, Islamic inheritance
+            (Fara'id) calculator, and in-depth guides for all five pillars, grounded in Qur'an,
+            Hadith, and all four schools of thought.
           </p>
           <div class="btn-group">
-            <RouterLink to="/faith" class="btn btn-primary btn-lg">Explore the Five Pillars
+            <RouterLink to="/faith" class="btn btn-primary btn-lg"
+              >Explore the Five Pillars
             </RouterLink>
             <RouterLink to="/zakat" class="btn btn-secondary btn-lg">Zakat Calculator</RouterLink>
           </div>
@@ -40,20 +37,48 @@
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:16px">
-          <div class="card" style="border-left:4px solid var(--green)"
-               aria-label="Today's Islamic date">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <div
+            class="card"
+            style="border-left: 4px solid var(--green)"
+            aria-label="Today's Islamic date"
+          >
             <div
-              style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
+              style="
+                font-size: 10.5px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                color: var(--muted);
+                margin-bottom: 6px;
+              "
+            >
               Today
             </div>
             <div
-              style="font-family:var(--serif);font-size:1.35rem;font-weight:600;margin-bottom:2px">
+              style="
+                font-family: var(--serif);
+                font-size: 1.35rem;
+                font-weight: 600;
+                margin-bottom: 2px;
+              "
+            >
               {{ today }}
             </div>
-            <div style="font-size:13.5px;color:var(--muted)">{{ hijri.formatted }}</div>
-            <div v-if="inRamadan"
-                 style="margin-top:8px;font-size:12px;background:var(--fasting-light);color:var(--fasting-color);padding:4px 10px;border-radius:10px;display:inline-block;font-weight:500">
+            <div style="font-size: 13.5px; color: var(--muted)">{{ hijri.formatted }}</div>
+            <div
+              v-if="inRamadan"
+              style="
+                margin-top: 8px;
+                font-size: 12px;
+                background: var(--fasting-light);
+                color: var(--fasting-color);
+                padding: 4px 10px;
+                border-radius: 10px;
+                display: inline-block;
+                font-weight: 500;
+              "
+            >
               🌙 Ramadan Day {{ hijri.day }}
             </div>
           </div>
@@ -71,18 +96,25 @@
     </section>
 
     <!-- FIVE PILLARS HUB -->
-    <section class="section" style="background:var(--cream-dark)" aria-labelledby="pillars-heading">
+    <section
+      class="section"
+      style="background: var(--cream-dark)"
+      aria-labelledby="pillars-heading"
+    >
       <div class="section-wide">
         <span class="eyebrow">The Five Pillars of Islam · أركان الإسلام</span>
         <h2 class="section-title" id="pillars-heading">Understand and practise each pillar</h2>
-        <p class="section-sub">Every pillar has a dedicated page with scholarly education
-          <em>and</em> a
-          practical tool — learn the ruling, understand the evidence, and fulfil the obligation.</p>
-        <div class="pillars-hub" style="margin-top:var(--space-8)" role="list">
+        <p class="section-sub">
+          Every pillar has a dedicated page with scholarly education <em>and</em> a practical tool —
+          learn the ruling, understand the evidence, and fulfil the obligation.
+        </p>
+        <div class="pillars-hub" style="margin-top: var(--space-8)" role="list">
           <RouterLink
-            v-for="p in pillars" :key="p.to"
+            v-for="p in pillars"
+            :key="p.to"
             :to="p.to"
-            class="pillar-hub-card" :class="p.cardClass"
+            class="pillar-hub-card"
+            :class="p.cardClass"
             :data-num="p.num"
             role="listitem"
             :aria-label="p.ariaLabel"
@@ -101,11 +133,19 @@
       <div class="section-wide">
         <span class="eyebrow">Islamic Tools</span>
         <h2 class="section-title" id="tools-heading">Practical tools for daily Islamic practice</h2>
-        <p class="section-sub">Accurate, free, and private — every tool runs entirely in your
-          browser with no account required and no data stored.</p>
-        <div class="tools-strip" style="margin-top:var(--space-8)" role="list">
-          <RouterLink v-for="t in tools" :key="t.to" :to="t.to" class="tool-card" role="listitem"
-                      :aria-label="t.aria">
+        <p class="section-sub">
+          Accurate, free, and private — every tool runs entirely in your browser with no account
+          required and no data stored.
+        </p>
+        <div class="tools-strip" style="margin-top: var(--space-8)" role="list">
+          <RouterLink
+            v-for="t in tools"
+            :key="t.to"
+            :to="t.to"
+            class="tool-card"
+            role="listitem"
+            :aria-label="t.aria"
+          >
             <span class="tc-icon" aria-hidden="true">{{ t.icon }}</span>
             <div>
               <div class="tc-name">{{ t.name }}</div>
@@ -117,41 +157,67 @@
     </section>
 
     <!-- WHY -->
-    <section class="section" style="background:var(--cream-dark)" aria-labelledby="why-heading">
+    <section class="section" style="background: var(--cream-dark)" aria-labelledby="why-heading">
       <div class="section-wide">
         <span class="eyebrow">Why IslamicHub</span>
         <h2 class="section-title" id="why-heading">Scholarly accuracy meets modern tools</h2>
-        <div class="why-grid"
-             style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-top:var(--space-8)">
+        <div
+          class="why-grid"
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+            margin-top: var(--space-8);
+          "
+        >
           <div class="prose">
-            <p>IslamicHub is a free Islamic learning platform that combines in-depth education with
+            <p>
+              IslamicHub is a free Islamic learning platform that combines in-depth education with
               practical digital tools. Unlike apps that give you a number with no explanation, every
-              section here gives you both: the ruling and the evidence behind it.</p>
-            <p>Our <strong>Zakat calculator</strong> fetches live gold and silver spot prices,
+              section here gives you both: the ruling and the evidence behind it.
+            </p>
+            <p>
+              Our <strong>Zakat calculator</strong> fetches live gold and silver spot prices,
               applies your chosen Nisab method (85g gold or 595g silver), deducts valid debts, and
               shows a precise figure — alongside the Qur'anic verse and Hadith references that
-              establish each rule.</p>
-            <p>Our <strong>prayer times calculator</strong> uses a full astronomical algorithm to
+              establish each rule.
+            </p>
+            <p>
+              Our <strong>prayer times calculator</strong> uses a full astronomical algorithm to
               compute prayer times for any coordinates on Earth — with five calculation methods. The
               same tool gives you the <strong>Qibla direction</strong> as an exact compass bearing.
             </p>
-            <p>Our <strong>Islamic inheritance calculator</strong> implements the complete Fara'id
+            <p>
+              Our <strong>Islamic inheritance calculator</strong> implements the complete Fara'id
               system from Qur'an 4:11–12 and 4:176 — all 13 heir types, automatic hijab (blocking)
-              rules, and awl (proportional reduction).</p>
+              rules, and awl (proportional reduction).
+            </p>
           </div>
-          <div style="display:flex;flex-direction:column;gap:1rem">
-            <div v-for="f in features" :key="f.title" class="card"
-                 style="display:flex;gap:14px;align-items:flex-start;padding:1rem 1.25rem">
-              <div style="font-size:20px;flex-shrink:0;margin-top:2px" aria-hidden="true">{{
-                  f.icon
-                }}
+          <div style="display: flex; flex-direction: column; gap: 1rem">
+            <div
+              v-for="f in features"
+              :key="f.title"
+              class="card"
+              style="display: flex; gap: 14px; align-items: flex-start; padding: 1rem 1.25rem"
+            >
+              <div style="font-size: 20px; flex-shrink: 0; margin-top: 2px" aria-hidden="true">
+                {{ f.icon }}
               </div>
               <div>
                 <div
-                  style="font-family:var(--serif);font-size:.95rem;font-weight:600;margin-bottom:.25rem">
+                  style="
+                    font-family: var(--serif);
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    margin-bottom: 0.25rem;
+                  "
+                >
                   {{ f.title }}
                 </div>
-                <div style="font-size:13px;color:var(--muted);line-height:1.6">{{ f.desc }}</div>
+                <div style="font-size: 13px; color: var(--muted); line-height: 1.6">
+                  {{ f.desc }}
+                </div>
               </div>
             </div>
           </div>
@@ -160,25 +226,56 @@
     </section>
 
     <!-- DARK FEATURE GRID -->
-    <section class="section" style="background:var(--ink)" aria-labelledby="features-heading">
+    <section class="section" style="background: var(--ink)" aria-labelledby="features-heading">
       <div class="section-wide">
-        <span class="eyebrow" style="color:#8BC4A8">What's inside</span>
-        <h2 class="section-title" style="color:#fff;margin-bottom:var(--space-8)"
-            id="features-heading">
+        <span class="eyebrow" style="color: #8bc4a8">What's inside</span>
+        <h2
+          class="section-title"
+          style="color: #fff; margin-bottom: var(--space-8)"
+          id="features-heading"
+        >
           Everything a Muslim needs in one place
         </h2>
         <div class="card-grid card-grid-3" role="list">
-          <article v-for="f in darkFeatures" :key="f.title"
-                   class="card card-dark" style="border:1px solid rgba(255,255,255,.08)"
-                   role="listitem">
-            <div style="font-size:26px;margin-bottom:.75rem" aria-hidden="true">{{ f.icon }}</div>
-            <h3 style="font-family:var(--serif);font-size:1.05rem;color:#fff;margin-bottom:.5rem">
-              {{ f.title }}</h3>
+          <article
+            v-for="f in darkFeatures"
+            :key="f.title"
+            class="card card-dark"
+            style="border: 1px solid rgba(255, 255, 255, 0.08)"
+            role="listitem"
+          >
+            <div style="font-size: 26px; margin-bottom: 0.75rem" aria-hidden="true">
+              {{ f.icon }}
+            </div>
+            <h3
+              style="
+                font-family: var(--serif);
+                font-size: 1.05rem;
+                color: #fff;
+                margin-bottom: 0.5rem;
+              "
+            >
+              {{ f.title }}
+            </h3>
             <p
-              style="font-size:13.5px;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:1rem">
-              {{ f.desc }}</p>
-            <RouterLink :to="f.to" class="btn btn-sm"
-                        style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:none">
+              style="
+                font-size: 13.5px;
+                color: rgba(255, 255, 255, 0.5);
+                line-height: 1.65;
+                margin-bottom: 1rem;
+              "
+            >
+              {{ f.desc }}
+            </p>
+            <RouterLink
+              :to="f.to"
+              class="btn btn-sm"
+              style="
+                background: rgba(255, 255, 255, 0.08);
+                color: rgba(255, 255, 255, 0.7);
+                border: none;
+              "
+            >
               {{ f.cta }} →
             </RouterLink>
           </article>
@@ -190,52 +287,73 @@
     <section class="section" aria-labelledby="team-heading">
       <div class="section-wide">
         <span class="eyebrow">Open source project</span>
-        <h2 class="section-title" id="team-heading" style="margin-bottom:.75rem">Built by the
-          community, for the community</h2>
-        <p class="section-sub" style="margin-bottom:var(--space-8)">IslamicHub is open source, built
-          by Zubair Idris Aweda and Yusuf Saif, and open to contributions from any Muslim who wants
-          to help improve it.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:640px">
-          <a v-for="b in builders" :key="b.login"
-             :href="'https://github.com/' + b.login"
-             target="_blank" rel="noopener noreferrer"
-             class="builder-mini-card">
-            <img :src="b.avatar" :alt="'Photo of ' + b.name" width="44" height="44"
-                 style="border-radius:50%;border:2px solid var(--border);flex-shrink:0"
-                 loading="lazy"
-                 @error="(e) => e.target.style.display = 'none'">
+        <h2 class="section-title" id="team-heading" style="margin-bottom: 0.75rem">
+          Built by the community, for the community
+        </h2>
+        <p class="section-sub" style="margin-bottom: var(--space-8)">
+          IslamicHub is open source, built by Zubair Idris Aweda and Yusuf Saif, and open to
+          contributions from any Muslim who wants to help improve it.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 640px">
+          <a
+            v-for="b in builders"
+            :key="b.login"
+            :href="'https://github.com/' + b.login"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="builder-mini-card"
+          >
+            <img
+              :src="b.avatar"
+              :alt="'Photo of ' + b.name"
+              width="44"
+              height="44"
+              style="border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0"
+              loading="lazy"
+              @error="(e) => (e.target.style.display = 'none')"
+            />
             <div>
               <div
-                style="font-family:var(--serif);font-size:.95rem;font-weight:600;margin-bottom:1px">
+                style="
+                  font-family: var(--serif);
+                  font-size: 0.95rem;
+                  font-weight: 600;
+                  margin-bottom: 1px;
+                "
+              >
                 {{ b.name }}
               </div>
-              <div style="font-size:11.5px;color:var(--muted)">{{ b.role }}</div>
+              <div style="font-size: 11.5px; color: var(--muted)">{{ b.role }}</div>
             </div>
           </a>
         </div>
-        <div style="margin-top:1.5rem">
-          <RouterLink to="/about" class="btn btn-secondary">About the project &amp; how to
-            contribute →
+        <div style="margin-top: 1.5rem">
+          <RouterLink to="/about" class="btn btn-secondary"
+            >About the project &amp; how to contribute →
           </RouterLink>
         </div>
       </div>
     </section>
 
     <!-- CTA -->
-    <section class="section" style="padding-top:0">
+    <section class="section" style="padding-top: 0">
       <div class="section-wide">
         <div class="cta-strip">
           <div class="ornament-hanging left" aria-hidden="true"></div>
           <div class="ornament-hanging right" aria-hidden="true"></div>
-          <GeoPattern/>
+          <GeoPattern />
           <h2>Begin with the first pillar</h2>
-          <p>Start with the Shahada — the declaration that anchors everything in Islam — then work
-            through each pillar with education and practical tools.</p>
-          <div class="btn-group" style="justify-content:center">
+          <p>
+            Start with the Shahada — the declaration that anchors everything in Islam — then work
+            through each pillar with education and practical tools.
+          </p>
+          <div class="btn-group" style="justify-content: center">
             <RouterLink to="/faith" class="btn btn-white btn-lg">Start with Faith →</RouterLink>
-            <RouterLink to="/prayer" class="btn btn-secondary btn-lg"
-                        style="color:#fff;border-color:rgba(255,255,255,.3)">Prayer Times &amp;
-              Qibla
+            <RouterLink
+              to="/prayer"
+              class="btn btn-secondary btn-lg"
+              style="color: #fff; border-color: rgba(255, 255, 255, 0.3)"
+              >Prayer Times &amp; Qibla
             </RouterLink>
           </div>
         </div>
@@ -250,11 +368,7 @@ import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import QuranBlock from '@/components/QuranBlock.vue'
 import GeoPattern from '@/components/GeoPattern.vue'
-import {
-  toHijri,
-  daysToRamadan,
-  isRamadan
-} from '@/utils/hijri.js'
+import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'
 
 useSeo('home')
 useScrollReveal()
@@ -344,6 +458,20 @@ const tools = [
     aria: 'Find Qibla direction'
   },
   {
+    to: '/adhkar',
+    icon: '📿',
+    name: 'Adhkar & Duas',
+    desc: 'Morning, evening & after-prayer supplications · Arabic, transliteration & translation · tap-to-count tracker',
+    aria: 'Adhkar and duas'
+  },
+  {
+    to: '/tasbih',
+    icon: '🔢',
+    name: 'Tasbih Counter',
+    desc: 'Digital dhikr counter with custom targets · daily and lifetime totals · works for any phrase',
+    aria: 'Digital tasbih counter'
+  },
+  {
     to: '/inheritance',
     icon: '📜',
     name: "Inheritance (Fara'id)",
@@ -361,7 +489,7 @@ const features = [
   {
     icon: '🕌',
     title: 'All four schools',
-    desc: 'Hanafi, Maliki, Shafi\'i, and Hanbali positions are considered. Disagreements are surfaced, not hidden.'
+    desc: "Hanafi, Maliki, Shafi'i, and Hanbali positions are considered. Disagreements are surfaced, not hidden."
   },
   {
     icon: '🔒',
@@ -396,6 +524,13 @@ const darkFeatures = [
     cta: 'Find prayer times'
   },
   {
+    icon: '📿',
+    title: 'Morning & Evening Adhkar, Tracked Daily',
+    desc: 'Authenticated supplications for morning, evening, after prayer, sleep, and waking — with Arabic, transliteration, translation, and daily streaks.',
+    to: '/adhkar',
+    cta: 'Open Adhkar'
+  },
+  {
     icon: '📜',
     title: "Free Islamic Inheritance Calculator (Fara'id)",
     desc: "Qur'anic shares for all 13 heir types. Auto-applies blocking rules. Visual percentage and amount breakdown. Based on Qur'an 4:11–12.",
@@ -415,13 +550,6 @@ const darkFeatures = [
     desc: 'Live Suhoor and Iftar times for your location. Fasting progress bar. Ramadan countdown. Comprehensive Sawm rulings.',
     to: '/fasting',
     cta: 'Track your fast'
-  },
-  {
-    icon: '🕋',
-    title: 'Pilgrimage to Makkah — Complete Hajj Rites Guide',
-    desc: 'Day-by-day rites for all five days. Three types of Hajj explained. Full Umrah guide. Scholarly rulings from all four schools.',
-    to: '/hajj',
-    cta: 'Read the Hajj guide'
   },
 ]
 
@@ -455,7 +583,7 @@ const builders = [
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
-  transition: box-shadow .15s;
+  transition: box-shadow 0.15s;
 }
 
 .builder-mini-card:hover {
