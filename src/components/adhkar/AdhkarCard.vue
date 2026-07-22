@@ -1,5 +1,5 @@
 <template>
-  <article class="dhikr-card anim-target" :class="{ 'dc-done': isFullyDone }">
+  <article class="dhikr-card" :class="{ 'dc-done': isFullyDone }">
     <!-- Reference badge -->
     <div class="dc-top">
       <span class="dc-ref">{{ dhikr.reference }}</span>
@@ -81,7 +81,6 @@ const isFullyDone = computed(() => {
   if (props.dhikr.parts) {
     return props.dhikr.parts.every((part, i) => partsDone[i] >= part.count)
   }
-
   return simpleDone.value >= props.dhikr.repeat
 })
 </script>

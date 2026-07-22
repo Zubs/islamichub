@@ -37,6 +37,11 @@ const routes = [
     component: () => import('@/views/adhkar/AdhkarCategoryView.vue'),
   },
   {
+    path: '/tasbih',
+    name: 'tasbih',
+    component: () => import('@/views/tools/TasbihView.vue'),
+  },
+  {
     path: '/faith',
     name: 'faith',
     component: () => import('@/views/pillar/FaithView.vue'),

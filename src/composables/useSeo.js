@@ -23,6 +23,11 @@ const ROUTE_META = {
     description:
       'Recite and track a category of daily Islamic supplications with Arabic, transliteration, and translation.',
   },
+  tasbih: {
+    title: 'Tasbih Counter — Digital Dhikr Counter | IslamicHub',
+    description:
+      'A free digital tasbih counter for dhikr — SubhanAllah, Alhamdulillah, Allahu Akbar, and more. Set a target, tap to count, and track your daily and lifetime totals.',
+  },
   home: {
     title: 'IslamicHub — Islamic Education, Prayer Times, Zakat Calculator & Five Pillars Guide',
     description: "Free Islamic learning platform covering all Five Pillars of Islam. Accurate prayer times and Qibla direction, Zakat calculator with live gold prices, Islamic inheritance (Fara'id) calculator, and Hadith-based scholarly guides. No account needed.",
