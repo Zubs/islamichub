@@ -468,6 +468,13 @@ const tools = [
     aria: 'Adhkar',
   },
   {
+    to: '/tracker',
+    icon: '✅',
+    name: 'Prayer Tracker',
+    desc: 'Log each of the five daily prayers · week and month at a glance · a streak that stays on your device',
+    aria: 'Prayer tracker',
+  },
+  {
     to: '/duas',
     icon: '🤲',
     name: 'Duas',

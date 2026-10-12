@@ -28,7 +28,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 16. Daily hadith
 - [x] 17. Adhkar progress survives reload
 - [x] 18. Duas
-- [ ] 19. Salah tracker
+- [x] 19. Salah tracker
 - [ ] 20. Fasting tracker
 - [ ] 21. Worship dashboard
 - [ ] 22. Share to WhatsApp
@@ -567,6 +567,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Nothing leaves the device. A "Clear my data" button removes the log.
 - A Tracker shortcut is added to the installed app (feature 12).
 - With a saved location (feature 11), each prayer shows its time, and prayers whose time has not arrived are marked "not yet".
+- While today is still in progress the streak shows the count up to yesterday, so it does not drop to zero each morning; a prayer marked missed today makes it zero.
+- A prayer marked "not yet" cannot be logged until its time arrives. Choosing the status a prayer already has clears it.
 
 **Tests**
 - With nothing logged, today shows five unlogged prayers and a streak of zero.
@@ -1050,6 +1052,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 17 | 15 | Two citations look imprecise and were left as they are: the Faith page quotes 'Uthman's narration (Sahih Muslim 26) and also cites Sahih Bukhari 128, which is a different narration on the same point; and the istighfar dhikr cites Sahih Bukhari 6307 ("more than seventy times a day") with a count of 100 | Left unchanged | A reviewer should decide whether to drop Bukhari 128 from that block and whether the count of 100 should cite Sahih Muslim 2702 instead |
 | 18 | 16 | Which hadiths, and which translation, for the daily hadith? | 67 short hadiths, all from Sahih al-Bukhari, chosen by me for being self-contained. English text copied from the open fawazahmed0/hadith-api dataset (edition eng-bukhari), with three typing errors corrected. The dataset does not state the translation's licence | Edit `src/data/dailyHadith.js`. A reviewer should read the list, and you should decide whether that translation may be republished or should be replaced |
 | 19 | 18 | Which duas, and in whose words? | 46 duas chosen by me: 16 from the Qur'an and 30 from Sahih al-Bukhari, Abu Dawud, al-Tirmidhi and Ibn Majah. The Arabic is copied from the sources. The transliterations, the English translations of the hadith duas, the titles and the "when to say it" lines are my own wording; Qur'an translations follow Saheeh International | Edit `src/data/duas.js`. A reviewer should read all 46, and in particular confirm the grading of the 19 that are not from the Qur'an or al-Bukhari, which I could not verify |
+| 20 | 19 | What does the streak show while today is unfinished? | The count up to yesterday, so it does not fall to zero every morning. It becomes zero only when a prayer today is marked missed | Change `salahStreak` in `utils/salah.js` |
 
 **Checks only Zubair can do**
 

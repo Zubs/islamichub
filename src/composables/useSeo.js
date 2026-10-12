@@ -25,6 +25,11 @@ const PAGE_META = {
     description:
       "Supplications from the Qur'an and Sunnah for travel, eating, home, the mosque, clothing, weather, distress, illness, forgiveness, and parents and family — with Arabic, transliteration, translation and source.",
   },
+  tracker: {
+    title: 'Prayer Tracker — Log Your Five Daily Prayers | IslamicHub',
+    description:
+      'Record each of the five daily prayers as on time, late or missed, see your week and month at a glance, and keep a streak. Private: everything stays on your device.',
+  },
   tasbih: {
     title: 'Tasbih Counter — Digital Dhikr Counter | IslamicHub',
     description:

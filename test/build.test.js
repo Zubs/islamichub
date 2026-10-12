@@ -102,7 +102,7 @@ describe('built site', () => {
     const router = createRouter({ history: createMemoryHistory(), routes })
     const addresses = manifest.shortcuts.map((shortcut) => shortcut.url)
 
-    expect(addresses).toEqual(expect.arrayContaining(['/prayer', '/adhkar', '/tasbih']))
+    expect(addresses).toEqual(expect.arrayContaining(['/prayer', '/adhkar', '/tasbih', '/tracker']))
     for (const address of addresses) {
       expect(address).not.toContain('#')
       expect(router.resolve(address).name).not.toBe('not-found')

@@ -70,6 +70,7 @@
           <RouterLink to="/fasting">Ramadan Tracker</RouterLink>
           <RouterLink to="/adhkar">Adhkar</RouterLink>
           <RouterLink to="/duas">Duas</RouterLink>
+          <RouterLink to="/tracker">Prayer Tracker</RouterLink>
           <RouterLink to="/tasbih">Tasbih Counter</RouterLink>
           <RouterLink to="/hadith/books">Hadith Library</RouterLink>
         </div>

@@ -37,6 +37,7 @@ export default defineConfig({
         shortcuts: [
           { name: 'Prayer times', url: '/prayer', icons: [{ src: '/icon-192.png', sizes: '192x192' }] },
           { name: 'Adhkar', url: '/adhkar', icons: [{ src: '/icon-192.png', sizes: '192x192' }] },
+          { name: 'Prayer tracker', url: '/tracker', icons: [{ src: '/icon-192.png', sizes: '192x192' }] },
           { name: 'Tasbih', url: '/tasbih', icons: [{ src: '/icon-192.png', sizes: '192x192' }] },
         ],
       },

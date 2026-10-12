@@ -79,3 +79,10 @@ A first visit to the home page SHALL download no more than 600 KB of the site's 
 #### Scenario: Code per page
 - **WHEN** the home page loads
 - **THEN** it does not load the code of the Zakat, Hajj or hadith pages
+
+### Requirement: The installed app has a Tracker shortcut
+The web manifest SHALL include a shortcut to the prayer tracker at `/tracker`, beside those for Prayer, Adhkar and Tasbih.
+
+#### Scenario: Shortcuts
+- **WHEN** the built manifest is read
+- **THEN** it lists a shortcut to `/tracker`, and the address is one the site serves

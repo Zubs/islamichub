@@ -144,6 +144,7 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/adhkar/:categorySlug`                   | `adhkar-category`   | AdhkarCategoryView    |
 | `/duas`                                   | `duas`              | DuasHomeView          |
 | `/duas/:situationSlug`                    | `duas-situation`    | DuasSituationView     |
+| `/tracker`                                | `tracker`           | TrackerView           |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
 | `/about`                                  | `about`             | AboutView             |
@@ -342,6 +343,23 @@ hadith), never typed from memory.
   `/duas/travel#farewell` opens on that dua.
 - References go through `HadithRef`: hadith references link to the library, Qur'an references are text.
 
+### 5.7b Prayer tracker (`/tracker`)
+
+Records each of the five daily prayers per local day as on time, late or missed; a prayer with no status is "not
+logged". `stores/salah.js` owns the log (`salah-log`), and `utils/salah.js` holds every rule.
+
+- Today's five prayers each have three one-tap status buttons. Choosing the status a prayer already has clears it.
+- **Streak:** consecutive days on which all five were marked on time or late. Today counts once all five are logged; a
+  missed prayer today makes the streak zero; otherwise counting starts from yesterday while today is in progress. A
+  past day with fewer than five logged, or with a missed prayer, ends the streak.
+- A seven-day strip and a month view (Monday first) show each day as complete, partly logged, a prayer missed, or empty,
+  and select the day shown. Past days can be edited; future days cannot be selected or logged.
+- With a saved location (`prayer-settings`), today's prayers show their times and a prayer whose time has not arrived is
+  marked "not yet" and cannot be logged.
+- "Clear my data" removes the log after a confirmation. Unreadable stored data, and unknown days, prayers or statuses,
+  are ignored.
+- Nothing leaves the device. The installed app has a Tracker shortcut.
+
 ### 5.8 Tasbih counter (`/tasbih`)
 
 Six preset phrases from `data/tasbihPhrases.js`, each with Arabic, transliteration, translation, and a default target:
@@ -432,6 +450,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `salah-log`              | `{ "YYYY-MM-DD": { fajr: "on-time" \| "late" \| "missed", … } }` | salah store |
 | `adhkar-progress`        | `{ day: "YYYY-MM-DD", counts: { [dhikrId]: count } }`; restored only on the same local day | adhkar store |
 | `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |
 | `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
@@ -456,7 +475,7 @@ Rules:
 ## 6a. Installable and offline
 
 - `vite-plugin-pwa` builds a service worker (workbox, `generateSW`) served from `/service-worker.js`, and
-  `manifest.webmanifest` with 192px, 512px and maskable icons and shortcuts to Prayer, Adhkar and Tasbih.
+  `manifest.webmanifest` with 192px, 512px and maskable icons and shortcuts to Prayer, Adhkar, the prayer tracker and Tasbih.
 - Every built file is precached on the first visit, so every route opens offline; `index.html` answers any navigation.
 - Google Fonts files are kept `CacheFirst` once loaded. Because the first page loads before the worker controls it,
   `usePwa.js` re-requests the font addresses the page has already loaded once the worker is ready.
