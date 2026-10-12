@@ -25,7 +25,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 13. Hadith proxy
 - [ ] 14. Single-hadith page
 - [ ] 15. Linked hadith citations
-- [ ] 16. Daily hadith
+- [x] 16. Daily hadith
 - [ ] 17. Adhkar progress survives reload
 - [ ] 18. Duas
 - [ ] 19. Salah tracker
@@ -483,6 +483,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The day's hadith is chosen from the local date (feature 2), so everyone sees the same one on the same date and it changes at local midnight.
 - The text is stored in the list, so the card needs no network request and works offline.
 - The card uses `HadithBlock`, so its reference links to the full hadith (features 14 and 15).
+- The list holds 67 hadiths, all from Sahih al-Bukhari, with texts copied from the open fawazahmed0/hadith-api dataset and checked against it by number. No Arabic text is stored, because the dataset's Arabic includes the full chain of narration; the link leads to the Arabic in the library.
 
 **Tests**
 - With an empty list, the home page shows no card and no gap.
@@ -1045,6 +1046,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 15 | 15 | Faith page: "equal to one-third of the Qur'an" was cited as Sahih Bukhari 6267, which is a different hadith | Changed to Sahih Bukhari 5013, whose text says exactly this | Reviewer to confirm |
 | 16 | 15 | Hajj page: Hajj on behalf of someone who died was cited as Sahih Bukhari 1513, which is about an elderly father still living | Changed to Sahih Bukhari 1852 (a woman whose mother died before performing Hajj) | Reviewer to confirm |
 | 17 | 15 | Two citations look imprecise and were left as they are: the Faith page quotes 'Uthman's narration (Sahih Muslim 26) and also cites Sahih Bukhari 128, which is a different narration on the same point; and the istighfar dhikr cites Sahih Bukhari 6307 ("more than seventy times a day") with a count of 100 | Left unchanged | A reviewer should decide whether to drop Bukhari 128 from that block and whether the count of 100 should cite Sahih Muslim 2702 instead |
+| 18 | 16 | Which hadiths, and which translation, for the daily hadith? | 67 short hadiths, all from Sahih al-Bukhari, chosen by me for being self-contained. English text copied from the open fawazahmed0/hadith-api dataset (edition eng-bukhari), with three typing errors corrected. The dataset does not state the translation's licence | Edit `src/data/dailyHadith.js`. A reviewer should read the list, and you should decide whether that translation may be republished or should be replaced |
 
 **Checks only Zubair can do**
 
