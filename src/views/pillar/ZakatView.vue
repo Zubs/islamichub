@@ -106,14 +106,14 @@
           <div style="text-align: right">
             <div class="ctrl-label">Gold price</div>
             <span>{{ store.sym }}{{ store.goldLocal.toFixed(2) }}/g</span>
-            <span
-              class="badge"
-              :class="store.pricesLive ? 'badge-green' : 'badge-gold'"
-              style="margin-left: 6px"
-              >{{ store.pricesLive ? 'live' : 'reference' }}</span
-            >
           </div>
         </div>
+        <ZakatPriceStatus
+          :metals-fetched="store.metalsFetched"
+          :rates-fetched="store.ratesFetched"
+          :date="store.pricesDate"
+          :loading="store.pricesLoading"
+        />
         <div
           style="
             font-size: 11.5px;
@@ -138,7 +138,7 @@
             sub="All liquid money you hold"
             icon="💵"
             icon-class="ai-teal"
-            :total="store.fmt(cashTotal)"
+            :total="store.fmt(zakat.cashTotal)"
             :start-open="true"
           >
             <template #reference
@@ -207,7 +207,7 @@
             sub="Loans given, expected income"
             icon="💸"
             icon-class="ai-blue"
-            :total="store.fmt(owedTotal)"
+            :total="store.fmt(zakat.owedTotal)"
           >
             <template #reference
               ><strong>Scholarly consensus (ijma') · Ibn Qudama, Al-Mughni</strong> Reliably
@@ -261,10 +261,10 @@
           <!-- Gold & Silver -->
           <ZakatAccordion
             title="Gold & Silver"
-            sub="Jewellery, bars, coins — live prices"
+            sub="Jewellery, bars, coins — priced per gram"
             icon="✦"
             icon-class="ai-amber"
-            :total="store.fmt(metalsTotal)"
+            :total="store.fmt(zakat.metalsTotal)"
           >
             <template #reference
               ><strong>Qur'an 9:34 · Abu Dawud 1558</strong> Gold and silver are zakatable. Hanafi:
@@ -272,25 +272,25 @@
             </template>
             <div class="metal-tiles">
               <div class="metal-tile">
-                <div class="mt-name">Gold spot · 24ct/gram</div>
+                <div class="mt-name">Gold · 24ct/gram</div>
                 <div class="mt-price">
                   {{ store.sym }}{{ store.goldLocal.toFixed(2) }}<span class="mt-unit"> /gram</span>
                 </div>
-                <span class="badge" :class="store.pricesLive ? 'badge-green' : 'badge-gold'">{{
-                  store.pricesLive ? 'live price' : 'reference'
-                }}</span>
               </div>
               <div class="metal-tile">
-                <div class="mt-name">Silver spot · per gram</div>
+                <div class="mt-name">Silver · per gram</div>
                 <div class="mt-price">
                   {{ store.sym }}{{ store.silverLocal.toFixed(2)
                   }}<span class="mt-unit"> /gram</span>
                 </div>
-                <span class="badge" :class="store.pricesLive ? 'badge-green' : 'badge-gold'">{{
-                  store.pricesLive ? 'live price' : 'reference'
-                }}</span>
               </div>
             </div>
+            <ZakatPriceStatus
+              :metals-fetched="store.metalsFetched"
+              :rates-fetched="store.ratesFetched"
+              :date="store.pricesDate"
+              :loading="store.pricesLoading"
+            />
             <div class="field-grid">
               <div class="field">
                 <label>Gold purity</label>
@@ -348,7 +348,7 @@
             sub="Stocks, ISAs, pensions, business assets"
             icon="📈"
             icon-class="ai-purple"
-            :total="store.fmt(investTotal)"
+            :total="store.fmt(zakat.investTotal)"
           >
             <template #reference
               ><strong>AAOIFI Standard No. 35 · Sheikh al-Qaradawi</strong>
@@ -418,7 +418,7 @@
             sub="Deducted from your zakatable total"
             icon="➖"
             icon-class="ai-coral"
-            :total="debtsTotal > 0 ? '−' + store.fmt(debtsTotal) : ''"
+            :total="zakat.debtsTotal > 0 ? '−' + store.fmt(zakat.debtsTotal) : ''"
           >
             <template #reference
               ><strong>Al-Nawawi (Shafi'i) · Al-Kasani (Hanafi)</strong> Immediate debts due within
@@ -495,22 +495,28 @@
                 ⚠ <strong>Hawl:</strong> Zakat is only due after your wealth has exceeded Nisab for
                 one complete lunar year (~354 days).
               </div>
-              <div class="result-box" :class="obligated ? 'result-due' : 'result-none'">
+              <div class="result-box" :class="zakat.obligated ? 'result-due' : 'result-none'">
                 <div class="rb-label">
                   {{
-                    obligated
+                    zakat.obligated
                       ? 'Zakat is due — 2.5% of net zakatable wealth:'
-                      : net > 0
+                      : zakat.net > 0
                         ? 'Below Nisab — no obligation this year'
                         : 'Enter your assets to begin'
                   }}
                 </div>
-                <div :class="obligated ? 'rb-amount' : 'rb-empty'">
-                  {{ obligated ? store.fmt(zakatDue) : net > 0 ? 'Below threshold' : '—' }}
+                <div :class="zakat.obligated ? 'rb-amount' : 'rb-empty'">
+                  {{
+                    zakat.obligated
+                      ? store.fmt(zakat.zakatDue)
+                      : zakat.net > 0
+                        ? 'Below threshold'
+                        : '—'
+                  }}
                 </div>
               </div>
               <div class="progress-bar" style="margin: 10px 0 3px">
-                <div class="progress-fill" :style="{ width: progressPct + '%' }"></div>
+                <div class="progress-fill" :style="{ width: zakat.progressPct + '%' }"></div>
               </div>
               <div
                 style="
@@ -594,10 +600,12 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { calculateZakat } from '@/utils/zakat.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import ZakatAccordion from '@/components/ZakatAccordion.vue'
+import ZakatPriceStatus from '@/components/ZakatPriceStatus.vue'
 
 useSeo('zakat')
 useScrollReveal()
@@ -633,83 +641,67 @@ const fields = reactive({
   otherDebts: 0,
 })
 
-const cashTotal = computed(
-  () => fields.cashHome + fields.cashCurrent + fields.cashSavings + fields.cashForeign,
-)
-const owedTotal = computed(() => fields.loansGiven + fields.unpaidIncome + fields.otherOwed)
-const metalsTotal = computed(
-  () =>
-    fields.goldGrams * store.goldLocal * fields.goldPurity +
-    fields.silverGrams * store.silverLocal +
-    fields.metalsDirect,
-)
-const investTotal = computed(() => fields.shares + fields.isas + fields.inventory + fields.pension)
-const debtsTotal = computed(
-  () => fields.loansDue + fields.creditCards + fields.bills + fields.otherDebts,
-)
-const gross = computed(
-  () => cashTotal.value + owedTotal.value + metalsTotal.value + investTotal.value,
-)
-const net = computed(() => Math.max(0, gross.value - debtsTotal.value))
-const zakatDue = computed(() => (net.value >= store.nisabValue ? net.value * 0.025 : 0))
-const obligated = computed(() => net.value >= store.nisabValue)
-const progressPct = computed(() =>
-  store.nisabValue > 0 ? Math.min(100, (net.value / store.nisabValue) * 100) : 0,
+const zakat = computed(() =>
+  calculateZakat(
+    fields,
+    { goldPerGram: store.goldLocal, silverPerGram: store.silverLocal },
+    store.nisabMethod,
+  ),
 )
 
 const breakdown = computed(() => [
   {
     label: 'Cash & savings',
-    value: cashTotal.value,
+    value: zakat.value.cashTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
     label: 'Money owed',
-    value: owedTotal.value,
+    value: zakat.value.owedTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
     label: 'Gold & silver',
-    value: metalsTotal.value,
+    value: zakat.value.metalsTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
     label: 'Investments',
-    value: investTotal.value,
+    value: zakat.value.investTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
     label: 'Gross zakatable',
-    value: gross.value,
+    value: zakat.value.gross,
     deduct: false,
     bold: true,
     highlight: false,
   },
   {
     label: 'Less: debts',
-    value: debtsTotal.value,
+    value: zakat.value.debtsTotal,
     deduct: true,
     bold: true,
     highlight: false,
   },
   {
     label: 'Net zakatable',
-    value: net.value,
+    value: zakat.value.net,
     deduct: false,
     bold: true,
     highlight: false,
   },
   {
     label: 'Zakat due (2.5%)',
-    value: zakatDue.value,
+    value: zakat.value.zakatDue,
     deduct: false,
     bold: true,
     highlight: true,

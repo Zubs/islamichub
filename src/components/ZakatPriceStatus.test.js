@@ -1,0 +1,48 @@
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import ZakatPriceStatus from './ZakatPriceStatus.vue'
+
+function status(props) {
+  const wrapper = mount(ZakatPriceStatus, {
+    props: { metalsFetched: false, ratesFetched: false, date: '2026-10-12', ...props },
+  })
+  return { label: wrapper.find('.badge').text(), note: wrapper.find('.price-status-note').text() }
+}
+
+describe('ZakatPriceStatus', () => {
+  it('says prices are loading and the calculator can be filled in', () => {
+    const { label, note } = status({ loading: true })
+
+    expect(label).toBe('loading')
+    expect(note).toContain('fill in the calculator')
+  })
+
+  it('marks fetched prices as current and gives their date', () => {
+    const { label, note } = status({ metalsFetched: true, ratesFetched: true, date: '2026-11-03' })
+
+    expect(label).toBe('current')
+    expect(note).toBe('Gold and silver prices for 3 November 2026.')
+  })
+
+  it('marks reference prices, gives their date and advises checking', () => {
+    const { label, note } = status({})
+
+    expect(label).toBe('reference')
+    expect(note).toContain('Reference prices from 12 October 2026')
+    expect(note).toContain('check the current price')
+  })
+
+  it('says the exchange rates are not current when only metals were fetched', () => {
+    const { label, note } = status({ metalsFetched: true, date: '2026-11-03' })
+
+    expect(label).toBe('rates not current')
+    expect(note).toContain('prices for 3 November 2026')
+    expect(note).toContain('reference exchange rates')
+  })
+
+  it('leaves the date out when none is known', () => {
+    const { note } = status({ metalsFetched: true, ratesFetched: true, date: null })
+
+    expect(note).toBe('Gold and silver prices.')
+  })
+})

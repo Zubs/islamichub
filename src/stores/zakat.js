@@ -1,33 +1,67 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import {
+  perGram,
+  nisabFor,
+  parsePrices,
+  GOLD_NISAB_GRAMS,
+  SILVER_NISAB_GRAMS,
+} from '@/utils/zakat.js'
+
+const PRICE_SOURCES = [
+  'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json',
+  'https://latest.currency-api.pages.dev/v1/currencies/usd.json',
+]
+const SOURCE_TIME_LIMIT_MS = 6000
+
+// Reference values on a US dollar base, used when today's prices cannot be fetched.
+const REFERENCE_DATE = '2026-10-12'
+const REFERENCE_USD_PER_OUNCE = { gold: 4186.27, silver: 60.83 }
+const REFERENCE_RATES = { USD: 1, GBP: 0.7555, EUR: 0.8928, SAR: 3.75 }
+
+async function fetchFrom(url) {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), SOURCE_TIME_LIMIT_MS)
+  try {
+    const response = await fetch(url, { cache: 'no-cache', signal: controller.signal })
+    if (!response.ok) {
+      throw new Error('prices fetch failed')
+    }
+
+    return parsePrices(await response.json())
+  } finally {
+    clearTimeout(timer)
+  }
+}
 
 export const useZakatStore = defineStore('zakat', () => {
   // ── State ────────────────────────────────────────────────────
   const currency = ref('GBP')
   const sym = ref('£')
-  const FX = ref({
-    GBP: 1,
-    USD: 1.294,
-    EUR: 1.167,
-    SAR: 4.851,
-  })
-  const goldGBP = ref(113.42)
-  const silverGBP = ref(1.07)
-  const pricesLive = ref(false)
+  const usdPerOunce = ref({ ...REFERENCE_USD_PER_OUNCE })
+  const rates = ref({ ...REFERENCE_RATES })
+  const metalsFetched = ref(false)
+  const ratesFetched = ref(false)
+  const pricesDate = ref(REFERENCE_DATE)
   const pricesLoading = ref(false)
   const nisabMethod = ref('gold') // 'gold' | 'silver'
   const location = ref(null) // { lat, lng, name }
   const locationError = ref(null)
-  const GOLD_NISAB_G = 85
-  const SILVER_NISAB_G = 595
+  const GOLD_NISAB_G = GOLD_NISAB_GRAMS
+  const SILVER_NISAB_G = SILVER_NISAB_GRAMS
 
   // ── Computed ─────────────────────────────────────────────────
-  const goldLocal = computed(() => goldGBP.value * (FX.value[currency.value] || 1))
-  const silverLocal = computed(() => silverGBP.value * (FX.value[currency.value] || 1))
+  function pricePerGram(metal, currencyCode) {
+    return perGram(usdPerOunce.value[metal], rates.value[currencyCode])
+  }
+
+  const goldLocal = computed(() => pricePerGram('gold', currency.value))
+  const silverLocal = computed(() => pricePerGram('silver', currency.value))
   const nisabValue = computed(() =>
-    nisabMethod.value === 'gold'
-      ? GOLD_NISAB_G * goldLocal.value
-      : SILVER_NISAB_G * silverLocal.value,
+    nisabFor(nisabMethod.value, {
+      goldPerGram: goldLocal.value,
+      silverPerGram: silverLocal.value,
+    }),
   )
 
   function fmt(n) {
@@ -54,52 +88,31 @@ export const useZakatStore = defineStore('zakat', () => {
     location.value = loc
   }
 
-  async function fetchFX() {
-    try {
-      const r = await fetch('https://api.frankfurter.app/latest?from=USD&to=GBP,EUR,SAR')
-      if (!r.ok) {
-        return
-      }
-
-      const d = await r.json()
-      FX.value.GBP = d.rates.GBP || 0.773
-      FX.value.EUR = d.rates.EUR || 0.922
-      FX.value.SAR = d.rates.SAR || 3.75
-    } catch {
-      // use fallback values already set
-    }
-  }
-
   async function fetchPrices() {
     if (pricesLoading.value) {
       return
     }
 
     pricesLoading.value = true
-    try {
-      const r = await fetch('https://api.metals.live/v1/spot/gold,silver')
-      if (!r.ok) {
-        throw new Error('prices fetch failed')
-      }
+    for (const url of PRICE_SOURCES) {
+      try {
+        const prices = await fetchFrom(url)
+        if (!prices.usdPerOunce) {
+          continue
+        }
 
-      const d = await r.json()
-      const gU = d.find?.((x) => x.gold)?.gold || (Array.isArray(d) && d[0]?.gold)
-      const sU = d.find?.((x) => x.silver)?.silver || (Array.isArray(d) && d[1]?.silver)
-      if (gU && sU) {
-        await fetchFX()
-        goldGBP.value = (gU / 31.1035) * FX.value.GBP
-        silverGBP.value = (sU / 31.1035) * FX.value.GBP
-        pricesLive.value = true
-        pricesLoading.value = false
-        return
+        usdPerOunce.value = prices.usdPerOunce
+        metalsFetched.value = true
+        pricesDate.value = prices.date
+        if (prices.rates) {
+          rates.value = prices.rates
+          ratesFetched.value = true
+        }
+        break
+      } catch {
+        // try the next source; the values already held stay in use
       }
-    } catch {
-      // fall through to defaults
     }
-    await fetchFX()
-    goldGBP.value = 113.42
-    silverGBP.value = 1.07
-    pricesLive.value = false
     pricesLoading.value = false
   }
 
@@ -141,16 +154,18 @@ export const useZakatStore = defineStore('zakat', () => {
   return {
     currency,
     sym,
-    FX,
-    goldGBP,
-    silverGBP,
-    pricesLive,
+    usdPerOunce,
+    rates,
+    metalsFetched,
+    ratesFetched,
+    pricesDate,
     pricesLoading,
     nisabMethod,
     location,
     locationError,
     GOLD_NISAB_G,
     SILVER_NISAB_G,
+    pricePerGram,
     goldLocal,
     silverLocal,
     nisabValue,
@@ -158,7 +173,6 @@ export const useZakatStore = defineStore('zakat', () => {
     setCurrency,
     setNisabMethod,
     setLocation,
-    fetchFX,
     fetchPrices,
     requestLocation,
   }

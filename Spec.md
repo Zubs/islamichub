@@ -85,7 +85,7 @@ src/
   components/           SiteNav, SiteFooter, QuranBlock, FaqList, GeoPattern, ZakatAccordion, adhkar/AdhkarCard
   stores/               zakat, adhkar, tasbih
   composables/          useSeo, useScrollReveal, useHadithApi
-  utils/                prayer, qibla, hijri, inheritance, day, storage (pure functions, no Vue imports)
+  utils/                prayer, qibla, hijri, inheritance, zakat, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
 public/                 robots.txt, sitemap.xml, favicons, service-worker.js (retires the old app's worker)
@@ -216,9 +216,16 @@ The page shows a line-by-line breakdown, whether Zakat is obligatory and progres
 
 **Currencies:** GBP (default), USD, EUR, SAR. Amounts are formatted to two decimals with the currency symbol.
 
-**Prices:** `stores/zakat.js` fetches gold and silver spot prices (USD per troy ounce) from metals.live and FX rates
-from frankfurter.app, converting to a per-gram price. If the price fetch fails, fallback values are used (gold
-£113.42/g, silver £1.07/g) and `pricesLive` is `false`; the UI must make clear when prices are not live.
+**Prices:** `stores/zakat.js` fetches one daily dataset that holds gold, silver and the exchange rates on a US dollar
+base. Metal prices are kept in dollars per troy ounce and rates as units per dollar, and `pricePerGram(metal, currency)`
+is the only conversion: dollars per ounce ÷ 31.1035 × the currency's rate. The dataset is tried at jsDelivr and then at
+its mirror, each with a six-second limit. A price or rate is used only if it is a positive number; rates are used only
+when all four are valid. Otherwise the built-in reference values are used (gold $4,186.27 and silver $60.83 per ounce,
+GBP 0.7555, EUR 0.8928, SAR 3.75, dated 12 October 2026). Metals and rates are flagged separately (`metalsFetched`,
+`ratesFetched`), and the page states which are in use and the date the prices are from.
+
+The arithmetic lives in `utils/zakat.js` (`calculateZakat`, `nisabFor`, `perGram`, `parsePrices`). Net wealth is
+compared with the nisab to the penny.
 
 Nothing entered into the calculator is persisted or transmitted.
 
@@ -363,8 +370,8 @@ Rules:
 
 | Service                         | Used for                         | On failure                                  |
 |---------------------------------|----------------------------------|---------------------------------------------|
-| `api.metals.live`               | Gold and silver spot prices      | Fallback prices; flagged as not live        |
-| `api.frankfurter.app`           | FX rates                         | Built-in fallback rates                     |
+| `cdn.jsdelivr.net`              | Daily gold, silver and FX rates (currency-api dataset) | Tries the mirror, then reference prices; flagged |
+| `latest.currency-api.pages.dev` | Mirror of the same dataset       | Reference prices; flagged as not current    |
 | `nominatim.openstreetmap.org`   | Reverse geocoding a place name   | Shows "Your location"                       |
 | `hadithapi.com`                 | Books, chapters, hadiths         | Error state in the view                     |
 | Google Fonts                    | Amiri, Cormorant Garamond, DM Sans | System font fallbacks                     |
@@ -441,14 +448,8 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Correctness
 
-- **Neither price service works, so the Zakat calculator always uses its built-in fallback prices.**
-  `api.metals.live` no longer answers (its TLS handshake fails). `api.frankfurter.app` now redirects to
-  `api.frankfurter.dev`, and the redirect carries no CORS header, so the browser blocks it; the new address is not in
-  the content security policy either, and its reply no longer includes SAR. Because prices are fetched when the app
-  starts, every page logs a CORS error to the console. Found on 12 October 2026.
-- **Zakat FX rates mix two bases.** The store's initial `FX` table is relative to GBP, but `fetchFX` overwrites GBP,
-  EUR, and SAR with USD-based rates while leaving `USD` at its GBP-based value. After a successful fetch, selecting GBP
-  multiplies prices by roughly 0.77 instead of 1.
+- **Zakat prices are daily, and the built-in reference prices age.** Prices come from one dataset maintained by one
+  person. If it is unavailable the calculator falls back to reference prices dated 12 October 2026, and says so.
 - **Inheritance engine departs from the table in 5.9.**
   - A sister is blocked outright by a brother and receives nothing, instead of sharing the residue 2:1.
   - A granddaughter is blocked by a single daughter, so her 1/6 share is unreachable.
