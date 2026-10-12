@@ -14,9 +14,14 @@ All notable changes to IslamicHub are documented here.
 - **Lint and format pass across the project** — Fixed the seven existing lint errors (unused variables and parameters) and formatted every file in `src/` with Prettier. No change to any calculation.
 - **README and contribution guide rewritten** — Both now describe the Vue and Vite project: setup, scripts, the folder layout, how to add a page or content, the content rules and the pull request steps. An automated check fails if either names a command, file or folder that does not exist. The old copy of the guide published at `/CONTRIBUTING.md` is removed.
 
+### Removed
+- **Leftovers from the old app** — The broken web manifest (its icons did not exist), the stale copy of this changelog published at `/CHANGELOG.md`, a console line that logged the length of the hadith API key, an undeployed redirects file, and three unused development dependencies. A proper manifest returns with offline support.
+
 ### Fixed
 - **"No chapters match" never showed** *(Hadith book page)* — The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.
 - **The day now changes at your own midnight** *(Adhkar and Tasbih)* — Completions, streaks and daily totals were filed by the UTC date, so the day turned over at 1am in Lagos and in the evening in New York. They now follow the device's local date. Entries made before this change keep the date they were saved under, so a streak may shift by one day, once.
+- **Visitors stuck on the old version are moved to the current site** — The old app registered a service worker between 26 May and 5 June 2026 that kept serving its own cached pages, and the site gave browsers no way to replace it. A small replacement worker now clears those caches and removes itself on the visitor's next visit, and the page reloads once.
+- **Repository links** — Links to the source, the issues page and the contribution guide now use the repository's current address.
 - **Unreadable saved data no longer breaks the page** *(Adhkar and Tasbih)* — Saved data of an unexpected kind is now read as empty instead of causing an error.
 
 ---

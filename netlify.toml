@@ -45,6 +45,11 @@ for = "/robots.txt"
 Cache-Control = "public, max-age=86400"
 
 [[headers]]
+for = "/service-worker.js"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
 for = "/site.webmanifest"
 [headers.values]
 Cache-Control = "public, max-age=86400"

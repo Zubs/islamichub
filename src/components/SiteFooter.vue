@@ -125,7 +125,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 
-const GITHUB_REPO = 'https://github.com/Zubs/pillarsofislam'
+const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
 const pillars = [
   { to: '/faith', label: 'Faith (Shahada)' },

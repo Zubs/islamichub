@@ -109,7 +109,7 @@ import GeoPattern from '@/components/GeoPattern.vue'
 useSeo('changelog')
 useScrollReveal()
 
-const GITHUB_REPO = 'https://github.com/Zubs/pillarsofislam'
+const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
 const releases = [
   {
@@ -187,6 +187,16 @@ const releases = [
             title: '"No chapters match" never showed',
             scope: 'Hadith book page',
             desc: 'The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.',
+          },
+          {
+            title: 'Visitors stuck on the old version are moved to the current site',
+            scope: 'Whole site',
+            desc: 'The old app registered a service worker between 26 May and 5 June 2026 that kept serving its own cached pages, and the site gave browsers no way to replace it. A small replacement worker now clears those caches and removes itself on the next visit, and the page reloads once.',
+          },
+          {
+            title: 'Leftovers from the old app removed',
+            scope: 'Housekeeping',
+            desc: 'The broken web manifest, a stale published copy of this changelog, a console line that logged the length of the hadith API key, and three unused development dependencies are gone. Repository links now use the current address.',
           },
           {
             title: 'The day now changes at your own midnight',

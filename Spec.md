@@ -88,7 +88,7 @@ src/
   utils/                prayer, qibla, hijri, inheritance, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
-public/                 robots.txt, sitemap.xml, site.webmanifest, favicons
+public/                 robots.txt, sitemap.xml, favicons, service-worker.js (retires the old app's worker)
 netlify.toml            Build, SPA redirect, security and cache headers
 ```
 
@@ -430,8 +430,8 @@ deploy.
 - **Security headers:** `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, strict referrer policy, a
   permissions policy allowing only same-origin geolocation, and a CSP restricting scripts to self and connections to
   the services in section 7.
-- **Caching:** hashed `/assets/*` are immutable for a year; `index.html` is never cached; sitemap, robots, and
-  manifest for a day; favicons for a week.
+- **Caching:** hashed `/assets/*` are immutable for a year; `index.html` and `service-worker.js` are never cached;
+  sitemap and robots for a day; favicons for a week.
 
 ---
 
@@ -441,6 +441,11 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Correctness
 
+- **Neither price service works, so the Zakat calculator always uses its built-in fallback prices.**
+  `api.metals.live` no longer answers (its TLS handshake fails). `api.frankfurter.app` now redirects to
+  `api.frankfurter.dev`, and the redirect carries no CORS header, so the browser blocks it; the new address is not in
+  the content security policy either, and its reply no longer includes SAR. Because prices are fetched when the app
+  starts, every page logs a CORS error to the console. Found on 12 October 2026.
 - **Zakat FX rates mix two bases.** The store's initial `FX` table is relative to GBP, but `fetchFX` overwrites GBP,
   EUR, and SAR with USD-based rates while leaving `USD` at its GBP-based value. After a successful fetch, selecting GBP
   multiplies prices by roughly 0.77 instead of 1.
@@ -461,18 +466,13 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Housekeeping
 
-- **The site's repository links use the old name.** `GITHUB_REPO` in `SiteNav.vue`, `SiteFooter.vue`, `AboutView.vue`
-  and `ChangelogView.vue` points to `Zubs/pillarsofislam`, which redirects to `Zubs/islamichub`.
-- **`public/CHANGELOG.md` is a stale published copy** of the root changelog, served at `/CHANGELOG.md`.
-- **`service-worker.js` is stale and unregistered.** It precaches paths from the old app and nothing registers it, so
-  there is currently no offline support.
-- **`site.webmanifest`** shortcuts use hash URLs (`/#/prayer`), and it references icon files that are not in
-  `public/` (only `favicon.ico` and `favicon.svg` exist).
-- **Root `_redirects` is not deployed** (it is outside `public/`) and duplicates the rule in `netlify.toml`.
-- **`fetchBooks` logs the API key length** to the console.
+- **There is no web manifest and no offline support.** The old manifest pointed to icons that did not exist and was
+  removed. `public/service-worker.js` exists only to retire the old app's worker in returning visitors' browsers: it
+  clears their caches, unregisters itself and caches nothing. It must stay until a real worker is served from the same
+  address.
 - **The hadith API key ships in the client bundle.** Keeping it secret needs a server-side proxy, which is the most immediate
   reason to add a backend.
-- **`adhkar-session-progress`** is declared as a storage key but never used; in-progress counts are lost on reload.
+- **In-progress adhkar counts are lost on reload.** They are held in memory only.
 - **The loading screen blocks every entry route** for at least 2 seconds on the price fetch, including pages that do
   not use prices.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih

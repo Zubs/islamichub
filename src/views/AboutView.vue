@@ -346,7 +346,7 @@ import GeoPattern from '@/components/GeoPattern.vue'
 useSeo('about')
 useScrollReveal()
 
-const GITHUB_REPO = 'https://github.com/Zubs/pillarsofislam'
+const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
 const builders = [
   {
