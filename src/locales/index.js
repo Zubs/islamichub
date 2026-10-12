@@ -1,5 +1,6 @@
 import en from './en.js'
 import yo from './yo.js'
+import ha from './ha.js'
 
 const NOTO_FONTS = {
   sans: "'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -27,6 +28,18 @@ export const LOCALES = [
     fonts: NOTO_FONTS,
     // Proposed, not yet confirmed.
     quran: { translator: 'Shaykh Abu Rahimah Mikael Aykyuni', edition: 'QuranEnc, Yoruba' },
+  },
+  {
+    code: 'ha',
+    name: 'Hausa',
+    intl: 'ha-NG',
+    dir: 'ltr',
+    complete: false,
+    messages: ha,
+    // None of the site's typefaces has ɓ, ɗ, ƙ or ƴ; Noto Sans and Noto Serif hold all of them.
+    fonts: NOTO_FONTS,
+    // Proposed, not yet confirmed.
+    quran: { translator: 'Abubakar Mahmoud Gumi', edition: 'Tanzil, Hausa' },
   },
 ]
 

@@ -232,6 +232,11 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: 'Groundwork for Hausa',
+            scope: 'Languages',
+            desc: 'Hausa is now a registered language of the site, waiting for its translation, and stays hidden until it is translated and reviewed. Search will find Hausa words whether or not the hooked letters are typed.',
+          },
+          {
             title: 'Groundwork for Yoruba',
             scope: 'Languages',
             desc: "Yoruba is now a registered language of the site, waiting for its translation. It stays hidden until every part is translated and reviewed. The site's body typeface cannot draw Yoruba's under-dotted letters, so Yoruba will be shown in typefaces that can.",

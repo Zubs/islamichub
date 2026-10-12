@@ -852,6 +852,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Every translated page of religious content is checked by a named reviewer before it goes live. The person building this feature asks Zubair for the reviewer's name and does not invent or assume one.
 - Hausa is added with files only. If a component has to change to make room for it, the gap is fixed in feature 25 or 26, not worked around here.
 - Hausa appears in the switcher only when the interface and the five pillar pages are complete.
+- Built so far, without the translation itself: Hausa is registered at `/ha/` with an empty message file and is not offered; it uses Noto Sans and Noto Serif, because none of the site's typefaces has ɓ, ɗ, ƙ or ƴ (checked against the font files); search folds hooked letters to plain ones. Everything else comes unchanged from feature 27, and no component was edited to add the language.
+- Not built: the Hausa translation of the interface and the pages. It needs a Hausa speaker and the named reviewer; see Final. The feature stays unticked.
 
 **Tests**
 - Before the translation is complete, Hausa is not in the switcher and `/ha/` addresses show the 404 page.
@@ -1091,6 +1093,8 @@ Tests are written in plain English and ordered the same way under every feature:
 | 31 | 27 | Who translates the site into Yoruba, and who reviews it? | Nobody yet. I did not write a Yoruba translation: religious text needs a Yoruba speaker and the named reviewer the project requires. Everything else is in place, so the work left is filling `src/locales/yo.js` (about 460 messages) and a `yo.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer. If you want a machine-drafted starting point for them to correct, say so and I will produce one, clearly marked as a draft |
 | 32 | 27 | Which published Yoruba translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Shaykh Abu Rahimah Mikael Aykyuni's translation, as published by QuranEnc | Change `quran` in the Yoruba entry of `src/locales/index.js` |
 | 33 | 27 | Which typefaces does Yoruba use? | Noto Sans for text and Noto Serif for headings, because DM Sans has no ẹ, ọ or ṣ (checked against the font files). They load from Google Fonts only when Yoruba is read | Change `fonts` in the Yoruba entry; any replacement must hold ẹ ọ ṣ and the tone marks |
+| 34 | 28 | Who translates the site into Hausa, and who reviews it? | Nobody yet, for the same reason as Yoruba. The work left is filling `src/locales/ha.js` and a `ha.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer; a machine-drafted starting point can be produced on request |
+| 35 | 28 | Which published Hausa translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Abubakar Mahmoud Gumi's translation, as published by Tanzil | Change `quran` in the Hausa entry of `src/locales/index.js` |
 
 **Checks only Zubair can do**
 
@@ -1114,6 +1118,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 16 | 24 | Run `node scripts/make-vapid-keys.js` and set `VITE_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT` in Netlify. Confirm the scheduled function `push-send` shows as running every minute and that Netlify Blobs is available on your plan |
 | 17 | 24 | On a real Android phone and an installed iPhone app, with the app fully closed, confirm a reminder arrives within two minutes of Maghrib and opens the tracker. Then switch push off and confirm the record is gone from the `push-subscriptions` store. Then tick feature 24 |
 | 18 | 27 | Once Yoruba text exists: on a real Android phone and a real iPhone, confirm letters with tone marks and under-dots (for example ẹ̀, ọ́, ṣ) display as single, correctly formed letters in headings, body text and buttons |
+| 19 | 28 | Once Hausa text exists: on a real Android phone and a real iPhone, confirm the hooked letters ɓ, ɗ, ƙ and ƴ display as single, correctly formed letters in headings, body text and buttons |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

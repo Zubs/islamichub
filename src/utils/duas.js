@@ -1,5 +1,9 @@
+// Hausa's hooked letters do not break down into a plain letter and a mark, so they are mapped.
+const HOOKED_LETTERS = { ɓ: 'b', Ɓ: 'b', ɗ: 'd', Ɗ: 'd', ƙ: 'k', Ƙ: 'k', ƴ: 'y', Ƴ: 'y' }
+
 export function foldText(text) {
   return String(text ?? '')
+    .replace(/[ɓƁɗƊƙƘƴƳ]/g, (letter) => HOOKED_LETTERS[letter])
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/[ʿʾ'’`-]/g, '')

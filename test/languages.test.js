@@ -289,6 +289,176 @@ describe('a complete Yoruba', () => {
   })
 })
 
+describe('Hausa before its translation is complete', () => {
+  it('is registered, and not ready', () => {
+    expect(LOCALES.find((locale) => locale.code === 'ha')).toMatchObject({
+      name: 'Hausa',
+      dir: 'ltr',
+      complete: false,
+    })
+    expect(availableLocales.value.map((locale) => locale.code)).toEqual(['en'])
+  })
+
+  it.each(['/ha', '/ha/faith', '/ha/zakat'])('shows the 404 page at %s', async (path) => {
+    const { router } = await open(path)
+
+    expect(router.currentRoute.value.name).toBe('not-found')
+  })
+})
+
+describe('three languages', () => {
+  const yoruba = LOCALES.find((locale) => locale.code === 'yo')
+  const hausa = LOCALES.find((locale) => locale.code === 'ha')
+
+  beforeEach(async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new TypeError('offline')
+      }),
+    )
+    addLocale({ ...yoruba, complete: true, messages: translated(en, 'yo:') })
+    addLocale({ ...hausa, complete: true, messages: translated(en, 'ha:') })
+    const sources = await pageSources()
+    for (const page of REQUIRED_PAGES) {
+      addTranslation('content', page, 'yo', translatedPage(sources[page], 'yo:'))
+      addTranslation('content', page, 'ha', translatedPage(sources[page], 'ha:'))
+    }
+  })
+
+  afterEach(() => {
+    removeTranslations()
+    removeLocale('yo')
+    removeLocale('ha')
+    setLocale('en')
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('offers all three in the switcher', async () => {
+    const { wrapper } = await open('/')
+
+    expect(wrapper.findAll('.language-select option').map((option) => option.text())).toEqual([
+      'English',
+      'Yorùbá',
+      'Hausa',
+    ])
+  })
+
+  it('keeps the reader on the same page when switching between any two', async () => {
+    const { wrapper, router } = await open('/fasting')
+    const visited = []
+    for (const code of ['ha', 'yo', 'en', 'yo', 'ha', 'en']) {
+      await wrapper.find('.language-select').setValue(code)
+      await vi.dynamicImportSettled()
+      await flushPromises()
+      visited.push(router.currentRoute.value.fullPath)
+    }
+
+    expect(visited).toEqual([
+      '/ha/fasting',
+      '/yo/fasting',
+      '/fasting',
+      '/yo/fasting',
+      '/ha/fasting',
+      '/fasting',
+    ])
+  })
+
+  it.each(REQUIRED_PAGES)(
+    'opens the %s page in Hausa with nothing in English or Yoruba',
+    async (page) => {
+      const { wrapper } = await open(`/ha/${page}`)
+
+      expect(wrapper.find('h1').text()).toMatch(/^ha:/)
+      expect(wrapper.find('.untranslated-note').exists()).toBe(false)
+      expect(wrapper.find('main').text()).not.toContain('yo:')
+      expect(document.documentElement.lang).toBe('ha')
+    },
+  )
+
+  it("uses typefaces that hold Hausa's hooked letters", async () => {
+    await open('/ha/prayer')
+
+    expect(document.documentElement.style.getPropertyValue('--sans')).toContain('Noto Sans')
+    expect(document.head.querySelectorAll('link[data-language-fonts]')).toHaveLength(1)
+  })
+
+  it('gives the same Zakat numbers in all three languages', async () => {
+    const due = async (path) => {
+      const { wrapper } = await open(path)
+      await wrapper.find('input[placeholder="0.00"]').setValue(4000000)
+      const amount = wrapper.find('.rb-amount').text().replace(/[^\d]/g, '')
+      wrapper.unmount()
+      return amount
+    }
+
+    const english = await due('/zakat')
+
+    expect(await due('/yo/zakat')).toBe(english)
+    expect(await due('/ha/zakat')).toBe(english)
+  })
+
+  it('credits both Qur’an translations on the About page', async () => {
+    const { wrapper } = await open('/ha/about')
+    const credits = wrapper.find('[data-test="quran-credits"]').text()
+
+    expect(credits).toContain(yoruba.quran.translator)
+    expect(credits).toContain(hausa.quran.translator)
+  })
+
+  it('brings a browser set to Hausa to the home page in Hausa, where Zakat can be worked out in naira', async () => {
+    vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['ha-NG', 'ha', 'en'])
+    const { wrapper, router } = await open('/')
+    expect(router.currentRoute.value.fullPath).toBe('/ha')
+
+    await router.push('/zakat')
+    await vi.dynamicImportSettled()
+    await flushPromises()
+    expect(router.currentRoute.value.fullPath).toBe('/ha/zakat')
+    await wrapper
+      .findAll('.pill-btn')
+      .find((button) => button.text().includes('NGN'))
+      .trigger('click')
+    await wrapper.find('#typed-gold').setValue('150000')
+    await wrapper.find('input[placeholder="0.00"]').setValue(20000000)
+
+    expect(
+      wrapper
+        .find('.rb-amount')
+        .text()
+        .replace(/[^\d₦]/g, ''),
+    ).toBe('₦50000000')
+  })
+})
+
+describe('search without hooked letters', () => {
+  const duas = [
+    {
+      id: 'h',
+      title: 'Shiga ƙofa',
+      when: '',
+      translation: 'Ɗan Adam',
+      transliteration: '',
+      situations: ['home'],
+    },
+  ]
+  const situations = [{ slug: 'home', name: 'Gida' }]
+
+  it('folds hooked letters to plain ones', () => {
+    expect(foldText('ƙofa')).toBe('kofa')
+    expect(foldText('Ɗan Adam')).toBe('dan adam')
+    expect(foldText('ɓaure ƴaƴa')).toBe('baure yaya')
+  })
+
+  it.each(['kofa', 'ƙofa', 'dan adam', 'ɗan adam', 'ƘOFA'])(
+    'finds the dua when searching %s',
+    (query) => {
+      expect(searchDuas(query, duas, situations).map((dua) => dua.id)).toEqual(['h'])
+    },
+  )
+})
+
 describe('search without tone marks', () => {
   const duas = [
     {
