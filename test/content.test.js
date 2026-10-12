@@ -19,7 +19,14 @@ import { mountPage } from './mountPage.js'
 import { hardCodedText } from './templateText.js'
 
 const ROOT = process.cwd()
-const TESTISH = { code: 'xx', name: 'Testish', intl: 'en-GB', dir: 'ltr', complete: true, messages: {} }
+const TESTISH = {
+  code: 'xx',
+  name: 'Testish',
+  intl: 'en-GB',
+  dir: 'ltr',
+  complete: true,
+  messages: {},
+}
 const CONTENT_VIEWS = {
   home: 'src/views/HomeView.vue',
   faith: 'src/views/pillar/FaithView.vue',
@@ -79,8 +86,13 @@ describe('content helpers', () => {
     expect(sectionsOf(source)).toEqual(['intro'])
   })
 
-  it("gives a data item its translated text by id and leaves the rest alone", () => {
-    const item = { id: 'farewell', arabic: 'أَسْتَوْدِعُ', translation: 'I entrust', reference: 'Al-Tirmidhi 3443' }
+  it('gives a data item its translated text by id and leaves the rest alone', () => {
+    const item = {
+      id: 'farewell',
+      arabic: 'أَسْتَوْدِعُ',
+      translation: 'I entrust',
+      reference: 'Al-Tirmidhi 3443',
+    }
 
     expect(localizeItem(item, { farewell: { translation: 'Je confie' } })).toEqual({
       ...item,
@@ -175,7 +187,9 @@ describe('a page in a second language', () => {
     expect(wrapper.text()).toContain(faith.theTwoClauses.understandingEachPart)
     expect(noted.length).toBe(eyebrows.length - 1)
     expect(noted[0].text()).toBe('Not yet translated')
-    expect(eyebrows[0].element.nextElementSibling?.classList.contains('untranslated-note')).toBe(false)
+    expect(eyebrows[0].element.nextElementSibling?.classList.contains('untranslated-note')).toBe(
+      false,
+    )
   })
 
   it('shows a text missing inside a translated section in English, never a blank or a key', async () => {
@@ -256,7 +270,9 @@ describe('a page in a second language', () => {
     addTranslation('translations', 'adhkar', 'xx', {
       'ayat-al-kursi': { translation: 'Traduction du verset du Trône.' },
     })
-    addTranslation('translations', 'adhkarCategories', 'xx', { morning: { name: 'Adhkar du matin' } })
+    addTranslation('translations', 'adhkarCategories', 'xx', {
+      morning: { name: 'Adhkar du matin' },
+    })
 
     const { wrapper } = await open('/xx/adhkar/morning')
 

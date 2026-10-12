@@ -113,6 +113,15 @@ export default {
     yusuf: 'Yusuf',
     disclaimerIslamichubIsAnEducationalAnd:
       'Disclaimer: IslamicHub is an educational and guidance tool — not a fatwa or formal religious ruling. Prayer times are calculated astronomically and may differ from local mosque announcements. For personal religious rulings, consult a qualified Islamic scholar (mufti). Built with sincerity for the Muslim community.',
+    pillars: {
+      faith: 'Faith (Shahada)',
+      prayer: 'Prayer (Salah)',
+      zakat: 'Zakat',
+      fasting: 'Fasting (Sawm)',
+      hajj: 'Hajj',
+      hadith: 'Hadith',
+    },
+    onGithub: 'IslamicHub on GitHub',
   },
   siteNav: {
     islamichubHome: 'IslamicHub home',
@@ -833,5 +842,8 @@ export default {
     'not-found': {
       title: 'Page Not Found — IslamicHub',
     },
+  },
+  about: {
+    quranTranslations: "Qur'an translations used:",
   },
 }

@@ -822,6 +822,9 @@ Tests are written in plain English and ordered the same way under every feature:
 - Every translated page of religious content is checked by a named reviewer before it goes live. The person building this feature asks Zubair for the reviewer's name and does not invent or assume one.
 - Yoruba appears in the switcher only when the interface and the five pillar pages are complete.
 - The sitemap lists the Yoruba pages.
+- Built so far, without the translation itself: Yoruba is registered at `/yo/` with an empty message file and is not offered; a test lists everything a language lacks and fails if one is marked complete early; a translated page records its reviewer in its content file; search ignores tone marks and under-dots; the About page credits a language's Qur'an translation; the sitemap must list a complete language's pages.
+- Typefaces were checked against the font files. DM Sans, the body typeface, has no ẹ, ọ or ṣ, so Yoruba uses Noto Sans and Noto Serif, loaded only when Yoruba is read.
+- Not built: the Yoruba translation of the interface and the pages. It needs a Yoruba speaker and the named reviewer; see Final. The feature stays unticked.
 
 **Tests**
 - Before the translation is complete, Yoruba is not in the switcher and `/yo/` addresses show the 404 page.
@@ -1085,6 +1088,9 @@ Tests are written in plain English and ordered the same way under every feature:
 | 28 | 25 | How far does "all interface text" go in feature 25? | The shell, shared components, tools and calculators are moved (about 440 messages), with a test that fails on hard-coded text in them. Long-form writing, text in `data/` and page titles were then moved with feature 26, so both are ticked. Sentences that had inline markup are split into fragments, which a translator may want merged | Merge a split sentence with vue-i18n's `<i18n-t>` where needed |
 | 29 | 25 | Reminders pushed by the server are in English, because the server does not know the reader's language | Left in English | Send the language with the push record (one more stored field) and translate on the server |
 | 30 | 26 | `Features.md` describes content as structured sections drawn by a small set of components. How were the existing pages done? | Each of the ten existing pages keeps its own layout and reads its words from its content file by section and key. Adding a translation is still one file with no component edited, and a test proves every page reads word for word as before. New pages (Eid, Qurbani, Prophets) are written section by section | Rebuild a page on `ContentPage` section components; its layout would have to be redesigned to fit |
+| 31 | 27 | Who translates the site into Yoruba, and who reviews it? | Nobody yet. I did not write a Yoruba translation: religious text needs a Yoruba speaker and the named reviewer the project requires. Everything else is in place, so the work left is filling `src/locales/yo.js` (about 460 messages) and a `yo.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer. If you want a machine-drafted starting point for them to correct, say so and I will produce one, clearly marked as a draft |
+| 32 | 27 | Which published Yoruba translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Shaykh Abu Rahimah Mikael Aykyuni's translation, as published by QuranEnc | Change `quran` in the Yoruba entry of `src/locales/index.js` |
+| 33 | 27 | Which typefaces does Yoruba use? | Noto Sans for text and Noto Serif for headings, because DM Sans has no ẹ, ọ or ṣ (checked against the font files). They load from Google Fonts only when Yoruba is read | Change `fonts` in the Yoruba entry; any replacement must hold ẹ ọ ṣ and the tone marks |
 
 **Checks only Zubair can do**
 
@@ -1107,6 +1113,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 15 | 23 | On a real phone with a saved location: turn on the Asr reminder, leave the app open in the background and confirm a notification arrives within a minute of Asr and opens the tracker when tapped. Then tick feature 23 |
 | 16 | 24 | Run `node scripts/make-vapid-keys.js` and set `VITE_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT` in Netlify. Confirm the scheduled function `push-send` shows as running every minute and that Netlify Blobs is available on your plan |
 | 17 | 24 | On a real Android phone and an installed iPhone app, with the app fully closed, confirm a reminder arrives within two minutes of Maghrib and opens the tracker. Then switch push off and confirm the record is gone from the `push-subscriptions` store. Then tick feature 24 |
+| 18 | 27 | Once Yoruba text exists: on a real Android phone and a real iPhone, confirm letters with tone marks and under-dots (for example ẹ̀, ọ́, ṣ) display as single, correctly formed letters in headings, body text and buttons |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

@@ -595,6 +595,17 @@ Rules:
   (`test/fixtures/pages/`) and fails if a page reads differently. `test/content.test.js` fails if a content page keeps
   writing in its template or a translation holds a section or key English lacks.
 - Still English: the changelog page, and reminders sent by the server.
+- **Languages in the registry.** Yoruba (`yo`, `/yo/`) is registered with an empty message file and `complete: false`,
+  so it is not offered. `languageGaps` lists what a language lacks: untranslated messages; missing sections, keys or
+  list items of the five pillar pages (`REQUIRED_PAGES`); and pages with no reviewer. A translated content file records
+  its reviewer as `meta: { reviewer, reviewed }`. `test/languages.test.js` fails if a language is marked complete with
+  any gap, and `test/sitemap.test.js` fails if a complete language's pages are missing from the sitemap.
+- **Typefaces.** DM Sans cannot draw ẹ, ọ or ṣ, and none of the site's typefaces has Hausa's hooked letters. A
+  registry entry can name `fonts` (`sans`, `serif`, a stylesheet); `setLocale` applies them and loads the stylesheet
+  only while that language is read. Yoruba uses Noto Sans and Noto Serif, whose font files were checked to hold every
+  Yoruba letter and tone mark.
+- A registry entry can name the published Qur'an translation it uses (`quran`); the About page credits it once the
+  language is available.
 
 ---
 

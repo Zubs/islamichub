@@ -4,7 +4,10 @@ const WORD = /[A-Za-z]{2}/
 // The text typed straight into a component's template: text nodes, listed attributes, and
 // phrases in quotes inside expressions. Text read from a message or content file is not found.
 export function hardCodedText(source) {
-  const template = source.slice(source.indexOf('<template>') + 10, source.lastIndexOf('</template>'))
+  const template = source.slice(
+    source.indexOf('<template>') + 10,
+    source.lastIndexOf('</template>'),
+  )
   const found = []
   let position = 0
   let raw = false

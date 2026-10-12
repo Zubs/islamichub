@@ -4,6 +4,7 @@ import { LOCALES } from '@/locales/index.js'
 import { SOURCE_LOCALE } from '@/utils/locale.js'
 
 const CHOICE_KEY = 'locale'
+const FONT_LINK = 'data-language-fonts'
 
 const registered = ref(LOCALES.filter((locale) => locale.complete))
 
@@ -50,6 +51,31 @@ export function setLocale(code) {
   i18n.global.locale.value = locale.code
   document.documentElement.lang = locale.code
   document.documentElement.dir = locale.dir
+  applyFonts(locale.fonts)
+}
+
+// Uses a language's own typefaces where the site's cannot draw its letters, and loads them
+// only while that language is read.
+function applyFonts(fonts) {
+  const style = document.documentElement.style
+  const existing = document.head.querySelector(`link[${FONT_LINK}]`)
+  if (!fonts) {
+    style.removeProperty('--sans')
+    style.removeProperty('--serif')
+    existing?.remove()
+    return
+  }
+
+  style.setProperty('--sans', fonts.sans)
+  style.setProperty('--serif', fonts.serif)
+  if (existing?.href !== fonts.stylesheet) {
+    existing?.remove()
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = fonts.stylesheet
+    link.setAttribute(FONT_LINK, '')
+    document.head.append(link)
+  }
 }
 
 export function rememberedLocale() {

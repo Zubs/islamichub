@@ -78,7 +78,9 @@ describe("clean-up of the old app's worker", () => {
   })
 
   it('waits its turn when there is no old cache', async () => {
-    const { self, dispatch } = runWorker({ cacheNames: ['workbox-precache-v2-https://islamichub.xyz/'] })
+    const { self, dispatch } = runWorker({
+      cacheNames: ['workbox-precache-v2-https://islamichub.xyz/'],
+    })
 
     await dispatch('install')
 

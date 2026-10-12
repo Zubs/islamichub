@@ -70,7 +70,11 @@ function decrypt(body, { keys, auth }) {
     decipher.update(encrypted.subarray(0, encrypted.length - 16)),
     decipher.final(),
   ])
-  return { text: plain.subarray(0, plain.length - 1).toString(), delimiter: plain.at(-1), recordSize }
+  return {
+    text: plain.subarray(0, plain.length - 1).toString(),
+    delimiter: plain.at(-1),
+    recordSize,
+  }
 }
 
 function vapidKeys() {
@@ -236,7 +240,15 @@ describe('validateRecord', () => {
     ['nothing', null],
     ['text', 'hello'],
     ['no subscription', { ...LAGOS }],
-    ['an endpoint that is not https', body({ subscription: { endpoint: 'http://x.y/z', keys: { p256dh: 'a'.repeat(87), auth: 'b'.repeat(22) } } })],
+    [
+      'an endpoint that is not https',
+      body({
+        subscription: {
+          endpoint: 'http://x.y/z',
+          keys: { p256dh: 'a'.repeat(87), auth: 'b'.repeat(22) },
+        },
+      }),
+    ],
     ['no keys', body({ subscription: { endpoint: 'https://push.example/1' } })],
     ['a latitude of 91', body({ lat: 91 })],
     ['a longitude of -181', body({ lng: -181 })],
@@ -260,8 +272,15 @@ describe('remindersDue', () => {
   it('knows the wall-clock time and offset of a device, summer time included', () => {
     const instant = new Date(Date.UTC(2026, 3, 10, 12, 30))
 
-    expect(localTime(instant, 'Africa/Lagos')).toMatchObject({ day: '2026-04-10', minutes: 13 * 60 + 30, offsetHours: 1 })
-    expect(localTime(instant, 'Europe/London')).toMatchObject({ minutes: 13 * 60 + 30, offsetHours: 1 })
+    expect(localTime(instant, 'Africa/Lagos')).toMatchObject({
+      day: '2026-04-10',
+      minutes: 13 * 60 + 30,
+      offsetHours: 1,
+    })
+    expect(localTime(instant, 'Europe/London')).toMatchObject({
+      minutes: 13 * 60 + 30,
+      offsetHours: 1,
+    })
     expect(localTime(new Date(Date.UTC(2026, 0, 10, 12, 30)), 'Europe/London').offsetHours).toBe(0)
     expect(localTime(new Date(Date.UTC(2026, 3, 10, 22, 30)), 'Asia/Tokyo')).toMatchObject({
       day: '2026-04-11',
@@ -306,7 +325,9 @@ describe('remindersDue', () => {
     const sent = { ...lagos, sent: { fajr: '2026-04-10' } }
 
     expect(remindersDue(sent, instantOf(lagos, 'fajr', 1))).toEqual([])
-    expect(remindersDue({ ...lagos, sent: { fajr: '2026-04-09' } }, instantOf(lagos, 'fajr'))).toHaveLength(1)
+    expect(
+      remindersDue({ ...lagos, sent: { fajr: '2026-04-09' } }, instantOf(lagos, 'fajr')),
+    ).toHaveLength(1)
   })
 
   it('times the adhkar reminders twenty minutes after their prayer, opening the adhkar', () => {
@@ -338,7 +359,10 @@ describe('push function', () => {
     const target = device()
     await handlePushRequest(request('POST', body({}, target)), store)
 
-    await handlePushRequest(request('POST', body({ method: 'Karachi', items: { isha: true } }, target)), store)
+    await handlePushRequest(
+      request('POST', body({ method: 'Karachi', items: { isha: true } }, target)),
+      store,
+    )
 
     expect(store.data.size).toBe(1)
     expect([...store.data.values()][0]).toMatchObject({ method: 'Karachi', items: ['isha'] })
@@ -384,7 +408,9 @@ describe('push function', () => {
   it('rejects other methods and a delete with no endpoint', async () => {
     const store = memoryStore()
 
-    expect((await handlePushRequest(new Request('https://islamichub.xyz/api/push'), store)).status).toBe(405)
+    expect(
+      (await handlePushRequest(new Request('https://islamichub.xyz/api/push'), store)).status,
+    ).toBe(405)
     expect((await handlePushRequest(request('DELETE', {}), store)).status).toBe(400)
   })
 })
@@ -434,7 +460,10 @@ describe('scheduled sender', () => {
     const record = fajrOnly()
     const send = vi.fn(async () => ({ ok: true, gone: false }))
 
-    const result = await sendDueReminders(storeWith(record), { send, now: instantOf(record, 'fajr', 10) })
+    const result = await sendDueReminders(storeWith(record), {
+      send,
+      now: instantOf(record, 'fajr', 10),
+    })
 
     expect(result.sent).toBe(0)
     expect(send).not.toHaveBeenCalled()
@@ -445,7 +474,10 @@ describe('scheduled sender', () => {
     const store = memoryStore()
     await handlePushRequest(request('POST', body({ items: { fajr: true } }, target)), store)
     const mwl = [...store.data.values()][0]
-    await handlePushRequest(request('POST', body({ items: { fajr: true }, method: 'ISNA' }, target)), store)
+    await handlePushRequest(
+      request('POST', body({ items: { fajr: true }, method: 'ISNA' }, target)),
+      store,
+    )
     const isna = [...store.data.values()][0]
     const send = vi.fn(async () => ({ ok: true, gone: false }))
 

@@ -67,7 +67,11 @@ describe('withPreview', () => {
   })
 
   it('escapes what it writes into the page', () => {
-    const risky = withPreview(PAGE, { title: 'A "quoted" <b>title</b>', description: 'x & y' }, address)
+    const risky = withPreview(
+      PAGE,
+      { title: 'A "quoted" <b>title</b>', description: 'x & y' },
+      address,
+    )
 
     expect(risky).toContain('A &quot;quoted&quot; &lt;b&gt;title&lt;/b&gt;')
     expect(risky).not.toContain('<b>title</b>')

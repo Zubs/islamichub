@@ -31,12 +31,12 @@
           <div style="display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap">
             <a
               v-for="social in socials"
-              :key="social.label"
+              :key="social.href"
               :href="social.href"
               target="_blank"
               rel="noopener noreferrer"
               class="footer-social-link"
-              :aria-label="social.label"
+              :aria-label="$t(social.labelKey)"
             >
               <span aria-hidden="true" v-if="social.icon !== 'github'">{{ social.icon }}</span>
               <svg
@@ -58,7 +58,9 @@
 
         <div class="footer-col">
           <h4>{{ $t('siteFooter.fivePillars') }}</h4>
-          <RouterLink v-for="p in pillars" :key="p.to" :to="p.to">{{ p.label }}</RouterLink>
+          <RouterLink v-for="p in pillars" :key="p.to" :to="p.to">{{
+            $t('siteFooter.pillars.' + p.key)
+          }}</RouterLink>
         </div>
 
         <div class="footer-col">
@@ -129,12 +131,12 @@ import { RouterLink } from 'vue-router'
 const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
 const pillars = [
-  { to: '/faith', label: 'Faith (Shahada)' },
-  { to: '/prayer', label: 'Prayer (Salah)' },
-  { to: '/zakat', label: 'Zakat' },
-  { to: '/fasting', label: 'Fasting (Sawm)' },
-  { to: '/hajj', label: 'Hajj' },
-  { to: '/hadith', label: 'Hadith' },
+  { to: '/faith', key: 'faith' },
+  { to: '/prayer', key: 'prayer' },
+  { to: '/zakat', key: 'zakat' },
+  { to: '/fasting', key: 'fasting' },
+  { to: '/hajj', key: 'hajj' },
+  { to: '/hadith', key: 'hadith' },
 ]
 
 const socials = [
@@ -142,7 +144,7 @@ const socials = [
     href: GITHUB_REPO,
     icon: 'github',
     text: 'GitHub',
-    label: 'IslamicHub on GitHub',
+    labelKey: 'siteFooter.onGithub',
   },
 ]
 </script>

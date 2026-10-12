@@ -31,8 +31,40 @@ export function mergeList(base, translated) {
   return Array.isArray(translated) ? mergeItem(base, translated) : base
 }
 
+const NOT_SECTIONS = ['lists', 'meta']
+
+// A translated content file may record who checked it: meta: { reviewer: 'Name', reviewed: 'YYYY-MM-DD' }
 export function sectionsOf(content) {
-  return Object.keys(content ?? {}).filter((section) => section !== 'lists')
+  return Object.keys(content ?? {}).filter((section) => !NOT_SECTIONS.includes(section))
+}
+
+// What a translation of a page still lacks: ['section', 'section.key', 'lists.name', 'reviewer']
+export function missingContent(source, translated) {
+  const missing = []
+  for (const section of sectionsOf(source)) {
+    if (!translated?.[section]) {
+      missing.push(section)
+      continue
+    }
+
+    for (const key of Object.keys(source[section])) {
+      if (!translated[section][key]) {
+        missing.push(`${section}.${key}`)
+      }
+    }
+  }
+
+  for (const [name, items] of Object.entries(source.lists ?? {})) {
+    if ((translated?.lists?.[name]?.length ?? 0) < items.length) {
+      missing.push(`lists.${name}`)
+    }
+  }
+
+  if (!translated?.meta?.reviewer) {
+    missing.push('reviewer')
+  }
+
+  return missing
 }
 
 // What a translated content file holds that the source does not: ['section', 'section.key', 'lists.name']

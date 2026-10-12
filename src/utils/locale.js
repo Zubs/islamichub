@@ -49,3 +49,19 @@ export function messageKeys(messages, prefix = '') {
       : [`${prefix}${key}`],
   )
 }
+
+// Everything a language lacks before it can be offered:
+//   ['message siteNav.about', 'page faith: foundation', 'page zakat: reviewer', …]
+// `pages` maps each required page to { source, translated } content.
+export function languageGaps(messages, sourceMessages, pages, missingContent) {
+  const present = new Set(messageKeys(messages))
+  const gaps = messageKeys(sourceMessages)
+    .filter((key) => !present.has(key))
+    .map((key) => `message ${key}`)
+
+  for (const [page, { source, translated }] of Object.entries(pages)) {
+    gaps.push(...missingContent(source, translated).map((gap) => `page ${page}: ${gap}`))
+  }
+
+  return gaps
+}

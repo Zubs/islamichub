@@ -325,6 +325,29 @@
         {{ c('usageStatistics.thisIsAChangeFromOur') }}
       </p>
 
+      <div
+        v-if="quranCredits.length"
+        class="card"
+        style="margin-top: 1rem"
+        data-test="quran-credits"
+      >
+        <p>
+          <strong>{{ $t('about.quranTranslations') }}</strong>
+        </p>
+        <ul
+          style="
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.7;
+            padding-inline-start: 1.2rem;
+          "
+        >
+          <li v-for="locale in quranCredits" :key="locale.code">
+            {{ locale.name }}: {{ locale.quran.translator }} ({{ locale.quran.edition }})
+          </li>
+        </ul>
+      </div>
+
       <div class="divider"></div>
       <span class="eyebrow" id="scholars">{{ c('scholarlySources.scholarlySources') }}</span
       ><UntranslatedNote v-if="untranslated('scholarlySources')" />
@@ -416,8 +439,10 @@ import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import HadithRef from '@/components/HadithRef.vue'
 import StatsOptOut from '@/components/StatsOptOut.vue'
+import { availableLocales } from '@/i18n.js'
 
 const { c, list, untranslated } = useContent('about', content)
+const quranCredits = computed(() => availableLocales.value.filter((locale) => locale.quran))
 
 useSeo('about')
 useScrollReveal()

@@ -232,6 +232,11 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: 'Groundwork for Yoruba',
+            scope: 'Languages',
+            desc: "Yoruba is now a registered language of the site, waiting for its translation. It stays hidden until every part is translated and reviewed. The site's body typeface cannot draw Yoruba's under-dotted letters, so Yoruba will be shown in typefaces that can.",
+          },
+          {
             title: "Every page's writing can now be translated",
             scope: 'Whole site',
             desc: 'The writing on the Faith, Prayer, Zakat, Fasting, Hajj, Articles of Faith, hadith, Inheritance, About and home pages, and the text of the adhkar, duas and daily hadith, now lives in content files, one per page and language. A page can be translated by adding a file. Where a translation is missing, the section is shown in English with a small note. Nothing changes for English readers.',

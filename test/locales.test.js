@@ -57,7 +57,9 @@ describe('locale paths', () => {
     expect(localePath('/prayer', 'en')).toBe('/prayer')
     expect(localePath('/prayer', 'yo')).toBe('/yo/prayer')
     expect(localePath('/', 'yo')).toBe('/yo')
-    expect(localePath('/hadith/books/sahih-bukhari/3', 'ha')).toBe('/ha/hadith/books/sahih-bukhari/3')
+    expect(localePath('/hadith/books/sahih-bukhari/3', 'ha')).toBe(
+      '/ha/hadith/books/sahih-bukhari/3',
+    )
   })
 
   it('splits an address into its language and the rest', () => {
@@ -109,10 +111,9 @@ describe('message files', () => {
   }
 
   it('fails a translation holding a key English does not have', () => {
-    expect(unknownKeys({ siteNav: { about: 'x', aboute: 'typo' }, zakta: { currency: 'x' } })).toEqual([
-      'siteNav.aboute',
-      'zakta.currency',
-    ])
+    expect(
+      unknownKeys({ siteNav: { about: 'x', aboute: 'typo' }, zakta: { currency: 'x' } }),
+    ).toEqual(['siteNav.aboute', 'zakta.currency'])
     expect(unknownKeys(TESTISH.messages)).toEqual([])
   })
 
@@ -320,9 +321,9 @@ describe('with a second language', () => {
     setLocale('xx')
 
     expect(formatNumber(1234.5, { minimumFractionDigits: 2 })).toBe('1.234,50')
-    expect(formatDate(new Date(2026, 9, 12), { day: 'numeric', month: 'long', year: 'numeric' })).toBe(
-      '12. Oktober 2026',
-    )
+    expect(
+      formatDate(new Date(2026, 9, 12), { day: 'numeric', month: 'long', year: 'numeric' }),
+    ).toBe('12. Oktober 2026')
   })
 })
 
