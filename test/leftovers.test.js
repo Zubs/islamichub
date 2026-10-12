@@ -15,6 +15,7 @@ const PUBLISHED_FILES = [
   'robots.txt',
   'sitemap.xml',
   'sw-legacy.js',
+  'sw-notifications.js',
 ]
 const OLD_APP_CACHE = 'islamichub-shell-v2'
 

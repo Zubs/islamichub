@@ -50,14 +50,16 @@ import { RouterView, useRouter } from 'vue-router'
 import SiteNav from '@/components/SiteNav.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import AppInstall from '@/components/AppInstall.vue'
+import { startReminders } from '@/composables/useReminders.js'
 
 const showLoading = ref(true)
+const router = useRouter()
 
-useRouter()
-  .isReady()
-  .finally(() => {
-    showLoading.value = false
-  })
+startReminders((path) => router.push(path))
+
+router.isReady().finally(() => {
+  showLoading.value = false
+})
 </script>
 
 <style>

@@ -111,6 +111,7 @@
               Kept on this device only and never sent anywhere.
             </span>
           </div>
+          <ReminderSettings />
         </div>
 
         <!-- Next prayer banner -->
@@ -475,6 +476,7 @@ import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import ReminderSettings from '@/components/ReminderSettings.vue'
 import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'

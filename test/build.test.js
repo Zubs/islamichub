@@ -75,7 +75,7 @@ describe('built site', () => {
 
   it('contains the worker at the old address, its clean-up script and the manifest', () => {
     expect(existsSync(join(dist, 'service-worker.js'))).toBe(true)
-    expect(read('service-worker.js')).toContain('importScripts("/sw-legacy.js")')
+    expect(read('service-worker.js')).toContain('importScripts("/sw-legacy.js","/sw-notifications.js")')
     expect(existsSync(join(dist, 'sw-legacy.js'))).toBe(true)
     expect(existsSync(join(dist, 'manifest.webmanifest'))).toBe(true)
   })

@@ -77,6 +77,11 @@ for = "/sw-legacy.js"
 Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
+for = "/sw-notifications.js"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
 for = "/manifest.webmanifest"
 [headers.values]
 Cache-Control = "public, max-age=86400"

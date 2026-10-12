@@ -692,6 +692,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Tapping a notification opens the tracker for a prayer, or the adhkar category for an adhkar reminder.
 - Choices are stored under `reminder-settings`. Requires a saved location (feature 11).
 - The settings state plainly that these reminders only arrive while the app is open, and point to feature 24 for the rest.
+- Adhkar reminders come 20 minutes after their prayer's time. Turning reminders on for the first time switches the five prayers on.
+- Built, with every automated test passing. The feature stays unticked until the real-phone check listed under Final is done.
 
 **Tests**
 - With reminders off, no permission is requested and nothing is scheduled.
@@ -1063,6 +1065,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 21 | 20 | Where is the user's own first day of Ramadan kept? `Features.md` names one key, `fasting-log` | In a second key, `ramadan-starts`, so the day-by-day log stays simple | Fold it into `fasting-log` with a migration |
 | 22 | 20 | Which Ramadan does a made-up fast count against? | The most recent Ramadan before the day it was fasted. Fasts owed from an older Ramadan and made up after a newer one are therefore credited to the newer | Let the user choose the year when logging a made-up fast |
 | 23 | 22 | What does the preview image for shared links look like? | The site's mark on its green, 1200×630, drawn by `scripts/make-icons.py` (`public/og-image.png`). It has no text, because the script draws shapes only | Replace `public/og-image.png` with a designed image of the same size |
+| 24 | 23 | How long after Fajr and Asr do the adhkar reminders come? | 20 minutes | Change `ADHKAR_DELAY_MINUTES` in `utils/reminders.js` |
 
 **Checks only Zubair can do**
 
@@ -1082,6 +1085,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 12 | 22 | On a real Android phone and a real iPhone: share the daily hadith and a dua to a WhatsApp chat. Confirm the card is readable, the Arabic is right to left with its letters joined and its marks in place, and the person receiving it can open the link to the same item. Then tick feature 22 |
 | 13 | 22 | After deploying, paste a hadith link, a dua link and a link to an unknown hadith into WhatsApp and confirm the previews (reference as title with the site image; the default preview for the unknown one). The edge function could not be run here |
 | 14 | 22 | Open a shared link on the live site and confirm in GoatCounter that the visit is counted with `whatsapp` as its source and the tag leaves the address bar |
+| 15 | 23 | On a real phone with a saved location: turn on the Asr reminder, leave the app open in the background and confirm a notification arrives within a minute of Asr and opens the tracker when tapped. Then tick feature 23 |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

@@ -88,7 +88,7 @@ src/
   utils/                prayer, qibla, hijri, inheritance, zakat, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
-public/                 robots.txt, sitemap.xml, favicons, app icons, og-image.png, sw-legacy.js (clears the old app's cache)
+public/                 robots.txt, sitemap.xml, favicons, app icons, og-image.png, sw-legacy.js (clears the old app's cache), sw-notifications.js (opens a tapped reminder)
 scripts/                make-icons.py (draws the app icons)
 netlify.toml            Build, SPA redirect, security and cache headers
 ```
@@ -474,6 +474,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `reminder-settings`      | `{ enabled, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar" } }` | reminders store |
 | `fasting-log`            | `{ "YYYY-MM-DD": "fasted" \| "missed" \| "made-up" \| "voluntary" }` | fasting store |
 | `ramadan-starts`         | `{ "<Hijri year>": "YYYY-MM-DD" }`, only dates the user set | fasting store |
 | `salah-log`              | `{ "YYYY-MM-DD": { fajr: "on-time" \| "late" \| "missed", … } }` | salah store |
@@ -516,6 +517,22 @@ Rules:
   page's title and description and adds Open Graph tags, for services that read a link without running scripts. A
   hadith's title is its reference. An address it does not recognise is served unchanged, with the default preview from
   `index.html`. `public/og-image.png` is the preview image, drawn by `scripts/make-icons.py`.
+
+---
+
+## 6c. Reminders
+
+- `ReminderSettings.vue`, in the prayer settings, turns reminders on (off by default) and has a switch for each of the
+  five prayers and for the morning adhkar (20 minutes after Fajr) and evening adhkar (20 minutes after Asr). Turning on
+  asks for notification permission; anything but "granted" turns it off again with a note on allowing it. With no saved
+  location the switch is disabled, and with no notification support the section says so.
+- `stores/reminders.js` keeps the choices under `reminder-settings`. `utils/reminders.js` holds the list and
+  `dueReminders(items, times, now)`, which gives only the switched-on reminders still ahead today.
+- `useReminders.js`, started from `App.vue`, sets one timer per due reminder and one for the next local midnight, and
+  reschedules when the reminder settings or the saved prayer settings change. Notifications are shown through the
+  service worker's registration, or `new Notification` where there is none, and carry the page to open: the tracker for
+  a prayer, the adhkar category for an adhkar reminder. `public/sw-notifications.js` handles the tap.
+- These reminders arrive only while the app is open or in the background; the settings say so.
 
 ---
 

@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Prayer reminders',
+            scope: 'Prayer page',
+            desc: 'With a remembered location you can now turn on reminders for each of the five prayers and for the morning and evening adhkar. A reminder opens the prayer tracker, or the adhkar, when tapped. They are off until you turn them on, and they arrive only while IslamicHub is open or running in the background.',
+          },
+          {
             title: 'Share to WhatsApp',
             scope: 'Hadith, duas and adhkar',
             desc: "Every hadith, dua and dhikr now has a Share button. It makes an image card on your own device, with the Arabic, the translation, the source and the site's address, and opens your phone's share sheet so WhatsApp is one tap away. Where a browser cannot share images you can save the card or send the text. Nothing is uploaded. Shared links now show a proper title and picture when pasted into a chat.",
