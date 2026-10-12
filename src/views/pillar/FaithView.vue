@@ -57,18 +57,17 @@
           <p>
             Pronouncing the Shahada with sincere belief and understanding is the entry point into
             Islam. It is the foundation upon which all other acts of worship stand. A person who
-            dies believing in the Shahada is promised admission to Paradise (Sahih Bukhari 128).
+            dies believing in the Shahada is promised admission to Paradise (<HadithRef
+              text="Sahih Bukhari 128"
+            />).
           </p>
         </div>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Bukhari 128 · Sahih Muslim 26</div>
-        <div class="hadith-text">
-          "Whoever dies knowing that there is no god but Allah will enter Paradise." — The Prophet
-          Muhammad ﷺ (narrated by Uthman ibn Affan RA)
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Bukhari 128 · Sahih Muslim 26">
+        "Whoever dies knowing that there is no god but Allah will enter Paradise." — The Prophet
+        Muhammad ﷺ (narrated by Uthman ibn Affan RA)
+      </HadithBlock>
 
       <div class="divider"></div>
 
@@ -170,7 +169,9 @@
           >
             {{ c.title }}
           </h4>
-          <p style="font-size: 12.5px; color: var(--muted); line-height: 1.5">{{ c.desc }}</p>
+          <p style="font-size: 12.5px; color: var(--muted); line-height: 1.5">
+            <HadithRef :text="c.desc" />
+          </p>
         </div>
       </div>
 
@@ -189,7 +190,7 @@
         arabic="قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ"
         reference="Qur'an 112:1–2"
         translation="Say: He is Allah, [who is] One. Allah, the Eternal Refuge."
-        note="Surah Al-Ikhlas, described by the Prophet ﷺ as equal to one-third of the Qur'an in meaning (Sahih Bukhari 6267)."
+        note="Surah Al-Ikhlas, described by the Prophet ﷺ as equal to one-third of the Qur'an in meaning (Sahih Bukhari 5013)."
       />
 
       <div class="timeline anim-target" style="margin-top: 1.5rem">
@@ -197,7 +198,7 @@
           <div class="tl-marker">{{ t.num }}</div>
           <div class="tl-content">
             <h4>{{ t.title }}</h4>
-            <p>{{ t.desc }}</p>
+            <p><HadithRef :text="t.desc" /></p>
           </div>
         </div>
       </div>
@@ -269,6 +270,8 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 

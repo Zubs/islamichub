@@ -129,13 +129,10 @@
         </div>
       </div>
 
-      <div class="hadith-block anim-target" style="margin-top: 1.5rem">
-        <div class="hadith-source">Imam Abdullah ibn al-Mubarak (d. 181 AH)</div>
-        <div class="hadith-text">
-          "The isnad is part of the religion. Were it not for the isnad, anyone could say whatever
-          they wished."
-        </div>
-      </div>
+      <HadithBlock reference="Imam Abdullah ibn al-Mubarak (d. 181 AH)" style="margin-top: 1.5rem">
+        "The isnad is part of the religion. Were it not for the isnad, anyone could say whatever
+        they wished."
+      </HadithBlock>
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
@@ -176,7 +173,9 @@
           <div style="font-size: 12px; color: var(--gold); font-weight: 500; margin-bottom: 0.3rem">
             {{ t.arabic }}
           </div>
-          <p style="font-size: 13px; color: var(--muted); line-height: 1.55">{{ t.desc }}</p>
+          <p style="font-size: 13px; color: var(--muted); line-height: 1.55">
+            <HadithRef :text="t.desc" />
+          </p>
         </div>
       </div>
 
@@ -204,7 +203,7 @@
           <div class="hgc-arabic" lang="ar">{{ g.arabic }}</div>
           <div class="hgc-body">
             <div class="hgc-title">{{ g.meaning }}</div>
-            <div class="hgc-desc">{{ g.desc }}</div>
+            <div class="hgc-desc"><HadithRef :text="g.desc" /></div>
           </div>
           <div class="hgc-ruling" :style="{ color: g.color }">{{ g.ruling }}</div>
         </div>
@@ -248,7 +247,7 @@
               <div style="font-size: 13.5px; font-weight: 600; margin-bottom: 2px">
                 {{ c.title }}
               </div>
-              <div style="font-size: 12px; color: var(--muted)">{{ c.desc }}</div>
+              <div style="font-size: 12px; color: var(--muted)"><HadithRef :text="c.desc" /></div>
             </div>
           </div>
         </div>
@@ -304,7 +303,9 @@
           >
             {{ s.work }}
           </div>
-          <p style="font-size: 13px; color: var(--muted); line-height: 1.55">{{ s.desc }}</p>
+          <p style="font-size: 13px; color: var(--muted); line-height: 1.55">
+            <HadithRef :text="s.desc" />
+          </p>
         </div>
       </div>
 
@@ -350,7 +351,9 @@
           >
             {{ sci.title }}
           </h4>
-          <p style="font-size: 13px; color: var(--muted); line-height: 1.55">{{ sci.desc }}</p>
+          <p style="font-size: 13px; color: var(--muted); line-height: 1.55">
+            <HadithRef :text="sci.desc" />
+          </p>
         </div>
       </div>
 
@@ -378,6 +381,8 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 

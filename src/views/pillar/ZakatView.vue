@@ -131,7 +131,7 @@
           "
         >
           Gold nisab: Hanafi/Shafi'i/Hanbali/Maliki majority — 85g of 24ct gold &nbsp;·&nbsp; Silver
-          nisab: Some Hanafi scholars — 595g silver (Sahih Bukhari 1454)
+          nisab: Some Hanafi scholars — 595g silver (<HadithRef text="Sahih Bukhari 1454" />)
         </div>
       </div>
 
@@ -148,8 +148,8 @@
             :start-open="true"
           >
             <template #reference
-              ><strong>Qur'an 9:103 · Sahih Bukhari 1454</strong> Cash and bank balances held above
-              Nisab for a full lunar year are zakatable at 2.5%.
+              ><strong>Qur'an 9:103 · <HadithRef text="Sahih Bukhari 1454" /></strong> Cash and bank
+              balances held above Nisab for a full lunar year are zakatable at 2.5%.
             </template>
             <div class="field-grid">
               <div class="field">
@@ -273,8 +273,9 @@
             :total="store.fmt(zakat.metalsTotal)"
           >
             <template #reference
-              ><strong>Qur'an 9:34 · Abu Dawud 1558</strong> Gold and silver are zakatable. Hanafi:
-              worn women's ornaments exempt. Shafi'i/Hanbali/Maliki: all gold zakatable.
+              ><strong>Qur'an 9:34 · <HadithRef text="Abu Dawud 1558" /></strong> Gold and silver
+              are zakatable. Hanafi: worn women's ornaments exempt. Shafi'i/Hanbali/Maliki: all gold
+              zakatable.
             </template>
             <div class="metal-tiles">
               <div class="metal-tile">
@@ -625,7 +626,7 @@
             >
               {{ r.title }}
             </h4>
-            <p style="font-size: 12.5px; color: var(--muted)">{{ r.desc }}</p>
+            <p style="font-size: 12.5px; color: var(--muted)"><HadithRef :text="r.desc" /></p>
           </div>
         </div>
 
@@ -651,6 +652,7 @@ import { useZakatStore } from '@/stores/zakat.js'
 import { calculateZakat, parseCustomPrice } from '@/utils/zakat.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import ZakatAccordion from '@/components/ZakatAccordion.vue'

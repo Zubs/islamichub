@@ -278,6 +278,15 @@ Nothing entered into the calculator is persisted or transmitted.
   marked `noindex`; a failed request shows an error with a retry button. Title and description come from the hadith.
   `utils/hadith.js` holds what this page and the chapter list share (address, copy text, grade badge).
 
+**Citations.** Every hadith reference on the site is written as a collection name and Arabic-edition number and
+rendered through `HadithRef` (inline text) or `HadithBlock` (a quoted hadith with its source line). `utils/hadithRefs.js`
+parses the text: a reference to a collection the library holds becomes a link to its single-hadith page, and anything
+else stays text. `data/hadithNumbering.js` maps cited numbers to library numbers where they differ; Sahih Muslim is
+cited by the 'Abd al-Baqi numbering while the library counts its narrations sequentially, so every Sahih Muslim
+reference has an entry (provisional until confirmed against the library). `test/citations.test.js` opens every page and
+fails on a reference left as plain text; `test/citations.live.test.js`, given `CITATIONS_BASE`, requests every cited
+hadith through the proxy.
+
 Views must handle these non-happy states: no API key configured on the server, request in flight, request failed, and
 offline with nothing saved.
 

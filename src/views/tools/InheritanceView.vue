@@ -70,8 +70,10 @@
               <div class="heir-info">
                 <h4>{{ heir.label }}</h4>
                 <p>
-                  {{ heir.desc }}
-                  <span style="color: var(--gold); font-weight: 500">· {{ heir.quran }}</span>
+                  <HadithRef :text="heir.desc" />
+                  <span style="color: var(--gold); font-weight: 500"
+                    >· <HadithRef :text="heir.quran"
+                  /></span>
                 </p>
               </div>
               <div style="display: flex; align-items: center; gap: 10px">
@@ -105,7 +107,7 @@
             <div v-for="r in results" :key="r.key" class="inh-row">
               <div class="inh-heir">
                 {{ r.label }}<span v-if="r.count > 1"> ×{{ r.count }}</span>
-                <div class="inh-rule">{{ r.rule }}</div>
+                <div class="inh-rule"><HadithRef :text="r.rule" /></div>
               </div>
               <div class="inh-bar-wrap">
                 <div class="inh-bar-fill" :style="{ width: r.percent + '%' }"></div>
@@ -182,14 +184,12 @@
           </p>
         </div>
 
-        <div class="hadith-block anim-target" style="margin: 1.5rem 0">
-          <div class="hadith-source">Sahih Bukhari 6732 · Abu Dawud 2886</div>
-          <div class="hadith-text">
-            "Learn the Fara'id (laws of inheritance) and teach them, for it is half of knowledge,
-            and it will be forgotten. It is the first thing that will be taken away from my nation."
-            — The Prophet Muhammad ﷺ
-          </div>
-        </div>
+        <HadithBlock reference="Sahih Bukhari 6732 · Abu Dawud 2898" style="margin: 1.5rem 0">
+          "Give the Fara'id (the shares of the inheritance that are prescribed in the Qur'an) to
+          those who are entitled to receive it. Then whatever remains, should be given to the
+          closest male relative of the deceased." — The Prophet Muhammad ﷺ (narrated by Ibn Abbas
+          RA)
+        </HadithBlock>
 
         <!-- Fixed shares table -->
         <h3
@@ -279,6 +279,8 @@ import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import { calcInheritance, HEIR_DEFS } from '@/utils/inheritance.js'

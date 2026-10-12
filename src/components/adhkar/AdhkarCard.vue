@@ -2,7 +2,7 @@
   <article class="dhikr-card" :class="{ 'dc-done': isFullyDone }">
     <!-- Reference badge -->
     <div class="dc-top">
-      <span class="dc-ref">{{ dhikr.reference }}</span>
+      <span class="dc-ref"><HadithRef :text="dhikr.reference" /></span>
       <span v-if="isFullyDone" class="dc-done-badge">✓ Done</span>
     </div>
 
@@ -14,10 +14,10 @@
     <div class="dc-translation">{{ dhikr.translation }}</div>
 
     <!-- Optional note (e.g. evening variant wording) -->
-    <div v-if="dhikr.note" class="dc-note">💡 {{ dhikr.note }}</div>
+    <div v-if="dhikr.note" class="dc-note">💡 <HadithRef :text="dhikr.note" /></div>
 
     <!-- Virtue -->
-    <div v-if="dhikr.virtue" class="dc-virtue">{{ dhikr.virtue }}</div>
+    <div v-if="dhikr.virtue" class="dc-virtue"><HadithRef :text="dhikr.virtue" /></div>
 
     <!-- Counter controls -->
     <div class="dc-counters">
@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import HadithRef from '@/components/HadithRef.vue'
 import { computed, reactive } from 'vue'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 

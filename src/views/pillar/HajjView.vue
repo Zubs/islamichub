@@ -57,7 +57,9 @@
             >
               {{ c.title }}
             </h4>
-            <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">{{ c.desc }}</p>
+            <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">
+              <HadithRef :text="c.desc" />
+            </p>
           </div>
         </div>
       </div>
@@ -207,7 +209,7 @@
             </div>
             <div class="tl-content">
               <h4>{{ rite.name }}</h4>
-              <p>{{ rite.desc }}</p>
+              <p><HadithRef :text="rite.desc" /></p>
             </div>
           </div>
         </div>
@@ -261,7 +263,9 @@
           >
             {{ u.title }}
           </div>
-          <div style="font-size: 12.5px; color: var(--muted); line-height: 1.5">{{ u.desc }}</div>
+          <div style="font-size: 12.5px; color: var(--muted); line-height: 1.5">
+            <HadithRef :text="u.desc" />
+          </div>
         </div>
       </div>
 
@@ -295,6 +299,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 
@@ -477,7 +482,7 @@ const faqs = [
   },
   {
     q: 'Can Hajj be performed on behalf of a deceased?',
-    a: 'Yes — proxy Hajj (hajj al-badal) is valid for a deceased person who met the conditions of obligation but died before performing Hajj. Ibn Abbas RA reported a woman asking the Prophet ﷺ about this and he permitted it (Sahih Bukhari 1513).',
+    a: 'Yes — proxy Hajj (hajj al-badal) is valid for a deceased person who met the conditions of obligation but died before performing Hajj. Ibn Abbas RA reported a woman asking the Prophet ﷺ about this and he permitted it (Sahih Bukhari 1852).',
   },
 ]
 

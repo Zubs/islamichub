@@ -38,7 +38,7 @@
           أَنْ تُؤْمِنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ وَالْيَوْمِ الْآخِرِ
           وَتُؤْمِنَ بِالْقَدَرِ خَيْرِهِ وَشَرِّهِ
         </div>
-        <div class="quran-ref">Hadith of Jibril — Sahih Muslim 8</div>
+        <div class="quran-ref">Hadith of Jibril — <HadithRef text="Sahih Muslim 8" /></div>
         <div class="quran-trans">
           "To believe in Allah, His angels, His books, His messengers, the Last Day, and to believe
           in divine decree — both its good and its evil." — The Angel Jibril ﷺ defining Iman when he
@@ -50,10 +50,11 @@
       <div style="margin-top: 2rem" class="prose anim-target">
         <p>
           The six articles of faith (أَركَان الإِيمَان — Arkan al-Iman) are the core doctrinal
-          beliefs of Islam. They are explicitly stated in the Hadith of Jibril (Sahih Muslim 8;
-          Sahih Bukhari 50), where the Angel Jibril appeared in human form and asked the Prophet ﷺ
-          to define Iman (faith). The six articles are also referenced collectively in Qur'an 2:177
-          and 4:136.
+          beliefs of Islam. They are explicitly stated in the Hadith of Jibril (<HadithRef
+            text="Sahih Muslim 8"
+          />; <HadithRef text="Sahih Bukhari 50" />), where the Angel Jibril appeared in human form
+          and asked the Prophet ﷺ to define Iman (faith). The six articles are also referenced
+          collectively in Qur'an 2:177 and 4:136.
         </p>
         <p>
           Holding these beliefs with conviction and understanding is the foundation of a Muslim's
@@ -106,7 +107,7 @@
 
         <!-- Body paragraphs -->
         <div class="prose" style="margin-bottom: 1.25rem">
-          <p v-for="(para, pi) in article.body" :key="pi">{{ para }}</p>
+          <p v-for="(para, pi) in article.body" :key="pi"><HadithRef :text="para" /></p>
         </div>
 
         <!-- Key points -->
@@ -117,7 +118,7 @@
               <div class="aof-point-icon" aria-hidden="true">{{ pt.icon }}</div>
               <div>
                 <div class="aof-point-title">{{ pt.title }}</div>
-                <div class="aof-point-desc">{{ pt.desc }}</div>
+                <div class="aof-point-desc"><HadithRef :text="pt.desc" /></div>
               </div>
             </div>
           </div>
@@ -188,6 +189,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 

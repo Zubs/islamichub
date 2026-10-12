@@ -275,17 +275,14 @@
           time, one must completely abstain from food, drink (including water), smoking, and sexual
           relations. It is also highly important to guard one's tongue, eyes, and behaviour — the
           Prophet ﷺ warned that a person who does not abandon false speech while fasting has no need
-          to abandon food and drink (Sahih Bukhari 1903).
+          to abandon food and drink (<HadithRef text="Sahih Bukhari 1903" />).
         </p>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Bukhari 1904 · Sahih Muslim 1151</div>
-        <div class="hadith-text">
-          "Every deed of the son of Adam is for him except fasting — it is for Me and I shall reward
-          it. Fasting is a shield." — Hadith Qudsi, narrated by Abu Hurayrah RA
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Bukhari 1904 · Sahih Muslim 1151">
+        "Every deed of the son of Adam is for him except fasting — it is for Me and I shall reward
+        it. Fasting is a shield." — Hadith Qudsi, narrated by Abu Hurayrah RA
+      </HadithBlock>
 
       <div class="divider"></div>
 
@@ -373,7 +370,9 @@
             >
               {{ m.title }}
             </h4>
-            <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">{{ m.desc }}</p>
+            <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">
+              <HadithRef :text="m.desc" />
+            </p>
           </div>
         </div>
       </div>
@@ -400,7 +399,7 @@
           <div class="tl-marker">{{ v.icon }}</div>
           <div class="tl-content">
             <h4>{{ v.title }}</h4>
-            <p>{{ v.desc }}</p>
+            <p><HadithRef :text="v.desc" /></p>
           </div>
         </div>
       </div>
@@ -430,6 +429,8 @@ import { useZakatStore } from '@/stores/zakat.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'

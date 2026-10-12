@@ -456,6 +456,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - The site cites Arabic-edition numbers. Where hadithapi.com numbers a hadith differently, a mapping file in `data/` records the right one.
 - Every existing citation is converted: the pillar pages, Articles of Faith, Tasbih, Inheritance and `data/adhkar.js`.
 - Each converted link is checked by hand to confirm it opens the hadith actually quoted.
+- `HadithRef` takes the reference as text ("Sahih Bukhari 1904 · Sahih Muslim 1151") and finds the references in it, so content stays readable where it is written.
+- Sahih Muslim is cited by the 'Abd al-Baqi numbering while the library counts its narrations sequentially, so each Sahih Muslim reference has a mapping entry. The entries were found by matching texts in an open dataset that counts the same way, and are provisional.
+- The automated check against the library is `test/citations.live.test.js`, run with `CITATIONS_BASE` set to a running site.
+- Built, with every automated test passing. The hand check could not be done without a working API key, so the feature stays unticked; see Final.
 
 **Tests**
 - A block with no references shows its text and no empty source line.
@@ -1037,6 +1041,10 @@ Tests are written in plain English and ordered the same way under every feature:
 | 11 | 11 | May location be saved on the device? (Reverses "location is never persisted" in Spec section 6) | Yes, only when the user presses "Remember this location"; kept on the device under `prayer-settings`; removed by "Forget my location". Privacy text updated on the About page and in Spec 6 and 9 | Remove the offer and the store; features 12, 19, 21, 23 and 24 depend on a saved location |
 | 12 | 12 | How are fonts kept for offline use? | Google Fonts stay as they are; the worker keeps the font files a visitor has loaded. Self-hosting them would be more robust offline but adds files to maintain | Self-host the three typefaces and drop the Google Fonts links |
 | 13 | 12 | The content security policy had a mistyped address, `cdn.jsdelivr.ne3t`, which blocked the first Zakat price source on the live site (the mirror was covering for it) | Corrected to `cdn.jsdelivr.net` | None needed; noted so you know prices on the live site were coming from the mirror |
+| 14 | 15 | The Inheritance page quoted "Learn the Fara'id and teach them, for it is half of knowledge…" and attributed it to Sahih Bukhari 6732 and Abu Dawud 2886. Neither holds that text | The quote was replaced with the text of Sahih Bukhari 6732 ("Give the Fara'id to those who are entitled…"), and the second reference corrected to Abu Dawud 2898, which carries the same statement. Both checked against the open fawazahmed0 hadith dataset | Restore the old quote with its true source (it is reported in Ibn Majah, and its chain is disputed); a reviewer should decide |
+| 15 | 15 | Faith page: "equal to one-third of the Qur'an" was cited as Sahih Bukhari 6267, which is a different hadith | Changed to Sahih Bukhari 5013, whose text says exactly this | Reviewer to confirm |
+| 16 | 15 | Hajj page: Hajj on behalf of someone who died was cited as Sahih Bukhari 1513, which is about an elderly father still living | Changed to Sahih Bukhari 1852 (a woman whose mother died before performing Hajj) | Reviewer to confirm |
+| 17 | 15 | Two citations look imprecise and were left as they are: the Faith page quotes 'Uthman's narration (Sahih Muslim 26) and also cites Sahih Bukhari 128, which is a different narration on the same point; and the istighfar dhikr cites Sahih Bukhari 6307 ("more than seventy times a day") with a count of 100 | Left unchanged | A reviewer should decide whether to drop Bukhari 128 from that block and whether the count of 100 should cite Sahih Muslim 2702 instead |
 
 **Checks only Zubair can do**
 
@@ -1051,6 +1059,8 @@ Tests are written in plain English and ordered the same way under every feature:
 | 7 | 13 | Run `npx netlify-cli dev` once locally to confirm the function is picked up and the rewrite in `netlify.toml` reaches it. I could not run the Netlify CLI in this session |
 | 8 | 14 | The key in the local `.env` (`VITE_HADITH_API_KEY`) is rejected by hadithapi.com as invalid, so nothing hadith-related could be checked against live data. Put a working key in `.env` as `HADITH_API_KEY` |
 | 9 | 14 | With a working key, open a hadith from each of the nine collections at `/hadith/books/<book>/hadith/<number>`, paste the address into a new browser and confirm the same hadith shows. Confirm the last hadith of a book has no "next" link (it relies on `hadithCount` in `BOOKS_META`, where Sahih Muslim's count looks copied from Bukhari's). Then tick feature 14 |
+| 10 | 15 | With a working key and `npx netlify-cli dev` running, run `CITATIONS_BASE=http://localhost:8888 npx vitest run test/citations.live.test.js`. It requests every hadith the site cites and fails on any the library does not have |
+| 11 | 15 | Open each cited hadith link (about 40) and confirm it shows the hadith quoted. Pay most attention to the 13 Sahih Muslim links: the library numbers that book differently, and their mapping in `src/data/hadithNumbering.js` was worked out from an open dataset, not from the library itself. Then tick feature 15 |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

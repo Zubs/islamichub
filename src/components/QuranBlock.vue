@@ -12,13 +12,14 @@
     <div class="quran-ref">{{ reference }}</div>
     <div class="quran-trans">
       "{{ translation }}"
-      <template v-if="note"> — {{ note }}</template>
+      <template v-if="note"> — <HadithRef :text="note" /></template>
     </div>
   </div>
 </template>
 
 <script setup>
 import GeoPattern from './GeoPattern.vue'
+import HadithRef from './HadithRef.vue'
 
 defineProps({
   arabic: { type: String, required: true },

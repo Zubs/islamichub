@@ -381,14 +381,11 @@
         </div>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Bukhari 8 · Sahih Muslim 16</div>
-        <div class="hadith-text">
-          "Islam is built on five [pillars]: testifying that there is no god but Allah and that
-          Muhammad is the Messenger of Allah, establishing the prayer, paying the Zakat, making the
-          pilgrimage to the House, and fasting in Ramadan."
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Bukhari 8 · Sahih Muslim 16">
+        "Islam is built on five [pillars]: testifying that there is no god but Allah and that
+        Muhammad is the Messenger of Allah, establishing the prayer, paying the Zakat, making the
+        pilgrimage to the House, and fasting in Ramadan."
+      </HadithBlock>
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
@@ -478,6 +475,7 @@ import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import {

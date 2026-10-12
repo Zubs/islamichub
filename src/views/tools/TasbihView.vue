@@ -116,13 +116,10 @@
         </p>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Muslim 2691</div>
-        <div class="hadith-text">
-          "Whoever says 'Glory be to Allah and praise Him' one hundred times a day will have their
-          sins forgiven, even if they were like the foam of the sea." — The Prophet Muhammad ﷺ
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Muslim 2691">
+        "Whoever says 'Glory be to Allah and praise Him' one hundred times a day will have their
+        sins forgiven, even if they were like the foam of the sea." — The Prophet Muhammad ﷺ
+      </HadithBlock>
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
@@ -143,6 +140,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import { useTasbihStore } from '@/stores/tasbih.js'
 
 useSeo('tasbih')

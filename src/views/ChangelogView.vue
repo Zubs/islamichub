@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Hadith references are now links',
+            scope: 'Whole site',
+            desc: 'Every hadith reference on the site, on the pillar pages, the Articles of Faith, the adhkar, the Tasbih and Inheritance pages, now links to that hadith in the library, so a claim can be checked in one tap.',
+          },
+          {
             title: 'Every hadith has its own page',
             scope: 'Hadith library',
             desc: 'Each hadith can now be opened at its own address, with its Arabic text, translation, narrator, grade, book and chapter, and links to the previous and next hadith. It can be copied or shared, and every hadith in a chapter list links to its page.',
@@ -213,6 +218,11 @@ const releases = [
         icon: '🐛',
         dotColor: '#c0392b',
         entries: [
+          {
+            title: 'Three hadith citations corrected',
+            scope: 'Faith, Hajj and Inheritance pages',
+            desc: "While linking every citation, each was compared with its source. The hadith on Surah al-Ikhlas being a third of the Qur'an is now cited as Sahih Bukhari 5013, and Hajj on behalf of someone who has died as Sahih Bukhari 1852. The Inheritance page quoted a narration that is not in the two collections it named; it now quotes Sahih Bukhari 6732, also found in Abu Dawud 2898.",
+          },
           {
             title: 'No more two-second wait on every page',
             scope: 'Whole site',

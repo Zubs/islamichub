@@ -246,7 +246,9 @@
             >
               {{ p.title }}
             </div>
-            <div style="font-size: 14px; color: var(--muted); line-height: 1.6">{{ p.desc }}</div>
+            <div style="font-size: 14px; color: var(--muted); line-height: 1.6">
+              <HadithRef :text="p.desc" />
+            </div>
           </div>
         </div>
       </div>
@@ -410,6 +412,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import StatsOptOut from '@/components/StatsOptOut.vue'
 
 useSeo('about')

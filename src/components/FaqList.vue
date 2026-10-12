@@ -5,13 +5,14 @@
         {{ faq.q }}
         <span class="faq-chev" :class="{ open: openIndex === i }">+</span>
       </button>
-      <div class="faq-a" :class="{ open: openIndex === i }">{{ faq.a }}</div>
+      <div class="faq-a" :class="{ open: openIndex === i }"><HadithRef :text="faq.a" /></div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import HadithRef from './HadithRef.vue'
 
 defineProps({
   faqs: { type: Array, required: true },

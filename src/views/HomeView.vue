@@ -149,7 +149,7 @@
             <span class="tc-icon" aria-hidden="true">{{ t.icon }}</span>
             <div>
               <div class="tc-name">{{ t.name }}</div>
-              <div class="tc-desc">{{ t.desc }}</div>
+              <div class="tc-desc"><HadithRef :text="t.desc" /></div>
             </div>
           </RouterLink>
         </div>
@@ -216,7 +216,7 @@
                   {{ f.title }}
                 </div>
                 <div style="font-size: 13px; color: var(--muted); line-height: 1.6">
-                  {{ f.desc }}
+                  <HadithRef :text="f.desc" />
                 </div>
               </div>
             </div>
@@ -265,7 +265,7 @@
                 margin-bottom: 1rem;
               "
             >
-              {{ f.desc }}
+              <HadithRef :text="f.desc" />
             </p>
             <RouterLink
               :to="f.to"
@@ -368,6 +368,7 @@ import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import QuranBlock from '@/components/QuranBlock.vue'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'
 
 useSeo('home')
