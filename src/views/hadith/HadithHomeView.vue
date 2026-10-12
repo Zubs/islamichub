@@ -478,7 +478,7 @@ const faqs = computed(() => list('faqs'))
 .hgc-ruling {
   font-size: 11.5px;
   font-weight: 600;
-  text-align: right;
+  text-align: end;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -504,7 +504,7 @@ const faqs = computed(() => list('faqs'))
     grid-template-columns: 1fr 1fr;
   }
   .hgc-ruling {
-    text-align: left;
+    text-align: start;
   }
 }
 @media (max-width: 480px) {

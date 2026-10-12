@@ -300,7 +300,7 @@ code {
 .had-book-count {
   font-size: 12px;
   color: var(--muted);
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* Book grid */
@@ -328,8 +328,7 @@ code {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--gold), var(--green));
   opacity: 0;
@@ -421,7 +420,7 @@ code {
 .hbc-count-label {
   font-size: 11px;
   color: var(--muted);
-  margin-left: 4px;
+  margin-inline-start: 4px;
 }
 .hbc-arrow {
   color: var(--muted);

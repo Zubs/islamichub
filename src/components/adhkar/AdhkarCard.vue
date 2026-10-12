@@ -194,7 +194,7 @@ const isFullyDone = computed(() => {
   font-size: 12.5px;
   color: #7a5a10;
   background: var(--gold-light);
-  border-left: 3px solid var(--gold);
+  border-inline-start: 3px solid var(--gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 8px 11px;
   margin-bottom: 1rem;

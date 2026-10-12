@@ -605,6 +605,13 @@ Rules:
   only while that language is read. Yoruba and Hausa use Noto Sans and Noto Serif, whose font files were checked to
   hold every Yoruba letter and tone mark and Hausa's hooked letters (ɓ, ɗ, ƙ, ƴ). Search folds tone marks, under-dots
   and hooked letters to plain letters (`foldText`).
+- **Right to left.** The document's direction follows the language (`dir` in the registry). Styles use logical
+  properties (`margin-inline-start`, `inset-inline-start`, `text-align: start`), so the layout mirrors in a
+  right-to-left language and is unchanged in a left-to-right one. What must not mirror keeps a physical side, each
+  listed with its reason in `test/rtl.test.js`: Arabic text, the Qibla compass, toggle knobs, centring offsets and the
+  symmetric ornaments. The compass, the tasbih ring and prayer times are always drawn left to right, references are
+  isolated inside right-to-left text, and `flip-rtl` mirrors an icon that points a direction. The test fails if a
+  physical left or right property is added outside the exceptions.
 - A registry entry can name the published Qur'an translation it uses (`quran`); the About page credits it once the
   language is available.
 

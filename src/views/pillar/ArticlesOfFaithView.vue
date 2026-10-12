@@ -332,7 +332,7 @@ const faqs = computed(() => list('faqs'))
 /* ── Verse box ───────────────────────────────────────────────── */
 .aof-verse {
   background: var(--cream-dark);
-  border-left: 3px solid var(--faith-color);
+  border-inline-start: 3px solid var(--faith-color);
   border-radius: 0 var(--radius) var(--radius) 0;
   padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;

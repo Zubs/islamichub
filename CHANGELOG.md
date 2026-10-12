@@ -26,6 +26,7 @@ All notable changes to IslamicHub are documented here.
 - **Licence** — IslamicHub is now licensed under the GNU General Public License, version 3.
 
 ### Changed
+- **Ready for right-to-left languages** *(Layout)* — The site's styles no longer say "left" and "right" but "start" and "end", so the whole layout will mirror by itself for a right-to-left language such as Arabic or Urdu. Arabic verses, the Qibla compass and the tasbih counter stay as they are. Nothing changes in English.
 - **Groundwork for Hausa** *(Languages)* — Hausa is now a registered language of the site, waiting for its translation, and stays hidden until it is translated and reviewed. Search will find Hausa words whether or not the hooked letters are typed.
 - **Groundwork for Yoruba** *(Languages)* — Yoruba is now a registered language of the site, waiting for its translation. It stays hidden until every part is translated and reviewed. The site's body typeface cannot draw Yoruba's under-dotted letters, so Yoruba will be shown in typefaces that can.
 - **Every page's writing can now be translated** *(Whole site)* — The writing on the Faith, Prayer, Zakat, Fasting, Hajj, Articles of Faith, hadith, Inheritance, About and home pages, and the text of the adhkar, duas and daily hadith, now lives in content files, one per page and language. A page can be translated by adding a file. Where a translation is missing, the section is shown in English with a small note. Nothing changes for English readers.

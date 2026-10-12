@@ -232,6 +232,11 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: 'Ready for right-to-left languages',
+            scope: 'Layout',
+            desc: "The site's styles no longer say \"left\" and \"right\" but \"start\" and \"end\", so the whole layout will mirror by itself for a right-to-left language such as Arabic or Urdu. Arabic verses, the Qibla compass and the tasbih counter stay as they are. Nothing changes in English.",
+          },
+          {
             title: 'Groundwork for Hausa',
             scope: 'Languages',
             desc: 'Hausa is now a registered language of the site, waiting for its translation, and stays hidden until it is translated and reviewed. Search will find Hausa words whether or not the hooked letters are typed.',

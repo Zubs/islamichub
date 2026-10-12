@@ -881,6 +881,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - The navigation, cards, accordions, pagination, tables and form fields all mirror.
 - Arabic verse and hadith blocks keep their existing right-to-left rendering in every language.
 - Numbers, the Qibla compass and the tasbih counter are not mirrored.
+- Built: every physical left or right property in the stylesheets, scoped styles and inline styles is now logical, apart from a listed few with reasons (Arabic text, the compass, toggle knobs, centring, symmetric ornaments), and a test keeps it so. Arrows written as text ("Next →") are part of each message, so a right-to-left translation writes its own; `flip-rtl` mirrors icons drawn as images.
+- Not checked: how the pages look in a right-to-left language. No such language is planned yet and no browser was available while building, so the feature stays unticked; see Final.
 
 **Tests**
 - In English, every page looks exactly as it did before this feature.
@@ -1095,6 +1097,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 33 | 27 | Which typefaces does Yoruba use? | Noto Sans for text and Noto Serif for headings, because DM Sans has no ẹ, ọ or ṣ (checked against the font files). They load from Google Fonts only when Yoruba is read | Change `fonts` in the Yoruba entry; any replacement must hold ẹ ọ ṣ and the tone marks |
 | 34 | 28 | Who translates the site into Hausa, and who reviews it? | Nobody yet, for the same reason as Yoruba. The work left is filling `src/locales/ha.js` and a `ha.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer; a machine-drafted starting point can be produced on request |
 | 35 | 28 | Which published Hausa translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Abubakar Mahmoud Gumi's translation, as published by Tanzil | Change `quran` in the Hausa entry of `src/locales/index.js` |
+| 36 | 29 | Which right-to-left language comes first, if any? `Features.md` names Arabic and Urdu as examples but plans neither | None registered. The layout is ready for one | Add the language to `src/locales/index.js` with `dir: 'rtl'` and its translation files |
 
 **Checks only Zubair can do**
 
@@ -1119,6 +1122,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 17 | 24 | On a real Android phone and an installed iPhone app, with the app fully closed, confirm a reminder arrives within two minutes of Maghrib and opens the tracker. Then switch push off and confirm the record is gone from the `push-subscriptions` store. Then tick feature 24 |
 | 18 | 27 | Once Yoruba text exists: on a real Android phone and a real iPhone, confirm letters with tone marks and under-dots (for example ẹ̀, ọ́, ṣ) display as single, correctly formed letters in headings, body text and buttons |
 | 19 | 28 | Once Hausa text exists: on a real Android phone and a real iPhone, confirm the hooked letters ɓ, ɗ, ƙ and ƴ display as single, correctly formed letters in headings, body text and buttons |
+| 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

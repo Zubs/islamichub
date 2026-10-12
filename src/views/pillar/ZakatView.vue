@@ -54,7 +54,7 @@
             </div>
           </div>
           <div>
-            <div class="ctrl-label" style="text-align: right">{{ $t('zakat.nisabMethod') }}</div>
+            <div class="ctrl-label" style="text-align: end">{{ $t('zakat.nisabMethod') }}</div>
             <div class="btn-group">
               <button
                 class="pill-btn"
@@ -94,7 +94,7 @@
               "
               >{{ store.fmt(store.nisabValue) }}</span
             >
-            <span style="font-size: 12px; color: var(--muted); margin-left: 6px">
+            <span style="font-size: 12px; color: var(--muted); margin-inline-start: 6px">
               {{
                 store.nisabMethod === 'gold'
                   ? `85g × ${store.sym}${store.goldLocal.toFixed(2)}/g`
@@ -102,7 +102,7 @@
               }}
             </span>
           </div>
-          <div style="text-align: right">
+          <div style="text-align: end">
             <div class="ctrl-label">{{ $t('zakat.goldPrice') }}</div>
             <span>{{ store.sym }}{{ store.goldLocal.toFixed(2) }}/g</span>
           </div>

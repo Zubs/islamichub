@@ -384,7 +384,7 @@ watch([bookSlug, hadithNumber], load, { immediate: true })
 
 .hv-ref-label {
   font-weight: 600;
-  margin-right: var(--space-1);
+  margin-inline-end: var(--space-1);
 }
 
 .hv-actions {

@@ -212,7 +212,7 @@
           <table style="width: 100%; border-collapse: collapse; font-size: 13.5px">
             <thead>
               <tr style="background: var(--ink); color: #fff">
-                <th style="padding: 10px 14px; text-align: left; font-weight: 600">
+                <th style="padding: 10px 14px; text-align: start; font-weight: 600">
                   {{ c('understandingFaraId.heir') }}
                 </th>
                 <th style="padding: 10px 14px; text-align: center; font-weight: 600">
@@ -221,7 +221,7 @@
                 <th style="padding: 10px 14px; text-align: center; font-weight: 600">
                   {{ c('understandingFaraId.withoutChildren') }}
                 </th>
-                <th style="padding: 10px 14px; text-align: left; font-weight: 600">
+                <th style="padding: 10px 14px; text-align: start; font-weight: 600">
                   {{ c('understandingFaraId.source') }}
                 </th>
               </tr>

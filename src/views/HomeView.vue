@@ -43,7 +43,7 @@
         <div style="display: flex; flex-direction: column; gap: 16px">
           <div
             class="card"
-            style="border-left: 4px solid var(--green)"
+            style="border-inline-start: 4px solid var(--green)"
             :aria-label="c('header.todaySIslamicDate')"
           >
             <div

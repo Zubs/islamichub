@@ -592,7 +592,7 @@ a {
 .hc-ref-label {
   font-weight: 600;
   color: var(--gold);
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 .hc-copy-btn {
   font-size: 12px;

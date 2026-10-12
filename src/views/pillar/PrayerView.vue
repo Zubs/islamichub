@@ -143,7 +143,7 @@
                 {{ nextPrayerLabel }}
               </div>
             </div>
-            <div style="text-align: right">
+            <div style="text-align: end">
               <div
                 style="font-size: 11px; font-weight: 600; color: var(--green); margin-bottom: 3px"
               >
