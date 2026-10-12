@@ -60,16 +60,28 @@ The site is then running at the address Vite prints, normally `http://localhost:
 
 ## Environment
 
-The site reads two variables:
+The site and its server functions read these variables:
 
 | Variable | Read by | Needed for | Notes |
 |---|---|---|---|
 | `HADITH_API_KEY` | The server (`netlify/functions/hadith.js`) | The hadith library | A key from [hadithapi.com](https://hadithapi.com). It stays on the server and is never sent to visitors. |
 | `VITE_STATS_ENDPOINT` | The site | Anonymous usage statistics | Optional — counting is off without it. Set to your GoatCounter counting address (e.g., `https://yourcode.goatcounter.com/count`). |
+| `VITE_VAPID_PUBLIC_KEY` | The site and the server | Push notifications | Optional — the push switch is not offered without it. |
+| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | The server | Push notifications | The private key and a contact address such as `mailto:you@example.com`. |
 
 Copy `.env.example` to `.env` to set them locally.
 
 The site runs without a key. Only the hadith book and chapter pages need one, and they show a "no API key" message until it is set.
+
+### Push notifications
+
+Reminders when the app is closed need a Web Push key pair. Make one and put the three values in `.env` and in the Netlify site settings:
+
+```bash
+node scripts/make-vapid-keys.js
+```
+
+A scheduled function sends the reminders every minute, and each device's opt-in record is kept in Netlify Blobs. Both need the Netlify runtime, so use the Netlify CLI to try them locally.
 
 ### The hadith proxy
 

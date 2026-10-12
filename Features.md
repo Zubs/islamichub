@@ -723,6 +723,11 @@ Tests are written in plain English and ordered the same way under every feature:
 - While push is on, the in-page reminders from feature 23 stay silent, so the user is not notified twice.
 - On iPhone, push only works once the app is installed, and the settings say so.
 - The privacy text on the site and in Spec section 9 states exactly what is stored and how to delete it.
+- Records are kept in Netlify Blobs, keyed by a hash of the push subscription's address. The server rounds the coordinates itself, whatever the device sends.
+- A reminder is sent when it is 0 to 3 minutes past its time and has not been sent that local day.
+- Web Push signing and encryption are written against Node's built-in `crypto`; `@netlify/blobs` is the one package added.
+- The push switch is not offered until `VITE_VAPID_PUBLIC_KEY` is set.
+- Built, with every automated test passing. The feature stays unticked until the keys are set and the real-phone checks listed under Final are done.
 
 **Tests**
 - With push off, no request is sent to the server and nothing is stored there.
@@ -1066,6 +1071,9 @@ Tests are written in plain English and ordered the same way under every feature:
 | 22 | 20 | Which Ramadan does a made-up fast count against? | The most recent Ramadan before the day it was fasted. Fasts owed from an older Ramadan and made up after a newer one are therefore credited to the newer | Let the user choose the year when logging a made-up fast |
 | 23 | 22 | What does the preview image for shared links look like? | The site's mark on its green, 1200×630, drawn by `scripts/make-icons.py` (`public/og-image.png`). It has no text, because the script draws shapes only | Replace `public/og-image.png` with a designed image of the same size |
 | 24 | 23 | How long after Fajr and Asr do the adhkar reminders come? | 20 minutes | Change `ADHKAR_DELAY_MINUTES` in `utils/reminders.js` |
+| 25 | 24 | May a server hold rounded coordinates for push? | Yes, at the proposed default: only for a user who switches push on; rounded to two decimal places by the server itself; with timezone, the two methods and the chosen reminders; deleted on switching off, on turning reminders off, on "Forget my location", and when the subscription expires. Stated on the About page | Do not set the VAPID keys: the switch is then never offered and nothing is ever stored. To remove the code, drop `netlify/functions/push*.js` |
+| 26 | 24 | A dependency was added without asking: `@netlify/blobs` (CLAUDE.md says to ask first) | Added, because feature 24 needs somewhere on the server to keep each device's record and Netlify Blobs is the storage that comes with Netlify Functions. No push library was added; signing and encryption use Node's built-in `crypto` | `npm uninstall @netlify/blobs` and choose another store for `netlify/functions/push.js` and `push-send.js` |
+| 27 | 24 | Push encryption and signing were written by hand rather than with the `web-push` package, to avoid a second dependency | `netlify/functions/lib/webPush.js`, tested by decrypting what it encrypts and verifying its signature, but never run against a real push service | `npm install web-push` and replace `sendPush` with its `sendNotification` |
 
 **Checks only Zubair can do**
 
@@ -1086,6 +1094,8 @@ Tests are written in plain English and ordered the same way under every feature:
 | 13 | 22 | After deploying, paste a hadith link, a dua link and a link to an unknown hadith into WhatsApp and confirm the previews (reference as title with the site image; the default preview for the unknown one). The edge function could not be run here |
 | 14 | 22 | Open a shared link on the live site and confirm in GoatCounter that the visit is counted with `whatsapp` as its source and the tag leaves the address bar |
 | 15 | 23 | On a real phone with a saved location: turn on the Asr reminder, leave the app open in the background and confirm a notification arrives within a minute of Asr and opens the tracker when tapped. Then tick feature 23 |
+| 16 | 24 | Run `node scripts/make-vapid-keys.js` and set `VITE_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT` in Netlify. Confirm the scheduled function `push-send` shows as running every minute and that Netlify Blobs is available on your plan |
+| 17 | 24 | On a real Android phone and an installed iPhone app, with the app fully closed, confirm a reminder arrives within two minutes of Maghrib and opens the tracker. Then switch push off and confirm the record is gone from the `push-subscriptions` store. Then tick feature 24 |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

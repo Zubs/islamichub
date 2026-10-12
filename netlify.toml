@@ -11,6 +11,12 @@ from = "/api/hadith/*"
 to = "/.netlify/functions/hadith/:splat"
 status = 200
 
+# ── Push notifications — saves and deletes a device's opt-in record ────────────
+[[redirects]]
+from = "/api/push"
+to = "/.netlify/functions/push"
+status = 200
+
 # ── Link previews — titles and images for hadith, dua and adhkar links ──────────
 [[edge_functions]]
 function = "link-preview"

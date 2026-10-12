@@ -75,3 +75,10 @@ The settings SHALL say plainly that these reminders arrive only while the app is
 #### Scenario: Reading the settings
 - **WHEN** the Reminders section is shown
 - **THEN** it says reminders arrive only while the app is open or in the background
+
+### Requirement: On-device reminders stay silent while push is on
+While push notifications are on for the device, the on-device reminders SHALL NOT be scheduled, so a reminder arrives once.
+
+#### Scenario: Push on with the app open
+- **WHEN** push is on and the app is open at a prayer time
+- **THEN** one notification arrives, not two

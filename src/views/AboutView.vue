@@ -313,7 +313,21 @@
           coordinates are sent once to OpenStreetMap&rsquo;s Nominatim service to find a place name.
           It is saved only if you choose &ldquo;Remember this location&rdquo; on the Prayer page,
           and then only on your own device, together with your calculation method and Asr method.
-          &ldquo;Forget my location&rdquo; on the same page removes it. It is never sent to us.
+          &ldquo;Forget my location&rdquo; on the same page removes it. It is never sent to us, with
+          one exception that you have to switch on yourself, described next.
+        </p>
+      </div>
+      <div class="card" style="margin-top: 1rem">
+        <p><strong>Notifications when the app is closed:</strong></p>
+        <p style="font-size: 13.5px; color: var(--muted); line-height: 1.7">
+          Prayer reminders work on your device with nothing sent anywhere. If you also switch on
+          &ldquo;Also notify me when the app is closed&rdquo;, a server has to send the reminder, so
+          it keeps the least it needs to do that: the address your browser gives for sending you a
+          notification, your location rounded to two decimal places (about 1 km), your timezone,
+          your calculation method and Asr method, and which reminders you chose. It keeps no name,
+          no email and no account, and it is not used for anything else. Switching that setting off,
+          turning reminders off, or choosing &ldquo;Forget my location&rdquo; deletes it. If your
+          browser stops accepting the notifications, it is deleted automatically.
         </p>
       </div>
       <p style="font-size: 12px; color: var(--muted); margin-top: 1rem">

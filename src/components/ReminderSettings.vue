@@ -40,6 +40,39 @@
         These reminders arrive only while IslamicHub is open or running in the background. They do
         not arrive once the app is fully closed.
       </p>
+
+      <template v-if="reminders.settings.enabled && prayerSettings.saved">
+        <template
+          v-if="reminders.pushState === 'ready' || reminders.pushState === 'ios-not-installed'"
+        >
+          <label class="reminders-switch">
+            <input
+              type="checkbox"
+              data-test="push"
+              :checked="reminders.settings.push"
+              :disabled="reminders.pushState !== 'ready' || pushBusy"
+              @change="togglePush($event.target)"
+            />
+            <span>Also notify me when the app is closed</span>
+          </label>
+          <p v-if="reminders.pushState === 'ios-not-installed'" class="reminders-note">
+            On iPhone, notifications for a closed app only work once IslamicHub is installed. Tap
+            Share, then &ldquo;Add to Home Screen&rdquo;, and turn this on from the installed app.
+          </p>
+          <p v-else-if="pushFailed" class="reminders-note reminders-warning" role="alert">
+            This could not be turned on. Check your connection and try again.
+          </p>
+          <p class="reminders-note">
+            Turning this on stores, on our server, what is needed to send the reminder at the right
+            time: your location rounded to about 1 km, your timezone, your calculation and Asr
+            methods, and the reminders you chose. No name, email or account. Turning it off, or
+            &ldquo;Forget my location&rdquo;, deletes it.
+          </p>
+        </template>
+        <p v-else-if="reminders.pushState === 'unsupported'" class="reminders-note">
+          This browser cannot receive notifications when the app is closed.
+        </p>
+      </template>
     </template>
   </section>
 </template>
@@ -54,6 +87,21 @@ const reminders = useRemindersStore()
 const prayerSettings = usePrayerSettingsStore()
 const list = REMINDERS
 const refused = ref(false)
+const pushBusy = ref(false)
+const pushFailed = ref(false)
+
+async function togglePush(input) {
+  pushBusy.value = true
+  pushFailed.value = false
+  if (input.checked) {
+    pushFailed.value = !(await reminders.turnPushOn())
+  } else {
+    await reminders.turnPushOff()
+  }
+
+  input.checked = reminders.settings.push
+  pushBusy.value = false
+}
 
 async function toggle(input) {
   if (!input.checked) {

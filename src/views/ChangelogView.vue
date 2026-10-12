@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Reminders when the app is closed',
+            scope: 'Prayer page',
+            desc: 'A new switch, "Also notify me when the app is closed", delivers prayer reminders even when IslamicHub is not open. It is off unless you turn it on. To send a reminder at the right minute a server keeps your location rounded to about 1 km, your timezone, your calculation methods and the reminders you chose, and nothing else: no name, no email, no account. Turning the switch off, or "Forget my location", deletes it. On iPhone it works once the app is installed.',
+          },
+          {
             title: 'Prayer reminders',
             scope: 'Prayer page',
             desc: 'With a remembered location you can now turn on reminders for each of the five prayers and for the morning and evening adhkar. A reminder opens the prayer tracker, or the adhkar, when tapped. They are off until you turn them on, and they arrive only while IslamicHub is open or running in the background.',

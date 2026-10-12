@@ -1,4 +1,4 @@
-import { parseStoredObject, isPlainObject } from '@/utils/storage.js'
+import { parseStoredObject, isPlainObject } from './storage.js'
 
 const ADHKAR_DELAY_MINUTES = 20
 
@@ -53,15 +53,12 @@ export function nextMidnight(now = new Date()) {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 1, 0)
 }
 
-export function defaultReminderSettings() {
-  return { enabled: false, items: Object.fromEntries(REMINDER_KEYS.map((key) => [key, false])) }
-}
-
 export function parseReminderSettings(text) {
   const saved = parseStoredObject(text)
   const items = isPlainObject(saved.items) ? saved.items : {}
   return {
     enabled: saved.enabled === true,
+    push: saved.push === true,
     items: Object.fromEntries(REMINDER_KEYS.map((key) => [key, items[key] === true])),
   }
 }

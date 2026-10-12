@@ -64,6 +64,8 @@ There is no TypeScript. Server-side code is limited to Netlify Functions, added 
 | Variable              | Required | Purpose                                              |
 |-----------------------|----------|------------------------------------------------------|
 | `HADITH_API_KEY` | For the hadith library | API key for hadithapi.com, read only by the server-side proxy. Without it the proxy answers "not configured" and the library views show a "no API key" state. |
+| `VITE_VAPID_PUBLIC_KEY` | For push notifications | The public Web Push key, read by the site and the server. Without it the push switch is not offered. |
+| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | For push notifications | The private key and a contact address (`mailto:…`), read only by the server. `node scripts/make-vapid-keys.js` makes a pair. |
 
 Copy `.env.example` to `.env` to set it for `netlify dev`. `.env` is git-ignored. The key is never compiled into the client bundle: `test/build.test.js` builds the site with a key set and fails if it appears in any built file.
 
@@ -119,6 +121,17 @@ Server-side code lives in `netlify/functions/` and is added only where a feature
   call. Successful replies are cacheable for a day; errors are `no-store`, written by the proxy and never contain the
   key. The upstream call is abandoned after nine seconds. With no key it answers 503 `not_configured`.
 - `netlify dev` runs functions locally. Plain `npm run dev` has no proxy.
+
+- **`push.js`** serves `/api/push`. `POST` saves or replaces one record per device in the Netlify Blobs store
+  `push-subscriptions`, keyed by the SHA-256 of the subscription's endpoint; `DELETE` with the endpoint removes it.
+  `lib/pushRecords.js` validates the request (at most 4 KB; an https endpoint and keys; a possible location; a known
+  method, Asr method, timezone and reminders) and rounds the coordinates to two decimal places itself, whatever was
+  sent. A record holds the subscription, rounded coordinates, timezone, the two methods, the chosen reminders and
+  which reminders were sent on which local day. Nothing else.
+- **`push-send.js`** runs every minute. For each record it works out the device's local time with `Intl` and its prayer
+  times with `utils/prayer.js`, and sends a push for each chosen reminder that is 0 to 3 minutes past its time and not
+  yet sent that day. A subscription the push service answers 404 or 410 for is deleted. `lib/webPush.js` builds the
+  VAPID token and encrypts the payload (RFC 8291) with Node's `crypto`; no push library is used.
 
 Still open: proxying and caching metal prices and exchange rates, and optional sync of streaks and totals across devices.
 
@@ -474,7 +487,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
-| `reminder-settings`      | `{ enabled, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar" } }` | reminders store |
+| `reminder-settings`      | `{ enabled, push, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar" } }` | reminders store |
 | `fasting-log`            | `{ "YYYY-MM-DD": "fasted" \| "missed" \| "made-up" \| "voluntary" }` | fasting store |
 | `ramadan-starts`         | `{ "<Hijri year>": "YYYY-MM-DD" }`, only dates the user set | fasting store |
 | `salah-log`              | `{ "YYYY-MM-DD": { fajr: "on-time" \| "late" \| "missed", … } }` | salah store |
@@ -533,6 +546,12 @@ Rules:
   service worker's registration, or `new Notification` where there is none, and carry the page to open: the tracker for
   a prayer, the adhkar category for an adhkar reminder. `public/sw-notifications.js` handles the tap.
 - These reminders arrive only while the app is open or in the background; the settings say so.
+- **Push (opt-in).** A second switch, "Also notify me when the app is closed", subscribes the device to Web Push and
+  saves a record through `/api/push`; the settings say what is stored. While it is on the on-device timers are not set,
+  so a reminder arrives once. A change of method or of a switch re-saves the record; turning the switch off, turning
+  reminders off or "Forget my location" deletes it and unsubscribes. The switch is disabled on an iPhone where the app
+  is not installed, and is not offered without `VITE_VAPID_PUBLIC_KEY` or in a browser with no push support. The worker
+  shows the pushed reminder (`push` in `sw-notifications.js`).
 
 ---
 
@@ -625,6 +644,10 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 - Financial and family details entered into calculators do not leave the device.
 - Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
 - Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.
+- **The one thing a server stores about a user** is the push record, and only for a user who switches on "Also notify
+  me when the app is closed": the push subscription, coordinates rounded to two decimal places (about 1 km), timezone,
+  calculation method, Asr method and chosen reminders. No name, email or account. It is deleted when the user turns the
+  switch off, turns reminders off or forgets their location, and when the push service reports the subscription gone.
 - If a backend is added, anything it stores about a user must be opt-in, and the tools must keep working without
   signing in.
 

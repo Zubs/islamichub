@@ -39,7 +39,8 @@ export function scheduleReminders({ open = () => {}, now = new Date() } = {}) {
   const reminders = useRemindersStore()
   const saved = usePrayerSettingsStore().saved
   clearTimers()
-  if (!reminders.active || !saved) {
+  // while push is on the server sends the reminders, so the device stays silent
+  if (!reminders.active || !saved || reminders.pushOn) {
     return 0
   }
 
@@ -71,9 +72,21 @@ export function startReminders(open) {
   const reminders = useRemindersStore()
   const prayerSettings = usePrayerSettingsStore()
   watch(
-    [() => reminders.active, () => reminders.settings.items, () => prayerSettings.saved],
+    [
+      () => reminders.active,
+      () => reminders.pushOn,
+      () => reminders.settings.items,
+      () => prayerSettings.saved,
+    ],
     () => scheduleReminders({ open }),
     { immediate: true, deep: true },
+  )
+  watch(
+    [() => reminders.settings.items, () => prayerSettings.saved],
+    () => reminders.syncPushRecord(),
+    {
+      deep: true,
+    },
   )
 
   navigator.serviceWorker?.addEventListener?.('message', (event) => {
