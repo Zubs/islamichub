@@ -17,7 +17,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 5. Zakat exchange rates
 - [x] 6. Naira in the Zakat calculator
 - [x] 7. Inheritance engine
-- [ ] 8. Asr method
+- [x] 8. Asr method
 - [ ] 9. SEO through one path
 - [ ] 10. Loading screen
 - [ ] 11. Saved prayer settings
@@ -261,8 +261,8 @@ Tests are written in plain English and ordered the same way under every feature:
 **What it does:** Lets users choose between the two ways of timing Asr, since the Hanafi school starts it later.
 
 **How it works**
-- `getPrayerTimes` takes an Asr option: Standard (shadow equal to the object's length, the default) or Hanafi (twice the length).
-- The Prayer page has a selector beside the calculation method.
+- `calcPrayerTimes` takes an Asr option: Standard (shadow equal to the object's length, the default) or Hanafi (twice the length).
+- The Prayer page has a selector beside the calculation method. Changing it, or the method, recalculates times that are already shown.
 - The Fasting page is unaffected, as it uses only Fajr and Maghrib.
 - The file header in `utils/prayer.js` is corrected to list only the methods that exist.
 

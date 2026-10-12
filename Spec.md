@@ -160,7 +160,7 @@ Requirements:
 
 ### 5.2 Prayer times (`/prayer`)
 
-Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset, and method.
+Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset, method and Asr option.
 
 - **Outputs:** Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha as `HH:MM` in the device's timezone.
 - **Methods:**
@@ -175,7 +175,10 @@ Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset
 
   Default is `MWL`; an unknown key falls back to `MWL`.
 - **Sunrise/Maghrib** use a sun altitude of −0.833°.
-- **Asr** uses the standard (Shafi'i) shadow factor of 1.
+- **Asr** takes an option: `standard` (shadow factor 1, the default, followed by the Shafi'i, Maliki and Hanbali
+  schools) or `hanafi` (shadow factor 2). An unknown option falls back to `standard`. The Prayer page has a selector
+  for it beside the calculation method; changing either recalculates times that are already shown. The Fasting page
+  is unaffected.
 - **Next prayer:** `getNextPrayer` returns the next upcoming time and minutes remaining; after Isha it returns
   tomorrow's Fajr. The countdown must recompute on each tick rather than cache the first value.
 - **Location** comes from the browser Geolocation API (10 s timeout), reverse-geocoded to a place name via Nominatim.
@@ -477,8 +480,6 @@ Places where the code does not yet meet this spec, or where supporting files are
   entries in `useSeo`'s `ROUTE_META` are unused. `useSeo` also builds canonical URLs from the route name, which is only
   correct while name and path match; it would be wrong for `hadith-books` or `articles-of-faith` if they adopted it. The hadith, adhkar, and tasbih views set no canonical link
   at all.
-- **Asr is Shafi'i only.** There is no Hanafi option, and the file header mentions Tehran and Jafari methods that do
-  not exist.
 
 ### Housekeeping
 

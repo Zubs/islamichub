@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Hanafi Asr time',
+            scope: 'Prayer page',
+            desc: "A new selector beside the calculation method chooses how Asr is timed: Standard (when an object's shadow equals its length, followed by the Shafi'i, Maliki and Hanbali schools) or Hanafi (twice its length). Standard remains the default. Changing it, or the calculation method, now updates the times and the countdown straight away.",
+          },
+          {
             title: 'Naira in the Zakat calculator',
             scope: 'Zakat page',
             desc: "Zakat can now be worked out in Nigerian naira (₦), at the official exchange rate. Because a local dealer's price can differ, you can also type your own price per gram for gold and silver, in any currency, and the calculator and the nisab both use it.",

@@ -54,3 +54,35 @@ export const LONDON_EQUINOX_2026 = {
     },
   },
 }
+
+export const ASR_BY_SCHOOL_2026 = {
+  source: 'Aladhan Prayer Times API (api.aladhan.com/v1/timings), school 0 and school 1',
+  retrieved: '2026-10-12',
+  date: '2026-03-20',
+  cities: [
+    {
+      name: 'London',
+      latitude: 51.5074,
+      longitude: -0.1278,
+      utcOffset: 0,
+      standard: '15:24',
+      hanafi: '16:15',
+    },
+    {
+      name: 'Lagos',
+      latitude: 6.5244,
+      longitude: 3.3792,
+      utcOffset: 1,
+      standard: '16:04',
+      hanafi: '17:12',
+    },
+    {
+      name: 'Karachi',
+      latitude: 24.8607,
+      longitude: 67.0011,
+      utcOffset: 5,
+      standard: '16:05',
+      hanafi: '17:01',
+    },
+  ],
+}

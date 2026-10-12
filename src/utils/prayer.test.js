@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { calcPrayerTimes, getNextPrayer } from './prayer.js'
-import { LONDON_EQUINOX_2026 } from './prayer.fixture.js'
+import { LONDON_EQUINOX_2026, ASR_BY_SCHOOL_2026 } from './prayer.fixture.js'
 
 const TOLERANCE_MINUTES = 2
 const PRAYERS = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']
@@ -66,5 +66,57 @@ describe('getNextPrayer', () => {
     vi.setSystemTime(new Date(2026, 2, 20, 21, 0))
 
     expect(getNextPrayer(times)).toMatchObject({ key: 'fajr', minsRemaining: 430 })
+  })
+})
+
+describe('Asr method', () => {
+  const OTHERS = ['fajr', 'sunrise', 'dhuhr', 'maghrib', 'isha']
+
+  function times(city, asrMethod) {
+    return calcPrayerTimes(
+      city.latitude,
+      city.longitude,
+      new Date(2026, 2, 20),
+      city.utcOffset,
+      'MWL',
+      asrMethod,
+    )
+  }
+
+  const london = ASR_BY_SCHOOL_2026.cities[0]
+
+  it('is Standard when no option is given', () => {
+    expect(times(london)).toEqual(times(london, 'standard'))
+    expect(times(london).asr).toBe(londonTimes('MWL').asr)
+  })
+
+  it('is later with Hanafi and leaves the other five times alone', () => {
+    const standard = times(london, 'standard')
+    const hanafi = times(london, 'hanafi')
+
+    expect(toMinutes(hanafi.asr)).toBeGreaterThan(toMinutes(standard.asr))
+    for (const prayer of OTHERS) {
+      expect(hanafi[prayer]).toBe(standard[prayer])
+    }
+  })
+
+  describe.each(ASR_BY_SCHOOL_2026.cities)('$name on 20 March 2026', (city) => {
+    it.each(['standard', 'hanafi'])('%s Asr is within two minutes of the timetable', (option) => {
+      const difference = Math.abs(toMinutes(times(city, option).asr) - toMinutes(city[option]))
+
+      expect(difference).toBeLessThanOrEqual(TOLERANCE_MINUTES)
+    })
+  })
+
+  it.each(['standard', 'hanafi'])('gives a valid %s Asr at latitude 60 in winter', (option) => {
+    const result = calcPrayerTimes(60, 10, new Date(2026, 11, 21), 1, 'MWL', option)
+
+    expect(result.asr).toMatch(/^\d{2}:\d{2}$/)
+    expect(toMinutes(result.asr)).toBeGreaterThan(toMinutes(result.dhuhr))
+    expect(toMinutes(result.asr)).toBeLessThanOrEqual(toMinutes(result.maghrib))
+  })
+
+  it('falls back to Standard for an unknown option', () => {
+    expect(times(london, 'NotAnOption')).toEqual(times(london, 'standard'))
   })
 })

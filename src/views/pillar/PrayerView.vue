@@ -74,6 +74,13 @@
                 <option value="Karachi">Karachi University</option>
               </select>
             </div>
+            <div class="field" style="min-width: 160px">
+              <label for="asr-method">Asr time</label>
+              <select id="asr-method" v-model="asrMethod" class="select-field">
+                <option value="standard">Standard (Shafi'i, Maliki, Hanbali)</option>
+                <option value="hanafi">Hanafi</option>
+              </select>
+            </div>
             <button class="btn btn-secondary" @click="locate" :disabled="locating">
               {{ locating ? 'Locating…' : '📍 Use my location' }}
             </button>
@@ -440,7 +447,7 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
@@ -466,6 +473,7 @@ const store = useZakatStore()
 const lat = ref(store.location?.lat ?? '')
 const lng = ref(store.location?.lng ?? '')
 const method = ref('MWL')
+const asrMethod = ref('standard')
 const locating = ref(false)
 const locationStatus = ref('')
 
@@ -513,20 +521,23 @@ async function locate() {
 
 // ── Calculate prayer times + Qibla ────────────────────────────
 function calculate() {
+  if (showTimes()) {
+    track('prayer times shown')
+  }
+}
+
+function showTimes() {
   const latV = parseFloat(lat.value)
   const lngV = parseFloat(lng.value)
   if (isNaN(latV) || isNaN(lngV)) {
     locationStatus.value = 'Please enter valid coordinates.'
-    return
+    return false
   }
 
   const tz = getTimezoneOffset()
-  const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value)
+  const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value, asrMethod.value)
   prayerTimes.value = times
   currentPrayer.value = getCurrentPrayer(times)
-
-  // Track prayer times shown
-  track('prayer times shown')
 
   // Countdown
   clearInterval(countdownTimer)
@@ -556,7 +567,15 @@ function calculate() {
   if (needleTail.value) {
     needleTail.value.style.transform = `rotate(${bearing}deg)`
   }
+
+  return true
 }
+
+watch([method, asrMethod], () => {
+  if (prayerTimes.value) {
+    showTimes()
+  }
+})
 
 // Pre-calculate if location already known
 if (store.location) {
