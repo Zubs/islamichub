@@ -8,9 +8,11 @@ All notable changes to IslamicHub are documented here.
 
 ### Added
 - **Automated test suite** — Vitest with Vue Test Utils and jsdom. `npm test` runs every test once and `npm run test:watch` re-runs them on change. First tests cover prayer times (checked against a published London timetable for all five methods), the Qibla bearing and distance, Hijri date conversion, and the adhkar and tasbih stores. Netlify now runs the tests before building, so a failing test stops a deploy.
+- **Licence** — IslamicHub is now licensed under the GNU General Public License, version 3.
 
 ### Changed
 - **Lint and format pass across the project** — Fixed the seven existing lint errors (unused variables and parameters) and formatted every file in `src/` with Prettier. No change to any calculation.
+- **README and contribution guide rewritten** — Both now describe the Vue and Vite project: setup, scripts, the folder layout, how to add a page or content, the content rules and the pull request steps. An automated check fails if either names a command, file or folder that does not exist. The old copy of the guide published at `/CONTRIBUTING.md` is removed.
 
 ### Fixed
 - **"No chapters match" never showed** *(Hadith book page)* — The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.
