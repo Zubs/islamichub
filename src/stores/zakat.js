@@ -98,11 +98,14 @@ export const useZakatStore = defineStore('zakat', () => {
     location.value = loc
   }
 
+  let pricesRequested = false
+
   async function fetchPrices() {
-    if (pricesLoading.value) {
+    if (pricesRequested) {
       return
     }
 
+    pricesRequested = true
     pricesLoading.value = true
     for (const url of PRICE_SOURCES) {
       try {

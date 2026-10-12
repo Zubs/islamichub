@@ -19,7 +19,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 7. Inheritance engine
 - [x] 8. Asr method
 - [x] 9. SEO through one path
-- [ ] 10. Loading screen
+- [x] 10. Loading screen
 - [ ] 11. Saved prayer settings
 - [ ] 12. Installable and offline
 - [ ] 13. Hadith proxy
@@ -313,7 +313,7 @@ Tests are written in plain English and ordered the same way under every feature:
 
 **Tests**
 - Opening `/prayer` makes no request for metal prices or exchange rates.
-- Opening `/zakat` makes one request for each.
+- Opening `/zakat` makes one request, as metals and rates now come from one dataset (feature 5).
 - Leaving the Zakat page and returning does not fetch again.
 - On a fast connection the loading screen is gone in under half a second.
 - On a slow connection the Zakat form can be filled in while prices load.

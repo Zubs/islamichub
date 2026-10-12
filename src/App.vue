@@ -1,5 +1,5 @@
 <template>
-  <!-- Loading screen — shown until prices load on first visit -->
+  <!-- Loading screen — shown until the first page is ready to draw -->
   <Transition name="loading">
     <div v-if="showLoading" class="loading-screen" role="status" aria-label="Loading IslamicHub">
       <div class="loading-inner">
@@ -43,25 +43,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { RouterView } from 'vue-router'
-import { useZakatStore } from '@/stores/zakat.js'
+import { ref } from 'vue'
+import { RouterView, useRouter } from 'vue-router'
 import SiteNav from '@/components/SiteNav.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 
-const store = useZakatStore()
 const showLoading = ref(true)
-const MIN_MS = 2000
-const start = Date.now()
 
-onMounted(async () => {
-  await store.fetchPrices()
-  const elapsed = Date.now() - start
-  const remaining = Math.max(0, MIN_MS - elapsed)
-  setTimeout(() => {
+useRouter()
+  .isReady()
+  .finally(() => {
     showLoading.value = false
-  }, remaining)
-})
+  })
 </script>
 
 <style>

@@ -641,7 +641,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
@@ -658,6 +658,7 @@ useSeo('zakat')
 useScrollReveal()
 
 const store = useZakatStore()
+onMounted(store.fetchPrices)
 
 const currencies = [
   { code: 'GBP', sym: '£' },

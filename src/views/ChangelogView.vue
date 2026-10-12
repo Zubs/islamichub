@@ -194,6 +194,11 @@ const releases = [
         dotColor: '#c0392b',
         entries: [
           {
+            title: 'No more two-second wait on every page',
+            scope: 'Whole site',
+            desc: 'Every visit used to sit behind the loading screen for at least two seconds while gold prices were fetched, even on pages that never use them. The loading screen now clears as soon as the page is ready, and prices are fetched only when the Zakat page is opened, once per visit.',
+          },
+          {
             title: 'Every page now has a correct canonical link',
             scope: 'Search engines',
             desc: 'Titles, descriptions and canonical links are now set one way on every page. The hadith, adhkar, tasbih and Articles of Faith pages had no canonical link, and the sitemap was missing the adhkar, tasbih and Articles of Faith pages; both are corrected, and a test keeps the sitemap in step with the pages that exist.',

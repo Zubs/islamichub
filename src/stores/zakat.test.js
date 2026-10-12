@@ -300,4 +300,15 @@ describe('zakat store prices', () => {
 
     expect(JSON.stringify(fetch.mock.calls[0])).not.toContain('987654')
   })
+
+  it('fetches once per visit, however often prices are requested', async () => {
+    const fetch = stubFetch(answering(reply()), answering(reply({ xau: 1 / 9000 })))
+    const store = useZakatStore()
+
+    await store.fetchPrices()
+    await store.fetchPrices()
+
+    expect(fetch).toHaveBeenCalledOnce()
+    expect(store.usdPerOunce.gold).toBeCloseTo(4000, 6)
+  })
 })

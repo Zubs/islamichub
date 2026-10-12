@@ -98,12 +98,13 @@ netlify.toml            Build, SPA redirect, security and cache headers
   stores.
 - **`data/`** holds static religious content. Content changes should not require touching view logic.
 - **`stores/`** own state that is shared across views or persisted. View-local form state stays in the view.
-- **Views** compose the above and call `useSeo` (or `useHead` directly for dynamic titles) and `useScrollReveal`.
+- **Views** compose the above and call `useSeo` and `useScrollReveal`.
 
 ### App shell behaviour
 
-- On mount, `App.vue` calls `zakat.fetchPrices()` and shows a full-screen Bismillah loading screen until it settles,
-  with a minimum display time of 2 seconds.
+- `App.vue` shows a full-screen Bismillah loading screen only until the first route is ready to draw
+  (`router.isReady()`), with no minimum time. It waits for no outside service.
+- Prices are requested by the Zakat page when it opens, once per visit; no other page requests them.
 - Route changes use an `out-in` fade keyed on `route.path`.
 - Navigation scrolls to the top instantly, except on back/forward, where the saved position is restored.
 
@@ -490,8 +491,6 @@ Places where the code does not yet meet this spec, or where supporting files are
 - **The hadith API key ships in the client bundle.** Keeping it secret needs a server-side proxy, which is the most immediate
   reason to add a backend.
 - **In-progress adhkar counts are lost on reload.** They are held in memory only.
-- **The loading screen blocks every entry route** for at least 2 seconds on the price fetch, including pages that do
-  not use prices.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
   stores are tested. The composables and most views are not yet.
 - **A damaged entry inside a stored record is not handled.** A stored record of the wrong kind is read as empty, but
