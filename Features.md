@@ -26,7 +26,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 14. Single-hadith page
 - [ ] 15. Linked hadith citations
 - [x] 16. Daily hadith
-- [ ] 17. Adhkar progress survives reload
+- [x] 17. Adhkar progress survives reload
 - [ ] 18. Duas
 - [ ] 19. Salah tracker
 - [ ] 20. Fasting tracker

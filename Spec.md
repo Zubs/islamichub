@@ -413,6 +413,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `adhkar-progress`        | `{ day: "YYYY-MM-DD", counts: { [dhikrId]: count } }`; restored only on the same local day | adhkar store |
 | `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |
 | `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
 
@@ -420,6 +421,9 @@ Rules:
 
 - Reads must tolerate missing or corrupt JSON, and valid JSON that is not a keyed record (`null`, a number, a string,
   a list), and fall back to an empty value. `utils/storage.js` provides `parseStoredObject` for this.
+- A damaged entry inside a valid record (a day whose value is `null`, a number or text; a count that is not a
+  positive number) is ignored and the rest of the record is used. `keepEntries` in `utils/storage.js` does this for
+  `adhkar-progress`, `adhkar-completion-log` and `tasbih-totals`. Reading never rewrites what is stored.
 - Anything recorded by day is keyed by the device's local date as `YYYY-MM-DD`, so the day changes at local midnight.
   `utils/day.js` is the only place a day key is built (`dayKey`) or stepped (`addDays`).
 - Zakat and inheritance inputs are never persisted. The user's location is persisted only when they choose "Remember
@@ -549,11 +553,7 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Housekeeping
 
-- **In-progress adhkar counts are lost on reload.** They are held in memory only.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
   stores are tested. The composables and most views are not yet.
-- **A damaged entry inside a stored record is not handled.** A stored record of the wrong kind is read as empty, but
-  a valid record holding a bad entry (for example a day whose value is `null` under `adhkar-completion-log` or
-  `tasbih-totals`) would still throw.
 - **"Today" is not refreshed while a page stays open.** A page left open past local midnight shows the previous
   day's state until it is next re-read.

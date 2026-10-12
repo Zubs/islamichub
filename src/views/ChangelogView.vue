@@ -224,6 +224,11 @@ const releases = [
         dotColor: '#c0392b',
         entries: [
           {
+            title: 'Adhkar counts are kept if you reload',
+            scope: 'Adhkar',
+            desc: 'Counts on adhkar cards used to vanish if the page was reloaded or closed part-way through. They are now kept on your device for the day, so you can leave and carry on where you stopped, and each new day starts clean. Completing a category also now clears the counts of its multi-part adhkar.',
+          },
+          {
             title: 'Three hadith citations corrected',
             scope: 'Faith, Hajj and Inheritance pages',
             desc: "While linking every citation, each was compared with its source. The hadith on Surah al-Ikhlas being a third of the Qur'an is now cited as Sahih Bukhari 5013, and Hajj on behalf of someone who has died as Sahih Bukhari 1852. The Inheritance page quoted a narration that is not in the two collections it named; it now quotes Sahih Bukhari 6732, also found in Abu Dawud 2898.",
