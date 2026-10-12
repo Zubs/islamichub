@@ -5,3 +5,9 @@ beforeEach(() => {
   localStorage.clear()
   setActivePinia(createPinia())
 })
+
+globalThis.IntersectionObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}

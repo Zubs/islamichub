@@ -2,6 +2,7 @@
   <p class="price-status" role="status">
     <span class="badge" :class="current ? 'badge-green' : 'badge-gold'">{{ label }}</span>
     <span class="price-status-note">{{ note }}</span>
+    <span v-if="customNote" class="price-status-custom">{{ customNote }}</span>
   </p>
 </template>
 
@@ -13,6 +14,7 @@ const props = defineProps({
   ratesFetched: { type: Boolean, required: true },
   date: { type: String, default: null },
   loading: { type: Boolean, default: false },
+  custom: { type: Array, default: () => [] },
 })
 
 const current = computed(() => !props.loading && props.metalsFetched && props.ratesFetched)
@@ -28,6 +30,15 @@ const dateText = computed(() => {
     month: 'long',
     year: 'numeric',
   })
+})
+
+const customNote = computed(() => {
+  if (!props.custom.length) {
+    return null
+  }
+
+  const metals = props.custom.join(' and ')
+  return `Your own ${metals} price per gram is in use in place of the fetched one.`
 })
 
 const label = computed(() => {
@@ -72,5 +83,11 @@ const note = computed(() => {
   font-size: 12px;
   line-height: 1.5;
   color: var(--muted);
+}
+
+.price-status-custom {
+  flex-basis: 100%;
+  color: var(--gold);
+  font-weight: 600;
 }
 </style>

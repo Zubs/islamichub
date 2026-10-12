@@ -499,7 +499,7 @@ const features = [
   {
     icon: '🌍',
     title: 'Multi-currency',
-    desc: 'GBP, USD, EUR, or SAR — with live exchange rates fetched automatically alongside metal prices.',
+    desc: 'GBP, USD, EUR, SAR or NGN — with live exchange rates fetched automatically alongside metal prices.',
   },
   {
     icon: '🤝',

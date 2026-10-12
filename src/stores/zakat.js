@@ -17,7 +17,7 @@ const SOURCE_TIME_LIMIT_MS = 6000
 // Reference values on a US dollar base, used when today's prices cannot be fetched.
 const REFERENCE_DATE = '2026-10-12'
 const REFERENCE_USD_PER_OUNCE = { gold: 4186.27, silver: 60.83 }
-const REFERENCE_RATES = { USD: 1, GBP: 0.7555, EUR: 0.8928, SAR: 3.75 }
+const REFERENCE_RATES = { USD: 1, GBP: 0.7555, EUR: 0.8928, SAR: 3.75, NGN: 1331.59 }
 
 async function fetchFrom(url) {
   const controller = new AbortController()
@@ -44,6 +44,7 @@ export const useZakatStore = defineStore('zakat', () => {
   const ratesFetched = ref(false)
   const pricesDate = ref(REFERENCE_DATE)
   const pricesLoading = ref(false)
+  const customPerGram = ref({ gold: null, silver: null })
   const nisabMethod = ref('gold') // 'gold' | 'silver'
   const location = ref(null) // { lat, lng, name }
   const locationError = ref(null)
@@ -55,8 +56,10 @@ export const useZakatStore = defineStore('zakat', () => {
     return perGram(usdPerOunce.value[metal], rates.value[currencyCode])
   }
 
-  const goldLocal = computed(() => pricePerGram('gold', currency.value))
-  const silverLocal = computed(() => pricePerGram('silver', currency.value))
+  const goldLocal = computed(() => customPerGram.value.gold ?? pricePerGram('gold', currency.value))
+  const silverLocal = computed(
+    () => customPerGram.value.silver ?? pricePerGram('silver', currency.value),
+  )
   const nisabValue = computed(() =>
     nisabFor(nisabMethod.value, {
       goldPerGram: goldLocal.value,
@@ -76,8 +79,15 @@ export const useZakatStore = defineStore('zakat', () => {
 
   // ── Actions ──────────────────────────────────────────────────
   function setCurrency(c, s) {
+    if (c !== currency.value) {
+      customPerGram.value = { gold: null, silver: null }
+    }
     currency.value = c
     sym.value = s
+  }
+
+  function setCustomPrice(metal, price) {
+    customPerGram.value = { ...customPerGram.value, [metal]: price }
   }
 
   function setNisabMethod(m) {
@@ -160,6 +170,7 @@ export const useZakatStore = defineStore('zakat', () => {
     ratesFetched,
     pricesDate,
     pricesLoading,
+    customPerGram,
     nisabMethod,
     location,
     locationError,
@@ -171,6 +182,7 @@ export const useZakatStore = defineStore('zakat', () => {
     nisabValue,
     fmt,
     setCurrency,
+    setCustomPrice,
     setNisabMethod,
     setLocation,
     fetchPrices,

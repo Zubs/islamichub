@@ -48,7 +48,7 @@
                 :key="c.code"
                 class="pill-btn"
                 :class="{ active: store.currency === c.code }"
-                @click="store.setCurrency(c.code, c.sym)"
+                @click="selectCurrency(c)"
               >
                 {{ c.sym }} {{ c.code }}
               </button>
@@ -113,7 +113,12 @@
           :rates-fetched="store.ratesFetched"
           :date="store.pricesDate"
           :loading="store.pricesLoading"
+          :custom="customMetals"
         />
+        <p v-if="store.currency === 'NGN'" class="rate-note">
+          Naira prices use the official exchange rate. The price a local dealer quotes can differ,
+          so you can type your own price per gram under Gold &amp; Silver below.
+        </p>
         <div
           style="
             font-size: 11.5px;
@@ -290,7 +295,48 @@
               :rates-fetched="store.ratesFetched"
               :date="store.pricesDate"
               :loading="store.pricesLoading"
+              :custom="customMetals"
             />
+            <div class="field-grid">
+              <div class="field">
+                <label for="typed-gold">Your own gold price per gram (optional)</label>
+                <div class="pfx-wrap">
+                  <span class="pfx">{{ store.sym }}</span
+                  ><input
+                    id="typed-gold"
+                    type="text"
+                    inputmode="decimal"
+                    class="input-field"
+                    v-model.trim="typedPrice.gold"
+                    :aria-invalid="typedPriceRejected.gold"
+                    placeholder="Uses the fetched price"
+                    @input="applyTypedPrice('gold')"
+                  />
+                </div>
+                <div v-if="typedPriceRejected.gold" class="hint hint-error" role="alert">
+                  Enter a price above zero. The fetched price is still in use.
+                </div>
+              </div>
+              <div class="field">
+                <label for="typed-silver">Your own silver price per gram (optional)</label>
+                <div class="pfx-wrap">
+                  <span class="pfx">{{ store.sym }}</span
+                  ><input
+                    id="typed-silver"
+                    type="text"
+                    inputmode="decimal"
+                    class="input-field"
+                    v-model.trim="typedPrice.silver"
+                    :aria-invalid="typedPriceRejected.silver"
+                    placeholder="Uses the fetched price"
+                    @input="applyTypedPrice('silver')"
+                  />
+                </div>
+                <div v-if="typedPriceRejected.silver" class="hint hint-error" role="alert">
+                  Enter a price above zero. The fetched price is still in use.
+                </div>
+              </div>
+            </div>
             <div class="field-grid">
               <div class="field">
                 <label>Gold purity</label>
@@ -600,7 +646,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
-import { calculateZakat } from '@/utils/zakat.js'
+import { calculateZakat, parseCustomPrice } from '@/utils/zakat.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
@@ -618,7 +664,31 @@ const currencies = [
   { code: 'USD', sym: '$' },
   { code: 'EUR', sym: '€' },
   { code: 'SAR', sym: '﷼' },
+  { code: 'NGN', sym: '₦' },
 ]
+
+const typedPrice = reactive({ gold: '', silver: '' })
+const typedPriceRejected = reactive({ gold: false, silver: false })
+
+const customMetals = computed(() =>
+  ['gold', 'silver'].filter((metal) => store.customPerGram[metal] !== null),
+)
+
+function applyTypedPrice(metal) {
+  const price = parseCustomPrice(typedPrice[metal])
+  typedPriceRejected[metal] = price === undefined
+  if (price !== undefined) {
+    store.setCustomPrice(metal, price)
+  }
+}
+
+function selectCurrency(c) {
+  store.setCurrency(c.code, c.sym)
+  typedPrice.gold = ''
+  typedPrice.silver = ''
+  typedPriceRejected.gold = false
+  typedPriceRejected.silver = false
+}
 
 const fields = reactive({
   cashHome: 0,
@@ -772,3 +842,16 @@ const faqs = [
   },
 ]
 </script>
+
+<style scoped>
+.rate-note {
+  margin: var(--space-2) 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.field .hint-error {
+  color: var(--red);
+}
+</style>

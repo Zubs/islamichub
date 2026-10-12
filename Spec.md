@@ -214,17 +214,23 @@ zakat due  = net × 2.5%   if net ≥ nisab, otherwise 0
 
 The page shows a line-by-line breakdown, whether Zakat is obligatory and progress toward the nisab (capped at 100%).
 
-**Currencies:** GBP (default), USD, EUR, SAR. Amounts are formatted to two decimals with the currency symbol.
+**Currencies:** GBP (default), USD, EUR, SAR, NGN. Amounts are formatted with the currency symbol, thousands separators
+and two decimals. Naira prices use the official exchange rate, and the page says so when naira is selected.
+
+**Typed prices:** the user can type their own price per gram for gold and for silver in the selected currency. A typed
+price replaces the fetched one for both the calculation and the nisab, and the page marks it as in use. Zero, a negative
+number or text is rejected and the fetched price kept. Typed prices are cleared when the currency changes and are never
+stored or sent.
 
 **Prices:** `stores/zakat.js` fetches one daily dataset that holds gold, silver and the exchange rates on a US dollar
 base. Metal prices are kept in dollars per troy ounce and rates as units per dollar, and `pricePerGram(metal, currency)`
 is the only conversion: dollars per ounce ÷ 31.1035 × the currency's rate. The dataset is tried at jsDelivr and then at
 its mirror, each with a six-second limit. A price or rate is used only if it is a positive number; rates are used only
-when all four are valid. Otherwise the built-in reference values are used (gold $4,186.27 and silver $60.83 per ounce,
-GBP 0.7555, EUR 0.8928, SAR 3.75, dated 12 October 2026). Metals and rates are flagged separately (`metalsFetched`,
+when all five are valid. Otherwise the built-in reference values are used (gold $4,186.27 and silver $60.83 per ounce,
+GBP 0.7555, EUR 0.8928, SAR 3.75, NGN 1,331.59, dated 12 October 2026). Metals and rates are flagged separately (`metalsFetched`,
 `ratesFetched`), and the page states which are in use and the date the prices are from.
 
-The arithmetic lives in `utils/zakat.js` (`calculateZakat`, `nisabFor`, `perGram`, `parsePrices`). Net wealth is
+The arithmetic lives in `utils/zakat.js` (`calculateZakat`, `nisabFor`, `perGram`, `parsePrices`, `parseCustomPrice`). Net wealth is
 compared with the nisab to the penny.
 
 Nothing entered into the calculator is persisted or transmitted.

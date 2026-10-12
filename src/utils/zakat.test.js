@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { perGram, nisabFor, parsePrices, calculateZakat } from './zakat.js'
+import { perGram, nisabFor, parsePrices, parseCustomPrice, calculateZakat } from './zakat.js'
 
 const PRICES = { goldPerGram: 100, silverPerGram: 1.5 }
 
@@ -32,12 +32,12 @@ describe('nisabFor', () => {
 })
 
 describe('parsePrices', () => {
-  it('reads metals as dollars per ounce, the four rates and the date', () => {
+  it('reads metals as dollars per ounce, the five rates and the date', () => {
     const { usdPerOunce, rates, date } = parsePrices(validReply())
 
     expect(usdPerOunce.gold).toBeCloseTo(4000, 6)
     expect(usdPerOunce.silver).toBeCloseTo(50, 6)
-    expect(rates).toEqual({ USD: 1, GBP: 0.75, EUR: 0.9, SAR: 3.75 })
+    expect(rates).toEqual({ USD: 1, GBP: 0.75, EUR: 0.9, SAR: 3.75, NGN: 1330 })
     expect(date).toBe('2026-10-12')
   })
 
@@ -195,5 +195,51 @@ describe('calculateZakat', () => {
     )
 
     expect(result.gross).toBe(9000)
+  })
+})
+
+describe('naira', () => {
+  it('gives no rates when the naira rate is missing', () => {
+    const reply = validReply()
+    delete reply.usd.ngn
+
+    expect(parsePrices(reply).rates).toBeNull()
+  })
+
+  it('prices gold as the dollar price per gram times the naira rate', () => {
+    expect(perGram(4000, 1500)).toBeCloseTo((4000 / 31.1035) * 1500, 6)
+  })
+
+  it('owes nothing when nothing is entered', () => {
+    const result = calculateZakat({}, { goldPerGram: 170000, silverPerGram: 2600 }, 'gold')
+
+    expect(result.zakatDue).toBe(0)
+    expect(result.obligated).toBe(false)
+  })
+
+  it('is obligatory exactly at the naira nisab and not one kobo under', () => {
+    const prices = { goldPerGram: 170000, silverPerGram: 2600 }
+    const nisab = 85 * 170000
+
+    expect(calculateZakat({ cashSavings: nisab }, prices, 'gold').obligated).toBe(true)
+    expect(calculateZakat({ cashSavings: nisab - 0.01 }, prices, 'gold').obligated).toBe(false)
+  })
+})
+
+describe('parseCustomPrice', () => {
+  it.each([
+    ['150000', 150000],
+    ['2600.5', 2600.5],
+    [175000, 175000],
+  ])('reads %j as a price', (text, price) => {
+    expect(parseCustomPrice(text)).toBe(price)
+  })
+
+  it.each(['', null, undefined])('reads %j as no typed price', (text) => {
+    expect(parseCustomPrice(text)).toBeNull()
+  })
+
+  it.each(['0', '-5', 'cheap', 0, -1, Number.NaN])('rejects %j', (text) => {
+    expect(parseCustomPrice(text)).toBeUndefined()
   })
 })

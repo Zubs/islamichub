@@ -45,4 +45,22 @@ describe('ZakatPriceStatus', () => {
 
     expect(note).toBe('Gold and silver prices.')
   })
+
+  it('says nothing about custom prices when none is typed', () => {
+    const wrapper = mount(ZakatPriceStatus, { props: { metalsFetched: true, ratesFetched: true } })
+
+    expect(wrapper.find('.price-status-custom').exists()).toBe(false)
+  })
+
+  it.each([
+    [['gold'], 'Your own gold price per gram'],
+    [['silver'], 'Your own silver price per gram'],
+    [['gold', 'silver'], 'Your own gold and silver price per gram'],
+  ])('says a typed price is in use for %j', (custom, text) => {
+    const wrapper = mount(ZakatPriceStatus, {
+      props: { metalsFetched: true, ratesFetched: true, custom },
+    })
+
+    expect(wrapper.find('.price-status-custom').text()).toContain(text)
+  })
 })

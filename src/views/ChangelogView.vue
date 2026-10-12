@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Naira in the Zakat calculator',
+            scope: 'Zakat page',
+            desc: "Zakat can now be worked out in Nigerian naira (₦), at the official exchange rate. Because a local dealer's price can differ, you can also type your own price per gram for gold and silver, in any currency, and the calculator and the nisab both use it.",
+          },
+          {
             title: 'Vue 3 + Vite + Pinia',
             scope: 'Architecture',
             desc: 'Full rewrite from vanilla ES modules to Vue 3 Composition API with Vite bundling and Pinia state management. All utility functions (prayer, qibla, hijri, inheritance) moved unchanged to src/utils/.',

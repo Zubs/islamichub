@@ -15,7 +15,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 3. Contributor docs
 - [x] 4. Dead file cleanup
 - [x] 5. Zakat exchange rates
-- [ ] 6. Naira in the Zakat calculator
+- [x] 6. Naira in the Zakat calculator
 - [ ] 7. Inheritance engine
 - [ ] 8. Asr method
 - [ ] 9. SEO through one path
@@ -43,7 +43,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 31. Qurbani
 - [ ] 32. Prophets
 - [ ] 33. Journeys of the prophets
-- [ ] 34. Usage statistics
+- [x] 34. Usage statistics
+- [ ] 35. Final
 
 ---
 
@@ -202,6 +203,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The naira's official rate and its street rate can differ. The calculator uses the official rate and says so.
 - For that reason the user can also type their own local price per gram for gold and for silver. A typed price replaces the fetched one for the calculation and the nisab, and the page shows that a custom price is in use.
 - A fallback naira rate is built in on the same dollar base as the others (feature 5).
+- A typed price can be entered in any currency, not only naira, and is cleared when the currency changes, since it was quoted in the previous one. It is never stored or sent.
 - Naira amounts are shown with the ₦ sign, thousands separators and two decimals.
 
 **Tests**
@@ -998,6 +1000,33 @@ Tests are written in plain English and ordered the same way under every feature:
 - A visitor arrives from a shared WhatsApp link, completes the morning adhkar, and the dashboard shows one visit from WhatsApp and one adhkar completion, with nothing that could identify them.
 
 **Done when:** The service's dashboard shows a day of real traffic by page, source and country and the five actions, and an inspection of the requests on every tool page finds nothing a visitor entered.
+
+---
+
+## Final
+
+### 35. Final
+
+**What it does:** Collects every decision and real-world check that was left for Zubair while features 6 to 33 were built without him. Each feature was built to the safe default named here. Nothing in this list blocks the code from running; each item is either a default to confirm or reverse, or a check that needs a real phone, the live site or a named person.
+
+**How it works**
+- Zubair goes through the two lists below, confirms or changes each decision, and carries out each outstanding check.
+- A decision that is reversed is changed in the feature it belongs to, and that feature's tests are updated.
+- A feature left unticked in the progress list is ticked once its outstanding check is done.
+
+**Decisions to confirm**
+
+| # | Feature | Decision | Built as | To reverse it |
+|---|---|---|---|---|
+| 1 | 6 | Which naira rate does the calculator use? | The official rate from the price dataset, with a note saying so and a typed price per gram as the way round it | Would need a street-rate source; none is free and reliable |
+| 2 | 6 | Is a typed price offered only in naira, or in every currency? | Every currency | Hide the two fields unless naira is selected, in `ZakatView.vue` |
+
+**Checks only Zubair can do**
+
+| # | Feature | Check |
+|---|---|---|
+
+**Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 
 ---
 

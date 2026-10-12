@@ -2,7 +2,7 @@ export const TROY_OUNCE_GRAMS = 31.1035
 export const GOLD_NISAB_GRAMS = 85
 export const SILVER_NISAB_GRAMS = 595
 export const ZAKAT_RATE = 0.025
-export const CURRENCIES = ['USD', 'GBP', 'EUR', 'SAR']
+export const CURRENCIES = ['USD', 'GBP', 'EUR', 'SAR', 'NGN']
 
 function isPrice(value) {
   return typeof value === 'number' && Number.isFinite(value) && value > 0
@@ -14,6 +14,15 @@ function toPence(amount) {
 
 function sum(...amounts) {
   return amounts.reduce((total, amount) => total + (Number(amount) || 0), 0)
+}
+
+export function parseCustomPrice(text) {
+  if (text === '' || text === null || text === undefined) {
+    return null
+  }
+
+  const price = Number(text)
+  return isPrice(price) ? price : undefined
 }
 
 export function perGram(usdPerOunce, rate) {
