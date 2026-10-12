@@ -4,6 +4,7 @@ import { createHead } from '@unhead/vue/client'
 
 import App from './App.vue'
 import router from './router/index.js'
+import { startPwa } from './composables/usePwa.js'
 
 import './assets/css/tokens.css'
 import './assets/css/base.css'
@@ -19,3 +20,7 @@ app.use(router)
 app.use(head)
 
 app.mount('#app')
+
+if (import.meta.env.PROD) {
+  startPwa()
+}

@@ -5,12 +5,17 @@ import process from 'node:process'
 
 const ROOT = process.cwd()
 const PUBLISHED_FILES = [
+  'apple-touch-icon.png',
   'favicon.ico',
   'favicon.svg',
+  'icon-192.png',
+  'icon-512.png',
+  'icon-maskable-512.png',
   'robots.txt',
-  'service-worker.js',
   'sitemap.xml',
+  'sw-legacy.js',
 ]
+const OLD_APP_CACHE = 'islamichub-shell-v2'
 
 function read(path) {
   return readFileSync(resolve(ROOT, path), 'utf8')
@@ -28,24 +33,25 @@ function sourceFiles(folder) {
 
 function runWorker({ cacheNames = [], windows = [] } = {}) {
   const listeners = {}
+  const held = new Set(cacheNames)
   const caches = {
-    keys: vi.fn(async () => cacheNames),
-    delete: vi.fn(async () => true),
+    has: vi.fn(async (name) => held.has(name)),
+    delete: vi.fn(async (name) => held.delete(name)),
   }
   const self = {
     addEventListener: (type, listener) => {
       listeners[type] = listener
     },
-    skipWaiting: vi.fn(),
+    skipWaiting: vi.fn(async () => {}),
     registration: { unregister: vi.fn(async () => true) },
     clients: { matchAll: vi.fn(async () => windows) },
   }
 
-  new Function('self', 'caches', read('public/service-worker.js'))(self, caches)
+  new Function('self', 'caches', read('public/sw-legacy.js'))(self, caches)
 
-  async function activate() {
+  async function dispatch(type) {
     let finished
-    listeners.activate({
+    listeners[type]({
       waitUntil: (promise) => {
         finished = promise
       },
@@ -53,63 +59,60 @@ function runWorker({ cacheNames = [], windows = [] } = {}) {
     await finished
   }
 
-  return { listeners, caches, self, activate }
+  return { listeners, caches, self, held, dispatch }
 }
 
 function openWindow(url, navigate = vi.fn(async () => null)) {
   return { url, navigate }
 }
 
-describe('replacement service worker', () => {
-  it('takes over at once when installed', () => {
-    const { listeners, self } = runWorker()
+describe("clean-up of the old app's worker", () => {
+  it('takes over at once when the old cache is on the device', async () => {
+    const { self, dispatch } = runWorker({ cacheNames: [OLD_APP_CACHE] })
 
-    listeners.install()
+    await dispatch('install')
 
     expect(self.skipWaiting).toHaveBeenCalledOnce()
   })
 
-  it('unregisters when there are no caches and no open windows', async () => {
-    const { caches, self, activate } = runWorker()
+  it('waits its turn when there is no old cache', async () => {
+    const { self, dispatch } = runWorker({ cacheNames: ['workbox-precache-v2-https://islamichub.xyz/'] })
 
-    await activate()
+    await dispatch('install')
+
+    expect(self.skipWaiting).not.toHaveBeenCalled()
+  })
+
+  it('deletes nothing and reloads nothing when there is no old cache', async () => {
+    const windows = [openWindow('https://islamichub.xyz/')]
+    const { caches, dispatch } = runWorker({ cacheNames: ['islamichub-fonts'], windows })
+
+    await dispatch('activate')
 
     expect(caches.delete).not.toHaveBeenCalled()
-    expect(self.registration.unregister).toHaveBeenCalledOnce()
+    expect(windows[0].navigate).not.toHaveBeenCalled()
   })
 
-  it('deletes the one cache the old worker left', async () => {
-    const { caches, activate } = runWorker({ cacheNames: ['islamichub-shell-v2'] })
-
-    await activate()
-
-    expect(caches.delete).toHaveBeenCalledExactlyOnceWith('islamichub-shell-v2')
-  })
-
-  it('deletes every cache when there are several', async () => {
-    const cacheNames = ['islamichub-shell-v1', 'islamichub-shell-v2', 'something-else']
-    const { caches, activate } = runWorker({ cacheNames })
-
-    await activate()
-
-    expect(caches.delete.mock.calls.map(([name]) => name)).toEqual(cacheNames)
-  })
-
-  it('reloads every open window', async () => {
+  it('deletes the old cache, leaves the others, and reloads every open window', async () => {
     const windows = [
       openWindow('https://islamichub.xyz/'),
       openWindow('https://islamichub.xyz/prayer'),
     ]
-    const { activate } = runWorker({ windows })
+    const { caches, held, dispatch } = runWorker({
+      cacheNames: [OLD_APP_CACHE, 'islamichub-fonts', 'islamichub-hadith'],
+      windows,
+    })
 
-    await activate()
+    await dispatch('activate')
 
+    expect(caches.delete).toHaveBeenCalledExactlyOnceWith(OLD_APP_CACHE)
+    expect([...held]).toEqual(['islamichub-fonts', 'islamichub-hadith'])
     for (const client of windows) {
       expect(client.navigate).toHaveBeenCalledExactlyOnceWith(client.url)
     }
   })
 
-  it('still cleans up and reloads the rest when one window refuses to reload', async () => {
+  it('still deletes the old cache and reloads the rest when one window refuses to reload', async () => {
     const refused = openWindow(
       'https://islamichub.xyz/',
       vi.fn(async () => {
@@ -117,22 +120,29 @@ describe('replacement service worker', () => {
       }),
     )
     const other = openWindow('https://islamichub.xyz/zakat')
-    const { caches, self, activate } = runWorker({
-      cacheNames: ['islamichub-shell-v2'],
+    const { held, dispatch } = runWorker({
+      cacheNames: [OLD_APP_CACHE],
       windows: [refused, other],
     })
 
-    await expect(activate()).resolves.toBeUndefined()
+    await expect(dispatch('activate')).resolves.toBeUndefined()
 
-    expect(caches.delete).toHaveBeenCalledOnce()
-    expect(self.registration.unregister).toHaveBeenCalledOnce()
+    expect(held.has(OLD_APP_CACHE)).toBe(false)
     expect(other.navigate).toHaveBeenCalledOnce()
   })
 
-  it('never answers a request itself', () => {
-    const { listeners } = runWorker()
+  it('never unregisters the worker and never answers a request itself', async () => {
+    const { listeners, self, dispatch } = runWorker({ cacheNames: [OLD_APP_CACHE] })
 
+    await dispatch('install')
+    await dispatch('activate')
+
+    expect(self.registration.unregister).not.toHaveBeenCalled()
     expect(Object.keys(listeners).sort()).toEqual(['activate', 'install'])
+  })
+
+  it("does not reuse the old app's cache name in the site's worker", () => {
+    expect(read('vite.config.js')).not.toContain(OLD_APP_CACHE)
   })
 })
 
@@ -149,8 +159,9 @@ describe('old app leftovers', () => {
     ).toEqual(PUBLISHED_FILES)
   })
 
-  it('does not link a web manifest', () => {
-    expect(read('index.html')).not.toMatch(/rel="manifest"/)
+  it("links the built manifest, not the old app's", () => {
+    expect(read('index.html')).toMatch(/rel="manifest" href="\/manifest\.webmanifest"/)
+    expect(read('index.html')).not.toContain('site.webmanifest')
   })
 
   it("does not use the repository's old name in the site", () => {

@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { perGram, nisabFor, parsePrices, parseCustomPrice, calculateZakat } from './zakat.js'
+import {
+  perGram,
+  nisabFor,
+  parsePrices,
+  parseCustomPrice,
+  parseSavedPrices,
+  calculateZakat,
+} from './zakat.js'
 
 const PRICES = { goldPerGram: 100, silverPerGram: 1.5 }
 
@@ -241,5 +248,39 @@ describe('parseCustomPrice', () => {
 
   it.each(['0', '-5', 'cheap', 0, -1, Number.NaN])('rejects %j', (text) => {
     expect(parseCustomPrice(text)).toBeUndefined()
+  })
+})
+
+describe('parseSavedPrices', () => {
+  const saved = {
+    usdPerOunce: { gold: 4000, silver: 50 },
+    rates: { USD: 1, GBP: 0.75, EUR: 0.9, SAR: 3.75, NGN: 1500 },
+    date: '2026-11-03',
+  }
+
+  it('reads saved prices as they were kept', () => {
+    expect(parseSavedPrices(JSON.stringify(saved))).toEqual(saved)
+  })
+
+  it('keeps the metals and drops the rates when a rate is missing', () => {
+    const { rates, ...withoutRates } = saved
+
+    expect(parseSavedPrices(JSON.stringify(withoutRates)).rates).toBeNull()
+    expect(
+      parseSavedPrices(JSON.stringify({ ...saved, rates: { ...rates, NGN: 0 } })).rates,
+    ).toBeNull()
+  })
+
+  it.each([
+    null,
+    'not json',
+    '[]',
+    '{}',
+    JSON.stringify({ ...saved, usdPerOunce: { gold: 0, silver: 50 } }),
+    JSON.stringify({ ...saved, usdPerOunce: { gold: 4000, silver: -1 } }),
+    JSON.stringify({ ...saved, date: 'yesterday' }),
+    JSON.stringify({ ...saved, date: null }),
+  ])('ignores %j', (text) => {
+    expect(parseSavedPrices(text)).toBeNull()
   })
 })

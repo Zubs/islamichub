@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Install IslamicHub and use it offline',
+            scope: 'Whole site',
+            desc: 'IslamicHub can now be installed on a phone from the browser, and after one visit every page opens with no connection. Prayer times (with a remembered location), the Qibla, adhkar and the tasbih counter work fully offline. Hadith books and chapters you have already opened are kept; the Zakat page uses the last prices it fetched and says how old they are. When a new version is released, an open page offers "Update available" instead of changing under you.',
+          },
+          {
             title: 'Remember my location',
             scope: 'Prayer and Fasting pages',
             desc: 'Once prayer times are shown you can choose to remember the location, calculation method and Asr method. Later visits to the Prayer and Fasting pages then show today\'s times straight away. It is saved on your device only, never sent anywhere, and "Forget my location" removes it. Coordinates outside the valid range are now refused.',

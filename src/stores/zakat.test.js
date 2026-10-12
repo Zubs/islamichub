@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 import { useZakatStore } from './zakat.js'
 import { calculateZakat, perGram, TROY_OUNCE_GRAMS } from '@/utils/zakat.js'
 
@@ -310,5 +311,57 @@ describe('zakat store prices', () => {
 
     expect(fetch).toHaveBeenCalledOnce()
     expect(store.usdPerOunce.gold).toBeCloseTo(4000, 6)
+  })
+
+  it('keeps fetched prices on the device and starts from them next time', async () => {
+    stubFetch(answering(reply()))
+    await useZakatStore().fetchPrices()
+    setActivePinia(createPinia())
+    stubFetch(failing(), failing())
+
+    const store = useZakatStore()
+    expect(store.pricesSaved).toBe(true)
+    expect(store.pricesDate).toBe('2026-11-03')
+    await store.fetchPrices()
+
+    expect(store.metalsFetched).toBe(false)
+    expect(store.usdPerOunce.gold).toBeCloseTo(4000, 6)
+    expect(store.rates.NGN).toBe(1500)
+  })
+
+  it('has no saved prices before any fetch, and stores none when fetching fails', async () => {
+    stubFetch(failing(), failing())
+    const store = useZakatStore()
+
+    await store.fetchPrices()
+
+    expect(store.pricesSaved).toBe(false)
+    expect(localStorage.getItem('zakat-prices')).toBeNull()
+  })
+
+  it.each(['not json', '{"usdPerOunce":{"gold":-4,"silver":50},"date":"2026-11-03"}'])(
+    'ignores damaged saved prices of %s',
+    (text) => {
+      localStorage.setItem('zakat-prices', text)
+      setActivePinia(createPinia())
+
+      const store = useZakatStore()
+
+      expect(store.pricesSaved).toBe(false)
+      expect(store.pricesDate).toBe('2026-10-12')
+    },
+  )
+
+  it('still fetches when storage refuses to keep the prices', async () => {
+    stubFetch(answering(reply()))
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('full', 'QuotaExceededError')
+    })
+    const store = useZakatStore()
+
+    await store.fetchPrices()
+    setItem.mockRestore()
+
+    expect(store.metalsFetched).toBe(true)
   })
 })

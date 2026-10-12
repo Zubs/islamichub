@@ -125,7 +125,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import { fetchBooks, BOOKS_META } from '@/composables/useHadithApi.js'
+import { fetchBooks, BOOKS_META, loadErrorMessage } from '@/composables/useHadithApi.js'
 
 useSeo('hadith-books')
 useScrollReveal()
@@ -181,7 +181,7 @@ onMounted(async () => {
     const data = await fetchBooks()
     liveBooks.value = data.books || []
   } catch (e) {
-    error.value = e.message
+    error.value = loadErrorMessage(e)
   } finally {
     loading.value = false
   }

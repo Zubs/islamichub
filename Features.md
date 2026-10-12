@@ -368,6 +368,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The Zakat page uses the last prices it fetched and says how old they are.
 - When a new version is deployed, the user sees "Update available" with a refresh button.
 - An "Install" button shows where the browser supports it. On iPhone, a short note explains "Add to Home Screen".
+- Built, with every automated test passing. The feature stays unticked until Zubair has carried out the real-phone, Lighthouse and slow-connection checks listed under Final.
 
 **Tests**
 - A first visit while offline shows the browser's own offline page, as nothing is stored yet.
@@ -1032,11 +1033,17 @@ Tests are written in plain English and ordered the same way under every feature:
 | 9 | 7 | Husband or wife with both parents (not covered by the table) | The mother takes a third of what is left after the spouse, so the father takes twice her share. This is the position of the four schools; no numbered source is cited on the page | Remove the `motherTakesThirdOfRemainder` branch |
 | 10 | 7 | The whole inheritance engine | Built and tested against Spec 5.9, but not reviewed by a scholar. It should be before people rely on it | Name a reviewer |
 | 11 | 11 | May location be saved on the device? (Reverses "location is never persisted" in Spec section 6) | Yes, only when the user presses "Remember this location"; kept on the device under `prayer-settings`; removed by "Forget my location". Privacy text updated on the About page and in Spec 6 and 9 | Remove the offer and the store; features 12, 19, 21, 23 and 24 depend on a saved location |
+| 12 | 12 | How are fonts kept for offline use? | Google Fonts stay as they are; the worker keeps the font files a visitor has loaded. Self-hosting them would be more robust offline but adds files to maintain | Self-host the three typefaces and drop the Google Fonts links |
+| 13 | 12 | The content security policy had a mistyped address, `cdn.jsdelivr.ne3t`, which blocked the first Zakat price source on the live site (the mirror was covering for it) | Corrected to `cdn.jsdelivr.net` | None needed; noted so you know prices on the live site were coming from the mirror |
 
 **Checks only Zubair can do**
 
 | # | Feature | Check |
 |---|---|---|
+| 1 | 12 | On a real Android phone and a real iPhone: install the app, turn on flight mode, open it from the home screen and read the morning adhkar; confirm prayer times (with a saved location) and tasbih also work. Then tick feature 12 |
+| 2 | 12 | Run Lighthouse on the live site and confirm it reports the site as installable with no manifest or icon warnings |
+| 3 | 12 | On a throttled "Slow 3G" connection, confirm a first visit to the home page is usable within five seconds, and that the Arabic and heading fonts still show after going offline on a second visit |
+| 4 | 12 | After the next deploy, with a tab already open, confirm "Update available" appears and Refresh loads the new version |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

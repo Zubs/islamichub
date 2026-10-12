@@ -502,7 +502,7 @@ const principles = [
   {
     num: '4',
     title: 'Privacy by design',
-    desc: 'No accounts, no personal tracking, no data storage. Everything runs in your browser. Your financial and personal information stays with you. Anonymous usage statistics can be turned off below.',
+    desc: 'No accounts, no personal tracking, and nothing you enter is stored on a server. Everything runs in your browser. Your financial and personal information stays with you. Anonymous usage statistics can be turned off below.',
   },
   {
     num: '5',

@@ -131,7 +131,7 @@ import { useRoute, RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import { fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
+import { fetchChapters, BOOKS_META, loadErrorMessage } from '@/composables/useHadithApi.js'
 
 useScrollReveal()
 
@@ -170,7 +170,7 @@ async function load() {
     const data = await fetchChapters(bookSlug.value)
     chapters.value = data.chapters || []
   } catch (e) {
-    error.value = e.message
+    error.value = loadErrorMessage(e)
   } finally {
     loading.value = false
   }

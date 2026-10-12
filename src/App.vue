@@ -40,6 +40,8 @@
 
   <!-- Site footer -->
   <SiteFooter />
+
+  <AppInstall />
 </template>
 
 <script setup>
@@ -47,6 +49,7 @@ import { ref } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import SiteNav from '@/components/SiteNav.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
+import AppInstall from '@/components/AppInstall.vue'
 
 const showLoading = ref(true)
 

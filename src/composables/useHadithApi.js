@@ -16,6 +16,13 @@ function buildUrl(path, params = {}) {
   return u.toString()
 }
 
+export const OFFLINE_MESSAGE =
+  'You are offline, and this page has not been saved on this device yet. Open it once while connected and it will be kept for next time.'
+
+export function loadErrorMessage(error) {
+  return navigator.onLine === false ? OFFLINE_MESSAGE : error.message
+}
+
 async function get(path, params = {}) {
   const url = buildUrl(path, params)
   const res = await fetch(url)

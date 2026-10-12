@@ -15,6 +15,7 @@ const props = defineProps({
   date: { type: String, default: null },
   loading: { type: Boolean, default: false },
   custom: { type: Array, default: () => [] },
+  saved: { type: Boolean, default: false },
 })
 
 const current = computed(() => !props.loading && props.metalsFetched && props.ratesFetched)
@@ -41,9 +42,37 @@ const customNote = computed(() => {
   return `Your own ${metals} price per gram is in use in place of the fetched one.`
 })
 
+const ageDays = computed(() => {
+  if (!props.date) {
+    return null
+  }
+
+  const [year, month, day] = props.date.split('-').map(Number)
+  const today = new Date()
+  const from = Date.UTC(year, month - 1, day)
+  const to = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+  return Math.max(0, Math.round((to - from) / 86400000))
+})
+
+const ageText = computed(() => {
+  if (ageDays.value === null) {
+    return ''
+  }
+
+  if (ageDays.value === 0) {
+    return ', fetched earlier today'
+  }
+
+  return ageDays.value === 1 ? ', 1 day old' : `, ${ageDays.value} days old`
+})
+
 const label = computed(() => {
   if (props.loading) {
     return 'loading'
+  }
+
+  if (!props.metalsFetched && props.saved) {
+    return 'saved'
   }
 
   if (!props.metalsFetched) {
@@ -59,6 +88,10 @@ const note = computed(() => {
 
   if (props.loading) {
     return "Fetching today's prices. You can fill in the calculator meanwhile."
+  }
+
+  if (!props.metalsFetched && props.saved) {
+    return `Saved prices${fromDate}${ageText.value}. Today's prices could not be loaded, so these are the last ones this device fetched.`
   }
 
   if (!props.metalsFetched) {

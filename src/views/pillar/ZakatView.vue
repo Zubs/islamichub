@@ -114,6 +114,7 @@
           :date="store.pricesDate"
           :loading="store.pricesLoading"
           :custom="customMetals"
+          :saved="store.pricesSaved"
         />
         <p v-if="store.currency === 'NGN'" class="rate-note">
           Naira prices use the official exchange rate. The price a local dealer quotes can differ,
@@ -296,6 +297,7 @@
               :date="store.pricesDate"
               :loading="store.pricesLoading"
               :custom="customMetals"
+              :saved="store.pricesSaved"
             />
             <div class="field-grid">
               <div class="field">

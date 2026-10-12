@@ -196,7 +196,12 @@ import { useRoute, RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import { fetchHadiths, fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
+import {
+  fetchHadiths,
+  fetchChapters,
+  BOOKS_META,
+  loadErrorMessage,
+} from '@/composables/useHadithApi.js'
 
 useScrollReveal()
 
@@ -316,7 +321,7 @@ async function loadHadiths() {
       hadiths.value.forEach((h) => expanded.add(h.id))
     }
   } catch (e) {
-    error.value = e.message
+    error.value = loadErrorMessage(e)
   } finally {
     loading.value = false
   }

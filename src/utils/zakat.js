@@ -1,3 +1,5 @@
+import { parseStoredObject } from '@/utils/storage.js'
+
 export const TROY_OUNCE_GRAMS = 31.1035
 export const GOLD_NISAB_GRAMS = 85
 export const SILVER_NISAB_GRAMS = 595
@@ -48,6 +50,27 @@ export function parsePrices(reply) {
   const rates = Object.values(fetchedRates).every(isPrice) ? fetchedRates : null
 
   return { usdPerOunce, rates, date: typeof reply.date === 'string' ? reply.date : null }
+}
+
+export function parseSavedPrices(text) {
+  const saved = parseStoredObject(text)
+  const metals = saved.usdPerOunce
+  if (
+    !isPrice(metals?.gold) ||
+    !isPrice(metals?.silver) ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(saved.date)
+  ) {
+    return null
+  }
+
+  const ratesValid = CURRENCIES.every((code) => isPrice(saved.rates?.[code]))
+  return {
+    usdPerOunce: { gold: metals.gold, silver: metals.silver },
+    rates: ratesValid
+      ? Object.fromEntries(CURRENCIES.map((code) => [code, saved.rates[code]]))
+      : null,
+    date: saved.date,
+  }
 }
 
 export function calculateZakat(amounts, prices, nisabMethod) {

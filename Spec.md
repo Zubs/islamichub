@@ -39,6 +39,7 @@ a browsable hadith library.
 | Head / SEO   | `@unhead/vue`                                                     |
 | Styling      | Global CSS with custom properties; scoped styles inside views     |
 | Lint/format  | oxlint, ESLint (`eslint-plugin-vue`), Prettier                    |
+| Offline      | `vite-plugin-pwa` (workbox)                                       |
 | Testing      | Vitest with Vue Test Utils and jsdom; tests sit beside their code |
 | Hosting      | Netlify (`npm test && npm run build` → `dist/`)                   |
 | Node         | `^20.19.0 \|\| >=22.12.0`                                         |
@@ -88,7 +89,8 @@ src/
   utils/                prayer, qibla, hijri, inheritance, zakat, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
-public/                 robots.txt, sitemap.xml, favicons, service-worker.js (retires the old app's worker)
+public/                 robots.txt, sitemap.xml, favicons, app icons, sw-legacy.js (clears the old app's cache)
+scripts/                make-icons.py (draws the app icons)
 netlify.toml            Build, SPA redirect, security and cache headers
 ```
 
@@ -382,6 +384,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |
 | `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
 
 Rules:
@@ -395,6 +398,29 @@ Rules:
   impossible location are read as none; an unknown method falls back to the default. If the browser blocks storage the
   page works for the visit and says the location cannot be remembered.
 - Changing a stored shape requires a migration or a new key, since existing users have data under the current keys.
+
+---
+
+## 6a. Installable and offline
+
+- `vite-plugin-pwa` builds a service worker (workbox, `generateSW`) served from `/service-worker.js`, and
+  `manifest.webmanifest` with 192px, 512px and maskable icons and shortcuts to Prayer, Adhkar and Tasbih.
+- Every built file is precached on the first visit, so every route opens offline; `index.html` answers any navigation.
+- Google Fonts files are kept `CacheFirst` once loaded. Because the first page loads before the worker controls it,
+  `usePwa.js` re-requests the font addresses the page has already loaded once the worker is ready.
+- Hadith requests (hadithapi.com, and `/api/hadith/` once the proxy exists) are `NetworkFirst` with a three-second limit,
+  so a book or chapter viewed online opens offline. One never viewed shows an "offline, not saved yet" message.
+- The Zakat store keeps the last fetched prices under `zakat-prices`. When a fetch fails they are used in preference to
+  the built-in reference prices, and the page marks them "saved" with their age in days.
+- Prayer times, Qibla, adhkar and tasbih need no server. Prayer times offline need a saved location.
+- A new deploy shows "Update available" with a Refresh button (`registerType: 'prompt'`); nothing reloads by itself.
+  `AppInstall.vue` also shows an Install button when the browser offers installation, and an "Add to Home Screen" note
+  in Safari on iPhone.
+- `public/sw-legacy.js` is loaded by the worker. If the old app's `islamichub-shell-v2` cache is on the device it takes
+  over at once, deletes that cache and reloads open pages. That name must never be reused.
+- `test/build.test.js` builds the site and fails if the home page's document, scripts and styles exceed 600 KB, if a
+  manifest icon is missing, or if any script or stylesheet is left out of the precache.
+- Every feature built from here on must work offline unless it says it needs a connection.
 
 ---
 
@@ -494,10 +520,6 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Housekeeping
 
-- **There is no web manifest and no offline support.** The old manifest pointed to icons that did not exist and was
-  removed. `public/service-worker.js` exists only to retire the old app's worker in returning visitors' browsers: it
-  clears their caches, unregisters itself and caches nothing. It must stay until a real worker is served from the same
-  address.
 - **The hadith API key ships in the client bundle.** Keeping it secret needs a server-side proxy, which is the most immediate
   reason to add a backend.
 - **In-progress adhkar counts are lost on reload.** They are held in memory only.
