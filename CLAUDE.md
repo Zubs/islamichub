@@ -46,8 +46,10 @@ IslamicHub (https://islamichub.xyz) is a free, open-source Islamic education and
 
 ## Privacy rules
 
-- No analytics, no tracking and no accounts.
+- No tracking of people: anonymous counts only, and no accounts.
 - Nothing a user enters leaves their device, and location is not stored, unless a feature in `Features.md` says so and the user has opted in.
+- Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
+- Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.
 - Any server-side storage is opt-in, holds the minimum needed, and can be deleted by the user.
 
 ## After every plan

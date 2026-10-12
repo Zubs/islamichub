@@ -43,6 +43,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 31. Qurbani
 - [ ] 32. Prophets
 - [ ] 33. Journeys of the prophets
+- [ ] 34. Usage statistics
 
 ---
 
@@ -633,6 +634,7 @@ Tests are written in plain English and ordered the same way under every feature:
 **How it works**
 - A Share button on the daily hadith, every single-hadith page, every dua and every adhkar card.
 - Sharing offers two things: an image card, and a link to the item's own address.
+- Shared links carry a short source tag, so usage statistics (feature 34), if built, can tell WhatsApp visits from direct ones.
 - The card is a square image drawn on the user's device: the Arabic text, the translation, the reference, and the site's name and address, in the site's colours and typefaces. Nothing is uploaded.
 - On phones the device's share sheet opens with the image attached, so WhatsApp is one tap away. Where a browser cannot share images, the user gets "Save image" and a "Share on WhatsApp" link that sends the text and the address.
 - Text too long for a card is shared as text and a link, with no image.
@@ -960,6 +962,45 @@ Tests are written in plain English and ordered the same way under every feature:
 
 ---
 
+## Insight
+
+### 34. Usage statistics
+
+**What it does:** Shows how many people visit, where they come from and which parts of the site they use, without identifying anyone. It does not depend on any other feature and can be built at any point.
+
+**How it works**
+- This reverses a rule the project states in four places: "no analytics, no tracking". The rule becomes "no tracking of people: anonymous counts only", and `Spec.md` section 9, `CLAUDE.md`, `CONTRIBUTING.md` and the About page are changed to say exactly what is counted.
+- **No third-party script is loaded.** The site sends its own small request to GoatCounter's counting address. The service's own script would send the address's query string and the full referring address, and would run someone else's code on pages where people enter their finances.
+- It counts three things: page views by address, where a visit came from (the referring site's name only), and the country, browser and screen size the service derives without storing an IP address.
+- It also counts a short, fixed list of actions, to show what is used: prayer times shown, a Zakat result reached, an inheritance result reached, an adhkar category completed, and a tasbih target reached.
+- An action is a name and nothing else. No amount, coordinate, place name, count, heir, search text or other input is ever sent, and one function, `track(name)`, is the only way to send one, so this can be tested.
+- Nothing is stored on the device to recognise a returning visitor: no cookie, no `localStorage` entry, no fingerprint.
+- Addresses are sent without their query string.
+- A visitor whose browser sends Do Not Track or Global Privacy Control is not counted. A "Don't count my visits" switch on the About page does the same for anyone else, and is remembered on the device.
+- Visits from WhatsApp arrive with no referrer and would show as "direct". Links made by Share to WhatsApp (feature 22) therefore carry a short source tag, which is counted and then removed from the address bar.
+- The counting address is added to the content security policy. If the request is blocked or the service is down, nothing breaks and nothing is retried.
+- Local development, tests and deploy previews are not counted.
+
+**Tests**
+- With the script blocked, every page works and the console shows no uncaught error.
+- Opening one page records one page view with its address and no query string.
+- Moving between three pages inside the app records three page views, one for each address.
+- Reaching a Zakat result records the action's name once, and the request holds none of the amounts entered.
+- Each action in the fixed list is recorded when it happens, and a name outside the list is refused.
+- A hadith chapter address is recorded as it is, and a search or filter typed on a page is not sent.
+- No cookie is set and nothing is added to `localStorage` by the statistics script.
+- With Do Not Track or Global Privacy Control on, no request is sent.
+- Turning on "Don't count my visits" stops requests at once, and it is still on after a reload.
+- A link shared with a source tag is counted under that source, and the tag is gone from the address bar afterwards.
+- On a deploy preview and in local development, no request is sent.
+- The script adds no more than 5 KB to a first visit and does not delay the page becoming usable.
+- A request to any address other than the statistics service is blocked by the content security policy.
+- A visitor arrives from a shared WhatsApp link, completes the morning adhkar, and the dashboard shows one visit from WhatsApp and one adhkar completion, with nothing that could identify them.
+
+**Done when:** The service's dashboard shows a day of real traffic by page, source and country and the five actions, and an inspection of the requests on every tool page finds nothing a visitor entered.
+
+---
+
 ## Decisions needed
 
 Each of these blocks the feature named. A proposed default is given where there is one; the feature is written to that default.
@@ -971,4 +1012,7 @@ Each of these blocks the feature named. A proposed default is given where there 
 | Which naira rate does the calculator use? | 6 | The official rate, with the user able to type their own price per gram |
 | May location be saved on the device? | 11 | Yes, by choice only. Reverses a rule in Spec section 6 |
 | May a server hold rounded coordinates for push? | 24 | Yes, by choice only, rounded to about 1 km, deleted on request |
+| May the site count visits at all? | 34 | **Decided:** Yes, as anonymous counts only. Reverses the "no analytics" rule in `Spec.md`, `CLAUDE.md`, `CONTRIBUTING.md` and the About page |
+| Which statistics service? | 34 | **Decided:** GoatCounter: open source, no cookies, counts named actions, free for non-commercial sites |
+| Are visitors asked first? | 34 | **Decided:** No banner. Nothing identifying is collected; Do Not Track is honoured and an opt-out switch is offered |
 | Who reviews translations and new religious content? | 27, 28, 30 to 32 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer |

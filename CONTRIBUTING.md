@@ -46,7 +46,7 @@ Three more rules:
 
 - **Saved data is a contract.** Visitors already have data saved under the current keys. Changing its shape needs a migration or a new key, and anything read from the device must cope with missing or damaged data.
 - **Every outside request fails soft.** The page must stay usable when a service is down. A new outside address must be added to the content security policy in `netlify.toml`.
-- **What a visitor enters stays on their device.** No analytics, no tracking, no accounts.
+- **What a visitor enters stays on their device.** Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page. Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request. No accounts, no personal tracking.
 
 ## Adding a page
 

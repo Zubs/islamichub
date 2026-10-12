@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { countPage, sourceTag } from '@/composables/useStats.js'
 
 const routes = [
   {
@@ -104,6 +105,27 @@ const router = createRouter({
 
     return { top: 0, behavior: 'instant' }
   },
+})
+
+let previousPath = ''
+
+router.afterEach((to) => {
+  // Only count when path actually changes
+  if (to.path !== previousPath) {
+    // Handle source tag from incoming link (e.g., WhatsApp shares)
+    const tag = sourceTag(to.path.split('?')[1] || '')
+    if (tag) {
+      // Remove the tag from the URL without triggering navigation
+      const cleanPath = to.path.split('?')[0]
+      const cleanSearch = new URLSearchParams(to.path.split('?')[1] || '')
+      cleanSearch.delete('src')
+      const newSearch = cleanSearch.toString()
+      const newUrl = cleanPath + (newSearch ? '?' + newSearch : '')
+      window.history.replaceState({}, '', newUrl)
+    }
+    countPage(to)
+    previousPath = to.path
+  }
 })
 
 export default router

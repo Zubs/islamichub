@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { TASBIH_PHRASES, getPhrase } from '@/data/tasbihPhrases.js'
 import { dayKey } from '@/utils/day.js'
 import { parseStoredObject } from '@/utils/storage.js'
+import { track } from '@/composables/useStats.js'
 
 const CURRENT_KEY = 'tasbih-current-phrase'
 const TOTALS_KEY = 'tasbih-totals' // { [date]: { [phraseId]: count } }
@@ -42,12 +43,15 @@ export const useTasbihStore = defineStore('tasbih', () => {
     totals.value[key][currentId.value] = (totals.value[key][currentId.value] || 0) + 1
     persistTotals()
 
-    if (count.value === target.value && navigator.vibrate) {
-      try {
-        navigator.vibrate(60)
-      } catch {
-        // vibration not supported/allowed — non-critical
+    if (count.value === target.value) {
+      if (navigator.vibrate) {
+        try {
+          navigator.vibrate(60)
+        } catch {
+          // vibration isn't supported/allowed — non-critical
+        }
       }
+      track('tasbih target reached')
     }
   }
 

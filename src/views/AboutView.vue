@@ -253,7 +253,64 @@
 
       <div class="divider"></div>
 
-      <!-- Sources -->
+      <!-- Usage Statistics -->
+      <span class="eyebrow" id="statistics">Usage statistics</span>
+      <h2
+        class="section-title"
+        style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1.5rem"
+      >
+        How we understand usage
+      </h2>
+      <div class="prose" style="margin-bottom: 1.5rem">
+        <p>
+          To understand how IslamicHub is used and which tools are most helpful, we count anonymous
+          usage statistics. This is strictly opt-out — you can turn it off at any time.
+        </p>
+        <p><strong>What is counted:</strong></p>
+        <ul>
+          <li>Page views by address (the path only, never query strings)</li>
+          <li>
+            Where a visit came from (the referring site's name only, e.g., <code>google.com</code> —
+            never the full URL)
+          </li>
+          <li>
+            Five named actions: prayer times shown, a Zakat result reached, an inheritance result
+            reached, an adhkar category completed, and a tasbih target reached
+          </li>
+        </ul>
+        <p><strong>What is never sent:</strong></p>
+        <ul>
+          <li>
+            Any amount, weight, coordinate, place name, heir, search text, or other input you enter
+          </li>
+          <li>
+            Your name, email, or any identifier — no cookies, no localStorage identifiers, no
+            fingerprinting
+          </li>
+          <li>Which specific hadith or article you read beyond the page address</li>
+        </ul>
+        <p>
+          Statistics are sent to <strong>GoatCounter</strong>, a cookieless, open-source analytics
+          service. GoatCounter sees the IP address and browser type of each request (as any server
+          does) and derives country and browser from them. It states that it never stores IP
+          addresses and holds a scrambled form in memory for up to eight hours only to count visits.
+        </p>
+        <p>
+          Counting happens only on the live site (<code>islamichub.xyz</code>) and only when
+          configured. It is off during local development, tests, and deploy previews.
+          <strong>Do Not Track</strong> and <strong>Global Privacy Control</strong> are honoured
+          automatically.
+        </p>
+      </div>
+      <StatsOptOut />
+      <p style="font-size: 12px; color: var(--muted); margin-top: 1rem">
+        This is a change from our earlier &ldquo;no analytics, no tracking&rdquo; promise. We
+        updated it because understanding usage helps us decide which languages to add first and
+        which tools to improve — but we kept the core promise: your data stays on your device, and
+        you can opt out at any time.
+      </p>
+
+      <div class="divider"></div>
       <span class="eyebrow" id="scholars">Scholarly sources</span>
       <h2
         class="section-title"
@@ -342,6 +399,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import StatsOptOut from '@/components/StatsOptOut.vue'
 
 useSeo('about')
 useScrollReveal()
@@ -433,7 +491,7 @@ const principles = [
   {
     num: '4',
     title: 'Privacy by design',
-    desc: 'No accounts, no tracking, no data storage. Everything runs in your browser. Your financial and personal information stays with you.',
+    desc: 'No accounts, no personal tracking, no data storage. Everything runs in your browser. Your financial and personal information stays with you. Anonymous usage statistics can be turned off below.',
   },
   {
     num: '5',

@@ -354,6 +354,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `adhkar-completion-log`  | `{ "YYYY-MM-DD": ["morning", ...] }`          | adhkar store  |
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
+| `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
 
 Rules:
 
@@ -374,6 +375,7 @@ Rules:
 | `latest.currency-api.pages.dev` | Mirror of the same dataset       | Reference prices; flagged as not current    |
 | `nominatim.openstreetmap.org`   | Reverse geocoding a place name   | Shows "Your location"                       |
 | `hadithapi.com`                 | Books, chapters, hadiths         | Error state in the view                     |
+| `islamichub.goatcounter.com`    | Anonymous usage statistics       | Dropped silently; page works normally       |
 | Google Fonts                    | Amiri, Cormorant Garamond, DM Sans | System font fallbacks                     |
 
 Every external call must fail soft: the page stays usable and no error is thrown to the user unhandled. Adding a new
@@ -420,9 +422,11 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 
 ### Privacy
 
-- No analytics or tracking, and currently no accounts.
+- No tracking of people: anonymous counts only, and currently no accounts.
 - Location is requested only on user action, used in memory, and sent only to Nominatim for a place name.
 - Financial and family details entered into calculators do not leave the device.
+- Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
+- Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.
 - If a backend is added, anything it stores about a user must be opt-in, and the tools must keep working without
   signing in.
 
