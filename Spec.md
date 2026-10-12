@@ -39,10 +39,11 @@ a browsable hadith library.
 | Head / SEO   | `@unhead/vue`                                                     |
 | Styling      | Global CSS with custom properties; scoped styles inside views     |
 | Lint/format  | oxlint, ESLint (`eslint-plugin-vue`), Prettier                    |
-| Hosting      | Netlify (`npm run build` → `dist/`)                               |
+| Testing      | Vitest with Vue Test Utils and jsdom; tests sit beside their code |
+| Hosting      | Netlify (`npm test && npm run build` → `dist/`)                   |
 | Node         | `^20.19.0 \|\| >=22.12.0`                                         |
 
-There is no TypeScript and no test runner. The app is currently client-only; a backend is not ruled out (see
+There is no TypeScript. The app is currently client-only; a backend is not ruled out (see
 [Backend](#backend-open)).
 
 ### Scripts
@@ -52,6 +53,8 @@ There is no TypeScript and no test runner. The app is currently client-only; a b
 | `npm run dev`     | Vite dev server                           |
 | `npm run build`   | Production build to `dist/`               |
 | `npm run preview` | Serve the production build locally        |
+| `npm test`        | Run every test once                       |
+| `npm run test:watch` | Re-run tests as files change           |
 | `npm run lint`    | oxlint then ESLint, both with `--fix`     |
 | `npm run format`  | Prettier over `src/`                      |
 
@@ -415,7 +418,8 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 
 ## 10. Deployment
 
-Netlify builds with `npm run build` and publishes `dist/`.
+Netlify runs the tests and then builds (`npm test && npm run build`), and publishes `dist/`. A failing test stops the
+deploy.
 
 - **SPA fallback:** every path rewrites to `/index.html` with status 200.
 - **Security headers:** `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, strict referrer policy, a
@@ -467,4 +471,8 @@ Places where the code does not yet meet this spec, or where supporting files are
 - **`adhkar-session-progress`** is declared as a storage key but never used; in-progress counts are lost on reload.
 - **The loading screen blocks every entry route** for at least 2 seconds on the price fetch, including pages that do
   not use prices.
-- **No automated tests.** The pure functions in `utils/` are the obvious first candidates.
+- **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
+  stores are tested. The Zakat store, the inheritance engine, the composables and the views are not yet.
+- **Stored data of the wrong shape is not handled.** The adhkar and tasbih stores fall back to empty when stored text
+  is not valid JSON, but valid JSON of the wrong shape (for example `null` under `adhkar-completion-log` or
+  `tasbih-totals`) would throw.

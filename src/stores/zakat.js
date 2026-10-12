@@ -9,14 +9,14 @@ export const useZakatStore = defineStore('zakat', () => {
     GBP: 1,
     USD: 1.294,
     EUR: 1.167,
-    SAR: 4.851
+    SAR: 4.851,
   })
   const goldGBP = ref(113.42)
   const silverGBP = ref(1.07)
   const pricesLive = ref(false)
   const pricesLoading = ref(false)
-  const nisabMethod = ref('gold')  // 'gold' | 'silver'
-  const location = ref(null)    // { lat, lng, name }
+  const nisabMethod = ref('gold') // 'gold' | 'silver'
+  const location = ref(null) // { lat, lng, name }
   const locationError = ref(null)
   const GOLD_NISAB_G = 85
   const SILVER_NISAB_G = 595
@@ -27,7 +27,7 @@ export const useZakatStore = defineStore('zakat', () => {
   const nisabValue = computed(() =>
     nisabMethod.value === 'gold'
       ? GOLD_NISAB_G * goldLocal.value
-      : SILVER_NISAB_G * silverLocal.value
+      : SILVER_NISAB_G * silverLocal.value,
   )
 
   function fmt(n) {
@@ -112,7 +112,7 @@ export const useZakatStore = defineStore('zakat', () => {
 
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
-          const {latitude: lat, longitude: lng} = pos.coords
+          const { latitude: lat, longitude: lng } = pos.coords
           let name = 'Your location'
           try {
             const r = await fetch(
@@ -120,16 +120,12 @@ export const useZakatStore = defineStore('zakat', () => {
             )
             if (r.ok) {
               const d = await r.json()
-              name =
-                d.address?.city ||
-                d.address?.town ||
-                d.address?.county ||
-                name
+              name = d.address?.city || d.address?.town || d.address?.county || name
             }
           } catch {
             // ignore — use default name
           }
-          location.value = {lat, lng, name}
+          location.value = { lat, lng, name }
           locationError.value = null
           resolve(location.value)
         },

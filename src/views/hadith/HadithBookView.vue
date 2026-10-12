@@ -116,23 +116,17 @@
             </div>
           </RouterLink>
         </div>
-      </div>
 
-      <!-- No results after filter -->
-      <div v-else-if="!loading && search && chapters.length" class="had-empty">
-        No chapters match "{{ search }}"
+        <div v-if="search && !filteredChapters.length" class="had-empty">
+          No chapters match "{{ search }}"
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  onMounted,
-  watch
-} from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'

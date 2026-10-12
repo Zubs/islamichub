@@ -379,7 +379,7 @@ const daysLeft = Math.round(daysToRamadan())
 const today = new Date().toLocaleDateString('en-GB', {
   weekday: 'long',
   day: 'numeric',
-  month: 'long'
+  month: 'long',
 })
 
 const pillars = [
@@ -391,7 +391,7 @@ const pillars = [
     name: 'Shahada',
     sub: 'Declaration of Faith · Tawhid',
     tag: 'Educational',
-    ariaLabel: 'Faith — Shahada'
+    ariaLabel: 'Faith — Shahada',
   },
   {
     to: '/prayer',
@@ -401,7 +401,7 @@ const pillars = [
     name: 'Salah',
     sub: 'Prayer Times & Qibla',
     tag: '+ Live calculator',
-    ariaLabel: 'Prayer — Salah and prayer times'
+    ariaLabel: 'Prayer — Salah and prayer times',
   },
   {
     to: '/zakat',
@@ -411,7 +411,7 @@ const pillars = [
     name: 'Zakat',
     sub: 'Almsgiving · Live prices',
     tag: '+ Calculator',
-    ariaLabel: 'Zakat calculator'
+    ariaLabel: 'Zakat calculator',
   },
   {
     to: '/fasting',
@@ -421,7 +421,7 @@ const pillars = [
     name: 'Sawm',
     sub: 'Ramadan & Fasting',
     tag: '+ Ramadan tracker',
-    ariaLabel: 'Fasting — Sawm and Ramadan'
+    ariaLabel: 'Fasting — Sawm and Ramadan',
   },
   {
     to: '/hajj',
@@ -431,7 +431,7 @@ const pillars = [
     name: 'Hajj',
     sub: 'Pilgrimage to Makkah',
     tag: '+ Rites guide',
-    ariaLabel: 'Hajj — Pilgrimage guide'
+    ariaLabel: 'Hajj — Pilgrimage guide',
   },
 ]
 
@@ -441,42 +441,42 @@ const tools = [
     icon: '⚖️',
     name: 'Zakat Calculator',
     desc: 'Live gold & silver prices · dual Nisab methods · all asset types including shares, ISAs, and pension',
-    aria: 'Open Zakat calculator'
+    aria: 'Open Zakat calculator',
   },
   {
     to: '/prayer',
     icon: '🕐',
     name: 'Prayer Times',
     desc: 'Fajr, Dhuhr, Asr, Maghrib & Isha for your city · 5 calculation methods · live countdown',
-    aria: 'Prayer times for your city'
+    aria: 'Prayer times for your city',
   },
   {
     to: '/prayer',
     icon: '🧭',
     name: 'Qibla Finder',
     desc: "Precise compass bearing to the Ka'bah · distance to Makkah in km · works from any location",
-    aria: 'Find Qibla direction'
+    aria: 'Find Qibla direction',
   },
   {
     to: '/adhkar',
     icon: '📿',
     name: 'Adhkar & Duas',
     desc: 'Morning, evening & after-prayer supplications · Arabic, transliteration & translation · tap-to-count tracker',
-    aria: 'Adhkar and duas'
+    aria: 'Adhkar and duas',
   },
   {
     to: '/tasbih',
     icon: '🔢',
     name: 'Tasbih Counter',
     desc: 'Digital dhikr counter with custom targets · daily and lifetime totals · works for any phrase',
-    aria: 'Digital tasbih counter'
+    aria: 'Digital tasbih counter',
   },
   {
     to: '/inheritance',
     icon: '📜',
     name: "Inheritance (Fara'id)",
     desc: "Qur'anic shares for all heirs · automatic blocking rules · visual breakdown by amount and percentage",
-    aria: 'Islamic inheritance calculator'
+    aria: 'Islamic inheritance calculator',
   },
 ]
 
@@ -484,27 +484,27 @@ const features = [
   {
     icon: '📖',
     title: "Qur'an & Hadith first",
-    desc: "Every ruling is cited back to its primary source. We don't just give you an answer; we tell you why."
+    desc: "Every ruling is cited back to its primary source. We don't just give you an answer; we tell you why.",
   },
   {
     icon: '🕌',
     title: 'All four schools',
-    desc: "Hanafi, Maliki, Shafi'i, and Hanbali positions are considered. Disagreements are surfaced, not hidden."
+    desc: "Hanafi, Maliki, Shafi'i, and Hanbali positions are considered. Disagreements are surfaced, not hidden.",
   },
   {
     icon: '🔒',
     title: 'Private by design',
-    desc: 'No account. No tracking. Everything runs in your browser. Your financial and religious information stays with you.'
+    desc: 'No account. No tracking. Everything runs in your browser. Your financial and religious information stays with you.',
   },
   {
     icon: '🌍',
     title: 'Multi-currency',
-    desc: 'GBP, USD, EUR, or SAR — with live exchange rates fetched automatically alongside metal prices.'
+    desc: 'GBP, USD, EUR, or SAR — with live exchange rates fetched automatically alongside metal prices.',
   },
   {
     icon: '🤝',
     title: 'Open source',
-    desc: 'The entire platform is open source on GitHub. Contributions, corrections, and translations are welcome.'
+    desc: 'The entire platform is open source on GitHub. Contributions, corrections, and translations are welcome.',
   },
 ]
 
@@ -514,42 +514,42 @@ const darkFeatures = [
     title: 'Accurate Zakat Calculator with Live Gold Prices',
     desc: 'Calculate Zakat on cash, savings, gold and silver (by weight and purity), shares, ISAs, pensions, and business inventory. Live spot prices. Dual Nisab. Full debt deduction.',
     to: '/zakat',
-    cta: 'Open calculator'
+    cta: 'Open calculator',
   },
   {
     icon: '🕌',
     title: 'Reliable Prayer Times for Any City + Qibla',
     desc: 'Fajr, Dhuhr, Asr, Maghrib, Isha for your exact coordinates. Five calculation methods. Live countdown. Animated Qibla compass.',
     to: '/prayer',
-    cta: 'Find prayer times'
+    cta: 'Find prayer times',
   },
   {
     icon: '📿',
     title: 'Morning & Evening Adhkar, Tracked Daily',
     desc: 'Authenticated supplications for morning, evening, after prayer, sleep, and waking — with Arabic, transliteration, translation, and daily streaks.',
     to: '/adhkar',
-    cta: 'Open Adhkar'
+    cta: 'Open Adhkar',
   },
   {
     icon: '📜',
     title: "Free Islamic Inheritance Calculator (Fara'id)",
     desc: "Qur'anic shares for all 13 heir types. Auto-applies blocking rules. Visual percentage and amount breakdown. Based on Qur'an 4:11–12.",
     to: '/inheritance',
-    cta: 'Calculate inheritance'
+    cta: 'Calculate inheritance',
   },
   {
     icon: '☪️',
     title: 'Understand the First Pillar — Shahada & Tawhid',
     desc: "The declaration of faith, its seven conditions, the three dimensions of Tawhid, and Risala — with Qur'anic verses and Hadith.",
     to: '/faith',
-    cta: 'Learn about faith'
+    cta: 'Learn about faith',
   },
   {
     icon: '🌙',
     title: 'Ramadan Fasting Tracker — Suhoor & Iftar Times',
     desc: 'Live Suhoor and Iftar times for your location. Fasting progress bar. Ramadan countdown. Comprehensive Sawm rulings.',
     to: '/fasting',
-    cta: 'Track your fast'
+    cta: 'Track your fast',
   },
 ]
 
@@ -558,13 +558,13 @@ const builders = [
     name: 'Zubair Idris Aweda',
     role: 'Software Engineer & Technical Writer',
     login: 'Zubs',
-    avatar: 'https://avatars.githubusercontent.com/u/53227444?v=4'
+    avatar: 'https://avatars.githubusercontent.com/u/53227444?v=4',
   },
   {
     name: 'Yusuf Saif',
     role: 'Project Manager & Technical Strategist',
     login: 'yusuf-saif',
-    avatar: 'https://avatars.githubusercontent.com/u/54576722?v=4'
+    avatar: 'https://avatars.githubusercontent.com/u/54576722?v=4',
   },
 ]
 </script>

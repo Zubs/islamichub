@@ -141,7 +141,7 @@ const socials = [
     href: GITHUB_REPO,
     icon: 'github',
     text: 'GitHub',
-    label: 'IslamicHub on GitHub'
+    label: 'IslamicHub on GitHub',
   },
 ]
 </script>
