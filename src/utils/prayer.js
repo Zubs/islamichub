@@ -104,6 +104,8 @@ const METHODS = {
   },
 }
 
+export const PRAYER_METHODS = Object.keys(METHODS)
+
 export const ASR_SHADOW_FACTORS = { standard: 1, hanafi: 2 }
 
 /**

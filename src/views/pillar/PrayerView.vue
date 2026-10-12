@@ -89,6 +89,28 @@
           <div v-if="locationStatus" style="margin-top: 8px; font-size: 13px; color: var(--muted)">
             {{ locationStatus }}
           </div>
+          <div v-if="shownLocation || settings.saved" class="remember-row">
+            <span v-if="isRemembered" class="remember-state">
+              📍 Remembered on this device: {{ settings.saved.name }}
+            </span>
+            <button
+              v-else-if="shownLocation && settings.canRemember"
+              class="btn btn-secondary"
+              @click="rememberLocation"
+            >
+              Remember this location
+            </button>
+            <span v-else-if="shownLocation" class="remember-state" role="status">
+              Your browser is blocking storage, so this location cannot be remembered. Times still
+              work for this visit.
+            </span>
+            <button v-if="settings.saved" class="btn btn-secondary" @click="settings.forget()">
+              Forget my location
+            </button>
+            <span v-if="settings.canRemember" class="remember-note">
+              Kept on this device only and never sent anywhere.
+            </span>
+          </div>
         </div>
 
         <!-- Next prayer banner -->
@@ -447,11 +469,13 @@
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
+import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
@@ -470,10 +494,34 @@ useScrollReveal()
 const store = useZakatStore()
 
 // ── Form state ───────────────────────────────────────────────
-const lat = ref(store.location?.lat ?? '')
-const lng = ref(store.location?.lng ?? '')
-const method = ref('MWL')
-const asrMethod = ref('standard')
+const settings = usePrayerSettingsStore()
+const lat = ref(settings.saved?.lat ?? store.location?.lat ?? '')
+const lng = ref(settings.saved?.lng ?? store.location?.lng ?? '')
+const method = ref(settings.saved?.method ?? 'MWL')
+const asrMethod = ref(settings.saved?.asrMethod ?? 'standard')
+const shownLocation = ref(null)
+const isRemembered = computed(
+  () =>
+    !!settings.saved &&
+    settings.saved.lat === shownLocation.value?.lat &&
+    settings.saved.lng === shownLocation.value?.lng,
+)
+
+function rememberLocation() {
+  const { lat: shownLat, lng: shownLng } = shownLocation.value
+  const found = store.location
+  const wasFound =
+    found &&
+    parseFloat(found.lat.toFixed(4)) === shownLat &&
+    parseFloat(found.lng.toFixed(4)) === shownLng
+  settings.remember({
+    lat: shownLat,
+    lng: shownLng,
+    name: wasFound ? found.name : `${shownLat}, ${shownLng}`,
+    method: method.value,
+    asrMethod: asrMethod.value,
+  })
+}
 const locating = ref(false)
 const locationStatus = ref('')
 
@@ -529,10 +577,13 @@ function calculate() {
 function showTimes() {
   const latV = parseFloat(lat.value)
   const lngV = parseFloat(lng.value)
-  if (isNaN(latV) || isNaN(lngV)) {
-    locationStatus.value = 'Please enter valid coordinates.'
+  if (!isValidCoordinates(latV, lngV)) {
+    locationStatus.value =
+      'Please enter valid coordinates: latitude from -90 to 90 and longitude from -180 to 180.'
     return false
   }
+
+  shownLocation.value = { lat: latV, lng: lngV }
 
   const tz = getTimezoneOffset()
   const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value, asrMethod.value)
@@ -572,13 +623,14 @@ function showTimes() {
 }
 
 watch([method, asrMethod], () => {
+  settings.setMethods(method.value, asrMethod.value)
   if (prayerTimes.value) {
     showTimes()
   }
 })
 
 // Pre-calculate if location already known
-if (store.location) {
+if (settings.saved || store.location) {
   calculate()
 }
 
@@ -662,3 +714,24 @@ const faqs = [
   },
 ]
 </script>
+
+<style scoped>
+.remember-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.remember-state {
+  color: var(--ink);
+}
+
+.remember-note {
+  flex-basis: 100%;
+  font-size: 12px;
+}
+</style>

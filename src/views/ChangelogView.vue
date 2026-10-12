@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Remember my location',
+            scope: 'Prayer and Fasting pages',
+            desc: 'Once prayer times are shown you can choose to remember the location, calculation method and Asr method. Later visits to the Prayer and Fasting pages then show today\'s times straight away. It is saved on your device only, never sent anywhere, and "Forget my location" removes it. Coordinates outside the valid range are now refused.',
+          },
+          {
             title: 'Hanafi Asr time',
             scope: 'Prayer page',
             desc: "A new selector beside the calculation method chooses how Asr is timed: Standard (when an object's shadow equals its length, followed by the Shafi'i, Maliki and Hanbali schools) or Hanafi (twice its length). Standard remains the default. Changing it, or the calculation method, now updates the times and the countdown straight away.",

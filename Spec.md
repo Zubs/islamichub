@@ -184,6 +184,10 @@ Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset
   tomorrow's Fajr. The countdown must recompute on each tick rather than cache the first value.
 - **Location** comes from the browser Geolocation API (10 s timeout), reverse-geocoded to a place name via Nominatim.
   If permission is denied, the user is told to enter coordinates manually.
+- **Coordinates** are accepted from −90 to 90 latitude and −180 to 180 longitude.
+- **Saved settings:** once times are shown, the page offers "Remember this location". Accepting saves the location,
+  method and Asr method through `stores/prayerSettings.js`; later visits to the Prayer and Fasting pages show times
+  without asking, and a change of method is remembered. `utils/prayerSettings.js` validates what is read.
 
 ### 5.3 Qibla (`/prayer`)
 
@@ -378,6 +382,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
 
 Rules:
 
@@ -385,7 +390,10 @@ Rules:
   a list), and fall back to an empty value. `utils/storage.js` provides `parseStoredObject` for this.
 - Anything recorded by day is keyed by the device's local date as `YYYY-MM-DD`, so the day changes at local midnight.
   `utils/day.js` is the only place a day key is built (`dayKey`) or stepped (`addDays`).
-- Zakat inputs, inheritance inputs, and the user's location are never persisted.
+- Zakat and inheritance inputs are never persisted. The user's location is persisted only when they choose "Remember
+  this location" on the Prayer page, under `prayer-settings`, and "Forget my location" removes it. Settings with an
+  impossible location are read as none; an unknown method falls back to the default. If the browser blocks storage the
+  page works for the visit and says the location cannot be remembered.
 - Changing a stored shape requires a migration or a new key, since existing users have data under the current keys.
 
 ---
@@ -450,7 +458,9 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 ### Privacy
 
 - No tracking of people: anonymous counts only, and currently no accounts.
-- Location is requested only on user action, used in memory, and sent only to Nominatim for a place name.
+- Location is requested only on user action and sent only to Nominatim for a place name. It is kept in memory unless
+  the user chooses to remember it, in which case it is saved on the device only (`prayer-settings`) and can be removed
+  with "Forget my location". It never reaches a server of ours.
 - Financial and family details entered into calculators do not leave the device.
 - Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
 - Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.

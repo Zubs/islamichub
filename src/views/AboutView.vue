@@ -303,6 +303,17 @@
         </p>
       </div>
       <StatsOptOut />
+      <div class="card" style="margin-top: 1rem">
+        <p><strong>Your location:</strong></p>
+        <p style="font-size: 13.5px; color: var(--muted); line-height: 1.7">
+          Your location is asked for only when you press a button, and is used on your device to
+          work out prayer times and the Qibla. If you use &ldquo;Use my location&rdquo;, the
+          coordinates are sent once to OpenStreetMap&rsquo;s Nominatim service to find a place name.
+          It is saved only if you choose &ldquo;Remember this location&rdquo; on the Prayer page,
+          and then only on your own device, together with your calculation method and Asr method.
+          &ldquo;Forget my location&rdquo; on the same page removes it. It is never sent to us.
+        </p>
+      </div>
       <p style="font-size: 12px; color: var(--muted); margin-top: 1rem">
         This is a change from our earlier &ldquo;no analytics, no tracking&rdquo; promise. We
         updated it because understanding usage helps us decide which languages to add first and

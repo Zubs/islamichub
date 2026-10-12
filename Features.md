@@ -20,7 +20,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 8. Asr method
 - [x] 9. SEO through one path
 - [x] 10. Loading screen
-- [ ] 11. Saved prayer settings
+- [x] 11. Saved prayer settings
 - [ ] 12. Installable and offline
 - [ ] 13. Hadith proxy
 - [ ] 14. Single-hadith page
@@ -1031,6 +1031,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 8 | 7 | The table gave each grandmother 1/6 | Two grandmothers share one sixth between them. No reference is attached to this on the page beyond the existing "Hadith" label, because I could not verify a numbered source; a reviewer should supply one | Give each 1/6 in `assignShares` |
 | 9 | 7 | Husband or wife with both parents (not covered by the table) | The mother takes a third of what is left after the spouse, so the father takes twice her share. This is the position of the four schools; no numbered source is cited on the page | Remove the `motherTakesThirdOfRemainder` branch |
 | 10 | 7 | The whole inheritance engine | Built and tested against Spec 5.9, but not reviewed by a scholar. It should be before people rely on it | Name a reviewer |
+| 11 | 11 | May location be saved on the device? (Reverses "location is never persisted" in Spec section 6) | Yes, only when the user presses "Remember this location"; kept on the device under `prayer-settings`; removed by "Forget my location". Privacy text updated on the About page and in Spec 6 and 9 | Remove the offer and the store; features 12, 19, 21, 23 and 24 depend on a saved location |
 
 **Checks only Zubair can do**
 

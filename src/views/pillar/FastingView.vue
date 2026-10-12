@@ -427,6 +427,8 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
+import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
@@ -440,8 +442,9 @@ const store = useZakatStore()
 const hijri = toHijri()
 const inRamadan = isRamadan()
 const daysLeft = Math.round(daysToRamadan())
-const lat = ref(store.location?.lat ?? '')
-const lng = ref(store.location?.lng ?? '')
+const settings = usePrayerSettingsStore()
+const lat = ref(settings.saved?.lat ?? store.location?.lat ?? '')
+const lng = ref(settings.saved?.lng ?? store.location?.lng ?? '')
 const suhoorTime = ref('—:—')
 const iftarTime = ref('—:—')
 const fastStatus = ref('')
@@ -464,12 +467,12 @@ async function locate() {
 function calculate() {
   const latV = parseFloat(lat.value)
   const lngV = parseFloat(lng.value)
-  if (isNaN(latV) || isNaN(lngV)) {
+  if (!isValidCoordinates(latV, lngV)) {
     return
   }
 
   const tz = getTimezoneOffset()
-  const times = calcPrayerTimes(latV, lngV, new Date(), tz, 'MWL')
+  const times = calcPrayerTimes(latV, lngV, new Date(), tz, settings.saved?.method ?? 'MWL')
   suhoorTime.value = times.fajr
   iftarTime.value = times.maghrib
 
@@ -504,7 +507,7 @@ function calculate() {
   fastTimer = setInterval(update, 60000)
 }
 
-if (store.location) {
+if (settings.saved || store.location) {
   calculate()
 }
 
