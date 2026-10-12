@@ -11,7 +11,7 @@ Tests are written in plain English and ordered the same way under every feature:
 ## Progress
 
 - [x] 1. Test suite
-- [ ] 2. Local day key
+- [x] 2. Local day key
 - [ ] 3. Contributor docs
 - [ ] 4. Dead file cleanup
 - [ ] 5. Zakat exchange rates
@@ -472,6 +472,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - In-progress counts are saved under a new key, `adhkar-progress`, as today's day key plus a count for each dhikr.
 - On load, counts are restored only if the saved day is today. An older day is discarded.
 - Completing a category clears its saved counts, as it clears the in-memory ones today.
+- Stored records are read with `parseStoredObject` (feature 2), which handles a record of the wrong kind. A damaged entry inside a valid record is still not handled: a day whose value is `null` under `adhkar-completion-log` or `tasbih-totals` would throw. This feature checks each entry of the record it adds, and of those two.
 
 **Tests**
 - With nothing saved, every card starts at zero.
@@ -482,6 +483,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - A card at its target reloads at its target, and one more tap resets it to zero.
 - Completing a category clears its counts but leaves other categories' counts alone.
 - Corrupt saved data is treated as none.
+- A day whose value is `null` or a number inside `adhkar-progress`, `adhkar-completion-log` or `tasbih-totals` is ignored without an error.
 - A user gets half-way through morning adhkar, closes the tab, returns and carries on from where they stopped.
 
 **Done when:** Reloading mid-way through a category loses no counts, and the next day starts clean.

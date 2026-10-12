@@ -1,25 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { ADHKAR, getAdhkarByCategory } from '@/data/adhkar.js'
+import { dayKey, addDays } from '@/utils/day.js'
+import { parseStoredObject } from '@/utils/storage.js'
 
 const LOG_KEY = 'adhkar-completion-log'
-
-function loadLog() {
-  try {
-    return JSON.parse(localStorage.getItem(LOG_KEY) || '{}')
-  } catch {
-    return {}
-  }
-}
-
-function todayKey() {
-  return new Date().toISOString().slice(0, 10) // YYYY-MM-DD
-}
 
 export const useAdhkarStore = defineStore('adhkar', () => {
   // ── State ────────────────────────────────────────────────────
   // completionLog: { '2026-07-21': ['morning', 'after-salah'], ... }
-  const completionLog = ref(loadLog())
+  const completionLog = ref(parseStoredObject(localStorage.getItem(LOG_KEY)))
   // progress: { [dhikrId]: countDoneInCurrentPass } — resets when a category is marked complete
   const progress = ref({})
 
@@ -50,12 +40,12 @@ export const useAdhkarStore = defineStore('adhkar', () => {
 
   // ── Category completion & streaks ────────────────────────────
   function isCategoryCompletedToday(slug) {
-    const today = completionLog.value[todayKey()]
+    const today = completionLog.value[dayKey()]
     return Array.isArray(today) && today.includes(slug)
   }
 
   function completeCategory(slug) {
-    const key = todayKey()
+    const key = dayKey()
     const today = completionLog.value[key] || []
     if (!today.includes(slug)) {
       completionLog.value[key] = [...today, slug]
@@ -70,16 +60,10 @@ export const useAdhkarStore = defineStore('adhkar', () => {
 
   function streakForCategory(slug) {
     let streak = 0
-    const cursor = new Date()
-    for (;;) {
-      const key = cursor.toISOString().slice(0, 10)
-      const day = completionLog.value[key]
-      if (day && day.includes(slug)) {
-        streak++
-        cursor.setDate(cursor.getDate() - 1)
-      } else {
-        break
-      }
+    let key = dayKey()
+    while (completionLog.value[key]?.includes(slug)) {
+      streak++
+      key = addDays(key, -1)
     }
 
     return streak

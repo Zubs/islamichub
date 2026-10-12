@@ -14,6 +14,8 @@ All notable changes to IslamicHub are documented here.
 
 ### Fixed
 - **"No chapters match" never showed** *(Hadith book page)* — The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.
+- **The day now changes at your own midnight** *(Adhkar and Tasbih)* — Completions, streaks and daily totals were filed by the UTC date, so the day turned over at 1am in Lagos and in the evening in New York. They now follow the device's local date. Entries made before this change keep the date they were saved under, so a streak may shift by one day, once.
+- **Unreadable saved data no longer breaks the page** *(Adhkar and Tasbih)* — Saved data of an unexpected kind is now read as empty instead of causing an error.
 
 ---
 
