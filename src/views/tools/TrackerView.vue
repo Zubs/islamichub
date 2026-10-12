@@ -145,14 +145,8 @@ import { useSeo } from '@/composables/useSeo.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { useSalahStore } from '@/stores/salah.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
-import {
-  SALAH_PRAYERS,
-  SALAH_STATUSES,
-  dayState,
-  canLog,
-  weekEnding,
-  monthGrid,
-} from '@/utils/salah.js'
+import { SALAH_PRAYERS, SALAH_STATUSES, dayState, canLog, weekEnding } from '@/utils/salah.js'
+import { monthGrid } from '@/utils/day.js'
 import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
 
 const WEEKDAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

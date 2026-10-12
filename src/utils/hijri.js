@@ -47,6 +47,30 @@ export function toHijri(date = new Date()) {
 
 export { HIJRI_MONTHS }
 
+const HIJRI_EPOCH_JD = 1948438.5
+const MEAN_LUNAR_MONTH_DAYS = 29.53059
+const UNIX_EPOCH_JD = 2440587.5
+const DAY_MS = 86400000
+const SEARCH_DAYS = 4
+
+// The first Gregorian date this calendar places in the given Hijri month. An estimate:
+// the true first day depends on moon sighting and can differ by a day.
+export function firstDayOfHijriMonth(year, month) {
+  const estimatedJd = HIJRI_EPOCH_JD + ((year - 1) * 12 + (month - 1)) * MEAN_LUNAR_MONTH_DAYS
+  const estimate = new Date((estimatedJd - UNIX_EPOCH_JD) * DAY_MS)
+  const start = new Date(estimate.getUTCFullYear(), estimate.getUTCMonth(), estimate.getUTCDate())
+
+  for (let offset = -SEARCH_DAYS; offset <= SEARCH_DAYS; offset += 1) {
+    const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + offset)
+    const hijri = toHijri(day)
+    if (hijri.year === year && hijri.month === month) {
+      return day
+    }
+  }
+
+  return start
+}
+
 /** Days remaining until Ramadan */
 export function daysToRamadan() {
   const today = toHijri(new Date())

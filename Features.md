@@ -29,7 +29,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 17. Adhkar progress survives reload
 - [x] 18. Duas
 - [x] 19. Salah tracker
-- [ ] 20. Fasting tracker
+- [x] 20. Fasting tracker
 - [ ] 21. Worship dashboard
 - [ ] 22. Share to WhatsApp
 - [ ] 23. Prayer reminders
@@ -597,6 +597,9 @@ Tests are written in plain English and ordered the same way under every feature:
 - Whether a day falls in Ramadan comes from `utils/hijri.js`. As that can be a day out, the user can set the first day of Ramadan themselves.
 - "Still to make up" is the number of missed Ramadan days minus the number of made-up days, never below zero, and is kept per Ramadan year.
 - Voluntary fasts are counted separately.
+- A day inside Ramadan takes "fasted" or "missed"; a day outside it takes "made up" or "voluntary". A made-up fast is credited to the most recent Ramadan before it.
+- The date the user sets for the first day of Ramadan is kept under a second key, `ramadan-starts`.
+- Outside Ramadan the most recent Ramadan's grid is one tap away, so its days can still be corrected.
 - Nothing leaves the device.
 
 **Tests**
@@ -1053,6 +1056,8 @@ Tests are written in plain English and ordered the same way under every feature:
 | 18 | 16 | Which hadiths, and which translation, for the daily hadith? | 67 short hadiths, all from Sahih al-Bukhari, chosen by me for being self-contained. English text copied from the open fawazahmed0/hadith-api dataset (edition eng-bukhari), with three typing errors corrected. The dataset does not state the translation's licence | Edit `src/data/dailyHadith.js`. A reviewer should read the list, and you should decide whether that translation may be republished or should be replaced |
 | 19 | 18 | Which duas, and in whose words? | 46 duas chosen by me: 16 from the Qur'an and 30 from Sahih al-Bukhari, Abu Dawud, al-Tirmidhi and Ibn Majah. The Arabic is copied from the sources. The transliterations, the English translations of the hadith duas, the titles and the "when to say it" lines are my own wording; Qur'an translations follow Saheeh International | Edit `src/data/duas.js`. A reviewer should read all 46, and in particular confirm the grading of the 19 that are not from the Qur'an or al-Bukhari, which I could not verify |
 | 20 | 19 | What does the streak show while today is unfinished? | The count up to yesterday, so it does not fall to zero every morning. It becomes zero only when a prayer today is marked missed | Change `salahStreak` in `utils/salah.js` |
+| 21 | 20 | Where is the user's own first day of Ramadan kept? `Features.md` names one key, `fasting-log` | In a second key, `ramadan-starts`, so the day-by-day log stays simple | Fold it into `fasting-log` with a migration |
+| 22 | 20 | Which Ramadan does a made-up fast count against? | The most recent Ramadan before the day it was fasted. Fasts owed from an older Ramadan and made up after a newer one are therefore credited to the newer | Let the user choose the year when logging a made-up fast |
 
 **Checks only Zubair can do**
 

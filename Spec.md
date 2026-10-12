@@ -259,6 +259,20 @@ Nothing entered into the calculator is persisted or transmitted.
 - Days until Ramadan, or an "it is Ramadan" state when the Hijri month is 9.
 - Suhoor and Iftar times derived from Fajr and Maghrib for the user's location, with a fasting-progress bar.
 
+**Fasting tracker.** `FastingTracker.vue`, on the Fasting page, records one status per local day in `fasting-log`
+(`stores/fasting.js`): fasted or missed for a day inside Ramadan, made up or voluntary for a day outside it. Rules live
+in `utils/fasting.js`.
+
+- Ramadan's first day is estimated by `firstDayOfHijriMonth` in `utils/hijri.js`, and the user can set it themselves
+  (`ramadan-starts`, per Hijri year), since the estimate can be a day out. Moving it moves the 30-day grid and keeps
+  every logged day.
+- In Ramadan the tracker opens on that Ramadan's 30 days; outside it, on the current month, with the most recent
+  Ramadan one tap away. Future days cannot be logged.
+- **Still to make up**, per Ramadan year: days marked missed, less made-up fasts logged between the end of that Ramadan
+  and the start of the next, never below zero. The page shows each year and the total. Voluntary fasts are counted
+  separately.
+- Nothing leaves the device. Unreadable stored data is treated as empty.
+
 ### 5.6 Hadith library (`/hadith/*`)
 
 - `/hadith` — educational overview: what hadith is, isnad, grades, major scholars.
@@ -450,6 +464,8 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `fasting-log`            | `{ "YYYY-MM-DD": "fasted" \| "missed" \| "made-up" \| "voluntary" }` | fasting store |
+| `ramadan-starts`         | `{ "<Hijri year>": "YYYY-MM-DD" }`, only dates the user set | fasting store |
 | `salah-log`              | `{ "YYYY-MM-DD": { fajr: "on-time" \| "late" \| "missed", … } }` | salah store |
 | `adhkar-progress`        | `{ day: "YYYY-MM-DD", counts: { [dhikrId]: count } }`; restored only on the same local day | adhkar store |
 | `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |

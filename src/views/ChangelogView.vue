@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Fasting tracker',
+            scope: 'Fasting page',
+            desc: 'The Fasting page can now record your fasts: fasted or missed for each day of Ramadan, and made-up or voluntary fasts for the rest of the year. It shows how many missed fasts are still to be made up, for each Ramadan separately, and lets you set the day Ramadan began where you are. Everything stays on your device.',
+          },
+          {
             title: 'Prayer tracker',
             scope: 'Tracker',
             desc: 'A new tracker lets you mark each of the five daily prayers as on time, late or missed, see the last seven days and the month at a glance, correct past days, and keep a streak. With a remembered location it shows each prayer\'s time. Everything stays on your device, and "Clear my data" removes it.',

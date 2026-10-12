@@ -7,10 +7,9 @@ import {
   salahStreak,
   canLog,
   weekEnding,
-  monthGrid,
   parseSalahLog,
 } from './salah.js'
-import { addDays } from '@/utils/day.js'
+import { addDays, monthGrid } from '@/utils/day.js'
 
 const TODAY = '2026-03-20'
 const ALL_ON_TIME = Object.fromEntries(SALAH_PRAYERS.map((prayer) => [prayer.key, 'on-time']))

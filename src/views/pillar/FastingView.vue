@@ -257,6 +257,8 @@
         </div>
       </div>
 
+      <FastingTracker />
+
       <div class="divider"></div>
 
       <span class="eyebrow">What is Sawm?</span>
@@ -429,6 +431,7 @@ import { useZakatStore } from '@/stores/zakat.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import FastingTracker from '@/components/FastingTracker.vue'
 import HadithRef from '@/components/HadithRef.vue'
 import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
