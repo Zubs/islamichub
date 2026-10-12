@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Your day on the home page',
+            scope: 'Home page',
+            desc: 'The home page now opens with a "Today" panel: the next prayer and how long until it, today\'s five prayers, the adhkar you have completed, your tasbih count, the hadith of the day, and in Ramadan today\'s fast. Each part is one tap from its page. It is built from what is already kept on your device and sends nothing anywhere.',
+          },
+          {
             title: 'Fasting tracker',
             scope: 'Fasting page',
             desc: 'The Fasting page can now record your fasts: fasted or missed for each day of Ramadan, and made-up or voluntary fasts for the rest of the year. It shows how many missed fasts are still to be made up, for each Ramadan separately, and lets you set the day Ramadan began where you are. Everything stays on your device.',

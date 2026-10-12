@@ -99,6 +99,7 @@ export const useTasbihStore = defineStore('tasbih', () => {
 
   return {
     phrases,
+    totals,
     currentId,
     currentPhrase,
     count,

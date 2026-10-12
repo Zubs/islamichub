@@ -7,6 +7,7 @@ All notable changes to IslamicHub are documented here.
 ## Unreleased
 
 ### Added
+- **Your day on the home page** *(Home page)* — The home page now opens with a "Today" panel: the next prayer and how long until it, today's five prayers, the adhkar you have completed, your tasbih count, the hadith of the day, and in Ramadan today's fast. Each part is one tap from its page. It is built from what is already kept on your device and sends nothing anywhere.
 - **Fasting tracker** *(Fasting page)* — The Fasting page can now record your fasts: fasted or missed for each day of Ramadan, and made-up or voluntary fasts for the rest of the year. It shows how many missed fasts are still to be made up, for each Ramadan separately, and lets you set the day Ramadan began where you are. Everything stays on your device.
 - **Prayer tracker** *(Tracker)* — A new tracker lets you mark each of the five daily prayers as on time, late or missed, see the last seven days and the month at a glance, correct past days, and keep a streak. With a remembered location it shows each prayer's time. Everything stays on your device, and "Clear my data" removes it.
 - **Duas for everyday situations** *(Duas)* — A new Duas section holds 46 supplications from the Qur'an and the Sunnah for travel, eating, home, the mosque, clothing, weather, distress, illness, forgiveness, and parents and family. Each has its Arabic text, transliteration, translation and source, with hadith sources linked to the library. You can search them in English or by transliteration, and link straight to any one of them.

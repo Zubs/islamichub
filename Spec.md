@@ -168,6 +168,16 @@ Requirements:
 - Arabic text is marked `lang="ar"`, rendered right-to-left in the Arabic typeface.
 - Every verse and hadith shows its reference (surah:ayah, or collection + Arabic-edition number).
 
+### 5.1a Today panel (home page)
+
+`TodayPanel.vue` sits near the top of the home page and shows the user's day from the stores that already hold it: the
+next prayer and its countdown (from `prayer-settings`, with the same functions as the Prayer page), today's five prayers
+and their statuses, the adhkar categories completed today, today's tasbih total across all phrases, the daily hadith,
+and, in Ramadan only, today's fast. Each tile links to its full page; the next-prayer tile links to the tracker. A part
+with nothing to show offers a way to start, and a visitor with no saved location is pointed to the Prayer page. The
+panel stores nothing and makes no request. A minute tick updates the countdown and resets the panel at local midnight.
+Its grid is one column on a narrow screen.
+
 ### 5.2 Prayer times (`/prayer`)
 
 Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset, method and Asr option.

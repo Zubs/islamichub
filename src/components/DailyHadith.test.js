@@ -66,7 +66,7 @@ describe('DailyHadith', () => {
 
     const { wrapper } = await mountPage(HomeView, { path: '/' })
 
-    expect(wrapper.find('.daily-hadith .hadith-text').text().length).toBeGreaterThan(30)
+    expect(wrapper.find('.today .daily-hadith .hadith-text').text().length).toBeGreaterThan(30)
     expect(fetch).not.toHaveBeenCalled()
   })
 })

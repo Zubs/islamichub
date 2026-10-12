@@ -30,7 +30,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 18. Duas
 - [x] 19. Salah tracker
 - [x] 20. Fasting tracker
-- [ ] 21. Worship dashboard
+- [x] 21. Worship dashboard
 - [ ] 22. Share to WhatsApp
 - [ ] 23. Prayer reminders
 - [ ] 24. Push notifications

@@ -94,7 +94,7 @@
         </div>
       </div>
     </section>
-    <DailyHadith />
+    <TodayPanel />
 
     <!-- FIVE PILLARS HUB -->
     <section
@@ -369,7 +369,7 @@ import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import QuranBlock from '@/components/QuranBlock.vue'
 import GeoPattern from '@/components/GeoPattern.vue'
-import DailyHadith from '@/components/DailyHadith.vue'
+import TodayPanel from '@/components/TodayPanel.vue'
 import HadithRef from '@/components/HadithRef.vue'
 import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'
 
