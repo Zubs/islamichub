@@ -466,7 +466,7 @@ const sources = [
   {
     title: 'Technical & data sources',
     content:
-      'Prayer times: astronomical Adhan algorithm<br>metals.live — live gold/silver spot prices<br>frankfurter.app — live FX rates (GBP/USD/EUR/SAR)<br>Nominatim (OpenStreetMap) — reverse geocoding',
+      'Prayer times: astronomical Adhan algorithm<br>fawazahmed0/exchange-api — daily gold and silver prices and exchange rates (GBP/USD/EUR/SAR)<br>Nominatim (OpenStreetMap) — reverse geocoding',
   },
 ]
 </script>

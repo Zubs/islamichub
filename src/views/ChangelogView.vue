@@ -189,6 +189,11 @@ const releases = [
             desc: 'The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.',
           },
           {
+            title: 'Zakat prices are current again, and results have changed',
+            scope: 'Zakat page',
+            desc: "Both services the calculator fetched prices from had stopped working, so it was using old built-in prices: in pounds the gold nisab showed about £9,641 where the day's price gave about £8,640, and the silver nisab about £637 where it should have been about £880. Gold, silver and exchange rates now come from one daily source. A hidden bug that would have made pound prices about 24% too low once prices loaded is fixed with it. The page states the date its prices are from.",
+          },
+          {
             title: 'Visitors stuck on the old version are moved to the current site',
             scope: 'Whole site',
             desc: 'The old app registered a service worker between 26 May and 5 June 2026 that kept serving its own cached pages, and the site gave browsers no way to replace it. A small replacement worker now clears those caches and removes itself on the next visit, and the page reloads once.',

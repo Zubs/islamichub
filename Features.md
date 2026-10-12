@@ -14,7 +14,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 2. Local day key
 - [x] 3. Contributor docs
 - [x] 4. Dead file cleanup
-- [ ] 5. Zakat exchange rates
+- [x] 5. Zakat exchange rates
 - [ ] 6. Naira in the Zakat calculator
 - [ ] 7. Inheritance engine
 - [ ] 8. Asr method
@@ -160,14 +160,17 @@ Tests are written in plain English and ordered the same way under every feature:
 
 ### 5. Zakat exchange rates
 
-**What it does:** Makes the Zakat calculator use correct gold and silver prices in every currency. Today, after prices load, pounds (the default) come out about 23% too low.
+**What it does:** Makes the Zakat calculator use correct gold and silver prices in every currency. Both price services had stopped working, so everyone was shown old built-in prices (the gold nisab about 12% too high and the silver nisab about 27% too low), and a second bug would have made pounds about 24% too low once prices loaded.
 
 **How it works**
+- Gold, silver and the exchange rates come from one free daily dataset (`@fawazahmed0/currency-api`), fetched from jsDelivr and, if that fails, from its mirror. Each attempt has a six-second limit. Daily prices were chosen over live spot prices.
 - All exchange rates are held against one base, US dollars, because metal prices arrive in dollars.
-- Fallback rates and fallback metal prices use the same base, so a failed fetch cannot mix the two.
+- Fallback rates and fallback metal prices use the same base, so a failed fetch cannot mix the two. They are dated, and the page shows the date.
 - One function, `pricePerGram(metal, currency)`, does the conversion, and the nisab and the calculation both use it.
-- Metals and rates are flagged separately as live or not, and the page says which is in use.
-- Neither price service works today, so both are replaced (found on 12 October 2026). `api.metals.live` no longer answers. `api.frankfurter.app` redirects to `api.frankfurter.dev`, and the browser blocks the redirect for lack of a CORS header; its reply also no longer includes SAR. The calculator has therefore been showing its built-in fallback prices to everyone. The new addresses are added to the content security policy.
+- The calculation lives in `utils/zakat.js` as pure functions, not in the page.
+- Metals and rates are flagged separately as fetched or not, and the page says which is in use and the date the prices are from.
+- A price that is missing, zero, negative or not a number counts as a failure. Fetched rates are used only when all four are valid.
+- The content security policy allows the two new addresses and no longer lists the two dead ones.
 
 **Tests**
 - With every input empty, Zakat due is zero and the page says it is not obligatory.
@@ -177,13 +180,16 @@ Tests are written in plain English and ordered the same way under every feature:
 - Wealth exactly equal to the nisab is obligatory, and one penny under is not.
 - Debts larger than wealth give zero, never a negative figure.
 - The nisab shown and the nisab used in the calculation are the same number.
-- If rates fail but metals load, fallback rates are used and the page says rates are not live.
-- If both fail, fallback prices are used and the page says prices are not live.
-- With the network on, the Zakat page shows live prices from the replacement services and no page logs a CORS error.
+- If the first address fails, the second is used.
+- A source that does not answer within six seconds is abandoned.
+- If rates fail but metals load, fallback rates are used and the page says rates are not current.
+- If both fail, fallback prices are used and the page says they are reference prices and gives their date.
+- With the network on, the Zakat page shows the day's prices and no page logs a CORS error.
 - A reply with missing or non-numeric prices is treated as a failure.
+- The price request carries nothing the user entered.
 - A user enters 100 g of 22k gold in pounds and sees a value that matches the day's gold price worked out by hand.
 
-**Done when:** With live prices, the gold nisab shown in pounds, dollars, euros and riyals each matches 85 g at the day's price to within 1%.
+**Done when:** With fetched prices, the gold nisab shown in pounds, dollars, euros and riyals each matches 85 g at the day's live spot price to within 1%.
 
 ### 6. Naira in the Zakat calculator
 
@@ -191,7 +197,7 @@ Tests are written in plain English and ordered the same way under every feature:
 
 **How it works**
 - Naira (NGN, ₦) is added to the currency list beside pounds, dollars, euros and riyals. Pounds stay the default.
-- The current exchange-rate service does not list the naira, so rates move to a service that covers all five currencies. The new address is added to the site's allowed connections.
+- The price dataset adopted in feature 5 already includes the naira, so no change of service is needed. `NGN` is added to the list of currencies read from it, and fetched rates are used only when all five are valid.
 - The naira's official rate and its street rate can differ. The calculator uses the official rate and says so.
 - For that reason the user can also type their own local price per gram for gold and for silver. A typed price replaces the fetched one for the calculation and the nisab, and the page shows that a custom price is in use.
 - A fallback naira rate is built in on the same dollar base as the others (feature 5).
@@ -207,7 +213,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Clearing the typed price returns to the fetched price.
 - A typed price of zero, a negative number or text is rejected and the fetched price is kept.
 - If the rate service fails, the fallback naira rate is used and the page says rates are not live.
-- The other four currencies give the same results as before the change of rate service.
+- The other four currencies give the same results as before the naira was added.
 - A user in Lagos selects naira, types the price their local dealer quoted for a gram of gold, enters their savings and sees the Zakat due in naira.
 
 **Done when:** A user can complete the calculator in naira, with either the fetched or a typed gold price, and the result matches a calculation done by hand.
