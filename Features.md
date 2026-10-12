@@ -429,6 +429,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Links to the previous and next hadith and back to the chapter.
 - Each hadith in a chapter list links to its own page.
 - The title and description come from the hadith, through `useSeo`.
+- Built, with every automated test passing against stand-in replies. No live request could be made while building it (the local API key was rejected), so the feature stays unticked until the live check listed under Final is done.
 
 **Tests**
 - A hadith with no Arabic text still shows its English text.
@@ -1048,6 +1049,8 @@ Tests are written in plain English and ordered the same way under every feature:
 | 5 | 13 | In Netlify, add `HADITH_API_KEY` (scoped to Functions) and delete `VITE_HADITH_API_KEY`. The old key was readable in the site's JavaScript, so get a fresh key from hadithapi.com and retire the old one |
 | 6 | 13 | On production (or a deploy preview), browse from the book list to a chapter and confirm in the network panel that every request goes to `/api/hadith/` and no key appears. Also confirm a repeated request is served from the cache. Then tick feature 13 |
 | 7 | 13 | Run `npx netlify-cli dev` once locally to confirm the function is picked up and the rewrite in `netlify.toml` reaches it. I could not run the Netlify CLI in this session |
+| 8 | 14 | The key in the local `.env` (`VITE_HADITH_API_KEY`) is rejected by hadithapi.com as invalid, so nothing hadith-related could be checked against live data. Put a working key in `.env` as `HADITH_API_KEY` |
+| 9 | 14 | With a working key, open a hadith from each of the nine collections at `/hadith/books/<book>/hadith/<number>`, paste the address into a new browser and confirm the same hadith shows. Confirm the last hadith of a book has no "next" link (it relies on `hadithCount` in `BOOKS_META`, where Sahih Muslim's count looks copied from Bukhari's). Then tick feature 14 |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

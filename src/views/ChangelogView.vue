@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Every hadith has its own page',
+            scope: 'Hadith library',
+            desc: 'Each hadith can now be opened at its own address, with its Arabic text, translation, narrator, grade, book and chapter, and links to the previous and next hadith. It can be copied or shared, and every hadith in a chapter list links to its page.',
+          },
+          {
             title: 'Install IslamicHub and use it offline',
             scope: 'Whole site',
             desc: 'IslamicHub can now be installed on a phone from the browser, and after one visit every page opens with no connection. Prayer times (with a remembered location), the Qibla, adhkar and the tasbih counter work fully offline. Hadith books and chapters you have already opened are kept; the Zakat page uses the last prices it fetched and says how old they are. When a new version is released, an open page offers "Update available" instead of changing under you.',

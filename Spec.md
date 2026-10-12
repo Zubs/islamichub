@@ -138,6 +138,7 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/hadith`                                 | `hadith`            | HadithHomeView        |
 | `/hadith/books`                           | `hadith-books`      | HadithBooksView       |
 | `/hadith/books/:bookSlug`                 | `hadith-book`       | HadithBookView        |
+| `/hadith/books/:bookSlug/hadith/:hadithNumber` | `hadith-single` | HadithView          |
 | `/hadith/books/:bookSlug/:chapterNumber`  | `hadith-chapter`    | HadithChapterView     |
 | `/adhkar`                                 | `adhkar`            | AdhkarHomeView        |
 | `/adhkar/:categorySlug`                   | `adhkar-category`   | AdhkarCategoryView    |
@@ -268,8 +269,17 @@ Nothing entered into the calculator is persisted or transmitted.
   - a grade badge per hadith (Sahih, Hasan, Da'eef, Mawdu', or neutral for unknown),
   - expand/collapse per hadith,
   - copy to clipboard as `<English text>\n\n— <Book name>, Hadith <number>`.
+  - a link from each hadith's number to its own page.
+- `/hadith/books/:bookSlug/hadith/:hadithNumber` — one hadith: Arabic text, English text, narrator where given, grade,
+  book and chapter; Copy (the same text as the chapter list) and Share (the device's share sheet with the canonical
+  address, or the address copied where there is none); links to the previous and next hadith and back to its chapter.
+  The first hadith has no previous link, and the last (the book's `hadithCount` in `BOOKS_META`) no next link. An
+  unknown book, a number that is not a whole positive number, or a number with no hadith shows "Hadith not found",
+  marked `noindex`; a failed request shows an error with a retry button. Title and description come from the hadith.
+  `utils/hadith.js` holds what this page and the chapter list share (address, copy text, grade badge).
 
-Views must handle three non-happy states: no API key configured, request in flight, and request failed.
+Views must handle these non-happy states: no API key configured on the server, request in flight, request failed, and
+offline with nothing saved.
 
 ### 5.7 Adhkar (`/adhkar`, `/adhkar/:categorySlug`)
 

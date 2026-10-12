@@ -77,9 +77,14 @@
             <!-- Header row -->
             <div class="hc-header" @click="toggleExpand(h.id)">
               <div class="hc-meta-left">
-                <div class="hc-number"># {{ h.hadithNumber }} {{ h.headingEnglish }}</div>
+                <RouterLink
+                  class="hc-number hc-number-link"
+                  :to="hadithPath(bookSlug, h.hadithNumber)"
+                  @click.stop
+                  ># {{ h.hadithNumber }} {{ h.headingEnglish }}</RouterLink
+                >
                 <div class="hc-status" :style="gradeStyle(h.status)">
-                  {{ h.status || 'Ungraded' }}
+                  {{ gradeLabel(h.status) }}
                 </div>
               </div>
               <button
@@ -195,6 +200,7 @@ import { ref, computed, onMounted, watch, reactive } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
+import { gradeStyle, gradeLabel, hadithPath, hadithCopyText } from '@/utils/hadith.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import {
   fetchHadiths,
@@ -250,25 +256,12 @@ function toggleExpand(id) {
 // Copy hadith to clipboard
 const copied = ref(null)
 async function copy(h) {
-  const text = `${h.hadithEnglish}\n\n— ${meta.value?.name || bookSlug.value}, Hadith ${h.hadithNumber}`
+  const text = hadithCopyText(h, meta.value?.name || bookSlug.value)
   await navigator.clipboard.writeText(text).catch(() => {})
   copied.value = h.id
   setTimeout(() => {
     copied.value = null
   }, 2000)
-}
-
-// Grade badge styling
-const GRADE_STYLES = {
-  Sahih: { background: 'var(--green-light)', color: 'var(--green)' },
-  Hasan: { background: 'var(--gold-light)', color: '#7A5A10' },
-  "Da'eef": { background: '#FDE9E7', color: '#c0392b' },
-  Daif: { background: '#FDE9E7', color: '#c0392b' },
-  Mawdu: { background: '#fde8e8', color: '#922b21' },
-}
-
-function gradeStyle(status) {
-  return GRADE_STYLES[status] || { background: 'var(--cream-dark)', color: 'var(--muted)' }
 }
 
 // Visible page numbers with ellipsis
@@ -503,8 +496,16 @@ a {
 }
 
 /* Arabic — always visible */
+.hc-number-link {
+  text-decoration: none;
+}
+
+.hc-number-link:hover {
+  text-decoration: underline;
+}
+
 .hc-arabic {
-  font-family: var(--serif);
+  font-family: var(--arabic);
   font-size: clamp(1.05rem, 2.5vw, 1.3rem);
   line-height: 2.1;
   color: var(--ink);

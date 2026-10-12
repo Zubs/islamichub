@@ -23,6 +23,11 @@ export const routes = [
     component: () => import('@/views/hadith/HadithBookView.vue'),
   },
   {
+    path: '/hadith/books/:bookSlug/hadith/:hadithNumber',
+    name: 'hadith-single',
+    component: () => import('@/views/hadith/HadithView.vue'),
+  },
+  {
     path: '/hadith/books/:bookSlug/:chapterNumber',
     name: 'hadith-chapter',
     component: () => import('@/views/hadith/HadithChapterView.vue'),
