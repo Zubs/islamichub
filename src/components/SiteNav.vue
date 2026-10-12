@@ -35,6 +35,7 @@
       <!-- Desktop right links -->
       <div class="nav-right">
         <RouterLink to="/adhkar" class="nav-tools-btn">📿 Adhkar</RouterLink>
+        <RouterLink to="/duas" class="nav-tools-btn">🤲 Duas</RouterLink>
         <RouterLink to="/tasbih" class="nav-tools-btn">🔢 Tasbih</RouterLink>
         <RouterLink to="/inheritance" class="nav-tools-btn">⚖️ Inheritance</RouterLink>
         <RouterLink to="/about" class="nav-tools-btn">About</RouterLink>
@@ -197,7 +198,12 @@ const allLinks = [
   {
     to: '/adhkar',
     icon: '📿',
-    label: 'Adhkar & Duas',
+    label: 'Adhkar',
+  },
+  {
+    to: '/duas',
+    icon: '🤲',
+    label: 'Duas for Everyday Situations',
   },
   {
     to: '/tasbih',

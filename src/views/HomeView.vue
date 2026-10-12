@@ -463,9 +463,16 @@ const tools = [
   {
     to: '/adhkar',
     icon: '📿',
-    name: 'Adhkar & Duas',
+    name: 'Adhkar',
     desc: 'Morning, evening & after-prayer supplications · Arabic, transliteration & translation · tap-to-count tracker',
-    aria: 'Adhkar and duas',
+    aria: 'Adhkar',
+  },
+  {
+    to: '/duas',
+    icon: '🤲',
+    name: 'Duas',
+    desc: 'Supplications for travel, eating, illness, distress, family and more · searchable · every one sourced',
+    aria: 'Duas for everyday situations',
   },
   {
     to: '/tasbih',

@@ -1,5 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { countPage, sourceTag } from '@/composables/useStats.js'
+import { getSituation } from '@/data/duas.js'
+
+const HASH_SCROLL_DELAY_MS = 350
+
+function notFound(to) {
+  return { name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, replace: true }
+}
 
 export const routes = [
   {
@@ -41,6 +48,17 @@ export const routes = [
     path: '/adhkar/:categorySlug',
     name: 'adhkar-category',
     component: () => import('@/views/adhkar/AdhkarCategoryView.vue'),
+  },
+  {
+    path: '/duas',
+    name: 'duas',
+    component: () => import('@/views/duas/DuasHomeView.vue'),
+  },
+  {
+    path: '/duas/:situationSlug',
+    name: 'duas-situation',
+    component: () => import('@/views/duas/DuasSituationView.vue'),
+    beforeEnter: (to) => (getSituation(to.params.situationSlug) ? true : notFound(to)),
   },
   {
     path: '/tasbih',
@@ -100,16 +118,25 @@ export const routes = [
   },
 ]
 
+export function scrollBehavior(to, from, savedPosition) {
+  if (savedPosition) {
+    return savedPosition
+  }
+
+  if (to.hash) {
+    // wait for the page transition, so the element is on the page
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({ el: to.hash, top: 84 }), HASH_SCROLL_DELAY_MS)
+    })
+  }
+
+  return { top: 0, behavior: 'instant' }
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    }
-
-    return { top: 0, behavior: 'instant' }
-  },
+  scrollBehavior,
 })
 
 let previousPath = ''

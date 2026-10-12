@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Duas for everyday situations',
+            scope: 'Duas',
+            desc: "A new Duas section holds 46 supplications from the Qur'an and the Sunnah for travel, eating, home, the mosque, clothing, weather, distress, illness, forgiveness, and parents and family. Each has its Arabic text, transliteration, translation and source, with hadith sources linked to the library. You can search them in English or by transliteration, and link straight to any one of them.",
+          },
+          {
             title: 'Hadith of the day',
             scope: 'Home page',
             desc: 'The home page now shows one short hadith from Sahih al-Bukhari each day, with its narrator and a link to the full hadith. It changes at your own midnight and works with no connection.',

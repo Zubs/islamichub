@@ -7,6 +7,7 @@ All notable changes to IslamicHub are documented here.
 ## Unreleased
 
 ### Added
+- **Duas for everyday situations** *(Duas)* — A new Duas section holds 46 supplications from the Qur'an and the Sunnah for travel, eating, home, the mosque, clothing, weather, distress, illness, forgiveness, and parents and family. Each has its Arabic text, transliteration, translation and source, with hadith sources linked to the library. You can search them in English or by transliteration, and link straight to any one of them.
 - **Hadith of the day** *(Home page)* — The home page now shows one short hadith from Sahih al-Bukhari each day, with its narrator and a link to the full hadith. It changes at your own midnight and works with no connection.
 - **Hadith references are now links** *(Whole site)* — Every hadith reference on the site, on the pillar pages, the Articles of Faith, the adhkar, the Tasbih and Inheritance pages, now links to that hadith in the library, so a claim can be checked in one tap.
 - **Every hadith has its own page** *(Hadith library)* — Each hadith can now be opened at its own address, with its Arabic text, translation, narrator, grade, book and chapter, and links to the previous and next hadith. It can be copied or shared, and every hadith in a chapter list links to its page.

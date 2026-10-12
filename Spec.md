@@ -142,6 +142,8 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/hadith/books/:bookSlug/:chapterNumber`  | `hadith-chapter`    | HadithChapterView     |
 | `/adhkar`                                 | `adhkar`            | AdhkarHomeView        |
 | `/adhkar/:categorySlug`                   | `adhkar-category`   | AdhkarCategoryView    |
+| `/duas`                                   | `duas`              | DuasHomeView          |
+| `/duas/:situationSlug`                    | `duas-situation`    | DuasSituationView     |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
 | `/about`                                  | `about`             | AboutView             |
@@ -316,12 +318,29 @@ A dhikr may belong to several categories.
 Behaviour (`stores/adhkar.js`):
 
 - **Tap to count.** Each tap on a card increments its count toward `repeat`. Tapping once more after reaching the
-  target resets it to 0. Counts are held in memory for the session only.
+  target resets it to 0. Counts are saved for the day under `adhkar-progress` and restored on reload.
 - **Complete a category.** Marks the category done for today, records it in the completion log, and clears the
   session counts for that category's adhkar. Completing twice in one day is a no-op.
 - **Streak.** The number of consecutive days, counting back from today, on which the category was completed. A streak
   is zero if today is not yet complete.
 - **Today** is the device's local calendar day (see [State and persistence](#6-state-and-persistence)).
+
+### 5.7a Duas (`/duas`, `/duas/:situationSlug`)
+
+Static content from `data/duas.js`: 46 supplications across ten situations (travel, eating, home, mosque, clothing,
+weather, distress, illness, forgiveness, parents and family), in the shape of the adhkar plus a title, a "when to say
+it" line and one or more situations. Arabic text is copied from its source (the Qur'an text, or the Arabic of the cited
+hadith), never typed from memory.
+
+- `/duas` lists each situation that has duas, with its count, and has a search box. `searchDuas` in `utils/duas.js`
+  matches English text, transliteration and situation names, ignoring case and the marks used in transliteration.
+  Results link to the dua's anchor. No matches shows "No duas found" with a button to clear the search.
+- `/duas/:situationSlug` shows the situation's duas as `AdhkarCard`s. A dua said once has no counter; one with a count
+  keeps its counter, saved with the day's adhkar progress under `dua:<id>`. A dua in two situations appears under both.
+  An unknown situation shows the 404 page at the same address.
+- Every card has `id="<dua id>"`, and the router scrolls to a hash after the page transition, so
+  `/duas/travel#farewell` opens on that dua.
+- References go through `HadithRef`: hadith references link to the library, Qur'an references are text.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 

@@ -20,6 +20,11 @@ const PAGE_META = {
     description:
       'Morning and evening adhkar, remembrance after prayer, before sleep, and daily dhikr — with Arabic, transliteration, translation, and a tap-to-count tracker.',
   },
+  duas: {
+    title: 'Duas for Everyday Situations — Travel, Eating, Illness & More | IslamicHub',
+    description:
+      "Supplications from the Qur'an and Sunnah for travel, eating, home, the mosque, clothing, weather, distress, illness, forgiveness, and parents and family — with Arabic, transliteration, translation and source.",
+  },
   tasbih: {
     title: 'Tasbih Counter — Digital Dhikr Counter | IslamicHub',
     description:

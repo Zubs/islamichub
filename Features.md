@@ -27,7 +27,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 15. Linked hadith citations
 - [x] 16. Daily hadith
 - [x] 17. Adhkar progress survives reload
-- [ ] 18. Duas
+- [x] 18. Duas
 - [ ] 19. Salah tracker
 - [ ] 20. Fasting tracker
 - [ ] 21. Worship dashboard
@@ -537,6 +537,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - A search box filters by English, transliteration or situation name.
 - Each dua has its own anchor, so one dua can be linked to.
 - References use `HadithRef` (feature 15) or a Qur'an reference.
+- Built with 46 duas. Every Arabic text was cut from its source (the Qur'an text, or the Arabic of the cited hadith in an open dataset), not typed. Hadith sources are limited to Sahih al-Bukhari, Abu Dawud, al-Tirmidhi and Ibn Majah, whose cited numbering the library shares.
+- A dua with a count (said seven or a hundred times) keeps a counter; its progress is saved with the day's adhkar progress.
 
 **Tests**
 - A situation with no duas is not listed.
@@ -1047,6 +1049,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 16 | 15 | Hajj page: Hajj on behalf of someone who died was cited as Sahih Bukhari 1513, which is about an elderly father still living | Changed to Sahih Bukhari 1852 (a woman whose mother died before performing Hajj) | Reviewer to confirm |
 | 17 | 15 | Two citations look imprecise and were left as they are: the Faith page quotes 'Uthman's narration (Sahih Muslim 26) and also cites Sahih Bukhari 128, which is a different narration on the same point; and the istighfar dhikr cites Sahih Bukhari 6307 ("more than seventy times a day") with a count of 100 | Left unchanged | A reviewer should decide whether to drop Bukhari 128 from that block and whether the count of 100 should cite Sahih Muslim 2702 instead |
 | 18 | 16 | Which hadiths, and which translation, for the daily hadith? | 67 short hadiths, all from Sahih al-Bukhari, chosen by me for being self-contained. English text copied from the open fawazahmed0/hadith-api dataset (edition eng-bukhari), with three typing errors corrected. The dataset does not state the translation's licence | Edit `src/data/dailyHadith.js`. A reviewer should read the list, and you should decide whether that translation may be republished or should be replaced |
+| 19 | 18 | Which duas, and in whose words? | 46 duas chosen by me: 16 from the Qur'an and 30 from Sahih al-Bukhari, Abu Dawud, al-Tirmidhi and Ibn Majah. The Arabic is copied from the sources. The transliterations, the English translations of the hadith duas, the titles and the "when to say it" lines are my own wording; Qur'an translations follow Saheeh International | Edit `src/data/duas.js`. A reviewer should read all 46, and in particular confirm the grading of the 19 that are not from the Qur'an or al-Bukhari, which I could not verify |
 
 **Checks only Zubair can do**
 

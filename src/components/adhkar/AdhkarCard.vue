@@ -1,10 +1,13 @@
 <template>
-  <article class="dhikr-card" :class="{ 'dc-done': isFullyDone }">
+  <article class="dhikr-card" :class="{ 'dc-done': counter && isFullyDone }">
     <!-- Reference badge -->
     <div class="dc-top">
       <span class="dc-ref"><HadithRef :text="dhikr.reference" /></span>
-      <span v-if="isFullyDone" class="dc-done-badge">✓ Done</span>
+      <span v-if="counter && isFullyDone" class="dc-done-badge">✓ Done</span>
     </div>
+
+    <h3 v-if="dhikr.title" class="dc-title">{{ dhikr.title }}</h3>
+    <div v-if="dhikr.when" class="dc-when">{{ dhikr.when }}</div>
 
     <!-- Arabic -->
     <div class="dc-arabic" lang="ar" dir="rtl">{{ dhikr.arabic }}</div>
@@ -20,7 +23,7 @@
     <div v-if="dhikr.virtue" class="dc-virtue"><HadithRef :text="dhikr.virtue" /></div>
 
     <!-- Counter controls -->
-    <div class="dc-counters">
+    <div v-if="counter" class="dc-counters">
       <!-- Compound dhikr (e.g. Tasbih Fatimah, Astaghfirullah x3) -->
       <template v-if="dhikr.parts">
         <button
@@ -53,6 +56,7 @@ import { useAdhkarStore } from '@/stores/adhkar.js'
 
 const props = defineProps({
   dhikr: { type: Object, required: true },
+  counter: { type: Boolean, default: true },
 })
 
 const store = useAdhkarStore()
@@ -122,6 +126,19 @@ const isFullyDone = computed(() => {
   background: #d4f5e8;
   padding: 2px 9px;
   border-radius: 12px;
+}
+
+.dc-title {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.dc-when {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: var(--space-3);
 }
 
 .dc-arabic {
