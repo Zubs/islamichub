@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import { ADHKAR, getAdhkarByCategory } from '@/data/adhkar.js'
 
 const LOG_KEY = 'adhkar-completion-log'
-const PROGRESS_KEY = 'adhkar-session-progress'
 
 function loadLog() {
   try {

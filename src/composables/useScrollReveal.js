@@ -15,7 +15,7 @@ export function useScrollReveal() {
           }
         })
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     )
 
     document.querySelectorAll('.anim-target').forEach((el) => observer.observe(el))

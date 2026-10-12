@@ -10,7 +10,7 @@ Tests are written in plain English and ordered the same way under every feature:
 
 ## Progress
 
-- [ ] 1. Test suite
+- [x] 1. Test suite
 - [ ] 2. Local day key
 - [ ] 3. Contributor docs
 - [ ] 4. Dead file cleanup
@@ -58,6 +58,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Tests sit beside the code they cover (`utils/prayer.test.js`).
 - First tests cover what already works: `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js`, and the adhkar and tasbih stores.
 - The Netlify build runs the tests before building, so a failing test stops a deploy.
+- Lint and format are made to pass across the whole project, so later features start from a clean check: the seven existing lint errors are fixed and every file in `src/` is formatted with Prettier. One of those errors hid a bug, a "No chapters match" message on the hadith book page that could never show, which is fixed with it.
 
 **Tests**
 - Running `npm test` on a fresh clone finishes with no failures.
@@ -70,9 +71,11 @@ Tests are written in plain English and ordered the same way under every feature:
 - Tapping an adhkar card past its target resets it to zero, and completing a category twice in one day records it once.
 - A tasbih tap raises both the session count and today's total, and reset leaves the total alone.
 - Corrupt data in `localStorage` is read as empty without an error.
-- A deliberately failing test stops `npm run build` on Netlify.
+- With a deliberately failing test, the Netlify build command run locally stops before building.
+- `npm run lint` reports no errors, and `npm run format` changes no files.
+- After formatting, each page shows the same text as before.
 
-**Done when:** `npm test` passes locally and a pull request with a failing test fails its Netlify deploy preview.
+**Done when:** `npm test`, `npm run lint` and `npm run build` pass locally with no errors, `npm run format` changes nothing, and the Netlify build command run locally stops when a test fails.
 
 ### 2. Local day key
 
@@ -82,6 +85,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - A new `utils/day.js` with `dayKey(date)` returning the local date as `YYYY-MM-DD`, plus `addDays(key, n)`.
 - The adhkar and tasbih stores use it in place of `toISOString()`.
 - Stored keys keep the same shape, so existing data is still read. No migration is needed.
+- Stored data that is valid JSON but the wrong shape is read as empty. Today the adhkar store (`adhkar-completion-log`) and the tasbih store (`tasbih-totals`) only survive text that is not JSON; the text `null`, a number or a list under either key would throw. Found while writing the tests for feature 1.
 - Every tracker added later (features 17, 19, 20) uses the same function.
 
 **Tests**
@@ -92,6 +96,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - A streak across the last day of a month and the first of the next counts as consecutive.
 - The day a clock changes for daylight saving still gives exactly one day key.
 - Data saved under the old code is still shown after the change.
+- The text `null`, a number or a list stored under `adhkar-completion-log` or `tasbih-totals` loads as empty without an error.
 - A user completes morning adhkar on three local days in a row and sees a streak of 3.
 
 **Done when:** No code outside `utils/day.js` builds a day key, and the streak tests pass in at least three timezones.
@@ -123,7 +128,6 @@ Tests are written in plain English and ordered the same way under every feature:
 - Delete the root `_redirects` (the rule is already in `netlify.toml`).
 - Delete the old `service-worker.js`. Feature 12 adds a new one.
 - Remove the `console.log` of the API key length in `fetchBooks`.
-- Remove the unused `adhkar-session-progress` constant. Feature 17 adds the real one.
 - Remove the web manifest link until feature 12 supplies a correct manifest, since the current one points to missing icons and old hash URLs.
 
 **Tests**

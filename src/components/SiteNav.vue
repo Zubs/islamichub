@@ -119,37 +119,37 @@ const pillars = [
     to: '/faith',
     icon: '☪️',
     name: 'Faith',
-    label: 'Faith — Shahada'
+    label: 'Faith — Shahada',
   },
   {
     to: '/prayer',
     icon: '🕌',
     name: 'Prayer',
-    label: 'Prayer — Salah and prayer times'
+    label: 'Prayer — Salah and prayer times',
   },
   {
     to: '/zakat',
     icon: '✦',
     name: 'Zakat',
-    label: 'Zakat calculator'
+    label: 'Zakat calculator',
   },
   {
     to: '/fasting',
     icon: '🌙',
     name: 'Fasting',
-    label: 'Fasting — Sawm and Ramadan'
+    label: 'Fasting — Sawm and Ramadan',
   },
   {
     to: '/hajj',
     icon: '🕋',
     name: 'Hajj',
-    label: 'Hajj — Pilgrimage guide'
+    label: 'Hajj — Pilgrimage guide',
   },
   {
     to: '/hadith',
     icon: '📖',
     name: 'Hadith',
-    label: 'Hadith — Prophetic tradition and library'
+    label: 'Hadith — Prophetic tradition and library',
   },
 ]
 
@@ -157,67 +157,67 @@ const allLinks = [
   {
     to: '/',
     icon: '🏠',
-    label: 'Home'
+    label: 'Home',
   },
   {
     to: '/faith',
     icon: '☪️',
-    label: 'Faith (Shahada)'
+    label: 'Faith (Shahada)',
   },
   {
     to: '/prayer',
     icon: '🕌',
-    label: 'Prayer (Salah) & Prayer Times'
+    label: 'Prayer (Salah) & Prayer Times',
   },
   {
     to: '/zakat',
     icon: '✦',
-    label: 'Zakat Calculator'
+    label: 'Zakat Calculator',
   },
   {
     to: '/fasting',
     icon: '🌙',
-    label: 'Fasting (Sawm) & Ramadan'
+    label: 'Fasting (Sawm) & Ramadan',
   },
   {
     to: '/hajj',
     icon: '🕋',
-    label: 'Hajj — Pilgrimage Guide'
+    label: 'Hajj — Pilgrimage Guide',
   },
   {
     to: '/hadith',
     icon: '📖',
-    label: 'Hadith — Prophetic Tradition'
+    label: 'Hadith — Prophetic Tradition',
   },
   {
     to: '/hadith/books',
     icon: '📚',
-    label: 'Hadith Library'
+    label: 'Hadith Library',
   },
   {
     to: '/adhkar',
     icon: '📿',
-    label: 'Adhkar & Duas'
+    label: 'Adhkar & Duas',
   },
   {
     to: '/tasbih',
     icon: '🔢',
-    label: 'Tasbih Counter'
+    label: 'Tasbih Counter',
   },
   {
     to: '/inheritance',
     icon: '⚖️',
-    label: "Inheritance (Fara'id) Calculator"
+    label: "Inheritance (Fara'id) Calculator",
   },
   {
     to: '/about',
     icon: 'ℹ️',
-    label: 'About & Contributors'
+    label: 'About & Contributors',
   },
   {
     to: '/changelog',
     icon: '📋',
-    label: 'Changelog'
+    label: 'Changelog',
   },
 ]
 </script>

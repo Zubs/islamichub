@@ -5,21 +5,59 @@
       <svg xmlns="http://www.w3.org/2000/svg" class="nf-bg-svg">
         <defs>
           <pattern id="nf-gp" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <polygon points="60,5 115,33 115,87 60,115 5,87 5,33"
-                     fill="none" stroke="var(--green)" stroke-width="0.6" opacity="0.18"/>
-            <polygon points="60,20 100,42 100,78 60,100 20,78 20,42"
-                     fill="none" stroke="var(--gold)" stroke-width="0.35" opacity="0.12"/>
-            <line x1="60" y1="5" x2="60" y2="115" stroke="var(--green)" stroke-width="0.2"
-                  opacity="0.1"/>
-            <line x1="5" y1="33" x2="115" y2="87" stroke="var(--green)" stroke-width="0.2"
-                  opacity="0.1"/>
-            <line x1="115" y1="33" x2="5" y2="87" stroke="var(--green)" stroke-width="0.2"
-                  opacity="0.1"/>
-            <rect x="57" y="57" width="6" height="6" fill="var(--gold)" opacity="0.2"
-                  transform="rotate(45 60 60)"/>
+            <polygon
+              points="60,5 115,33 115,87 60,115 5,87 5,33"
+              fill="none"
+              stroke="var(--green)"
+              stroke-width="0.6"
+              opacity="0.18"
+            />
+            <polygon
+              points="60,20 100,42 100,78 60,100 20,78 20,42"
+              fill="none"
+              stroke="var(--gold)"
+              stroke-width="0.35"
+              opacity="0.12"
+            />
+            <line
+              x1="60"
+              y1="5"
+              x2="60"
+              y2="115"
+              stroke="var(--green)"
+              stroke-width="0.2"
+              opacity="0.1"
+            />
+            <line
+              x1="5"
+              y1="33"
+              x2="115"
+              y2="87"
+              stroke="var(--green)"
+              stroke-width="0.2"
+              opacity="0.1"
+            />
+            <line
+              x1="115"
+              y1="33"
+              x2="5"
+              y2="87"
+              stroke="var(--green)"
+              stroke-width="0.2"
+              opacity="0.1"
+            />
+            <rect
+              x="57"
+              y="57"
+              width="6"
+              height="6"
+              fill="var(--gold)"
+              opacity="0.2"
+              transform="rotate(45 60 60)"
+            />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#nf-gp)"/>
+        <rect width="100%" height="100%" fill="url(#nf-gp)" />
       </svg>
     </div>
 
@@ -28,7 +66,6 @@
     <div class="nf-ornament nf-ornament-right" aria-hidden="true"></div>
 
     <div class="nf-inner">
-
       <!-- Top kufic divider -->
       <div class="nf-divider-top" aria-hidden="true">
         <div class="nf-divider-line"></div>
@@ -50,11 +87,20 @@
       <div class="nf-gem-row" aria-hidden="true">
         <div class="nf-gem-line"></div>
         <svg width="32" height="32" viewBox="0 0 32 32">
-          <polygon points="16,2 30,16 16,30 2,16" fill="none" stroke="var(--gold)"
-                   stroke-width="1.2"/>
-          <polygon points="16,7 25,16 16,25 7,16" fill="none" stroke="var(--gold)"
-                   stroke-width="0.6" opacity="0.5"/>
-          <circle cx="16" cy="16" r="2" fill="var(--gold)" opacity="0.7"/>
+          <polygon
+            points="16,2 30,16 16,30 2,16"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="1.2"
+          />
+          <polygon
+            points="16,7 25,16 16,25 7,16"
+            fill="none"
+            stroke="var(--gold)"
+            stroke-width="0.6"
+            opacity="0.5"
+          />
+          <circle cx="16" cy="16" r="2" fill="var(--gold)" opacity="0.7" />
         </svg>
         <div class="nf-gem-line"></div>
       </div>
@@ -66,7 +112,7 @@
         <p class="nf-ayah-ref">Qur'an 65:3</p>
         <p class="nf-body">
           "And whoever relies upon Allah — then He is sufficient for him."
-          <br>
+          <br />
           The page you were looking for doesn't exist — but you're always in the right place with
           Allah.
         </p>
@@ -74,9 +120,7 @@
 
       <!-- Navigation options -->
       <div class="nf-actions">
-        <RouterLink to="/" class="btn btn-primary btn-lg nf-btn-home">
-          ← Return home
-        </RouterLink>
+        <RouterLink to="/" class="btn btn-primary btn-lg nf-btn-home"> ← Return home </RouterLink>
         <div class="nf-pillar-links" role="navigation" aria-label="Quick pillar links">
           <span class="nf-links-label">Or go directly to:</span>
           <div class="nf-links-grid">
@@ -89,12 +133,11 @@
       </div>
 
       <!-- Bottom divider -->
-      <div class="nf-divider-top" style="margin-top:3rem" aria-hidden="true">
+      <div class="nf-divider-top" style="margin-top: 3rem" aria-hidden="true">
         <div class="nf-divider-line"></div>
         <div class="nf-divider-gem"></div>
         <div class="nf-divider-line"></div>
       </div>
-
     </div>
   </div>
 </template>
@@ -112,32 +155,32 @@ const pillars = [
   {
     to: '/faith',
     icon: '☪️',
-    name: 'Faith'
+    name: 'Faith',
   },
   {
     to: '/prayer',
     icon: '🕌',
-    name: 'Prayer'
+    name: 'Prayer',
   },
   {
     to: '/zakat',
     icon: '✦',
-    name: 'Zakat'
+    name: 'Zakat',
   },
   {
     to: '/fasting',
     icon: '🌙',
-    name: 'Fasting'
+    name: 'Fasting',
   },
   {
     to: '/hajj',
     icon: '🕋',
-    name: 'Hajj'
+    name: 'Hajj',
   },
   {
     to: '/inheritance',
     icon: '⚖️',
-    name: "Inheritance"
+    name: 'Inheritance',
   },
 ]
 </script>
@@ -209,7 +252,7 @@ const pillars = [
   text-align: center;
   max-width: 680px;
   width: 100%;
-  animation: nfFadeUp .7s cubic-bezier(.4, 0, .2, 1) both;
+  animation: nfFadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 @keyframes nfFadeUp {
@@ -236,7 +279,7 @@ const pillars = [
 .nf-divider-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(196, 147, 42, .4), transparent);
+  background: linear-gradient(to right, transparent, rgba(196, 147, 42, 0.4), transparent);
 }
 
 .nf-divider-gem {
@@ -244,7 +287,7 @@ const pillars = [
   height: 8px;
   background: var(--gold);
   transform: rotate(45deg);
-  opacity: .65;
+  opacity: 0.65;
   flex-shrink: 0;
 }
 
@@ -266,19 +309,19 @@ const pillars = [
   opacity: 0.12;
   letter-spacing: -0.02em;
   display: block;
-  animation: nfDigit .9s cubic-bezier(.4, 0, .2, 1) both;
+  animation: nfDigit 0.9s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .nf-digit-4a {
-  animation-delay: .05s;
+  animation-delay: 0.05s;
 }
 
 .nf-digit-0 {
-  animation-delay: .15s;
+  animation-delay: 0.15s;
 }
 
 .nf-digit-4b {
-  animation-delay: .25s;
+  animation-delay: 0.25s;
 }
 
 @keyframes nfDigit {
@@ -298,12 +341,12 @@ const pillars = [
   font-size: clamp(1.4rem, 4vw, 2rem);
   font-weight: 600;
   color: var(--muted);
-  letter-spacing: .35em;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   margin-top: -0.5rem;
   margin-bottom: 1.5rem;
   opacity: 0;
-  animation: nfFadeUp .6s ease .4s both;
+  animation: nfFadeUp 0.6s ease 0.4s both;
 }
 
 /* ── Gem row ──────────────────────────────────────────────────────────────── */
@@ -315,20 +358,20 @@ const pillars = [
   max-width: 260px;
   margin-bottom: 2.25rem;
   opacity: 0;
-  animation: nfFadeUp .5s ease .5s both;
+  animation: nfFadeUp 0.5s ease 0.5s both;
 }
 
 .nf-gem-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(196, 147, 42, .35), transparent);
+  background: linear-gradient(to right, transparent, rgba(196, 147, 42, 0.35), transparent);
 }
 
 /* ── Text block ───────────────────────────────────────────────────────────── */
 .nf-text {
   margin-bottom: 2.5rem;
   opacity: 0;
-  animation: nfFadeUp .6s ease .55s both;
+  animation: nfFadeUp 0.6s ease 0.55s both;
 }
 
 .nf-heading {
@@ -346,14 +389,14 @@ const pillars = [
   color: var(--green);
   direction: rtl;
   line-height: 1.8;
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 
 .nf-ayah-ref {
   font-size: 12px;
   font-weight: 600;
   color: var(--gold);
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
@@ -374,7 +417,7 @@ const pillars = [
   gap: 2rem;
   width: 100%;
   opacity: 0;
-  animation: nfFadeUp .6s ease .7s both;
+  animation: nfFadeUp 0.6s ease 0.7s both;
 }
 
 .nf-btn-home {
@@ -386,7 +429,7 @@ const pillars = [
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .75rem;
+  gap: 0.75rem;
   width: 100%;
 }
 
@@ -394,7 +437,7 @@ const pillars = [
   font-size: 11.5px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: .6px;
+  letter-spacing: 0.6px;
   color: var(--muted);
 }
 
@@ -402,7 +445,7 @@ const pillars = [
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .nf-pillar-link {
@@ -417,7 +460,7 @@ const pillars = [
   font-weight: 500;
   color: var(--ink);
   text-decoration: none;
-  transition: all .15s;
+  transition: all 0.15s;
 }
 
 .nf-pillar-link:hover {

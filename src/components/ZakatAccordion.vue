@@ -1,23 +1,23 @@
 <template>
   <div class="acc-card">
     <div class="acc-header" @click="open = !open">
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display: flex; align-items: center; gap: 10px">
         <div class="acc-icon" :class="iconClass">{{ icon }}</div>
         <div>
           <div class="acc-name">{{ title }}</div>
           <div class="acc-sub">{{ sub }}</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div style="display: flex; align-items: center; gap: 8px">
         <span class="acc-total" v-if="total && hasValue">{{ total }}</span>
         <span class="acc-chev" :class="{ open }">▼</span>
       </div>
     </div>
     <div class="acc-body" :class="{ open }">
       <div class="ref-box" v-if="$slots.reference">
-        <slot name="reference"/>
+        <slot name="reference" />
       </div>
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>

@@ -1,15 +1,12 @@
 <template>
-  <div
-    class="quran-block"
-    :class="{ 'frame-calligraphy': framed, 'anim-target': animate }"
-  >
+  <div class="quran-block" :class="{ 'frame-calligraphy': framed, 'anim-target': animate }">
     <template v-if="framed">
       <div class="corner-ornament top-left" aria-hidden="true"></div>
       <div class="corner-ornament top-right" aria-hidden="true"></div>
       <div class="corner-ornament bottom-left" aria-hidden="true"></div>
       <div class="corner-ornament bottom-right" aria-hidden="true"></div>
     </template>
-    <GeoPattern v-else/>
+    <GeoPattern v-else />
 
     <div class="quran-arabic" lang="ar">{{ arabic }}</div>
     <div class="quran-ref">{{ reference }}</div>

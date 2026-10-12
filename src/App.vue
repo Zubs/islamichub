@@ -8,10 +8,16 @@
         </div>
         <div class="loading-bismillah" lang="ar">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
         <div class="loading-logo" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
-               stroke-width="1.5">
-            <polygon points="12,2 20,7 20,17 12,22 4,17 4,7"/>
-            <polygon points="12,6 17,9 17,15 12,18 7,15 7,9"/>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fff"
+            stroke-width="1.5"
+          >
+            <polygon points="12,2 20,7 20,17 12,22 4,17 4,7" />
+            <polygon points="12,6 17,9 17,15 12,18 7,15 7,9" />
           </svg>
         </div>
         <div class="loading-name">Islamic<span>Hub</span></div>
@@ -21,19 +27,19 @@
   </Transition>
 
   <!-- Site nav -->
-  <SiteNav/>
+  <SiteNav />
 
   <!-- Page content — Vue Router renders the matching view here -->
   <main id="app" role="main">
     <RouterView v-slot="{ Component }">
       <Transition name="page-fade" mode="out-in">
-        <component :is="Component" :key="$route.path"/>
+        <component :is="Component" :key="$route.path" />
       </Transition>
     </RouterView>
   </main>
 
   <!-- Site footer -->
-  <SiteFooter/>
+  <SiteFooter />
 </template>
 
 <script setup>
@@ -84,7 +90,8 @@ onMounted(async () => {
   margin-bottom: 1.25rem;
 }
 
-.loading-ornament::before, .loading-ornament::after {
+.loading-ornament::before,
+.loading-ornament::after {
   content: '';
   height: 1px;
   width: 44px;
@@ -118,7 +125,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto .75rem;
+  margin: 0 auto 0.75rem;
 }
 
 .loading-name {
@@ -126,7 +133,7 @@ onMounted(async () => {
   font-size: 1.7rem;
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 }
 
 .loading-name span {
@@ -139,17 +146,22 @@ onMounted(async () => {
 }
 
 /* Loading transition */
-.loading-enter-active, .loading-leave-active {
-  transition: opacity .4s ease;
+.loading-enter-active,
+.loading-leave-active {
+  transition: opacity 0.4s ease;
 }
 
-.loading-enter-from, .loading-leave-to {
+.loading-enter-from,
+.loading-leave-to {
   opacity: 0;
 }
 
 /* Page fade transition */
-.page-fade-enter-active, .page-fade-leave-active {
-  transition: opacity .15s ease, transform .15s ease;
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .page-fade-enter-from {
