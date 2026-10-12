@@ -1,37 +1,82 @@
-const BASE = 'https://hadithapi.com/api'
-
-function key() {
-  return import.meta.env.VITE_HADITH_API_KEY || ''
-}
-
-function buildUrl(path, params = {}) {
-  const u = new URL(`${BASE}${path}`)
-  u.searchParams.set('apiKey', key())
-  for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== null && v !== '') {
-      u.searchParams.set(k, v)
-    }
-  }
-
-  return u.toString()
-}
+const BASE = '/api/hadith'
+const OFFLINE_CACHE = 'islamichub-hadith'
+const FORMER_HOST = 'hadithapi.com'
 
 export const OFFLINE_MESSAGE =
   'You are offline, and this page has not been saved on this device yet. Open it once while connected and it will be kept for next time.'
 
+export const NOT_CONFIGURED_MESSAGE = 'The hadith library is not configured on this server.'
+
 export function loadErrorMessage(error) {
+  if (error.notConfigured) {
+    return NOT_CONFIGURED_MESSAGE
+  }
+
   return navigator.onLine === false ? OFFLINE_MESSAGE : error.message
 }
 
-async function get(path, params = {}) {
-  const url = buildUrl(path, params)
-  const res = await fetch(url)
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    throw new Error(`hadithapi ${res.status}: ${text.slice(0, 120)}`)
+function buildUrl(path, params = {}) {
+  const query = new URLSearchParams()
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null && v !== '') {
+      query.set(k, v)
+    }
   }
 
-  return res.json()
+  const text = query.toString()
+  return `${BASE}${path}${text ? `?${text}` : ''}`
+}
+
+// Pages stored for offline use before the proxy existed were kept under hadithapi.com addresses.
+async function storedBeforeProxy(path, params) {
+  if (!('caches' in globalThis)) {
+    return null
+  }
+
+  const wanted = new URLSearchParams(buildUrl(path, params).split('?')[1] ?? '')
+  wanted.sort()
+  const cache = await caches.open(OFFLINE_CACHE)
+  for (const request of await cache.keys()) {
+    const address = new URL(request.url)
+    address.searchParams.delete('apiKey')
+    address.searchParams.sort()
+    const matches =
+      address.hostname === FORMER_HOST &&
+      address.pathname === `/api${path}` &&
+      address.searchParams.toString() === wanted.toString()
+    if (matches) {
+      return (await cache.match(request)).json()
+    }
+  }
+
+  return null
+}
+
+async function request(path, params) {
+  const res = await fetch(buildUrl(path, params))
+  if (res.ok) {
+    return res.json()
+  }
+
+  const body = await res.json().catch(() => ({}))
+  const error = new Error(`The hadith library could not be loaded (${res.status}).`)
+  error.notConfigured = body.error === 'not_configured'
+  throw error
+}
+
+async function get(path, params = {}) {
+  try {
+    return await request(path, params)
+  } catch (error) {
+    const stored = error.notConfigured
+      ? null
+      : await storedBeforeProxy(path, params).catch(() => null)
+    if (stored) {
+      return stored
+    }
+
+    throw error
+  }
 }
 
 // ── Books ──────────────────────────────────────────────────────────────────

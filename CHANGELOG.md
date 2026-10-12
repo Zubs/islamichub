@@ -16,6 +16,7 @@ All notable changes to IslamicHub are documented here.
 - **Licence** — IslamicHub is now licensed under the GNU General Public License, version 3.
 
 ### Changed
+- **The hadith library's key is no longer public** *(Hadith library)* — The hadith library now asks the site's own server for books, chapters and hadiths, and the server adds the API key. The key used to be readable in the site's code. Replies are cached for a day, so pages you have opened load faster.
 - **Lint and format pass across the project** — Fixed the seven existing lint errors (unused variables and parameters) and formatted every file in `src/` with Prettier. No change to any calculation.
 - **README and contribution guide rewritten** — Both now describe the Vue and Vite project: setup, scripts, the folder layout, how to add a page or content, the content rules and the pull request steps. An automated check fails if either names a command, file or folder that does not exist. The old copy of the guide published at `/CONTRIBUTING.md` is removed.
 

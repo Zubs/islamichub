@@ -2,11 +2,14 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { mkdtempSync, rmSync, readFileSync, existsSync, statSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import process from 'node:process'
 import { build } from 'vite'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import { routes } from '@/router/index.js'
 
 const HOME_PAGE_LIMIT_BYTES = 600 * 1024
+const SERVER_KEY = 'server-only-key-51c7'
+const FORMER_CLIENT_KEY = 'former-client-key-88d2'
 
 let dist
 
@@ -42,11 +45,32 @@ function staticImports(script, seen = new Set()) {
 describe('built site', () => {
   beforeAll(async () => {
     dist = mkdtempSync(join(tmpdir(), 'islamichub-build-'))
+    process.env.HADITH_API_KEY = SERVER_KEY
+    process.env.VITE_HADITH_API_KEY = FORMER_CLIENT_KEY
     await build({ logLevel: 'silent', build: { outDir: dist, emptyOutDir: true } })
   }, 120000)
 
   afterAll(() => {
     rmSync(dist, { recursive: true, force: true })
+    delete process.env.HADITH_API_KEY
+    delete process.env.VITE_HADITH_API_KEY
+  })
+
+  function builtFiles(folder = '') {
+    return readdirSync(join(dist, folder), { withFileTypes: true }).flatMap((entry) =>
+      entry.isDirectory() ? builtFiles(join(folder, entry.name)) : [join(folder, entry.name)],
+    )
+  }
+
+  it('holds the hadith API key in no built file', () => {
+    const files = builtFiles()
+
+    expect(files.length).toBeGreaterThan(20)
+    for (const file of files) {
+      const content = readFileSync(join(dist, file), 'latin1')
+      expect(content.includes(SERVER_KEY) || content.includes(FORMER_CLIENT_KEY), file).toBe(false)
+      expect(content.includes('hadithapi.com/api'), file).toBe(false)
+    }
   })
 
   it('contains the worker at the old address, its clean-up script and the manifest', () => {

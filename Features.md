@@ -402,6 +402,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Replies are cached for a day, as the collections do not change.
 - `useHadithApi` calls the proxy. hadithapi.com is removed from the site's allowed connections.
 - `netlify dev` runs the function locally, and the README says so.
+- Built, with every automated test passing. The feature stays unticked until Zubair has set `HADITH_API_KEY` in Netlify and confirmed the library on production, as listed under Final.
 
 **Tests**
 - With no key set on the server, the proxy returns a clear "not configured" reply and the library shows its existing "no API key" state.
@@ -1044,6 +1045,9 @@ Tests are written in plain English and ordered the same way under every feature:
 | 2 | 12 | Run Lighthouse on the live site and confirm it reports the site as installable with no manifest or icon warnings |
 | 3 | 12 | On a throttled "Slow 3G" connection, confirm a first visit to the home page is usable within five seconds, and that the Arabic and heading fonts still show after going offline on a second visit |
 | 4 | 12 | After the next deploy, with a tab already open, confirm "Update available" appears and Refresh loads the new version |
+| 5 | 13 | In Netlify, add `HADITH_API_KEY` (scoped to Functions) and delete `VITE_HADITH_API_KEY`. The old key was readable in the site's JavaScript, so get a fresh key from hadithapi.com and retire the old one |
+| 6 | 13 | On production (or a deploy preview), browse from the book list to a chapter and confirm in the network panel that every request goes to `/api/hadith/` and no key appears. Also confirm a repeated request is served from the cache. Then tick feature 13 |
+| 7 | 13 | Run `npx netlify-cli dev` once locally to confirm the function is picked up and the rewrite in `netlify.toml` reaches it. I could not run the Netlify CLI in this session |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

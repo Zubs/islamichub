@@ -44,8 +44,8 @@ a browsable hadith library.
 | Hosting      | Netlify (`npm test && npm run build` → `dist/`)                   |
 | Node         | `^20.19.0 \|\| >=22.12.0`                                         |
 
-There is no TypeScript. The app is currently client-only; a backend is not ruled out (see
-[Backend](#backend-open)).
+There is no TypeScript. Server-side code is limited to Netlify Functions, added only where a feature needs one (see
+[Server-side code](#server-side-code)).
 
 ### Scripts
 
@@ -63,10 +63,9 @@ There is no TypeScript. The app is currently client-only; a backend is not ruled
 
 | Variable              | Required | Purpose                                              |
 |-----------------------|----------|------------------------------------------------------|
-| `VITE_HADITH_API_KEY` | For the hadith library | API key for hadithapi.com. Without it the library views show a "no API key" state instead of fetching. |
+| `HADITH_API_KEY` | For the hadith library | API key for hadithapi.com, read only by the server-side proxy. Without it the proxy answers "not configured" and the library views show a "no API key" state. |
 
-Copy `.env.example` to `.env` to set it. `.env` is git-ignored. Because the variable is `VITE_`-prefixed it is compiled into the client bundle and is visible to
-anyone who loads the site.
+Copy `.env.example` to `.env` to set it for `netlify dev`. `.env` is git-ignored. The key is never compiled into the client bundle: `test/build.test.js` builds the site with a key set and fails if it appears in any built file.
 
 ---
 
@@ -110,14 +109,18 @@ netlify.toml            Build, SPA redirect, security and cache headers
 - Route changes use an `out-in` fade keyed on `route.path`.
 - Navigation scrolls to the top instantly, except on back/forward, where the saved position is restored.
 
-### Backend (open)
+### Server-side code
 
-The project is open to adding a backend; none exists yet, and its shape is undecided. Things in the current code that
-would benefit from one:
+Server-side code lives in `netlify/functions/` and is added only where a feature calls for it.
 
-- Proxying hadithapi.com so the API key stays out of the client bundle.
-- Proxying and caching metal prices and FX rates, so there is one consistent rate base and fewer third-party failures.
-- Optional sync of adhkar streaks and tasbih totals across devices.
+- **`hadith.js`** serves `/api/hadith/*` (a rewrite in `netlify.toml`, placed before the SPA rule). It forwards three
+  read requests to hadithapi.com with `HADITH_API_KEY` added: `books`, `<book>/chapters`, and `hadiths` with only
+  `book`, `chapter`, `hadithNumber`, `page` and `paginate` (at most 100). Anything else is rejected without an upstream
+  call. Successful replies are cacheable for a day; errors are `no-store`, written by the proxy and never contain the
+  key. The upstream call is abandoned after nine seconds. With no key it answers 503 `not_configured`.
+- `netlify dev` runs functions locally. Plain `npm run dev` has no proxy.
+
+Still open: proxying and caching metal prices and exchange rates, and optional sync of streaks and totals across devices.
 
 ---
 
@@ -258,7 +261,7 @@ Nothing entered into the calculator is persisted or transmitted.
 - `/hadith/books` — nine collections from static `BOOKS_META`: Sahih al-Bukhari, Sahih Muslim, Jami' al-Tirmidhi,
   Sunan Abu Dawood, Sunan Ibn Majah, Sunan an-Nasa'i, Mishkat al-Masabih, Musnad Ahmad, Al-Silsila al-Sahiha. Each
   shows the author, death date, grade, hadith count, and a description.
-- `/hadith/books/:bookSlug` — chapter list fetched from hadithapi.com.
+- `/hadith/books/:bookSlug` — chapter list fetched from hadithapi.com through the proxy.
 - `/hadith/books/:bookSlug/:chapterNumber` — hadiths in the chapter, 25 per page, with:
   - numbered pagination with ellipsis (all pages shown when there are 7 or fewer),
   - previous/next chapter links,
@@ -408,7 +411,7 @@ Rules:
 - Every built file is precached on the first visit, so every route opens offline; `index.html` answers any navigation.
 - Google Fonts files are kept `CacheFirst` once loaded. Because the first page loads before the worker controls it,
   `usePwa.js` re-requests the font addresses the page has already loaded once the worker is ready.
-- Hadith requests (hadithapi.com, and `/api/hadith/` once the proxy exists) are `NetworkFirst` with a three-second limit,
+- Hadith requests (`/api/hadith/`) are `NetworkFirst` with a three-second limit,
   so a book or chapter viewed online opens offline. One never viewed shows an "offline, not saved yet" message.
 - The Zakat store keeps the last fetched prices under `zakat-prices`. When a fetch fails they are used in preference to
   the built-in reference prices, and the page marks them "saved" with their age in days.
@@ -431,7 +434,7 @@ Rules:
 | `cdn.jsdelivr.net`              | Daily gold, silver and FX rates (currency-api dataset) | Tries the mirror, then reference prices; flagged |
 | `latest.currency-api.pages.dev` | Mirror of the same dataset       | Reference prices; flagged as not current    |
 | `nominatim.openstreetmap.org`   | Reverse geocoding a place name   | Shows "Your location"                       |
-| `hadithapi.com`                 | Books, chapters, hadiths         | Error state in the view                     |
+| `hadithapi.com` (server-side only, through `/api/hadith/`) | Books, chapters, hadiths | The proxy answers with an error within ten seconds; error state in the view |
 | `islamichub.goatcounter.com`    | Anonymous usage statistics       | Dropped silently; page works normally       |
 | Google Fonts                    | Amiri, Cormorant Garamond, DM Sans | System font fallbacks                     |
 
@@ -520,8 +523,6 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Housekeeping
 
-- **The hadith API key ships in the client bundle.** Keeping it secret needs a server-side proxy, which is the most immediate
-  reason to add a backend.
 - **In-progress adhkar counts are lost on reload.** They are held in memory only.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
   stores are tested. The composables and most views are not yet.

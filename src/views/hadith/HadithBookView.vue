@@ -63,9 +63,9 @@
         <div>
           <div class="had-error-title">Could not load chapters</div>
           <div class="had-error-desc">{{ error }}</div>
-          <div v-if="!hasApiKey" style="margin-top: 8px; font-size: 13px">
-            Add <code>VITE_HADITH_API_KEY=your_key</code> to your <code>.env</code> file. Get a free
-            key at
+          <div v-if="notConfigured" style="margin-top: 8px; font-size: 13px">
+            Set <code>HADITH_API_KEY</code> where the site is hosted (see the README). A free key is
+            available at
             <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
               >hadithapi.com</a
             >.
@@ -145,7 +145,7 @@ useSeo({
     `Browse all chapters of ${meta.value?.name || bookSlug.value} — ${meta.value?.hadithCount || ''} hadiths from ${meta.value?.author || ''}.`,
 })
 
-const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
+const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
 const chapters = ref([])
@@ -170,6 +170,7 @@ async function load() {
     const data = await fetchChapters(bookSlug.value)
     chapters.value = data.chapters || []
   } catch (e) {
+    notConfigured.value = !!e.notConfigured
     error.value = loadErrorMessage(e)
   } finally {
     loading.value = false

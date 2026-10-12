@@ -60,8 +60,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: ({ url }) =>
-              url.hostname === 'hadithapi.com' || url.pathname.startsWith('/api/hadith/'),
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/hadith/'),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'islamichub-hadith',

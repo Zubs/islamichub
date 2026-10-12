@@ -77,6 +77,7 @@ describe('Hadith chapter page offline', () => {
     await flushPromises()
 
     expect(wrapper.find('.had-error').text()).toContain('Failed to fetch')
+    expect(wrapper.find('.had-error').text()).not.toContain('HADITH_API_KEY')
     expect(wrapper.find('.had-error').text()).not.toContain('You are offline')
   })
 })

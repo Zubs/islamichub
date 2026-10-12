@@ -182,6 +182,11 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: "The hadith library's key is no longer public",
+            scope: 'Hadith library',
+            desc: "The hadith library now asks the site's own server for books, chapters and hadiths, and the server adds the API key. The key used to be readable in the site's code. Replies are cached for a day, so pages you have opened load faster.",
+          },
+          {
             title: 'Lint and format pass across the project',
             scope: 'Code quality',
             desc: 'Fixed the seven existing lint errors (unused variables and parameters) and formatted every source file with Prettier. No change to any calculation.',

@@ -60,16 +60,26 @@ The site is then running at the address Vite prints, normally `http://localhost:
 
 ## Environment
 
-The site reads two variables, set in `.env`:
+The site reads two variables:
 
-| Variable | Needed for | Notes |
-|---|---|---|
-| `VITE_HADITH_API_KEY` | The hadith library | A key from [hadithapi.com](https://hadithapi.com) |
-| `VITE_STATS_ENDPOINT` | Anonymous usage statistics | Optional — counting is off without it. Set to your GoatCounter counting address (e.g., `https://yourcode.goatcounter.com/count`). |
+| Variable | Read by | Needed for | Notes |
+|---|---|---|---|
+| `HADITH_API_KEY` | The server (`netlify/functions/hadith.js`) | The hadith library | A key from [hadithapi.com](https://hadithapi.com). It stays on the server and is never sent to visitors. |
+| `VITE_STATS_ENDPOINT` | The site | Anonymous usage statistics | Optional — counting is off without it. Set to your GoatCounter counting address (e.g., `https://yourcode.goatcounter.com/count`). |
+
+Copy `.env.example` to `.env` to set them locally.
 
 The site runs without a key. Only the hadith book and chapter pages need one, and they show a "no API key" message until it is set.
 
-The key is compiled into the site's JavaScript, so anyone who loads the site can read it. Moving it to a server is planned; see [Features.md](Features.md).
+### The hadith proxy
+
+The hadith library does not call hadithapi.com from the browser. It calls `/api/hadith/…` on the site itself, and a Netlify function forwards the request with the key added. To use the library locally, run the site through the Netlify CLI, which serves the site and the function together:
+
+```bash
+npx netlify-cli dev
+```
+
+Plain `npm run dev` has no proxy, so the hadith pages show their error state there. Everything else works.
 
 ## Deployment
 
@@ -79,7 +89,7 @@ The site is hosted on Netlify, configured in `netlify.toml`. Each deploy runs th
 npm test && npm run build
 ```
 
-A failing test stops the deploy. The contents of `dist/` are published, and every path is served by `index.html` so that clean URLs work. Set `VITE_HADITH_API_KEY` in the Netlify site settings.
+A failing test stops the deploy. The contents of `dist/` are published, and every path is served by `index.html` so that clean URLs work. Set `HADITH_API_KEY` in the Netlify site settings (environment variables, scoped to Functions).
 
 ## Licence
 

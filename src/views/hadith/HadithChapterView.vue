@@ -49,9 +49,9 @@
       <div v-else-if="error" class="had-error">
         <div class="had-error-title">Could not load hadiths</div>
         <div>{{ error }}</div>
-        <div v-if="!hasApiKey" style="margin-top: 8px; font-size: 13px">
-          Add <code>VITE_HADITH_API_KEY=your_key</code> to <code>.env</code> and restart the dev
-          server. Get a free key at
+        <div v-if="notConfigured" style="margin-top: 8px; font-size: 13px">
+          Set <code>HADITH_API_KEY</code> where the site is hosted (see the README). A free key is
+          available at
           <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
             >hadithapi.com</a
           >.
@@ -209,7 +209,7 @@ const route = useRoute()
 const bookSlug = computed(() => route.params.bookSlug)
 const chapterNumber = computed(() => route.params.chapterNumber)
 const meta = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
-const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
+const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
 const hadiths = ref([])
@@ -321,6 +321,7 @@ async function loadHadiths() {
       hadiths.value.forEach((h) => expanded.add(h.id))
     }
   } catch (e) {
+    notConfigured.value = !!e.notConfigured
     error.value = loadErrorMessage(e)
   } finally {
     loading.value = false

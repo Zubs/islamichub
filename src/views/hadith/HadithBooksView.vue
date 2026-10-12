@@ -24,17 +24,17 @@
         <span>All Books</span>
       </div>
 
-      <!-- API key notice if missing -->
-      <div v-if="!hasApiKey" class="api-key-notice">
+      <!-- Notice when the server has no API key -->
+      <div v-if="notConfigured" class="api-key-notice">
         <div class="akn-icon" aria-hidden="true">🔑</div>
         <div>
           <div class="akn-title">API key required</div>
           <div class="akn-desc">
-            Add <code>VITE_HADITH_API_KEY=your_key</code> to your <code>.env</code> file. Get a free
-            key at
+            The hadith library is not configured on this server. Set <code>HADITH_API_KEY</code>
+            where the site is hosted (see the README); a free key is available at
             <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
               >hadithapi.com/register</a
-            >. The book cards below use static metadata — live chapter counts require your key.
+            >. The book cards below use static metadata.
           </div>
         </div>
       </div>
@@ -50,9 +50,7 @@
         <div class="had-error-icon" aria-hidden="true">⚠</div>
         <div>
           <div class="had-error-title">Could not load live data</div>
-          <div class="had-error-desc">
-            {{ error }} — Showing static metadata. Check your API key in <code>.env</code>.
-          </div>
+          <div class="had-error-desc">{{ error }} Showing static metadata meanwhile.</div>
         </div>
       </div>
 
@@ -130,7 +128,7 @@ import { fetchBooks, BOOKS_META, loadErrorMessage } from '@/composables/useHadit
 useSeo('hadith-books')
 useScrollReveal()
 
-const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
+const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
 const liveBooks = ref([]) // from API
@@ -172,16 +170,13 @@ function getInitials(name) {
 }
 
 onMounted(async () => {
-  if (!hasApiKey) {
-    return
-  }
-
   loading.value = true
   try {
     const data = await fetchBooks()
     liveBooks.value = data.books || []
   } catch (e) {
-    error.value = loadErrorMessage(e)
+    notConfigured.value = !!e.notConfigured
+    error.value = e.notConfigured ? null : loadErrorMessage(e)
   } finally {
     loading.value = false
   }
