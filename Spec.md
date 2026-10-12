@@ -88,7 +88,7 @@ src/
   utils/                prayer, qibla, hijri, inheritance, zakat, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
-public/                 robots.txt, sitemap.xml, favicons, app icons, sw-legacy.js (clears the old app's cache)
+public/                 robots.txt, sitemap.xml, favicons, app icons, og-image.png, sw-legacy.js (clears the old app's cache)
 scripts/                make-icons.py (draws the app icons)
 netlify.toml            Build, SPA redirect, security and cache headers
 ```
@@ -495,6 +495,27 @@ Rules:
   impossible location are read as none; an unknown method falls back to the default. If the browser blocks storage the
   page works for the visit and says the location cannot be remembered.
 - Changing a stored shape requires a migration or a new key, since existing users have data under the current keys.
+
+---
+
+## 6b. Sharing
+
+- `ShareButton.vue` appears on the daily hadith, the single-hadith page and every adhkar and dua card. It shares an
+  item `{ arabic, translation, reference, path }`.
+- `utils/share.js` is pure: `shareAddress(path)` gives the canonical address with `?src=whatsapp` ahead of any anchor;
+  `shareText` joins the Arabic, translation, reference and address; `layoutCard(item, measure)` places every line of a
+  1080px square card, trying smaller type until the text fits, and returns `null` when it cannot fit at a readable size;
+  `drawCard` draws it (Arabic right to left in the `--arabic` typeface, with the site's name and address).
+- `useShare.js` draws the card on a canvas on the device and, where `navigator.canShare({ files })` allows, opens the
+  share sheet with the image. Otherwise the button opens a panel with "Save image", "Share on WhatsApp"
+  (`https://wa.me/?text=…`) and "Copy link". Text too long for a card is shared as text and a link. A cancelled share
+  sheet does nothing. Nothing is uploaded and no request is made.
+- Adhkar and dua cards have `id` anchors, so a shared link opens the page at that item.
+- The router reads `src` from an arriving address, counts the visit under it, and replaces the address without it.
+- `netlify/edge-functions/link-preview.js` runs on `/hadith/books/*`, `/duas/*` and `/adhkar/*` and rewrites the served
+  page's title and description and adds Open Graph tags, for services that read a link without running scripts. A
+  hadith's title is its reference. An address it does not recognise is served unchanged, with the default preview from
+  `index.html`. `public/og-image.png` is the preview image, drawn by `scripts/make-icons.py`.
 
 ---
 

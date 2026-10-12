@@ -22,6 +22,8 @@
     <!-- Virtue -->
     <div v-if="dhikr.virtue" class="dc-virtue"><HadithRef :text="dhikr.virtue" /></div>
 
+    <ShareButton v-if="sharePath" class="dc-share" :item="shareable" />
+
     <!-- Counter controls -->
     <div v-if="counter" class="dc-counters">
       <!-- Compound dhikr (e.g. Tasbih Fatimah, Astaghfirullah x3) -->
@@ -51,13 +53,22 @@
 
 <script setup>
 import HadithRef from '@/components/HadithRef.vue'
+import ShareButton from '@/components/ShareButton.vue'
 import { computed, reactive } from 'vue'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 
 const props = defineProps({
   dhikr: { type: Object, required: true },
   counter: { type: Boolean, default: true },
+  sharePath: { type: String, default: '' },
 })
+
+const shareable = computed(() => ({
+  arabic: props.dhikr.arabic,
+  translation: props.dhikr.translation,
+  reference: props.dhikr.reference,
+  path: props.sharePath,
+}))
 
 const store = useAdhkarStore()
 
@@ -126,6 +137,10 @@ const isFullyDone = computed(() => {
   background: #d4f5e8;
   padding: 2px 9px;
   border-radius: 12px;
+}
+
+.dc-share {
+  margin: var(--space-3) 0;
 }
 
 .dc-title {

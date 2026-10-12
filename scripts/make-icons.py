@@ -75,20 +75,42 @@ def chunk(kind, data):
     return struct.pack('>I', len(data)) + body + struct.pack('>I', zlib.crc32(body))
 
 
-def write_png(path, size, **options):
-    header = struct.pack('>IIBBBBB', size, size, 8, 6, 0, 0, 0)
+def save_png(path, width, height, rows):
+    header = struct.pack('>IIBBBBB', width, height, 8, 6, 0, 0, 0)
     png = (
         b'\x89PNG\r\n\x1a\n'
         + chunk(b'IHDR', header)
-        + chunk(b'IDAT', zlib.compress(render(size, **options), 9))
+        + chunk(b'IDAT', zlib.compress(rows, 9))
         + chunk(b'IEND', b'')
     )
     with open(path, 'wb') as file:
         file.write(png)
-    print(path, size, len(png), 'bytes')
+    print(path, width, height, len(png), 'bytes')
+
+
+def write_png(path, size, **options):
+    save_png(path, size, size, render(size, **options))
+
+
+def write_preview(path, width=1200, height=630, mark=420):
+    """The image link previews show: the mark centred on the site's green."""
+    logo = render(mark, scale=0.9, radius=0)
+    left = (width - mark) // 2
+    top = (height - mark) // 2
+    plain = bytes(GREEN + (255,)) * width
+    rows = []
+    for y in range(height):
+        if top <= y < top + mark:
+            start = (y - top) * (mark * 4 + 1) + 1
+            row = plain[: left * 4] + logo[start : start + mark * 4] + plain[(left + mark) * 4 :]
+        else:
+            row = plain
+        rows.append(b'\x00' + row)
+    save_png(path, width, height, b''.join(rows))
 
 
 write_png('public/icon-192.png', 192)
 write_png('public/icon-512.png', 512)
 write_png('public/icon-maskable-512.png', 512, scale=0.68, radius=0)
 write_png('public/apple-touch-icon.png', 180, radius=0)
+write_preview('public/og-image.png')

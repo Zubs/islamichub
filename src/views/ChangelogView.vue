@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Share to WhatsApp',
+            scope: 'Hadith, duas and adhkar',
+            desc: "Every hadith, dua and dhikr now has a Share button. It makes an image card on your own device, with the Arabic, the translation, the source and the site's address, and opens your phone's share sheet so WhatsApp is one tap away. Where a browser cannot share images you can save the card or send the text. Nothing is uploaded. Shared links now show a proper title and picture when pasted into a chat.",
+          },
+          {
             title: 'Your day on the home page',
             scope: 'Home page',
             desc: 'The home page now opens with a "Today" panel: the next prayer and how long until it, today\'s five prayers, the adhkar you have completed, your tasbih count, the hadith of the day, and in Ramadan today\'s fast. Each part is one tap from its page. It is built from what is already kept on your device and sends nothing anywhere.',
@@ -243,6 +248,11 @@ const releases = [
         icon: '🐛',
         dotColor: '#c0392b',
         entries: [
+          {
+            title: 'Visits from shared links are counted as such',
+            scope: 'Usage statistics',
+            desc: 'A link shared from the site carries a short tag so the visit can be counted as coming from WhatsApp. The code that read the tag never ran; it does now, and the tag is removed from the address bar after it is counted.',
+          },
           {
             title: 'Adhkar counts are kept if you reload',
             scope: 'Adhkar',

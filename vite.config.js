@@ -43,7 +43,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
-        globIgnores: ['sw-legacy.js'],
+        globIgnores: ['sw-legacy.js', 'og-image.png'],
         importScripts: ['/sw-legacy.js'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,

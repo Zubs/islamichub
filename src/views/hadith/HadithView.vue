@@ -86,9 +86,7 @@
             <button class="btn btn-secondary" @click="copy">
               {{ notice === 'copied' ? '✓ Copied' : 'Copy' }}
             </button>
-            <button class="btn btn-primary" @click="share">
-              {{ notice === 'link' ? '✓ Link copied' : 'Share' }}
-            </button>
+            <ShareButton :item="shareable" />
           </div>
         </footer>
       </article>
@@ -111,7 +109,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useSeo, canonicalFor } from '@/composables/useSeo.js'
+import { useSeo } from '@/composables/useSeo.js'
+import ShareButton from '@/components/ShareButton.vue'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { fetchHadith, BOOKS_META, loadErrorMessage } from '@/composables/useHadithApi.js'
 import {
@@ -209,18 +208,12 @@ async function copy() {
   showNotice('copied')
 }
 
-async function share() {
-  const url = canonicalFor(route.path)
-  if (navigator.share) {
-    await navigator
-      .share({ title: `${bookName.value}, Hadith ${hadith.value.hadithNumber}`, url })
-      .catch(() => {})
-    return
-  }
-
-  await navigator.clipboard?.writeText(url).catch(() => {})
-  showNotice('link')
-}
+const shareable = computed(() => ({
+  arabic: hadith.value.hadithArabic,
+  translation: hadith.value.hadithEnglish,
+  reference: `${bookName.value} ${hadith.value.hadithNumber}`,
+  path: route.path,
+}))
 
 watch([bookSlug, hadithNumber], load, { immediate: true })
 </script>
@@ -382,6 +375,8 @@ watch([bookSlug, hadithNumber], load, { immediate: true })
 
 .hv-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: var(--space-2);
 }
 

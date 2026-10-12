@@ -56,7 +56,13 @@
 
         <!-- Dhikr list -->
         <div class="adh-list">
-          <AdhkarCard v-for="d in dhikrList" :key="d.id" :dhikr="d" />
+          <AdhkarCard
+            v-for="d in dhikrList"
+            :id="d.id"
+            :key="d.id"
+            :dhikr="d"
+            :share-path="`/adhkar/${categorySlug}#${d.id}`"
+          />
         </div>
 
         <!-- Category nav -->

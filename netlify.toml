@@ -11,6 +11,19 @@ from = "/api/hadith/*"
 to = "/.netlify/functions/hadith/:splat"
 status = 200
 
+# ── Link previews — titles and images for hadith, dua and adhkar links ──────────
+[[edge_functions]]
+function = "link-preview"
+path = "/hadith/books/*"
+
+[[edge_functions]]
+function = "link-preview"
+path = "/duas/*"
+
+[[edge_functions]]
+function = "link-preview"
+path = "/adhkar/*"
+
 # ── SPA redirect — all paths serve index.html ────────────────────────────────
 # Required for Vue Router createWebHistory (clean URLs like /zakat, not #/zakat)
 [[redirects]]

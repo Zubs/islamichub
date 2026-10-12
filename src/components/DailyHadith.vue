@@ -5,15 +5,18 @@
       {{ hadith.text }}
       <span class="daily-hadith-narrator">Narrated by {{ hadith.narrator }}</span>
     </HadithBlock>
+    <ShareButton :item="shareable" />
   </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import HadithBlock from './HadithBlock.vue'
+import ShareButton from './ShareButton.vue'
 import { DAILY_HADITHS } from '@/data/dailyHadith.js'
 import { dailyHadithFor } from '@/utils/dailyHadith.js'
 import { dayKey } from '@/utils/day.js'
+import { hadithPath } from '@/utils/hadith.js'
 
 const props = defineProps({
   hadiths: { type: Array, default: () => DAILY_HADITHS },
@@ -21,6 +24,13 @@ const props = defineProps({
 
 const today = ref(dayKey())
 const hadith = computed(() => dailyHadithFor(today.value, props.hadiths))
+
+const shareable = computed(() => ({
+  arabic: hadith.value.arabic,
+  translation: hadith.value.text,
+  reference: hadith.value.reference,
+  path: hadithPath(hadith.value.book, hadith.value.number),
+}))
 
 function refreshDay() {
   today.value = dayKey()

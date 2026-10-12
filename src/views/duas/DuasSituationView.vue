@@ -27,6 +27,7 @@
           :key="dua.id"
           :dhikr="{ ...dua, id: 'dua:' + dua.id }"
           :counter="dua.repeat > 1"
+          :share-path="`/duas/${slug}#${dua.id}`"
         />
       </div>
 

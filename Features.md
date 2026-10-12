@@ -660,6 +660,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - Text too long for a card is shared as text and a link, with no image.
 - Links to hadith and dua pages show a proper preview when pasted into WhatsApp. The site is drawn in the browser, which WhatsApp does not run, so a small Netlify edge function adds the title, description and preview image to those addresses for link previews.
 - The card is drawn in whichever language the user is reading once translations exist (features 25 to 28).
+- The handling of the source tag built with feature 34 never ran, because it looked for the query string inside the path; it is corrected here, and a tagged visit is now counted under its tag.
+- Link previews cover hadith pages, dua situation pages and adhkar category pages. A dua or dhikr link carries its anchor, which opens the page at that item, but a preview cannot see an anchor, so it describes the page.
+- Each daily hadith now holds its Arabic saying, cut from the Arabic edition of the same hadith.
+- Built, with every automated test passing. The feature stays unticked until the real-phone and live-preview checks listed under Final are done.
 
 **Tests**
 - An item with no translation produces a card with the Arabic and the reference only.
@@ -1058,6 +1062,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 20 | 19 | What does the streak show while today is unfinished? | The count up to yesterday, so it does not fall to zero every morning. It becomes zero only when a prayer today is marked missed | Change `salahStreak` in `utils/salah.js` |
 | 21 | 20 | Where is the user's own first day of Ramadan kept? `Features.md` names one key, `fasting-log` | In a second key, `ramadan-starts`, so the day-by-day log stays simple | Fold it into `fasting-log` with a migration |
 | 22 | 20 | Which Ramadan does a made-up fast count against? | The most recent Ramadan before the day it was fasted. Fasts owed from an older Ramadan and made up after a newer one are therefore credited to the newer | Let the user choose the year when logging a made-up fast |
+| 23 | 22 | What does the preview image for shared links look like? | The site's mark on its green, 1200×630, drawn by `scripts/make-icons.py` (`public/og-image.png`). It has no text, because the script draws shapes only | Replace `public/og-image.png` with a designed image of the same size |
 
 **Checks only Zubair can do**
 
@@ -1074,6 +1079,9 @@ Tests are written in plain English and ordered the same way under every feature:
 | 9 | 14 | With a working key, open a hadith from each of the nine collections at `/hadith/books/<book>/hadith/<number>`, paste the address into a new browser and confirm the same hadith shows. Confirm the last hadith of a book has no "next" link (it relies on `hadithCount` in `BOOKS_META`, where Sahih Muslim's count looks copied from Bukhari's). Then tick feature 14 |
 | 10 | 15 | With a working key and `npx netlify-cli dev` running, run `CITATIONS_BASE=http://localhost:8888 npx vitest run test/citations.live.test.js`. It requests every hadith the site cites and fails on any the library does not have |
 | 11 | 15 | Open each cited hadith link (about 40) and confirm it shows the hadith quoted. Pay most attention to the 13 Sahih Muslim links: the library numbers that book differently, and their mapping in `src/data/hadithNumbering.js` was worked out from an open dataset, not from the library itself. Then tick feature 15 |
+| 12 | 22 | On a real Android phone and a real iPhone: share the daily hadith and a dua to a WhatsApp chat. Confirm the card is readable, the Arabic is right to left with its letters joined and its marks in place, and the person receiving it can open the link to the same item. Then tick feature 22 |
+| 13 | 22 | After deploying, paste a hadith link, a dua link and a link to an unknown hadith into WhatsApp and confirm the previews (reference as title with the site image; the default preview for the unknown one). The edge function could not be run here |
+| 14 | 22 | Open a shared link on the live site and confirm in GoatCounter that the visit is counted with `whatsapp` as its source and the tag leaves the address bar |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

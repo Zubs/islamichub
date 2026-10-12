@@ -23,7 +23,7 @@ export default defineConfig([
 
   {
     name: 'app/server-functions',
-    files: ['netlify/functions/**/*.js'],
+    files: ['netlify/functions/**/*.js', 'netlify/edge-functions/**/*.js'],
     languageOptions: { globals: { ...globals.node } },
   },
 

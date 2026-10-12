@@ -147,21 +147,16 @@ const router = createRouter({
 let previousPath = ''
 
 router.afterEach((to) => {
-  // Only count when path actually changes
-  if (to.path !== previousPath) {
-    // Handle source tag from incoming link (e.g., WhatsApp shares)
-    const tag = sourceTag(to.path.split('?')[1] || '')
-    if (tag) {
-      // Remove the tag from the URL without triggering navigation
-      const cleanPath = to.path.split('?')[0]
-      const cleanSearch = new URLSearchParams(to.path.split('?')[1] || '')
-      cleanSearch.delete('src')
-      const newSearch = cleanSearch.toString()
-      const newUrl = cleanPath + (newSearch ? '?' + newSearch : '')
-      window.history.replaceState({}, '', newUrl)
-    }
-    countPage(to)
-    previousPath = to.path
+  if (to.path === previousPath) {
+    return
+  }
+
+  previousPath = to.path
+  const tag = sourceTag(new URLSearchParams(to.query).toString())
+  countPage(to, tag)
+  if (tag) {
+    const { src: _tag, ...query } = to.query
+    router.replace({ path: to.path, query, hash: to.hash })
   }
 })
 

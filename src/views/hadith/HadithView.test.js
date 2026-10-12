@@ -174,17 +174,21 @@ describe('single hadith page', () => {
     expect(writeText.mock.calls[1][0]).toBe(fromPage)
   })
 
-  it("opens the share sheet with the hadith's own address", async () => {
+  it("shares the hadith's own address, tagged, with its text", async () => {
     navigator.share = vi.fn(async () => {})
     stubFetch(async () => replyWith(FIRST))
     const { wrapper } = await open('/hadith/books/sahih-bukhari/hadith/1')
 
     await button(wrapper, 'Share').trigger('click')
+    await flushPromises()
 
-    expect(navigator.share).toHaveBeenCalledExactlyOnceWith({
-      title: 'Sahih Al-Bukhari, Hadith 1',
-      url: 'https://islamichub.xyz/hadith/books/sahih-bukhari/hadith/1',
-    })
+    const shared = navigator.share.mock.calls[0][0]
+    expect(shared.title).toBe('Sahih Al-Bukhari 1')
+    expect(shared.text).toContain(FIRST.hadithArabic)
+    expect(shared.text).toContain(FIRST.hadithEnglish)
+    expect(shared.text).toContain(
+      'https://islamichub.xyz/hadith/books/sahih-bukhari/hadith/1?src=whatsapp',
+    )
   })
 
   it('does nothing and shows no error when the share sheet is cancelled', async () => {
@@ -193,16 +197,15 @@ describe('single hadith page', () => {
     })
     stubFetch(async () => replyWith(FIRST))
     const { wrapper } = await open('/hadith/books/sahih-bukhari/hadith/1')
-    const before = wrapper.html()
 
     await button(wrapper, 'Share').trigger('click')
     await flushPromises()
 
-    expect(wrapper.html()).toBe(before)
+    expect(wrapper.find('.share-panel').exists()).toBe(false)
     expect(wrapper.find('.had-error').exists()).toBe(false)
   })
 
-  it('copies the link and says so where the browser cannot share', async () => {
+  it('offers a WhatsApp link and the address to copy where the browser cannot share', async () => {
     const writeText = vi.fn(async () => {})
     navigator.clipboard = { writeText }
     stubFetch(async () => replyWith(FIRST))
@@ -211,10 +214,12 @@ describe('single hadith page', () => {
     await button(wrapper, 'Share').trigger('click')
     await flushPromises()
 
+    const whatsapp = wrapper.find('.share-panel a[href^="https://wa.me/"]')
+    expect(decodeURIComponent(whatsapp.attributes('href'))).toContain(FIRST.hadithEnglish)
+    await button(wrapper, 'Copy link').trigger('click')
     expect(writeText).toHaveBeenCalledExactlyOnceWith(
-      'https://islamichub.xyz/hadith/books/sahih-bukhari/hadith/1',
+      'https://islamichub.xyz/hadith/books/sahih-bukhari/hadith/1?src=whatsapp',
     )
-    expect(wrapper.text()).toContain('Link copied')
   })
 
   it.each([
