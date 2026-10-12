@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { ADHKAR, getAdhkarByCategory } from '@/data/adhkar.js'
 import { dayKey, addDays } from '@/utils/day.js'
 import { parseStoredObject } from '@/utils/storage.js'
+import { track } from '@/composables/useStats.js'
 
 const LOG_KEY = 'adhkar-completion-log'
 
@@ -50,6 +51,7 @@ export const useAdhkarStore = defineStore('adhkar', () => {
     if (!today.includes(slug)) {
       completionLog.value[key] = [...today, slug]
       persistLog()
+      track('adhkar category completed')
     }
 
     // Clear session progress for this category's adhkar

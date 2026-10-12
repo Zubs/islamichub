@@ -60,11 +60,12 @@ The site is then running at the address Vite prints, normally `http://localhost:
 
 ## Environment
 
-The site reads one variable, set in `.env`:
+The site reads two variables, set in `.env`:
 
 | Variable | Needed for | Notes |
 |---|---|---|
 | `VITE_HADITH_API_KEY` | The hadith library | A key from [hadithapi.com](https://hadithapi.com) |
+| `VITE_STATS_ENDPOINT` | Anonymous usage statistics | Optional — counting is off without it. Set to your GoatCounter counting address (e.g., `https://yourcode.goatcounter.com/count`). |
 
 The site runs without a key. Only the hadith book and chapter pages need one, and they show a "no API key" message until it is set.
 

@@ -296,10 +296,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
@@ -347,6 +348,15 @@ const results = computed(() => {
   }
 
   return calcInheritance({ ...activeHeirs }, estateValue.value)
+})
+
+// Track inheritance result reached (once per page visit)
+let inheritanceTracked = false
+watch(results, (val) => {
+  if (!inheritanceTracked && val.length > 0) {
+    track('inheritance result reached')
+    inheritanceTracked = true
+  }
 })
 
 // Group heirs by category for display

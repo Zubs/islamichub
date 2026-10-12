@@ -595,12 +595,13 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
 import { calculateZakat } from '@/utils/zakat.js'
+import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
@@ -707,6 +708,15 @@ const breakdown = computed(() => [
     highlight: true,
   },
 ])
+
+// Track Zakat result reached (once per page visit)
+let zakatTracked = false
+watch(zakat, (val) => {
+  if (!zakatTracked && val.obligated) {
+    track('zakat result reached')
+    zakatTracked = true
+  }
+})
 
 const recipients = [
   {

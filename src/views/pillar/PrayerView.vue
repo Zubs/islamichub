@@ -445,6 +445,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
@@ -523,6 +524,9 @@ function calculate() {
   const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value)
   prayerTimes.value = times
   currentPrayer.value = getCurrentPrayer(times)
+
+  // Track prayer times shown
+  track('prayer times shown')
 
   // Countdown
   clearInterval(countdownTimer)
