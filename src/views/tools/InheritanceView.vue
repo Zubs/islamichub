@@ -99,37 +99,21 @@
         <div style="position: sticky; top: 84px">
           <div class="inheritance-results">
             <div class="inh-title">Inheritance Breakdown</div>
-            <div
-              v-if="results.length === 0"
-              style="
-                color: rgba(255, 255, 255, 0.4);
-                font-size: 14px;
-                text-align: center;
-                padding: 1rem 0;
-              "
-            >
-              Select heirs on the left to calculate shares
+            <div v-if="outcome.error" class="inh-message" role="status">
+              {{ outcome.error }}
             </div>
             <div v-for="r in results" :key="r.key" class="inh-row">
               <div class="inh-heir">
                 {{ r.label }}<span v-if="r.count > 1"> ×{{ r.count }}</span>
+                <div class="inh-rule">{{ r.rule }}</div>
               </div>
               <div class="inh-bar-wrap">
                 <div class="inh-bar-fill" :style="{ width: r.percent + '%' }"></div>
               </div>
               <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
-                <div class="inh-share">
-                  {{ r.shareStr === 'Residue' ? 'Residue' : r.shareStr }} ({{ r.percent }}%)
-                </div>
-                <div class="inh-amount">
-                  {{ store.sym
-                  }}{{
-                    Number(r.amount).toLocaleString('en-GB', {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
-                  }}
-                </div>
+                <div class="inh-share">{{ r.share }} ({{ r.percent }}%)</div>
+                <div class="inh-amount">{{ store.fmt(r.amount) }}</div>
+                <div v-if="r.count > 1" class="inh-each">{{ eachText(r) }}</div>
               </div>
             </div>
             <div
@@ -145,15 +129,7 @@
               "
             >
               <span>Total estate distributed</span>
-              <span style="color: var(--gold); font-weight: 600"
-                >{{ store.sym
-                }}{{
-                  estateValue.toLocaleString('en-GB', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                }}</span
-              >
+              <span style="color: var(--gold); font-weight: 600">{{ store.fmt(estateValue) }}</span>
             </div>
           </div>
 
@@ -171,8 +147,9 @@
               ⚠ Important note
             </div>
             <p style="font-size: 13px; color: #5a3e0a; line-height: 1.6">
-              Inheritance law is complex. This calculator covers standard cases. For non-standard
-              situations (multiple marriages, missing heirs, disputes), consult a qualified Islamic
+              This result is a guide, not a ruling. Inheritance law is complex and this calculator
+              covers standard cases only. Before dividing an estate, and for anything non-standard
+              (half-siblings, missing heirs, bequests, disputes), consult a qualified Islamic
               scholar or mufti.
             </p>
           </div>
@@ -313,15 +290,7 @@ const store = useZakatStore()
 const estateValue = ref(100000)
 const activeHeirs = reactive({})
 
-const countableKeys = new Set([
-  'wife',
-  'son',
-  'daughter',
-  'grandson',
-  'granddaughter',
-  'brother',
-  'sister',
-])
+const countableKeys = new Set(HEIR_DEFS.filter((def) => def.countable).map((def) => def.key))
 
 function needsCount(key) {
   return countableKeys.has(key)
@@ -336,19 +305,20 @@ function toggleHeir(key) {
 }
 
 function setHeirCount(key, val) {
-  const n = parseInt(val)
-  if (n > 0) {
-    activeHeirs[key] = n
+  if (val !== '') {
+    activeHeirs[key] = Number(val)
   }
 }
 
-const results = computed(() => {
-  if (Object.keys(activeHeirs).length === 0) {
-    return []
-  }
+const outcome = computed(() => calcInheritance({ ...activeHeirs }, estateValue.value))
+const results = computed(() => outcome.value.shares)
 
-  return calcInheritance({ ...activeHeirs }, estateValue.value)
-})
+function eachText(share) {
+  const [first, ...rest] = share.each
+  return rest.every((amount) => amount === first)
+    ? `${store.fmt(first)} each`
+    : share.each.map(store.fmt).join(' · ')
+}
 
 // Track inheritance result reached (once per page visit)
 let inheritanceTracked = false
@@ -380,19 +350,23 @@ const heirGroups = computed(() => {
 
 function getHeirDesc(key) {
   const descs = {
-    husband: 'Receives 1/4 or 1/2 depending on children',
-    wife: 'Receives 1/8 or 1/4 — divided equally among all wives',
-    father: 'Receives 1/6 fixed or residue depending on sons',
-    mother: 'Receives 1/6 or 1/3 depending on children & siblings',
+    husband: 'Receives 1/4 beside a child or grandchild, otherwise 1/2',
+    wife: 'Receives 1/8 beside a child or grandchild, otherwise 1/4, shared equally among wives',
+    father:
+      'Receives 1/6 beside a child or grandchild, and the residue when no son or grandson takes it',
+    mother: 'Receives 1/6 beside a child, grandchild or two or more siblings, otherwise 1/3',
     son: "Residuary — receives double a daughter's share",
     daughter: 'Receives 1/2 (one), 2/3 (two+), or residue with son',
     grandson: "Son's son — blocked by a son",
-    granddaughter: "Son's daughter — partially blocked",
-    brother: 'Full brother — blocked by father or son',
-    sister: 'Full sister — blocked by brother or father',
+    granddaughter:
+      "Son's daughter — 1/6 beside one daughter; excluded by a son, or by two daughters unless a grandson is present",
+    brother: 'Full brother — residuary; excluded by a son, grandson, father or grandfather',
+    sister:
+      'Full sister — 1/2 (one) or 2/3 (two+); shares the residue with a brother; excluded by a son, grandson, father or grandfather',
     paternal_grandfather: "Father's father — blocked by father",
-    paternal_grandmother: 'Receives 1/6 — blocked by mother or father',
-    maternal_grandmother: 'Receives 1/6 — blocked by mother',
+    paternal_grandmother:
+      'Receives 1/6, shared if both grandmothers inherit — excluded by mother or father',
+    maternal_grandmother: 'Receives 1/6, shared if both grandmothers inherit — excluded by mother',
   }
 
   return descs[key] || ''
@@ -401,7 +375,7 @@ function getHeirDesc(key) {
 const sharesTable = [
   ['Husband', '1/4', '1/2', "Qur'an 4:12"],
   ['Wife (or wives)', '1/8', '1/4', "Qur'an 4:12"],
-  ['Father', '1/6 (with sons)', 'Residue', "Qur'an 4:11"],
+  ['Father', '1/6 (plus any residue beside daughters only)', 'Residue', "Qur'an 4:11"],
   ['Mother', '1/6', '1/3', "Qur'an 4:11"],
   ['Daughter (1)', '1/2 (no sons)', '1/2', "Qur'an 4:11"],
   ['Daughters (2+)', '2/3 (no sons)', '2/3', "Qur'an 4:11"],
@@ -416,7 +390,7 @@ const faqs = [
   },
   {
     q: 'What is radd (return)?',
-    a: 'When the fixed shares do not exhaust the estate and there are no residuary heirs, the remainder is returned proportionally to the fixed-share heirs. This is called radd (الرَّدّ). Husband/wife do not generally receive radd.',
+    a: 'When the fixed shares do not exhaust the estate and there are no residuary heirs, the remainder is returned proportionally to the fixed-share heirs. This is called radd (الرَّدّ). Scholars differ on whether the husband or wife shares in it; this calculator returns it to the other fixed-share heirs only, and shows it as a remainder when a spouse is the only heir.',
   },
   {
     q: 'Who is excluded from inheritance?',
@@ -430,6 +404,25 @@ const faqs = [
 </script>
 
 <style scoped>
+.inh-heir {
+  flex: 0 1 45%;
+}
+
+.inh-message {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  text-align: center;
+  padding: var(--space-4) 0;
+}
+
+.inh-rule,
+.inh-each {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 @media (max-width: 900px) {
   #inh-layout {
     grid-template-columns: 1fr !important;

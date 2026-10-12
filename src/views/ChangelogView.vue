@@ -189,6 +189,11 @@ const releases = [
         dotColor: '#c0392b',
         entries: [
           {
+            title: 'Inheritance shares corrected',
+            scope: 'Inheritance calculator',
+            desc: 'The calculator was rebuilt and several results have changed. A sister now shares with a brother, two parts to one. A granddaughter beside one daughter receives her sixth. A remainder with no residuary heir returns to the fixed-share heirs other than the spouse, so a wife beside one daughter takes 12.5%, not 20%. Every line names the rule behind it and amounts always add up to the estate. The result remains a guide, not a ruling.',
+          },
+          {
             title: '"No chapters match" never showed',
             scope: 'Hadith book page',
             desc: 'The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.',

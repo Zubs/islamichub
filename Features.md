@@ -16,7 +16,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 4. Dead file cleanup
 - [x] 5. Zakat exchange rates
 - [x] 6. Naira in the Zakat calculator
-- [ ] 7. Inheritance engine
+- [x] 7. Inheritance engine
 - [ ] 8. Asr method
 - [ ] 9. SEO through one path
 - [ ] 10. Loading screen
@@ -233,6 +233,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Radd goes to fixed-share heirs other than the spouse. This is the proposed default; see Decisions needed.
 - Each result line says which rule produced it, and the share label always matches the percentage.
 - Amounts are rounded to the penny, with any leftover penny added to the largest share so the total equals the estate.
+- Where the Spec 5.9 table was silent or at odds with Qur'an 4:11 and 4:176 and Sahih al-Bukhari 6736, the engine follows those sources and the table was corrected: parents take a sixth beside any child, a father beside daughters only takes a sixth plus the residue, a sister beside a daughter takes the residue, two grandmothers share one sixth, and beside a spouse and the father the mother takes a third of the remainder. Each is listed under Final for confirmation.
+- A spouse who is the only heir keeps the fixed share, and the rest is shown as a "Remainder" line.
 
 **Tests**
 - With no heirs chosen, the page asks for at least one heir and shows no result.
@@ -1020,6 +1022,14 @@ Tests are written in plain English and ordered the same way under every feature:
 |---|---|---|---|---|
 | 1 | 6 | Which naira rate does the calculator use? | The official rate from the price dataset, with a note saying so and a typed price per gram as the way round it | Would need a street-rate source; none is free and reliable |
 | 2 | 6 | Is a typed price offered only in naira, or in every currency? | Every currency | Hide the two fields unless naira is selected, in `ZakatView.vue` |
+| 3 | 7 | Do spouses take part in radd? | No. The remainder returns to the other fixed-share heirs only. A spouse who is the only heir takes their fixed share and the rest is shown as a "Remainder" line with no recipient | Set `SPOUSE_TAKES_RADD` to true in `utils/inheritance.js` and update its tests |
+| 4 | 7 | Does a grandfather exclude brothers and sisters? | Yes | Set `GRANDFATHER_EXCLUDES_SIBLINGS` to false; the grandfather-with-siblings sharing rules of the other schools would then need building |
+| 5 | 7 | The Spec 5.9 table gave the mother 1/6 only beside a son, grandson or two siblings. Qur'an 4:11 gives each parent a sixth beside any child | Mother takes 1/6 beside any child or son's child, daughters included. Spec table corrected | Restore the old row; not advised, as it contradicts 4:11 |
+| 6 | 7 | The table made the father a pure residuary beside daughters only | Father (or grandfather in his place) takes 1/6 plus the residue beside daughters or granddaughters only, so he keeps his sixth when shares are reduced | Remove the fixed sixth in `assignShares` |
+| 7 | 7 | The table gave a sister 1/2 or 2/3 even beside a daughter | Beside a daughter or granddaughter, sisters take the residue (Sahih al-Bukhari 6736, verified against the text) | Remove the `sisterWithDaughters` branch |
+| 8 | 7 | The table gave each grandmother 1/6 | Two grandmothers share one sixth between them. No reference is attached to this on the page beyond the existing "Hadith" label, because I could not verify a numbered source; a reviewer should supply one | Give each 1/6 in `assignShares` |
+| 9 | 7 | Husband or wife with both parents (not covered by the table) | The mother takes a third of what is left after the spouse, so the father takes twice her share. This is the position of the four schools; no numbered source is cited on the page | Remove the `motherTakesThirdOfRemainder` branch |
+| 10 | 7 | The whole inheritance engine | Built and tested against Spec 5.9, but not reviewed by a scholar. It should be before people rely on it | Name a reviewer |
 
 **Checks only Zubair can do**
 

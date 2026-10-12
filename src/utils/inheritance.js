@@ -1,285 +1,370 @@
-// js/utils/inheritance.js — Islamic Inheritance (Fara'id) Calculator
-// Based on Qur'an 4:11–12, 4:176 and Hanafi fiqh
+// Shares follow Qur'an 4:11, 4:12 and 4:176 and Sahih al-Bukhari 6736.
+// The two constants below are points on which scholars differ; each is a decision recorded in Features.md.
+const SPOUSE_TAKES_RADD = false
+const GRANDFATHER_EXCLUDES_SIBLINGS = true
 
-/**
- * Heir definitions with their Qur'anic shares (fixed fractions)
- * share: null = residuary (asaba), gets remainder after fixed shares
- * blocked_by: list of heirs that block this heir entirely
- */
+const MAX_WIVES = 4
+
 export const HEIR_DEFS = [
-  {
-    key: 'husband',
-    label: 'Husband',
-    group: 'Spouse',
-    quran: '4:12',
-    getShare(heirs) {
-      // 1/4 if deceased has children, else 1/2
-      const hasChildren = heirs.son || heirs.daughter || heirs.grandson || heirs.granddaughter
-      return hasChildren ? { num: 1, den: 4 } : { num: 1, den: 2 }
-    },
-  },
-  {
-    key: 'wife',
-    label: 'Wife / Wives',
-    group: 'Spouse',
-    quran: '4:12',
-    getShare(heirs) {
-      // 1/8 with children, else 1/4; divided among all wives
-      const hasChildren = heirs.son || heirs.daughter || heirs.grandson || heirs.granddaughter
-      return hasChildren ? { num: 1, den: 8 } : { num: 1, den: 4 }
-    },
-  },
-  {
-    key: 'father',
-    label: 'Father',
-    group: 'Parents',
-    quran: '4:11',
-    getShare(heirs) {
-      if (heirs.son || heirs.grandson) {
-        return { num: 1, den: 6 }
-      } // fixed
-
-      return null // residuary
-    },
-  },
-  {
-    key: 'mother',
-    label: 'Mother',
-    group: 'Parents',
-    quran: '4:11',
-    getShare(heirs) {
-      const hasBrothers = (heirs.brother || 0) + (heirs.sister || 0) >= 2
-      if (heirs.son || heirs.grandson || hasBrothers) {
-        return { num: 1, den: 6 }
-      }
-
-      return { num: 1, den: 3 }
-    },
-  },
-  {
-    key: 'son',
-    label: 'Son(s)',
-    group: 'Children',
-    quran: '4:11',
-    blockedBy: [],
-    getShare() {
-      return null
-    }, // residuary — males get double daughters
-  },
-  {
-    key: 'daughter',
-    label: 'Daughter(s)',
-    group: 'Children',
-    quran: '4:11',
-    getShare(heirs) {
-      if (heirs.son) {
-        return null
-      } // with son = residuary (asaba)
-
-      const count = heirs.daughter || 1
-      if (count === 1) {
-        return { num: 1, den: 2 }
-      }
-
-      return { num: 2, den: 3 } // 2+ daughters = 2/3 shared
-    },
-  },
+  { key: 'husband', label: 'Husband', group: 'Spouse', quran: '4:12' },
+  { key: 'wife', label: 'Wife / Wives', group: 'Spouse', quran: '4:12', countable: true },
+  { key: 'father', label: 'Father', group: 'Parents', quran: '4:11' },
+  { key: 'mother', label: 'Mother', group: 'Parents', quran: '4:11' },
+  { key: 'son', label: 'Son(s)', group: 'Children', quran: '4:11', countable: true },
+  { key: 'daughter', label: 'Daughter(s)', group: 'Children', quran: '4:11', countable: true },
   {
     key: 'grandson',
     label: "Grandson (son's son)",
     group: 'Children',
     quran: '4:11',
-    blockedBy: ['son'],
-    getShare() {
-      return null
-    }, // residuary if no son
+    countable: true,
   },
   {
     key: 'granddaughter',
     label: "Granddaughter (son's daughter)",
     group: 'Children',
-    quran: '4:11',
-    blockedBy: ['son', 'daughter'], // blocked if 2+ daughters
-    getShare(heirs) {
-      if (heirs.son || heirs.grandson) {
-        return null
-      } // asaba
-
-      if (heirs.daughter) {
-        if ((heirs.daughter || 0) >= 2) {
-          return null
-        } // blocked (2/3 already taken)
-
-        return { num: 1, den: 6 } // supplement to make 2/3
-      }
-      return { num: 1, den: 2 }
-    },
+    quran: '4:11 · Bukhari 6736',
+    countable: true,
   },
-  {
-    key: 'brother',
-    label: 'Full Brother(s)',
-    group: 'Siblings',
-    quran: '4:176',
-    blockedBy: ['son', 'grandson', 'father'],
-    getShare() {
-      return null
-    }, // residuary
-  },
-  {
-    key: 'sister',
-    label: 'Full Sister(s)',
-    group: 'Siblings',
-    quran: '4:176',
-    blockedBy: ['son', 'grandson', 'father', 'brother'],
-    getShare(heirs) {
-      if (heirs.brother) {
-        return null
-      } // asaba with brother (gets half)
-
-      if ((heirs.sister || 1) === 1) {
-        return { num: 1, den: 2 }
-      }
-
-      return { num: 2, den: 3 }
-    },
-  },
-  {
-    key: 'paternal_grandfather',
-    label: 'Paternal Grandfather',
-    group: 'Extended',
-    quran: '4:11',
-    blockedBy: ['father'],
-    getShare(heirs) {
-      if (heirs.son || heirs.grandson) {
-        return { num: 1, den: 6 }
-      }
-
-      return null
-    },
-  },
+  { key: 'brother', label: 'Full Brother(s)', group: 'Siblings', quran: '4:176', countable: true },
+  { key: 'sister', label: 'Full Sister(s)', group: 'Siblings', quran: '4:176', countable: true },
+  { key: 'paternal_grandfather', label: 'Paternal Grandfather', group: 'Extended', quran: '4:11' },
   {
     key: 'paternal_grandmother',
     label: 'Paternal Grandmother',
     group: 'Extended',
     quran: 'Hadith',
-    blockedBy: ['father', 'mother'],
-    getShare() {
-      return { num: 1, den: 6 }
-    },
   },
   {
     key: 'maternal_grandmother',
     label: 'Maternal Grandmother',
     group: 'Extended',
     quran: 'Hadith',
-    blockedBy: ['mother'],
-    getShare() {
-      return { num: 1, den: 6 }
-    },
   },
 ]
 
-/**
- * Calculate inheritance shares
- * @param {Object} activeHeirs - e.g. { son: 2, daughter: 1, wife: 1 }
- * @param {number} estate - total estate value
- * @returns Array of { key, label, count, shareFraction, sharePercent, shareAmount }
- */
-export function calcInheritance(activeHeirs, estate = 100) {
-  const results = []
-  let fixedTotal = 0 // sum of all fixed fractions (as decimals)
-  let residuaryHeirs = []
-
-  // 1. Determine fixed shares and collect residuaries
-  for (const def of HEIR_DEFS) {
-    const count = activeHeirs[def.key]
-    if (!count) {
-      continue
-    }
-
-    // Check if blocked
-    const isBlocked = (def.blockedBy || []).some((b) => activeHeirs[b] > 0)
-    if (isBlocked) {
-      continue
-    }
-
-    const share = def.getShare(activeHeirs, count)
-
-    if (share) {
-      const fraction = share.num / share.den
-      fixedTotal += fraction
-      results.push({
-        key: def.key,
-        label: def.label,
-        count,
-        fraction,
-        shareStr: `${share.num}/${share.den}`,
-        percent: 0, // calculated after
-        amount: 0,
-      })
-    } else {
-      residuaryHeirs.push({ def, count })
-    }
-  }
-
-  // 2. Residuary (asaba) gets remainder — awl (proportional reduction) if over 1
-  const remainder = Math.max(0, 1 - fixedTotal)
-  const scale = fixedTotal > 1 ? 1 / fixedTotal : 1 // awl reduction
-
-  // Scale fixed shares if sum > 1
-  for (const r of results) {
-    r.fraction *= scale
-  }
-
-  // Distribute residue among asaba
-  if (remainder > 0 && residuaryHeirs.length > 0) {
-    // Sons get 2x daughters (if mixed); otherwise equal among same-sex
-    const hasSon = residuaryHeirs.find((h) => h.def.key === 'son')
-
-    if (hasSon && activeHeirs.son > 0 && activeHeirs.daughter > 0) {
-      // Mixed: son gets 2 shares per son, daughter 1 per daughter
-      const sonShares = activeHeirs.son * 2
-      const dauShares = activeHeirs.daughter
-      const totalShares = sonShares + dauShares
-      residuaryHeirs.forEach((h) => {
-        const shares = (h.def.key === 'son' ? 2 : 1) * h.count
-        results.push({
-          key: h.def.key,
-          label: h.def.label,
-          count: h.count,
-          fraction: (remainder * shares) / totalShares,
-          shareStr: 'Residue',
-          percent: 0,
-          amount: 0,
-        })
-      })
-    } else {
-      // Equal split among residuaries
-      const totalCount = residuaryHeirs.reduce((a, h) => a + h.count, 0)
-      residuaryHeirs.forEach((h) => {
-        results.push({
-          key: h.def.key,
-          label: h.def.label,
-          count: h.count,
-          fraction: remainder * (h.count / totalCount),
-          shareStr: 'Residue',
-          percent: 0,
-          amount: 0,
-        })
-      })
-    }
-  }
-
-  // 3. Calculate amounts
-  const grandTotal = results.reduce((a, r) => a + r.fraction, 0) || 1
-  for (const r of results) {
-    r.percent = ((r.fraction / grandTotal) * 100).toFixed(1)
-    r.amount = ((r.fraction / grandTotal) * estate).toFixed(2)
-  }
-
-  return results
-}
+const SPOUSES = ['husband', 'wife']
+const ZERO = { n: 0, d: 1 }
+const ONE = { n: 1, d: 1 }
 
 export function gcd(a, b) {
   return b ? gcd(b, a % b) : a
+}
+
+function frac(n, d = 1) {
+  const divisor = gcd(Math.abs(n), Math.abs(d)) || 1
+  return { n: n / divisor, d: d / divisor }
+}
+
+function add(a, b) {
+  return frac(a.n * b.d + b.n * a.d, a.d * b.d)
+}
+
+function subtract(a, b) {
+  return frac(a.n * b.d - b.n * a.d, a.d * b.d)
+}
+
+function multiply(a, b) {
+  return frac(a.n * b.n, a.d * b.d)
+}
+
+function divide(a, b) {
+  return frac(a.n * b.d, a.d * b.n)
+}
+
+function sumOf(fractions) {
+  return fractions.reduce(add, ZERO)
+}
+
+function isPositive(fraction) {
+  return fraction.n > 0
+}
+
+function exceedsOne(fraction) {
+  return fraction.n > fraction.d
+}
+
+function text(fraction) {
+  if (fraction.n === 0) {
+    return '0'
+  }
+
+  return fraction.d === 1 ? 'All' : `${fraction.n}/${fraction.d}`
+}
+
+export function validateInheritance(heirs, estate) {
+  if (typeof estate !== 'number' || !Number.isFinite(estate) || estate < 0) {
+    return 'Enter the estate as a number of zero or more.'
+  }
+
+  for (const def of HEIR_DEFS) {
+    const count = heirs[def.key] ?? 0
+    if (!Number.isInteger(count) || count < 0) {
+      return `Enter a whole number of zero or more for ${def.label}.`
+    }
+
+    if (count > 1 && !def.countable) {
+      return `There can be only one ${def.label}.`
+    }
+  }
+
+  if (heirs.husband && heirs.wife) {
+    return 'The deceased leaves either a husband or a wife, not both. Remove one.'
+  }
+
+  if (heirs.wife > MAX_WIVES) {
+    return `Enter no more than ${MAX_WIVES} wives.`
+  }
+
+  if (!HEIR_DEFS.some((def) => heirs[def.key] > 0)) {
+    return 'Select at least one heir.'
+  }
+
+  return null
+}
+
+export function excludedHeirs(heirs) {
+  const has = (key) => heirs[key] > 0
+  const excluded = new Set()
+  const exclude = (...keys) => keys.forEach((key) => excluded.add(key))
+
+  if (has('son')) {
+    exclude('grandson', 'granddaughter', 'brother', 'sister')
+  }
+
+  if (has('grandson')) {
+    exclude('brother', 'sister')
+  }
+
+  if (has('father')) {
+    exclude('paternal_grandfather', 'paternal_grandmother', 'brother', 'sister')
+  }
+
+  if (has('mother')) {
+    exclude('paternal_grandmother', 'maternal_grandmother')
+  }
+
+  if (GRANDFATHER_EXCLUDES_SIBLINGS && has('paternal_grandfather')) {
+    exclude('brother', 'sister')
+  }
+
+  if (heirs.daughter >= 2 && !has('grandson')) {
+    exclude('granddaughter')
+  }
+
+  return excluded
+}
+
+function oneOrMany(count) {
+  return count === 1 ? frac(1, 2) : frac(2, 3)
+}
+
+// Returns the fixed share of every heir who has one, and the class that takes the residue.
+export function assignShares(all, present) {
+  const has = (key) => present[key] > 0
+  const hasDescendant = ['son', 'daughter', 'grandson', 'granddaughter'].some((key) => all[key] > 0)
+  const hasMaleDescendant = all.son > 0 || all.grandson > 0
+  const siblingCount = (all.brother ?? 0) + (all.sister ?? 0)
+  const fixed = {}
+
+  const spouse = SPOUSES.find(has)
+  if (spouse === 'husband') {
+    fixed.husband = hasDescendant ? frac(1, 4) : frac(1, 2)
+  }
+
+  if (spouse === 'wife') {
+    fixed.wife = hasDescendant ? frac(1, 8) : frac(1, 4)
+  }
+
+  const ancestor = ['father', 'paternal_grandfather'].find(has)
+  if (ancestor && hasDescendant) {
+    fixed[ancestor] = frac(1, 6)
+  }
+
+  let motherTakesThirdOfRemainder = false
+  if (has('mother')) {
+    if (hasDescendant || siblingCount >= 2) {
+      fixed.mother = frac(1, 6)
+    } else if (spouse && has('father')) {
+      fixed.mother = multiply(subtract(ONE, fixed[spouse]), frac(1, 3))
+      motherTakesThirdOfRemainder = true
+    } else {
+      fixed.mother = frac(1, 3)
+    }
+  }
+
+  const grandmothers = ['paternal_grandmother', 'maternal_grandmother'].filter(has)
+  for (const key of grandmothers) {
+    fixed[key] = frac(1, 6 * grandmothers.length)
+  }
+
+  if (has('daughter') && !has('son')) {
+    fixed.daughter = oneOrMany(present.daughter)
+  }
+
+  if (has('granddaughter') && !has('grandson')) {
+    fixed.granddaughter = has('daughter') ? frac(1, 6) : oneOrMany(present.granddaughter)
+  }
+
+  const sisterWithDaughters = has('sister') && !has('brother') && hasDescendant
+  if (has('sister') && !has('brother') && !hasDescendant) {
+    fixed.sister = oneOrMany(present.sister)
+  }
+
+  let residuaries = []
+  if (has('son')) {
+    residuaries = ['son', 'daughter'].filter(has)
+  } else if (has('grandson')) {
+    residuaries = ['grandson', 'granddaughter'].filter(has)
+  } else if (ancestor && !hasMaleDescendant) {
+    residuaries = [ancestor]
+  } else if (has('brother')) {
+    residuaries = ['brother', 'sister'].filter(has)
+  } else if (sisterWithDaughters) {
+    residuaries = ['sister']
+  }
+
+  return { fixed, residuaries, motherTakesThirdOfRemainder, sharedSixth: grandmothers.length > 1 }
+}
+
+const MALES = new Set(['son', 'grandson', 'brother'])
+
+function residueParts(residuaries, present) {
+  const mixed = residuaries.length > 1
+  return Object.fromEntries(
+    residuaries.map((key) => [key, present[key] * (mixed && MALES.has(key) ? 2 : 1)]),
+  )
+}
+
+function settleToTotal(values, total) {
+  const leftover = total - values.reduce((sum, value) => sum + value, 0)
+  if (leftover !== 0 && values.length) {
+    values[values.indexOf(Math.max(...values))] += leftover
+  }
+
+  return values
+}
+
+export function calcInheritance(heirs, estate = 100) {
+  const error = validateInheritance(heirs, estate)
+  if (error) {
+    return { error, shares: [] }
+  }
+
+  const excluded = excludedHeirs(heirs)
+  const present = Object.fromEntries(
+    HEIR_DEFS.filter((def) => heirs[def.key] > 0 && !excluded.has(def.key)).map((def) => [
+      def.key,
+      heirs[def.key],
+    ]),
+  )
+  const { fixed, residuaries, motherTakesThirdOfRemainder, sharedSixth } = assignShares(
+    heirs,
+    present,
+  )
+
+  const final = { ...fixed }
+  const rule = {}
+  for (const [key, share] of Object.entries(fixed)) {
+    rule[key] = `Fixed share of ${text(share)}`
+  }
+
+  if (motherTakesThirdOfRemainder) {
+    rule.mother = "A third of what remains after the spouse's share"
+  }
+
+  if (sharedSixth) {
+    rule.paternal_grandmother = 'Half of the one sixth the grandmothers share'
+    rule.maternal_grandmother = rule.paternal_grandmother
+  }
+
+  const fixedTotal = sumOf(Object.values(fixed))
+  if (exceedsOne(fixedTotal)) {
+    for (const key of Object.keys(fixed)) {
+      final[key] = divide(fixed[key], fixedTotal)
+      rule[key] += ", reduced in proportion because the fixed shares exceed the estate ('awl)"
+    }
+  }
+
+  const remainder = exceedsOne(fixedTotal) ? ZERO : subtract(ONE, fixedTotal)
+  let unclaimed = ZERO
+
+  if (residuaries.length) {
+    const parts = residueParts(residuaries, present)
+    const totalParts = Object.values(parts).reduce((sum, value) => sum + value, 0)
+    const mixed = residuaries.length > 1
+    for (const key of residuaries) {
+      const share = multiply(remainder, frac(parts[key], totalParts))
+      final[key] = add(final[key] ?? ZERO, share)
+      if (fixed[key]) {
+        rule[key] += isPositive(share) ? ', plus the residue' : ''
+      } else if (!isPositive(remainder)) {
+        rule[key] = 'Residuary, but the fixed shares used the whole estate'
+      } else if (mixed) {
+        rule[key] = 'Residue, two parts to each male and one to each female'
+      } else if (key === 'sister') {
+        rule[key] = 'Residue beside a daughter or granddaughter'
+      } else {
+        rule[key] = 'Residue after the fixed shares'
+      }
+    }
+  } else if (isPositive(remainder)) {
+    const returnedTo = Object.keys(fixed).filter(
+      (key) => SPOUSE_TAKES_RADD || !SPOUSES.includes(key),
+    )
+    const returnedBase = sumOf(returnedTo.map((key) => fixed[key]))
+    for (const key of returnedTo) {
+      final[key] = add(fixed[key], multiply(remainder, divide(fixed[key], returnedBase)))
+      rule[key] += ', plus a part of the remainder returned to the fixed-share heirs (radd)'
+    }
+    if (!returnedTo.length) {
+      unclaimed = remainder
+    }
+  }
+
+  const lines = HEIR_DEFS.filter((def) => final[def.key]).map((def) => ({
+    key: def.key,
+    label: def.label,
+    count: present[def.key],
+    fraction: final[def.key],
+    rule: `${rule[def.key]} · ${def.quran === 'Hadith' ? 'Hadith' : `Qur'an ${def.quran}`}`,
+  }))
+  if (isPositive(unclaimed)) {
+    lines.push({
+      key: 'remainder',
+      label: 'Remainder',
+      count: 1,
+      fraction: unclaimed,
+      rule: 'No other heir was selected to receive this. Ask a scholar where it goes.',
+    })
+  }
+
+  const estatePence = Math.round(estate * 100)
+  const people = lines.flatMap((line, index) =>
+    Array.from({ length: line.count }, () => ({
+      index,
+      pence: Math.round((estatePence * line.fraction.n) / (line.fraction.d * line.count)),
+    })),
+  )
+  const pence = settleToTotal(
+    people.map((person) => person.pence),
+    estatePence,
+  )
+  const tenths = settleToTotal(
+    lines.map((line) => Math.round((1000 * line.fraction.n) / line.fraction.d)),
+    1000,
+  )
+
+  const shares = lines.map((line, index) => {
+    const each = pence.filter((_, person) => people[person].index === index)
+    return {
+      ...line,
+      share: text(line.fraction),
+      percent: tenths[index] / 10,
+      amount: each.reduce((sum, value) => sum + value, 0) / 100,
+      each: each.map((value) => value / 100),
+    }
+  })
+
+  return { error: null, shares }
 }

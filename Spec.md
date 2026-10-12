@@ -315,31 +315,44 @@ and amount.
 
 **Heirs and fixed shares (13 types):**
 
-| Heir                  | Share                                                              | Blocked by                     |
-|-----------------------|--------------------------------------------------------------------|--------------------------------|
-| Husband               | 1/4 with descendants, else 1/2                                     | —                              |
-| Wife / wives          | 1/8 with descendants, else 1/4 (shared)                            | —                              |
-| Father                | 1/6 with son or grandson, else residuary                           | —                              |
-| Mother                | 1/6 with son, grandson, or 2+ siblings; else 1/3                   | —                              |
-| Son(s)                | Residuary                                                          | —                              |
-| Daughter(s)           | 1/2 (one), 2/3 (two or more); residuary alongside a son            | —                              |
-| Grandson (son's son)  | Residuary                                                          | son                            |
-| Granddaughter         | 1/2 alone; 1/6 with one daughter; residuary with grandson          | son, two or more daughters     |
-| Full brother(s)       | Residuary                                                          | son, grandson, father          |
-| Full sister(s)        | 1/2 (one), 2/3 (two or more); residuary alongside a brother        | son, grandson, father          |
-| Paternal grandfather  | 1/6 with son or grandson, else residuary                           | father                         |
-| Paternal grandmother  | 1/6                                                                | father, mother                 |
-| Maternal grandmother  | 1/6                                                                | mother                         |
+| Heir                  | Share                                                                          | Excluded by                                  |
+|-----------------------|--------------------------------------------------------------------------------|----------------------------------------------|
+| Husband               | 1/4 with descendants, else 1/2                                                 | —                                            |
+| Wife / wives          | 1/8 with descendants, else 1/4 (shared)                                        | —                                            |
+| Father                | 1/6 with a son or grandson; 1/6 plus the residue with daughters or granddaughters only; else residuary | —                    |
+| Mother                | 1/6 with descendants or 2+ siblings; else 1/3 (a third of the remainder beside a spouse and the father) | —                   |
+| Son(s)                | Residuary                                                                      | —                                            |
+| Daughter(s)           | 1/2 (one), 2/3 (two or more); residuary alongside a son                        | —                                            |
+| Grandson (son's son)  | Residuary                                                                      | son                                          |
+| Granddaughter         | 1/2 (one), 2/3 (two or more); 1/6 with one daughter; residuary with a grandson | son; two or more daughters unless a grandson is present |
+| Full brother(s)       | Residuary                                                                      | son, grandson, father, paternal grandfather  |
+| Full sister(s)        | 1/2 (one), 2/3 (two or more); residuary alongside a brother, or beside a daughter or granddaughter | son, grandson, father, paternal grandfather |
+| Paternal grandfather  | As the father, in his absence                                                  | father                                       |
+| Paternal grandmother  | 1/6, shared with the other grandmother if both inherit                         | father, mother                               |
+| Maternal grandmother  | 1/6, shared with the other grandmother if both inherit                         | mother                                       |
 
-**Algorithm:**
+"Descendants" means a son, daughter, son's son or son's daughter. Sources: Qur'an 4:11, 4:12 and 4:176, and Sahih
+al-Bukhari 6736 for the granddaughter's sixth and the sister's residue beside a daughter.
 
-1. Drop blocked heirs (hijab).
-2. Assign fixed shares; collect the rest as residuaries.
-3. If fixed shares exceed the estate, reduce them proportionally ('awl).
-4. Distribute any remainder to the residuaries. Within a class, a male receives twice the share of a female (son and
-   daughter, brother and sister).
-5. If there is a remainder and no residuary, return it to the fixed-share heirs in proportion to their shares (radd).
-6. Report percentage (1 dp) and amount (2 dp).
+**Algorithm** (`calcInheritance` returns `{ error, shares }`; shares are exact fractions until the last step):
+
+1. Validate: at least one heir; not a husband and a wife together; at most four wives; whole, non-negative counts; a
+   non-negative numeric estate. Otherwise return a message and no shares.
+2. Drop excluded heirs (hijab).
+3. Assign fixed shares and pick the residuary class.
+4. If fixed shares exceed the estate, reduce them proportionally ('awl).
+5. Give any remainder to the first residuary class present: sons with daughters; grandsons with granddaughters; father;
+   paternal grandfather; brothers with sisters; sisters beside daughters. Within a class a male receives twice the share
+   of a female.
+6. If there is a remainder and no residuary, return it to the fixed-share heirs other than the spouse, in proportion to
+   their shares (radd). A spouse who is the only heir keeps the fixed share and the rest is shown as a "Remainder" line.
+7. Report, per line: the share label (the final fraction, so it always matches the percentage), the rule that produced
+   it, the percentage (1 dp, totalling 100) and the amount. Each person's amount is rounded to the penny and any
+   leftover penny goes to the largest share, so the amounts total the estate.
+
+Two points of scholarly difference are fixed by named constants in `utils/inheritance.js`: spouses take no part in
+radd, and a paternal grandfather excludes brothers and sisters. Half-siblings, distant kindred and bequests are not
+covered.
 
 The page must state prominently that the result is a guide and not a ruling.
 
@@ -460,14 +473,6 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 - **Zakat prices are daily, and the built-in reference prices age.** Prices come from one dataset maintained by one
   person. If it is unavailable the calculator falls back to reference prices dated 12 October 2026, and says so.
-- **Inheritance engine departs from the table in 5.9.**
-  - A sister is blocked outright by a brother and receives nothing, instead of sharing the residue 2:1.
-  - A granddaughter is blocked by a single daughter, so her 1/6 share is unreachable.
-  - Residuaries other than son + daughter split equally per head, with no priority order between classes.
-  - Radd happens implicitly through normalisation and includes the spouse: a wife and one daughter come out at 20% and
-    80%, while the share label still reads 1/8. Whether spouses take part in radd is a point of scholarly difference
-    and should be an explicit decision.
-  - Arithmetic is floating-point, not fractional.
 - **SEO is set two ways.** The hadith, adhkar, tasbih, and articles-of-faith views call `useHead` directly, so their
   entries in `useSeo`'s `ROUTE_META` are unused. `useSeo` also builds canonical URLs from the route name, which is only
   correct while name and path match; it would be wrong for `hadith-books` or `articles-of-faith` if they adopted it. The hadith, adhkar, and tasbih views set no canonical link
@@ -487,7 +492,7 @@ Places where the code does not yet meet this spec, or where supporting files are
 - **The loading screen blocks every entry route** for at least 2 seconds on the price fetch, including pages that do
   not use prices.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
-  stores are tested. The Zakat store, the inheritance engine, the composables and the views are not yet.
+  stores are tested. The composables and most views are not yet.
 - **A damaged entry inside a stored record is not handled.** A stored record of the wrong kind is read as empty, but
   a valid record holding a bad entry (for example a day whose value is `null` under `adhkar-completion-log` or
   `tasbih-totals`) would still throw.
