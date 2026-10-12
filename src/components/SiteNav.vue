@@ -111,7 +111,7 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-const GITHUB_REPO = 'https://github.com/Zubs/pillarsofislam'
+const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 const menuOpen = ref(false)
 
 const pillars = [

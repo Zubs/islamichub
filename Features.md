@@ -13,7 +13,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 1. Test suite
 - [x] 2. Local day key
 - [x] 3. Contributor docs
-- [ ] 4. Dead file cleanup
+- [x] 4. Dead file cleanup
 - [ ] 5. Zakat exchange rates
 - [ ] 6. Naira in the Zakat calculator
 - [ ] 7. Inheritance engine
@@ -126,25 +126,33 @@ Tests are written in plain English and ordered the same way under every feature:
 
 ### 4. Dead file cleanup
 
-**What it does:** Removes files and code left over from the old app, so nobody builds on them by mistake.
+**What it does:** Removes files and code left over from the old app, so nobody builds on them by mistake, and moves visitors who are still being served the old app onto the current site.
 
 **How it works**
+- The old app registered a service worker for visitors between 26 May and 5 June 2026. It serves its cached pages first, and the site answered the worker's address with a web page, which a browser will not accept as a replacement, so those visitors stayed on the old app. A small replacement at `public/service-worker.js` deletes every cache, unregisters itself and reloads the open page. It has no `fetch` handler and caches nothing.
+- Delete the root `service-worker.js`, the old worker's source, which was not deployed.
 - Delete the root `_redirects` (the rule is already in `netlify.toml`).
-- Delete the old `service-worker.js`. Feature 12 adds a new one.
-- Remove the `console.log` of the API key length in `fetchBooks`.
-- Remove the web manifest link until feature 12 supplies a correct manifest, since the current one points to missing icons and old hash URLs.
-- Delete `public/CHANGELOG.md`, a stale copy of the root changelog that is published at `/CHANGELOG.md`.
-- Update `GITHUB_REPO` in `src/components/SiteNav.vue`, `src/components/SiteFooter.vue`, `src/views/AboutView.vue` and `src/views/ChangelogView.vue` from `Zubs/pillarsofislam` to `Zubs/islamichub`. The old name redirects, so the links work today.
+- Remove the `console.log` of the API key length in `fetchBooks`, and add a lint rule against `console.log` in `src/`.
+- Remove the web manifest link and delete `public/site.webmanifest`, since it points to icons that do not exist and old hash URLs. Feature 12 supplies a correct one.
+- Delete `public/CHANGELOG.md`, a stale copy of the root changelog that was published at `/CHANGELOG.md`.
+- Update `GITHUB_REPO` in `src/components/SiteNav.vue`, `src/components/SiteFooter.vue`, `src/views/AboutView.vue` and `src/views/ChangelogView.vue` from `Zubs/pillarsofislam` to `Zubs/islamichub`.
+- Remove three unused development dependencies: `unplugin-auto-import`, `unplugin-vue-components` and `vite-plugin-vue-devtools`.
+- An automated check, `test/leftovers.test.js`, keeps these gone. It includes a list of the only files `public/` may hold.
 
 **Tests**
-- A deep link such as `/prayer` still loads on a deploy preview after `_redirects` is gone.
-- Opening the hadith library logs nothing about the API key.
+- A browser with no service worker registers none and nothing reloads.
+- A browser holding the old worker and its cache has no registration and no cache after its next visit, and shows the current app.
+- With several caches, every one is deleted.
+- When a window refuses to reload, the caches are still deleted and the registration is still removed.
+- The replacement worker registers no `fetch` listener.
+- A deep link such as `/prayer` still loads after `_redirects` is gone.
+- Opening the hadith library logs nothing about the API key, and a `console.log` left in `src/` fails lint.
 - The browser console shows no manifest or missing-icon warnings on any page.
-- The build output contains no `service-worker.js` and no `CHANGELOG.md`.
+- The build output contains `service-worker.js` and no `CHANGELOG.md`, `site.webmanifest` or `_redirects`.
 - No file in `src/` contains the repository's old name.
 - Lint and tests still pass.
 
-**Done when:** A deploy preview loads every route with a clean console.
+**Done when:** A deploy preview loads every route with no manifest, icon or API-key message in the console, and serves `/service-worker.js` as JavaScript that is not cached.
 
 ---
 
@@ -159,6 +167,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Fallback rates and fallback metal prices use the same base, so a failed fetch cannot mix the two.
 - One function, `pricePerGram(metal, currency)`, does the conversion, and the nisab and the calculation both use it.
 - Metals and rates are flagged separately as live or not, and the page says which is in use.
+- Neither price service works today, so both are replaced (found on 12 October 2026). `api.metals.live` no longer answers. `api.frankfurter.app` redirects to `api.frankfurter.dev`, and the browser blocks the redirect for lack of a CORS header; its reply also no longer includes SAR. The calculator has therefore been showing its built-in fallback prices to everyone. The new addresses are added to the content security policy.
 
 **Tests**
 - With every input empty, Zakat due is zero and the page says it is not obligatory.
@@ -170,6 +179,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The nisab shown and the nisab used in the calculation are the same number.
 - If rates fail but metals load, fallback rates are used and the page says rates are not live.
 - If both fail, fallback prices are used and the page says prices are not live.
+- With the network on, the Zakat page shows live prices from the replacement services and no page logs a CORS error.
 - A reply with missing or non-numeric prices is treated as a failure.
 - A user enters 100 g of 22k gold in pounds and sees a value that matches the day's gold price worked out by hand.
 
@@ -336,6 +346,7 @@ Tests are written in plain English and ordered the same way under every feature:
 
 **How it works**
 - `vite-plugin-pwa` builds a new service worker.
+- The new worker is served from `/service-worker.js`, where it replaces the self-removing worker from feature 4 (or that file is kept). The old app's cache was named `islamichub-shell-v2` and must not be reused. The list of published files in `test/leftovers.test.js` is updated for the manifest and icons.
 - A corrected manifest: real icons at 192px and 512px including a maskable one, clean shortcut URLs for Prayer, Adhkar and Tasbih, and the site's colours.
 - The app's pages, styles, scripts and fonts are stored on first visit, so every route opens offline.
 - Prayer times, Qibla, adhkar and tasbih work fully offline, as they need no server. Prayer times offline need a saved location (feature 11).

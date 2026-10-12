@@ -24,6 +24,15 @@ export default defineConfig([
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
 
+  {
+    name: 'app/no-console',
+    files: ['src/**/*.{vue,js}'],
+    ignores: ['**/*.test.js'],
+    rules: {
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 
   skipFormatting,
