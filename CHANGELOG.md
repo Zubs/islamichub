@@ -26,6 +26,7 @@ All notable changes to IslamicHub are documented here.
 - **Licence** — IslamicHub is now licensed under the GNU General Public License, version 3.
 
 ### Changed
+- **Every page's writing can now be translated** *(Whole site)* — The writing on the Faith, Prayer, Zakat, Fasting, Hajj, Articles of Faith, hadith, Inheritance, About and home pages, and the text of the adhkar, duas and daily hadith, now lives in content files, one per page and language. A page can be translated by adding a file. Where a translation is missing, the section is shown in English with a small note. Nothing changes for English readers.
 - **The site is ready to be translated** *(Whole site)* — The text of the navigation, the tools and the calculators now lives in one message file per language instead of inside the pages, and the site can serve each language at its own address, with a language switcher that appears once a second language is ready. Nothing changes for English readers yet.
 - **The hadith library's key is no longer public** *(Hadith library)* — The hadith library now asks the site's own server for books, chapters and hadiths, and the server adds the API key. The key used to be readable in the site's code. Replies are cached for a day, so pages you have opened load faster.
 - **Lint and format pass across the project** — Fixed the seven existing lint errors (unused variables and parameters) and formatted every file in `src/` with Prettier. No change to any calculation.

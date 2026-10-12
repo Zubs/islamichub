@@ -104,6 +104,7 @@ import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import AdhkarCard from '@/components/adhkar/AdhkarCard.vue'
 import { ADHKAR_CATEGORIES, getAdhkarByCategory, getCategoryMeta } from '@/data/adhkar.js'
+import { useDataTranslations } from '@/composables/useContent.js'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 
 useScrollReveal()
@@ -111,8 +112,13 @@ useScrollReveal()
 const route = useRoute()
 const store = useAdhkarStore()
 const categorySlug = computed(() => route.params.categorySlug)
-const meta = computed(() => getCategoryMeta(categorySlug.value))
-const dhikrList = computed(() => getAdhkarByCategory(categorySlug.value))
+const adhkarText = useDataTranslations('adhkar')
+const categoryText = useDataTranslations('adhkarCategories')
+const meta = computed(() => {
+  const category = getCategoryMeta(categorySlug.value)
+  return category ? categoryText.localized(category) : null
+})
+const dhikrList = computed(() => getAdhkarByCategory(categorySlug.value).map(adhkarText.localized))
 
 useSeo({
   title: () => `${meta.value?.name || 'Adhkar'} | IslamicHub`,

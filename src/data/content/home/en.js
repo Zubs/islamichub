@@ -1,0 +1,271 @@
+// The writing of the home page, in English: the source every translation follows.
+// Sections follow the page from top to bottom. A translation gives the same sections and keys;
+// in a list it gives only the text it translates, and Arabic, references and icons are shared.
+export default {
+  header: {
+    ramadanMubarak: 'Ramadan Mubarak',
+    untilRamadan: 'until Ramadan',
+    islamichubIslamicEducationAndTools: 'IslamicHub — Islamic education and tools',
+    freeScholarlyNoAccountNeeded: 'Free · Scholarly · No account needed',
+    learnLiveThe: 'Learn & live the',
+    fivePillars: 'Five Pillars of Islam',
+    islamichubIsAFreeIslamicEducation:
+      "IslamicHub is a free Islamic education and tools platform — accurate prayer times with Qibla finder, Zakat calculator with live gold and silver prices, Islamic inheritance (Fara'id) calculator, and in-depth guides for all five pillars, grounded in Qur'an, Hadith, and all four schools of thought.",
+    exploreTheFivePillars: 'Explore the Five Pillars',
+    zakatCalculator: 'Zakat Calculator',
+    platformHighlights: 'Platform highlights',
+    pillarsCovered: 'Pillars covered',
+    ahToday: '{a} AH · today',
+    todaySIslamicDate: "Today's Islamic date",
+    today: 'Today',
+    ramadanDay: '🌙 Ramadan Day {a}',
+    establishPrayerAndGiveZakat: 'Establish prayer and give Zakat.',
+    theTwoPillarsMostFrequentlyPaired:
+      "The two pillars most frequently paired in the Qur'an, named together in over 30 verses.",
+  },
+  theFivePillarsOf: {
+    theFivePillars: 'The Five Pillars of Islam · أركان الإسلام',
+    understandAndPractiseEachPillar: 'Understand and practise each pillar',
+    everyPillarHasADedicatedPage: 'Every pillar has a dedicated page with scholarly education',
+    and: 'and',
+    aPracticalToolLearnTheRuling:
+      'a practical tool — learn the ruling, understand the evidence, and fulfil the obligation.',
+  },
+  islamicTools: {
+    islamicTools: 'Islamic Tools',
+    practicalToolsForDailyIslamicPractice: 'Practical tools for daily Islamic practice',
+    accurateFreeAndPrivateEveryTool:
+      'Accurate, free, and private — every tool runs entirely in your browser with no account required and no data stored.',
+  },
+  whyIslamichub: {
+    whyIslamichub: 'Why IslamicHub',
+    scholarlyAccuracyMeetsModernTools: 'Scholarly accuracy meets modern tools',
+    islamichubIsAFreeIslamicLearning:
+      'IslamicHub is a free Islamic learning platform that combines in-depth education with practical digital tools. Unlike apps that give you a number with no explanation, every section here gives you both: the ruling and the evidence behind it.',
+    our: 'Our',
+    zakatCalculator: 'Zakat calculator',
+    fetchesLiveGoldAndSilverSpot:
+      "fetches live gold and silver spot prices, applies your chosen Nisab method (85g gold or 595g silver), deducts valid debts, and shows a precise figure — alongside the Qur'anic verse and Hadith references that establish each rule.",
+    prayerTimesCalculator: 'prayer times calculator',
+    usesAFullAstronomicalAlgorithmTo:
+      'uses a full astronomical algorithm to compute prayer times for any coordinates on Earth — with five calculation methods. The same tool gives you the',
+    qiblaDirection: 'Qibla direction',
+    asAnExactCompassBearing: 'as an exact compass bearing.',
+    islamicInheritanceCalculator: 'Islamic inheritance calculator',
+    implementsTheCompleteFaraIdSystem:
+      "implements the complete Fara'id system from Qur'an 4:11–12 and 4:176 — all 13 heir types, automatic hijab (blocking) rules, and awl (proportional reduction).",
+  },
+  whatSInside: {
+    whatSInside: "What's inside",
+    everythingAMuslimNeedsInOne: 'Everything a Muslim needs in one place',
+  },
+  openSourceProject: {
+    openSourceProject: 'Open source project',
+    builtByTheCommunityForThe: 'Built by the community, for the community',
+    islamichubIsOpenSourceBuiltBy:
+      'IslamicHub is open source, built by Zubair Idris Aweda and Yusuf Saif, and open to contributions from any Muslim who wants to help improve it.',
+    aboutTheProjectHowToContribute: 'About the project & how to contribute →',
+    beginWithTheFirstPillar: 'Begin with the first pillar',
+    startWithTheShahadaTheDeclaration:
+      'Start with the Shahada — the declaration that anchors everything in Islam — then work through each pillar with education and practical tools.',
+    startWithFaith: 'Start with Faith →',
+    prayerTimesQibla: 'Prayer Times & Qibla',
+  },
+  lists: {
+    pillars: [
+      {
+        to: '/faith',
+        num: '١',
+        cardClass: 'phc-faith',
+        icon: '☪️',
+        name: 'Shahada',
+        sub: 'Declaration of Faith · Tawhid',
+        tag: 'Educational',
+        ariaLabel: 'Faith — Shahada',
+      },
+      {
+        to: '/prayer',
+        num: '٢',
+        cardClass: 'phc-prayer',
+        icon: '🕌',
+        name: 'Salah',
+        sub: 'Prayer Times & Qibla',
+        tag: '+ Live calculator',
+        ariaLabel: 'Prayer — Salah and prayer times',
+      },
+      {
+        to: '/zakat',
+        num: '٣',
+        cardClass: 'phc-zakat',
+        icon: '✦',
+        name: 'Zakat',
+        sub: 'Almsgiving · Live prices',
+        tag: '+ Calculator',
+        ariaLabel: 'Zakat calculator',
+      },
+      {
+        to: '/fasting',
+        num: '٤',
+        cardClass: 'phc-fasting',
+        icon: '🌙',
+        name: 'Sawm',
+        sub: 'Ramadan & Fasting',
+        tag: '+ Ramadan tracker',
+        ariaLabel: 'Fasting — Sawm and Ramadan',
+      },
+      {
+        to: '/hajj',
+        num: '٥',
+        cardClass: 'phc-hajj',
+        icon: '🕋',
+        name: 'Hajj',
+        sub: 'Pilgrimage to Makkah',
+        tag: '+ Rites guide',
+        ariaLabel: 'Hajj — Pilgrimage guide',
+      },
+    ],
+    tools: [
+      {
+        to: '/zakat',
+        icon: '⚖️',
+        name: 'Zakat Calculator',
+        desc: 'Live gold & silver prices · dual Nisab methods · all asset types including shares, ISAs, and pension',
+        aria: 'Open Zakat calculator',
+      },
+      {
+        to: '/prayer',
+        icon: '🕐',
+        name: 'Prayer Times',
+        desc: 'Fajr, Dhuhr, Asr, Maghrib & Isha for your city · 5 calculation methods · live countdown',
+        aria: 'Prayer times for your city',
+      },
+      {
+        to: '/prayer',
+        icon: '🧭',
+        name: 'Qibla Finder',
+        desc: "Precise compass bearing to the Ka'bah · distance to Makkah in km · works from any location",
+        aria: 'Find Qibla direction',
+      },
+      {
+        to: '/adhkar',
+        icon: '📿',
+        name: 'Adhkar',
+        desc: 'Morning, evening & after-prayer supplications · Arabic, transliteration & translation · tap-to-count tracker',
+        aria: 'Adhkar',
+      },
+      {
+        to: '/tracker',
+        icon: '✅',
+        name: 'Prayer Tracker',
+        desc: 'Log each of the five daily prayers · week and month at a glance · a streak that stays on your device',
+        aria: 'Prayer tracker',
+      },
+      {
+        to: '/duas',
+        icon: '🤲',
+        name: 'Duas',
+        desc: 'Supplications for travel, eating, illness, distress, family and more · searchable · every one sourced',
+        aria: 'Duas for everyday situations',
+      },
+      {
+        to: '/tasbih',
+        icon: '🔢',
+        name: 'Tasbih Counter',
+        desc: 'Digital dhikr counter with custom targets · daily and lifetime totals · works for any phrase',
+        aria: 'Digital tasbih counter',
+      },
+      {
+        to: '/inheritance',
+        icon: '📜',
+        name: "Inheritance (Fara'id)",
+        desc: "Qur'anic shares for all heirs · automatic blocking rules · visual breakdown by amount and percentage",
+        aria: 'Islamic inheritance calculator',
+      },
+    ],
+    features: [
+      {
+        icon: '📖',
+        title: "Qur'an & Hadith first",
+        desc: "Every ruling is cited back to its primary source. We don't just give you an answer; we tell you why.",
+      },
+      {
+        icon: '🕌',
+        title: 'All four schools',
+        desc: "Hanafi, Maliki, Shafi'i, and Hanbali positions are considered. Disagreements are surfaced, not hidden.",
+      },
+      {
+        icon: '🔒',
+        title: 'Private by design',
+        desc: 'No account. No tracking. Everything runs in your browser. Your financial and religious information stays with you.',
+      },
+      {
+        icon: '🌍',
+        title: 'Multi-currency',
+        desc: 'GBP, USD, EUR, SAR or NGN — with live exchange rates fetched automatically alongside metal prices.',
+      },
+      {
+        icon: '🤝',
+        title: 'Open source',
+        desc: 'The entire platform is open source on GitHub. Contributions, corrections, and translations are welcome.',
+      },
+    ],
+    darkFeatures: [
+      {
+        icon: '⚖️',
+        title: 'Accurate Zakat Calculator with Live Gold Prices',
+        desc: 'Calculate Zakat on cash, savings, gold and silver (by weight and purity), shares, ISAs, pensions, and business inventory. Live spot prices. Dual Nisab. Full debt deduction.',
+        to: '/zakat',
+        cta: 'Open calculator',
+      },
+      {
+        icon: '🕌',
+        title: 'Reliable Prayer Times for Any City + Qibla',
+        desc: 'Fajr, Dhuhr, Asr, Maghrib, Isha for your exact coordinates. Five calculation methods. Live countdown. Animated Qibla compass.',
+        to: '/prayer',
+        cta: 'Find prayer times',
+      },
+      {
+        icon: '📿',
+        title: 'Morning & Evening Adhkar, Tracked Daily',
+        desc: 'Authenticated supplications for morning, evening, after prayer, sleep, and waking — with Arabic, transliteration, translation, and daily streaks.',
+        to: '/adhkar',
+        cta: 'Open Adhkar',
+      },
+      {
+        icon: '📜',
+        title: "Free Islamic Inheritance Calculator (Fara'id)",
+        desc: "Qur'anic shares for all 13 heir types. Auto-applies blocking rules. Visual percentage and amount breakdown. Based on Qur'an 4:11–12.",
+        to: '/inheritance',
+        cta: 'Calculate inheritance',
+      },
+      {
+        icon: '☪️',
+        title: 'Understand the First Pillar — Shahada & Tawhid',
+        desc: "The declaration of faith, its seven conditions, the three dimensions of Tawhid, and Risala — with Qur'anic verses and Hadith.",
+        to: '/faith',
+        cta: 'Learn about faith',
+      },
+      {
+        icon: '🌙',
+        title: 'Ramadan Fasting Tracker — Suhoor & Iftar Times',
+        desc: 'Live Suhoor and Iftar times for your location. Fasting progress bar. Ramadan countdown. Comprehensive Sawm rulings.',
+        to: '/fasting',
+        cta: 'Track your fast',
+      },
+    ],
+    builders: [
+      {
+        name: 'Zubair Idris Aweda',
+        role: 'Software Engineer & Technical Writer',
+        login: 'Zubs',
+        avatar: 'https://avatars.githubusercontent.com/u/53227444?v=4',
+      },
+      {
+        name: 'Yusuf Saif',
+        role: 'Project Manager & Technical Strategist',
+        login: 'yusuf-saif',
+        avatar: 'https://avatars.githubusercontent.com/u/54576722?v=4',
+      },
+    ],
+  },
+}

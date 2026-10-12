@@ -133,6 +133,7 @@
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
@@ -143,8 +144,13 @@ import { fetchChapters, BOOKS_META, loadErrorMessage } from '@/composables/useHa
 useScrollReveal()
 
 const route = useRoute()
+const bookText = useDataTranslations('hadithBooks')
+
+function localizedBook(found) {
+  return found ? bookText.localized(found) : null
+}
 const bookSlug = computed(() => route.params.bookSlug)
-const meta = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
+const meta = computed(() => localizedBook(BOOKS_META.find((b) => b.slug === bookSlug.value)))
 
 useSeo({
   title: () => `${meta.value?.name || bookSlug.value} — Chapters | IslamicHub`,

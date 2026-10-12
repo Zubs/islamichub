@@ -59,20 +59,22 @@ import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { ADHKAR_CATEGORIES, getAdhkarByCategory } from '@/data/adhkar.js'
+import { useDataTranslations } from '@/composables/useContent.js'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 
 useSeo('adhkar')
 useScrollReveal()
 
 const store = useAdhkarStore()
-const categories = ADHKAR_CATEGORIES
+const categoryText = useDataTranslations('adhkarCategories')
+const categories = computed(() => ADHKAR_CATEGORIES.map(categoryText.localized))
 
 function countFor(slug) {
   return getAdhkarByCategory(slug).length
 }
 
 const categoriesWithStreak = computed(() =>
-  categories
+  categories.value
     .map((c) => ({ ...c, streak: store.streakForCategory(c.slug) }))
     .filter((c) => c.streak > 0 || ['morning', 'evening'].includes(c.slug)),
 )

@@ -232,6 +232,11 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: "Every page's writing can now be translated",
+            scope: 'Whole site',
+            desc: 'The writing on the Faith, Prayer, Zakat, Fasting, Hajj, Articles of Faith, hadith, Inheritance, About and home pages, and the text of the adhkar, duas and daily hadith, now lives in content files, one per page and language. A page can be translated by adding a file. Where a translation is missing, the section is shown in English with a small note. Nothing changes for English readers.',
+          },
+          {
             title: 'The site is ready to be translated',
             scope: 'Whole site',
             desc: 'The text of the navigation, the tools and the calculators now lives in one message file per language instead of inside the pages, and the site can serve each language at its own address, with a language switcher that appears once a second language is ready. Nothing changes for English readers yet.',

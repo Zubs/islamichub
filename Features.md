@@ -34,8 +34,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 22. Share to WhatsApp
 - [ ] 23. Prayer reminders
 - [ ] 24. Push notifications
-- [ ] 25. Interface translation
-- [ ] 26. Translatable content
+- [x] 25. Interface translation
+- [x] 26. Translatable content
 - [ ] 27. Yoruba
 - [ ] 28. Hausa
 - [ ] 29. Right-to-left layout
@@ -763,7 +763,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Numbers, dates and currency use the current language's formatting.
 - Long-form page content is not covered here. That is feature 26.
 - Built for the shell, every shared component, the 404 page, the adhkar, duas, hadith library, tracker and tasbih views, and the calculators on the Prayer, Zakat, Fasting and Inheritance pages, with their results and error messages: about 440 messages in `src/locales/en.js`.
-- Not yet moved, and left for feature 26 because it is content or held in data: the long-form writing; names and labels in `data/` (adhkar categories, dua titles, tasbih phrases); page titles and descriptions; and the hadith home and About pages. Reminders sent by the server (feature 24) are in English, because the server does not know the reader's language.
+- The long-form writing, the text in `data/`, and page titles and descriptions were moved with feature 26. Reminders sent by the server (feature 24) are in English, because the server does not know the reader's language; the changelog page is in English.
 - Sentences that had inline markup inside them were split into fragments by the script that moved the text. They read correctly in English; a translator may need some merged.
 - Links inside a second-language page are written without a prefix and kept in that language by the router.
 
@@ -792,6 +792,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - Static data files (adhkar, duas, tasbih phrases, daily hadith) gain translations by language in the same way.
 - A section missing in a language is shown in English with a small "not yet translated" note.
 - Order of work: Faith first, as the pattern, then Prayer, Zakat, Fasting, Hajj, Articles of Faith, Hadith overview and About.
+- Built differently from the two bullets above that describe structured sections drawn by a small set of components: each existing page keeps its own layout and takes its words from its content file by section and key (`c('section.key')`, `list('name')`), because the ten pages' hand-built layouts could not be reproduced by generic section components without redesigning them. The result the feature asks for is met: a translation is one file and no component is edited. New pages (features 30 to 32) are written section by section.
+- Home and Inheritance are content pages too and were moved with the others.
+- Each page's wording is held in `test/fixtures/pages/` as it was before the move, and a test fails if a page reads differently.
+- Data translations live in `src/data/translations/<set>/<code>.js`, keyed by id.
 
 **Tests**
 - A page with an empty content file shows its header and no errors.
@@ -1078,8 +1082,9 @@ Tests are written in plain English and ordered the same way under every feature:
 | 25 | 24 | May a server hold rounded coordinates for push? | Yes, at the proposed default: only for a user who switches push on; rounded to two decimal places by the server itself; with timezone, the two methods and the chosen reminders; deleted on switching off, on turning reminders off, on "Forget my location", and when the subscription expires. Stated on the About page | Do not set the VAPID keys: the switch is then never offered and nothing is ever stored. To remove the code, drop `netlify/functions/push*.js` |
 | 26 | 24 | A dependency was added without asking: `@netlify/blobs` (CLAUDE.md says to ask first) | Added, because feature 24 needs somewhere on the server to keep each device's record and Netlify Blobs is the storage that comes with Netlify Functions. No push library was added; signing and encryption use Node's built-in `crypto` | `npm uninstall @netlify/blobs` and choose another store for `netlify/functions/push.js` and `push-send.js` |
 | 27 | 24 | Push encryption and signing were written by hand rather than with the `web-push` package, to avoid a second dependency | `netlify/functions/lib/webPush.js`, tested by decrypting what it encrypts and verifying its signature, but never run against a real push service | `npm install web-push` and replace `sendPush` with its `sendNotification` |
-| 28 | 25 | How far does "all interface text" go in feature 25? | The shell, shared components, tools and calculators are moved (about 440 messages), with a test that fails on hard-coded text in them. Long-form writing, labels held in `data/`, page titles and descriptions, and the hadith home and About pages were left for feature 26. Feature 25 is therefore left unticked | Nothing to reverse; finish with feature 26 |
+| 28 | 25 | How far does "all interface text" go in feature 25? | The shell, shared components, tools and calculators are moved (about 440 messages), with a test that fails on hard-coded text in them. Long-form writing, text in `data/` and page titles were then moved with feature 26, so both are ticked. Sentences that had inline markup are split into fragments, which a translator may want merged | Merge a split sentence with vue-i18n's `<i18n-t>` where needed |
 | 29 | 25 | Reminders pushed by the server are in English, because the server does not know the reader's language | Left in English | Send the language with the push record (one more stored field) and translate on the server |
+| 30 | 26 | `Features.md` describes content as structured sections drawn by a small set of components. How were the existing pages done? | Each of the ten existing pages keeps its own layout and reads its words from its content file by section and key. Adding a translation is still one file with no component edited, and a test proves every page reads word for word as before. New pages (Eid, Qurbani, Prophets) are written section by section | Rebuild a page on `ContentPage` section components; its layout would have to be redesigned to fit |
 
 **Checks only Zubair can do**
 

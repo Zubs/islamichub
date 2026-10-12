@@ -56,11 +56,17 @@ import GeoPattern from '@/components/GeoPattern.vue'
 import AdhkarCard from '@/components/adhkar/AdhkarCard.vue'
 import { DUAS, DUA_SITUATIONS, getDuasBySituation, getSituation } from '@/data/duas.js'
 import { situationsWithDuas } from '@/utils/duas.js'
+import { useDataTranslations } from '@/composables/useContent.js'
 
 const route = useRoute()
 const slug = computed(() => route.params.situationSlug)
-const situation = computed(() => getSituation(slug.value))
-const duas = computed(() => getDuasBySituation(slug.value))
+const duaText = useDataTranslations('duas')
+const situationText = useDataTranslations('duaSituations')
+const situation = computed(() => {
+  const found = getSituation(slug.value)
+  return found ? situationText.localized(found) : null
+})
+const duas = computed(() => getDuasBySituation(slug.value).map(duaText.localized))
 
 const listed = situationsWithDuas(DUA_SITUATIONS, DUAS)
 const position = computed(() => listed.findIndex((entry) => entry.slug === slug.value))

@@ -6,12 +6,11 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Islamic Tool &nbsp;·&nbsp; الميراث
+          {{ c('header.islamicTool') }}
         </div>
-        <h1>Fara'id — Islamic Inheritance Calculator</h1>
+        <h1>{{ c('header.faraIdIslamicInheritanceCalculator') }}</h1>
         <p>
-          Calculate the Qur'anic shares of inheritance based on the heirs present. Each heir's share
-          is derived directly from Qur'an 4:11–12 and 4:176.
+          {{ c('header.calculateTheQurAnicSharesOf') }}
         </p>
       </div>
     </div>
@@ -20,8 +19,8 @@
       <QuranBlock
         arabic="يُوصِيكُمُ اللَّهُ فِي أَوْلَادِكُمْ ۖ لِلذَّكَرِ مِثْلُ حَظِّ الْأُنثَيَيْنِ"
         reference="Qur'an 4:11"
-        translation="Allah instructs you concerning your children: for the male, what is equal to the share of two females."
-        note="The foundational verse of Islamic inheritance law."
+        :translation="c('header.allahInstructsYouConcerningYourChildren')"
+        :note="c('header.theFoundationalVerseOfIslamicInheritance')"
         style="max-width: 860px; margin-bottom: 2rem"
       />
 
@@ -164,34 +163,29 @@
       <!-- Education -->
       <div style="max-width: 860px; margin-top: 3rem">
         <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-        <span class="eyebrow">Understanding Fara'id</span>
+        <span class="eyebrow">{{ c('understandingFaraId.understandingFaraId') }}</span
+        ><UntranslatedNote v-if="untranslated('understandingFaraId')" />
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
         >
-          The Qur'anic system of inheritance
+          {{ c('understandingFaraId.theQurAnicSystemOfInheritance') }}
         </h2>
         <div class="prose">
           <p>
-            Fara'id (فَرَائِض) — from the root meaning "obligatory portions" — is the Islamic law of
-            inheritance derived primarily from Qur'an 4:11–12 and 4:176. It is one of the most
-            precisely legislated areas of Islamic law, with specific fractional shares assigned
-            directly by divine revelation.
+            {{ c('understandingFaraId.faraIdFromTheRootMeaning') }}
           </p>
           <p>
-            The system has two main categories of heirs: <strong>Dhawu al-furud</strong> (those with
-            fixed Qur'anic shares) and <strong>Asaba</strong> (residuaries who receive the remainder
-            after fixed shares are distributed). Males generally receive double the share of their
-            equivalent female relative, reflecting the greater financial obligations Islam places on
-            men.
+            {{ c('understandingFaraId.theSystemHasTwoMainCategories') }}
+            <strong>{{ c('understandingFaraId.dhawuAlFurud') }}</strong>
+            {{ c('understandingFaraId.thoseWithFixedQurAnicShares') }}
+            <strong>{{ c('understandingFaraId.asaba') }}</strong>
+            {{ c('understandingFaraId.residuariesWhoReceiveTheRemainderAfter') }}
           </p>
         </div>
 
         <HadithBlock reference="Sahih Bukhari 6732 · Abu Dawud 2898" style="margin: 1.5rem 0">
-          "Give the Fara'id (the shares of the inheritance that are prescribed in the Qur'an) to
-          those who are entitled to receive it. Then whatever remains, should be given to the
-          closest male relative of the deceased." — The Prophet Muhammad ﷺ (narrated by Ibn Abbas
-          RA)
+          {{ c('understandingFaraId.giveTheFaraIdTheShares') }}
         </HadithBlock>
 
         <!-- Fixed shares table -->
@@ -204,7 +198,7 @@
             margin-top: 1.5rem;
           "
         >
-          Fixed Qur'anic shares at a glance
+          {{ c('understandingFaraId.fixedQurAnicSharesAtA') }}
         </h3>
         <div
           style="
@@ -218,14 +212,18 @@
           <table style="width: 100%; border-collapse: collapse; font-size: 13.5px">
             <thead>
               <tr style="background: var(--ink); color: #fff">
-                <th style="padding: 10px 14px; text-align: left; font-weight: 600">Heir</th>
-                <th style="padding: 10px 14px; text-align: center; font-weight: 600">
-                  With children
+                <th style="padding: 10px 14px; text-align: left; font-weight: 600">
+                  {{ c('understandingFaraId.heir') }}
                 </th>
                 <th style="padding: 10px 14px; text-align: center; font-weight: 600">
-                  Without children
+                  {{ c('understandingFaraId.withChildren') }}
                 </th>
-                <th style="padding: 10px 14px; text-align: left; font-weight: 600">Source</th>
+                <th style="padding: 10px 14px; text-align: center; font-weight: 600">
+                  {{ c('understandingFaraId.withoutChildren') }}
+                </th>
+                <th style="padding: 10px 14px; text-align: left; font-weight: 600">
+                  {{ c('understandingFaraId.source') }}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -276,6 +274,9 @@
 </template>
 
 <script setup>
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/inheritance/en.js'
 import { ref, reactive, computed, watch } from 'vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
@@ -288,6 +289,8 @@ import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import { calcInheritance, HEIR_DEFS } from '@/utils/inheritance.js'
 import { t } from '@/i18n.js'
+
+const { c, list, untranslated } = useContent('inheritance', content)
 
 useSeo('inheritance')
 useScrollReveal()
@@ -378,35 +381,9 @@ function getHeirDesc(key) {
   return t(`inheritance.heirDesc.${key}`)
 }
 
-const sharesTable = [
-  ['Husband', '1/4', '1/2', "Qur'an 4:12"],
-  ['Wife (or wives)', '1/8', '1/4', "Qur'an 4:12"],
-  ['Father', '1/6 (plus any residue beside daughters only)', 'Residue', "Qur'an 4:11"],
-  ['Mother', '1/6', '1/3', "Qur'an 4:11"],
-  ['Daughter (1)', '1/2 (no sons)', '1/2', "Qur'an 4:11"],
-  ['Daughters (2+)', '2/3 (no sons)', '2/3', "Qur'an 4:11"],
-  ['Son', 'Residue (double daughter)', 'Residue', "Qur'an 4:11"],
-  ['Full Sister (1)', '1/2 (if no closer heirs)', '1/2', "Qur'an 4:176"],
-]
+const sharesTable = computed(() => list('sharesTable'))
 
-const faqs = [
-  {
-    q: 'What is awl (proportional reduction)?',
-    a: 'When the sum of all fixed shares exceeds the estate, the shares are proportionally reduced so they sum to the estate. This is called awl (العَوْل) — the consensus of the Companions, adopted by all schools.',
-  },
-  {
-    q: 'What is radd (return)?',
-    a: 'When the fixed shares do not exhaust the estate and there are no residuary heirs, the remainder is returned proportionally to the fixed-share heirs. This is called radd (الرَّدّ). Scholars differ on whether the husband or wife shares in it; this calculator returns it to the other fixed-share heirs only, and shows it as a remainder when a spouse is the only heir.',
-  },
-  {
-    q: 'Who is excluded from inheritance?',
-    a: 'A murderer of the deceased, an apostate (those who leave Islam), and non-Muslims cannot inherit from a Muslim. These are the three main exclusions.',
-  },
-  {
-    q: "Does a will override Qur'anic shares?",
-    a: "No — the Qur'anic shares (fara'id) are mandatory and cannot be altered by a will. However, a Muslim may leave up to one-third of their estate to non-heirs through a valid wasiyyah (bequest).",
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>
 
 <style scoped>

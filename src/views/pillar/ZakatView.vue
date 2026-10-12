@@ -9,12 +9,11 @@
           class="pillar-num-badge"
           style="background: var(--zakat-light); color: var(--zakat-color)"
         >
-          Pillar 3 of 5 &nbsp;·&nbsp; الزكاة
+          {{ c('header.pillar3Of5') }}
         </div>
-        <h1>Zakat — Obligatory Almsgiving</h1>
+        <h1>{{ c('header.zakatObligatoryAlmsgiving') }}</h1>
         <p>
-          The third pillar — an annual 2.5% levy on zakatable wealth above the Nisab threshold,
-          obligatory on every Muslim who meets the conditions.
+          {{ c('header.theThirdPillarAnAnnual2') }}
         </p>
       </div>
     </div>
@@ -23,8 +22,8 @@
       <QuranBlock
         arabic="خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا"
         reference="Qur'an 9:103"
-        translation="Take from their wealth a charity by which you purify them and cause them increase."
-        note="The direct divine command establishing Zakat."
+        :translation="c('header.takeFromTheirWealthACharity')"
+        :note="c('header.theDirectDivineCommandEstablishingZakat')"
         style="max-width: 860px; margin-bottom: 2rem"
       />
 
@@ -139,7 +138,7 @@
           <!-- Cash -->
           <ZakatAccordion
             :title="$t('zakat.cashBankSavings')"
-            sub="All liquid money you hold"
+            :sub="c('header.allLiquidMoneyYouHold')"
             icon="💵"
             icon-class="ai-teal"
             :total="store.fmt(zakat.cashTotal)"
@@ -208,7 +207,7 @@
           <!-- Money owed -->
           <ZakatAccordion
             :title="$t('zakat.moneyOwedToYou')"
-            sub="Loans given, expected income"
+            :sub="c('header.loansGivenExpectedIncome')"
             icon="💸"
             icon-class="ai-blue"
             :total="store.fmt(zakat.owedTotal)"
@@ -265,7 +264,7 @@
           <!-- Gold & Silver -->
           <ZakatAccordion
             :title="$t('zakat.goldSilver')"
-            sub="Jewellery, bars, coins — priced per gram"
+            :sub="c('header.jewelleryBarsCoinsPricedPerGram')"
             icon="✦"
             icon-class="ai-amber"
             :total="store.fmt(zakat.metalsTotal)"
@@ -392,7 +391,7 @@
           <!-- Investments -->
           <ZakatAccordion
             :title="$t('zakat.investmentsShares')"
-            sub="Stocks, ISAs, pensions, business assets"
+            :sub="c('header.stocksIsasPensionsBusinessAssets')"
             icon="📈"
             icon-class="ai-purple"
             :total="store.fmt(zakat.investTotal)"
@@ -461,7 +460,7 @@
           <!-- Debts -->
           <ZakatAccordion
             :title="$t('zakat.debtsLiabilities')"
-            sub="Deducted from your zakatable total"
+            :sub="c('header.deductedFromYourZakatableTotal')"
             icon="➖"
             icon-class="ai-coral"
             :total="zakat.debtsTotal > 0 ? '−' + store.fmt(zakat.debtsTotal) : ''"
@@ -595,16 +594,16 @@
       <!-- Education below calculator -->
       <div style="max-width: 860px; margin-top: 3rem">
         <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-        <span class="eyebrow">SCHOLARSHIP</span>
+        <span class="eyebrow">{{ c('scholarship.scholarship') }}</span
+        ><UntranslatedNote v-if="untranslated('scholarship')" />
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
         >
-          Who receives Zakat?
+          {{ c('scholarship.whoReceivesZakat') }}
         </h2>
         <p class="prose" style="margin-bottom: 1.5rem">
-          The Qur'an (9:60) identifies eight specific categories of Zakat recipients. Zakat cannot
-          be spent on general charity that doesn't fall within these groups.
+          {{ c('scholarship.theQurAn960Identifies') }}
         </p>
         <div
           class="card-grid anim-target"
@@ -629,9 +628,11 @@
 
         <div class="cta-strip anim-target" style="margin-top: 2.5rem">
           <GeoPattern />
-          <h2>Continue to the fourth pillar</h2>
-          <p>Sawm — fasting during the blessed month of Ramadan.</p>
-          <RouterLink to="/fasting" class="btn btn-white btn-lg">Explore Fasting →</RouterLink>
+          <h2>{{ c('scholarship.continueToTheFourthPillar') }}</h2>
+          <p>{{ c('scholarship.sawmFastingDuringTheBlessedMonth') }}</p>
+          <RouterLink to="/fasting" class="btn btn-white btn-lg">{{
+            c('scholarship.exploreFasting')
+          }}</RouterLink>
         </div>
       </div>
     </div>
@@ -639,6 +640,9 @@
 </template>
 
 <script setup>
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/zakat/en.js'
 import { reactive, computed, watch, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
@@ -653,6 +657,8 @@ import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import ZakatAccordion from '@/components/ZakatAccordion.vue'
 import ZakatPriceStatus from '@/components/ZakatPriceStatus.vue'
+
+const { c, list, untranslated } = useContent('zakat', content)
 
 useSeo('zakat')
 useScrollReveal()
@@ -789,59 +795,9 @@ watch(zakat, (val) => {
   }
 })
 
-const recipients = [
-  {
-    title: '1. Al-Fuqara',
-    desc: 'The poor — little or no income',
-  },
-  {
-    title: '2. Al-Masakin',
-    desc: 'The needy — insufficient income',
-  },
-  {
-    title: '3. Al-Amilin',
-    desc: 'Zakat administrators',
-  },
-  {
-    title: "4. Al-Mu'allafah",
-    desc: 'Hearts to be reconciled to Islam',
-  },
-  {
-    title: '5. Ar-Riqab',
-    desc: 'Freeing of captives',
-  },
-  {
-    title: '6. Al-Gharimin',
-    desc: 'Overwhelmed by debt',
-  },
-  {
-    title: '7. Fi Sabilillah',
-    desc: 'In the cause of Allah',
-  },
-  {
-    title: '8. Ibn Al-Sabil',
-    desc: 'Stranded traveller',
-  },
-]
+const recipients = computed(() => list('recipients'))
 
-const faqs = [
-  {
-    q: 'What is the Nisab?',
-    a: 'Nisab is the minimum wealth threshold for Zakat to be obligatory. It is set at 85g of 24ct gold (majority position) or 595g of silver (some Hanafi scholars). If your net zakatable wealth stays above Nisab for one lunar year (hawl), Zakat becomes due.',
-  },
-  {
-    q: 'Is Zakat due on gold jewellery?',
-    a: "Debated. Hanafi: regularly worn women's personal ornaments are exempt. Shafi'i, Hanbali, Maliki: all gold and silver are zakatable. The cautious approach is to include all gold.",
-  },
-  {
-    q: 'Can I deduct my mortgage?',
-    a: "Most scholars allow deducting only the portion currently due (current year's instalment), not the full outstanding balance. Credit cards and short-term debts that are currently owed are deductible in full.",
-  },
-  {
-    q: 'What is the hawl?',
-    a: 'The hawl is the completion of one full Islamic lunar year (~354 days). Zakat becomes due only when your net zakatable wealth has remained above Nisab continuously for this period. If it dips below, the hawl resets.',
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>
 
 <style scoped>

@@ -78,6 +78,7 @@ import { useSeo } from '@/composables/useSeo.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { DUAS, DUA_SITUATIONS } from '@/data/duas.js'
 import { searchDuas, situationsWithDuas, duaPath } from '@/utils/duas.js'
+import { useDataTranslations } from '@/composables/useContent.js'
 
 const props = defineProps({
   duas: { type: Array, default: () => DUAS },
@@ -87,8 +88,12 @@ const props = defineProps({
 useSeo('duas')
 
 const query = ref('')
-const situations = computed(() => situationsWithDuas(props.allSituations, props.duas))
-const results = computed(() => searchDuas(query.value, props.duas, props.allSituations))
+const duaText = useDataTranslations('duas')
+const situationText = useDataTranslations('duaSituations')
+const shownDuas = computed(() => props.duas.map(duaText.localized))
+const shownSituations = computed(() => props.allSituations.map(situationText.localized))
+const situations = computed(() => situationsWithDuas(shownSituations.value, shownDuas.value))
+const results = computed(() => searchDuas(query.value, shownDuas.value, shownSituations.value))
 </script>
 
 <style scoped>

@@ -19,13 +19,18 @@ import { DAILY_HADITHS } from '@/data/dailyHadith.js'
 import { dailyHadithFor } from '@/utils/dailyHadith.js'
 import { dayKey } from '@/utils/day.js'
 import { hadithPath } from '@/utils/hadith.js'
+import { useDataTranslations } from '@/composables/useContent.js'
 
 const props = defineProps({
   hadiths: { type: Array, default: () => DAILY_HADITHS },
 })
 
 const today = ref(dayKey())
-const hadith = computed(() => dailyHadithFor(today.value, props.hadiths))
+const hadithText = useDataTranslations('dailyHadith')
+const hadith = computed(() => {
+  const chosen = dailyHadithFor(today.value, props.hadiths)
+  return chosen ? hadithText.localized({ ...chosen, id: chosen.reference }) : null
+})
 
 const shareable = computed(() => ({
   arabic: hadith.value.arabic,

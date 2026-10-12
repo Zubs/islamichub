@@ -115,6 +115,7 @@
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
@@ -134,9 +135,14 @@ import {
 const NOTICE_MS = 2000
 
 const route = useRoute()
+const bookText = useDataTranslations('hadithBooks')
+
+function localizedBook(found) {
+  return found ? bookText.localized(found) : null
+}
 const bookSlug = computed(() => route.params.bookSlug)
 const hadithNumber = computed(() => route.params.hadithNumber)
-const book = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
+const book = computed(() => localizedBook(BOOKS_META.find((b) => b.slug === bookSlug.value)))
 const bookName = computed(() => book.value?.name || 'Hadith library')
 
 const loading = ref(false)

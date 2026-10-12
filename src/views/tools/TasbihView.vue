@@ -36,7 +36,9 @@
 
         <div class="tsb-current-arabic" lang="ar" dir="rtl">{{ store.currentPhrase.arabic }}</div>
         <div class="tsb-current-translit">{{ store.currentPhrase.transliteration }}</div>
-        <div class="tsb-current-translation">{{ store.currentPhrase.translation }}</div>
+        <div class="tsb-current-translation">
+          {{ phraseText.localized(store.currentPhrase).translation }}
+        </div>
 
         <button
           class="tsb-ring"
@@ -133,6 +135,7 @@
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
@@ -145,6 +148,7 @@ useSeo('tasbih')
 useScrollReveal()
 
 const store = useTasbihStore()
+const phraseText = useDataTranslations('tasbihPhrases')
 
 const ringStyle = computed(() => {
   const pct = Math.min(100, Math.round((store.count / store.target) * 100))

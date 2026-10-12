@@ -9,12 +9,11 @@
           class="pillar-num-badge"
           style="background: var(--prayer-light); color: var(--prayer-color)"
         >
-          Pillar 2 of 5 &nbsp;·&nbsp; الصلاة
+          {{ c('header.pillar2Of5') }}
         </div>
-        <h1>Salah — The Five Daily Prayers</h1>
+        <h1>{{ c('header.salahTheFiveDailyPrayers') }}</h1>
         <p>
-          The second pillar and the most repeated act of worship in Islam — five prayers daily, at
-          prescribed times, facing the Ka'bah in Makkah.
+          {{ c('header.theSecondPillarAndTheMost') }}
         </p>
       </div>
     </div>
@@ -23,8 +22,8 @@
       <QuranBlock
         arabic="إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَوْقُوتًا"
         reference="Qur'an 4:103"
-        translation="Indeed, prayer has been decreed upon the believers a decree of specified times."
-        note="Prayer has specific, divinely-ordained times; it is not flexible or approximate."
+        :translation="c('header.indeedPrayerHasBeenDecreedUpon')"
+        :note="c('header.prayerHasSpecificDivinelyOrdainedTimes')"
         class="anim-target"
       />
 
@@ -141,7 +140,7 @@
                 {{ $t('prayer.nextPrayer') }}
               </div>
               <div style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600">
-                {{ nextPrayer?.label }}
+                {{ nextPrayerLabel }}
               </div>
             </div>
             <div style="text-align: right">
@@ -329,9 +328,10 @@
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
       <!-- Educational -->
-      <span class="eyebrow">Understanding Salah</span>
+      <span class="eyebrow">{{ c('understandingSalah.understandingSalah') }}</span
+      ><UntranslatedNote v-if="untranslated('understandingSalah')" />
       <h2 class="section-title" style="font-size: clamp(1.5rem, 2.5vw, 1.9rem)">
-        The five daily prayers
+        {{ c('understandingSalah.theFiveDailyPrayers') }}
       </h2>
       <div
         class="card-grid anim-target"
@@ -380,19 +380,18 @@
       </div>
 
       <HadithBlock reference="Sahih Bukhari 8 · Sahih Muslim 16">
-        "Islam is built on five [pillars]: testifying that there is no god but Allah and that
-        Muhammad is the Messenger of Allah, establishing the prayer, paying the Zakat, making the
-        pilgrimage to the House, and fasting in Ramadan."
+        {{ c('understandingSalah.islamIsBuiltOnFivePillars') }}
       </HadithBlock>
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
-      <span class="eyebrow">Conditions &amp; Structure</span>
+      <span class="eyebrow">{{ c('conditionsStructure.conditionsStructure') }}</span
+      ><UntranslatedNote v-if="untranslated('conditionsStructure')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        Prerequisites for a valid prayer
+        {{ c('conditionsStructure.prerequisitesForAValidPrayer') }}
       </h2>
       <div class="card-grid card-grid-2 anim-target">
         <div class="card">
@@ -405,7 +404,7 @@
               color: var(--green);
             "
           >
-            Conditions (Shurut)
+            {{ c('conditionsStructure.conditionsShurut') }}
           </h3>
           <div
             v-for="c in shurut"
@@ -430,7 +429,7 @@
               color: var(--green);
             "
           >
-            Pillars (Arkan)
+            {{ c('conditionsStructure.pillarsArkan') }}
           </h3>
           <div
             v-for="a in arkan"
@@ -452,18 +451,22 @@
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
-        <h2>Continue to the third pillar</h2>
+        <h2>{{ c('conditionsStructure.continueToTheThirdPillar') }}</h2>
         <p>
-          Zakat — the obligation of almsgiving, calculated on your wealth at 2.5% once the Nisab
-          threshold is met.
+          {{ c('conditionsStructure.zakatTheObligationOfAlmsgivingCalculated') }}
         </p>
-        <RouterLink to="/zakat" class="btn btn-white btn-lg">Explore Zakat →</RouterLink>
+        <RouterLink to="/zakat" class="btn btn-white btn-lg">{{
+          c('conditionsStructure.exploreZakat')
+        }}</RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/prayer/en.js'
 import { ref, computed, watch, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
@@ -485,6 +488,8 @@ import {
   getTimezoneOffset,
 } from '@/utils/prayer.js'
 import { calcQibla, bearingToLabel, distanceToMakkah } from '@/utils/qibla.js'
+
+const { c, list, untranslated } = useContent('prayer', content)
 
 useSeo('prayer')
 useScrollReveal()
@@ -528,6 +533,16 @@ const prayerTimes = ref(null)
 const currentPrayer = ref(null)
 const nextPrayer = ref(null)
 const countdown = ref('')
+const nextPrayerLabel = computed(() => {
+  if (!nextPrayer.value) {
+    return ''
+  }
+
+  const name = t(`common.prayers.${nextPrayer.value.key}`)
+  return nextPrayer.value.label.includes('tomorrow')
+    ? t('todayPanel.tomorrow', { prayer: name })
+    : name
+})
 const qiblaBearing = ref(null)
 const qiblaDir = ref(t('prayer.qiblaPrompt'))
 const qiblaDist = ref(null)
@@ -594,7 +609,10 @@ function showTimes() {
     nextPrayer.value = next
     const h = Math.floor(next.minsRemaining / 60)
     const m = next.minsRemaining % 60
-    countdown.value = h > 0 ? `${h}h ${m}m` : `${m} min`
+    countdown.value =
+      h > 0
+        ? t('common.hoursMinutes', { hours: h, minutes: m })
+        : t('common.minutes', { minutes: m })
   }
 
   tick()
@@ -633,82 +651,12 @@ if (settings.saved || store.location) {
 onUnmounted(() => clearInterval(countdownTimer))
 
 // ── Static data ────────────────────────────────────────────────
-const prayerInfo = [
-  {
-    en: 'Fajr',
-    ar: 'الفجر',
-    meaning: 'Dawn',
-    rakahs: "2 rak'ahs",
-    time: 'Before sunrise',
-  },
-  {
-    en: 'Dhuhr',
-    ar: 'الظهر',
-    meaning: 'Midday',
-    rakahs: "4 rak'ahs",
-    time: 'After solar noon',
-  },
-  {
-    en: 'Asr',
-    ar: 'العصر',
-    meaning: 'Afternoon',
-    rakahs: "4 rak'ahs",
-    time: 'Mid-afternoon',
-  },
-  {
-    en: 'Maghrib',
-    ar: 'المغرب',
-    meaning: 'Sunset',
-    rakahs: "3 rak'ahs",
-    time: 'After sunset',
-  },
-  {
-    en: 'Isha',
-    ar: 'العشاء',
-    meaning: 'Night',
-    rakahs: "4 rak'ahs",
-    time: 'After twilight',
-  },
-]
+const prayerInfo = computed(() => list('prayerInfo'))
 
-const shurut = [
-  'Ritual purity (Wudu or Ghusl)',
-  'Entering prayer time',
-  'Facing the Qibla',
-  'Covering the Awrah',
-  'Intention (Niyyah) in the heart',
-  'Clean body, clothes, and place',
-]
-const arkan = [
-  'Opening Takbir (Allahu Akbar)',
-  'Standing (Qiyam)',
-  'Reciting Surah Al-Fatiha',
-  'Bowing (Ruku)',
-  'Rising from Ruku',
-  'Prostration (Sujud) × 2',
-  'Sitting between prostrations',
-  'Final Tashahhud',
-  'Tasleem (Assalamu Alaykum)',
-]
+const shurut = computed(() => list('shurut'))
+const arkan = computed(() => list('arkan'))
 
-const faqs = [
-  {
-    q: 'What breaks Wudu?',
-    a: "Natural discharge (urine, stool, wind), deep sleep lying down, loss of consciousness. Touching private parts: does not break Wudu per Hanafi; does break it per Shafi'i/Hanbali. Sexual intercourse requires Ghusl.",
-  },
-  {
-    q: 'Can I pray in congregation at home?',
-    a: "Yes — congregation (jama'ah) in the mosque is highly recommended for men, especially Fajr and Isha. Women may pray at home. The reward of congregation is 27 times that of praying alone (Sahih Bukhari 645).",
-  },
-  {
-    q: 'What if I miss a prayer?',
-    a: 'A missed prayer (qada) must be made up as soon as remembered. Deliberately missing a prayer is a major sin. The Prophet ﷺ said: "Whoever forgets a prayer, or sleeps through it, let him pray it when he remembers it." (Sahih Muslim 684)',
-  },
-  {
-    q: 'How is prayer time calculated?',
-    a: "Prayer times are derived from the sun's position relative to the observer. Fajr and Isha require the sun a specific number of degrees below the horizon. Dhuhr is solar noon; Maghrib is sunset; Asr is based on shadow length.",
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>
 
 <style scoped>

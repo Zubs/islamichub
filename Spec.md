@@ -578,11 +578,23 @@ Rules:
 - `test/locales.test.js` adds a made-up language to test switching, prefixes, fallback and formatting; fails if a
   translation holds a key English lacks or a complete language lacks one; and fails if any interface component holds
   hard-coded text.
-- Moved so far: the shell, every shared component, the 404 page, the adhkar, duas, hadith library, tracker and tasbih
-  views, and the calculators on the Prayer, Zakat, Fasting and Inheritance pages, including their results and error
-  messages. The inheritance engine returns each rule and problem as data (`ruleParts`, `problem`) beside its English
-  text, so the page can word it in any language. Long-form writing, labels held in `data/`, page titles and
-  descriptions, and reminders sent by the server are still English.
+- The message file holds the shell, every shared component, the tools and calculators with their results and error
+  messages, and every page's title and description (`seo`). The inheritance engine returns each rule and problem as
+  data (`ruleParts`, `problem`) beside its English text, so the page can word it in any language.
+- **Content.** The writing of each content page (Home, Faith, Articles of Faith, Prayer, Zakat, Fasting, Hajj, the
+  hadith overview, Inheritance, About) is in `src/data/content/<page>/en.js`: sections of keyed text, following the
+  page's eyebrow headings, and `lists` (FAQs, cards, steps, tables). A page reads it through
+  `useContent(page, english)`: `c('section.key')` for a text, `list('name')` for a list. A translation is a file beside
+  the English one with the same sections and keys; it is loaded only when that language is read. A text or section it
+  lacks is shown in English, and a missing section carries a "Not yet translated" note beside its heading. A
+  translated list gives only the text it translates; Arabic, references, icons and links come from the English list.
+- **Data.** The text of the adhkar, adhkar categories, duas, dua situations, tasbih phrases, daily hadith and hadith
+  book details is translated by id in `src/data/translations/<set>/<code>.js`, laid over the items by
+  `useDataTranslations`. Arabic and references are never duplicated.
+- `test/content-pages.test.js` holds each content page's wording as it was before the move
+  (`test/fixtures/pages/`) and fails if a page reads differently. `test/content.test.js` fails if a content page keeps
+  writing in its template or a translation holds a section or key English lacks.
+- Still English: the changelog page, and reminders sent by the server.
 
 ---
 

@@ -207,6 +207,7 @@
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { ref, computed, onMounted, watch, reactive } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
@@ -223,9 +224,14 @@ import {
 useScrollReveal()
 
 const route = useRoute()
+const bookText = useDataTranslations('hadithBooks')
+
+function localizedBook(found) {
+  return found ? bookText.localized(found) : null
+}
 const bookSlug = computed(() => route.params.bookSlug)
 const chapterNumber = computed(() => route.params.chapterNumber)
-const meta = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
+const meta = computed(() => localizedBook(BOOKS_META.find((b) => b.slug === bookSlug.value)))
 const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
