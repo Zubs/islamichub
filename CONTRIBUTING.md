@@ -2,218 +2,148 @@
 
 بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
 
-Thank you for wanting to contribute to IslamicHub. This project exists to make authentic Islamic education and tools accessible to the Muslim community — and every contribution, however small, helps fulfil that mission.
+Thank you for wanting to contribute. IslamicHub exists to make authentic Islamic education and tools freely available, and every contribution helps, whether it is code, a corrected reference or a translation.
 
----
+- [README.md](README.md) explains how to install and run the site.
+- [Spec.md](Spec.md) describes how the site is built and how each feature behaves.
+- [Features.md](Features.md) lists what is planned, in the order it will be built.
 
-## Table of contents
+## Conduct
 
-1. [Code of conduct](#code-of-conduct)
-2. [Ways to contribute](#ways-to-contribute)
-3. [Getting started (local setup)](#getting-started)
-4. [Project structure](#project-structure)
-5. [Submitting changes](#submitting-changes)
-6. [Scholarly accuracy](#scholarly-accuracy)
-7. [Style guide](#style-guide)
-8. [Reporting bugs](#reporting-bugs)
-
----
-
-## Code of conduct
-
-This project follows Islamic principles of respect, sincerity, and brotherhood. Contributions must be made in good faith. Please be kind and constructive in all discussions. Harassment, dishonesty, or bad-faith edits will result in removal from the project.
-
----
+Contribute in good faith, and be kind and constructive in every discussion. Harassment, dishonesty and bad-faith edits are not accepted.
 
 ## Ways to contribute
 
-You don't need to write code to contribute. Here's how anyone can help:
-
-| Type | Examples |
+| Kind | Examples |
 |---|---|
-| **💻 Code** | Fix bugs, add features, improve performance, write tests |
-| **📖 Content** | Write or improve educational articles on the Five Pillars |
-| **🕌 Scholarship** | Correct or add Qur'anic / Hadith references, flag inaccurate rulings |
-| **🌍 Translations** | Translate pages to Arabic, Urdu, Turkish, Indonesian, French, etc. |
-| **🎨 Design** | UI improvements, icons, accessibility enhancements |
-| **🧪 Testing** | Test across browsers, devices, and screen sizes |
-| **📣 Sharing** | Share IslamicHub with your community — a simple recommendation helps enormously |
-| **⭐ Star on GitHub** | Helps others discover the project |
+| Code | Fix a bug, build a feature from [Features.md](Features.md), add tests |
+| Content | Write or improve a guide |
+| Scholarship | Correct a Qur'an or hadith reference, flag an inaccurate statement |
+| Translation | Yoruba and Hausa are the first languages planned |
+| Design and accessibility | Layout, contrast, keyboard and screen reader use |
+| Testing | Try the site on your phone and report what breaks |
 
----
+For anything larger than a small fix, open an issue first so the work is not duplicated.
 
-## Getting started
+## How the code is laid out
 
-IslamicHub requires no build step — it runs as a plain HTML/CSS/JS site using native ES modules.
+Everything lives under `src/`. Each folder has one job:
 
-### Prerequisites
+| Folder | What belongs there |
+|---|---|
+| `src/utils/` | Calculations as pure functions: no Vue imports, no stores, no DOM |
+| `src/data/` | Static religious content, such as the adhkar and tasbih phrases |
+| `src/stores/` | Pinia stores for state that is shared between pages or saved on the device |
+| `src/composables/` | Reusable Vue logic, such as page titles and scroll animations |
+| `src/components/` | Reusable interface pieces |
+| `src/views/` | One component per page, which puts the above together |
+| `src/assets/css/` | The global stylesheets |
+| `test/` | Shared test setup, and checks that cover no single source file |
 
-- Any modern browser (Chrome 90+, Firefox 88+, Safari 14+)
-- A local static file server (to avoid ES module CORS restrictions)
+Keep to the layers. A calculation goes in `src/utils/`, not in a view. Content goes in `src/data/`, so it can change without touching page logic. State that only one page uses stays in that page.
 
-### Running locally
+Three more rules:
+
+- **Saved data is a contract.** Visitors already have data saved under the current keys. Changing its shape needs a migration or a new key, and anything read from the device must cope with missing or damaged data.
+- **Every outside request fails soft.** The page must stay usable when a service is down. A new outside address must be added to the content security policy in `netlify.toml`.
+- **What a visitor enters stays on their device.** No analytics, no tracking, no accounts.
+
+## Adding a page
+
+1. Create the view under `src/views/`.
+2. Add its route to `src/router/index.js`, above the catch-all route, which must stay last.
+3. Give it a title and description by adding an entry to `src/composables/useSeo.js` and calling `useSeo` in the view.
+4. Add its address to `public/sitemap.xml`.
+5. Add tests for any calculation or store it introduces.
+6. Link to it from the navigation or the page it belongs with.
+
+A view starts like this:
+
+```vue
+<script setup>
+import { useSeo } from '@/composables/useSeo.js'
+import { useScrollReveal } from '@/composables/useScrollReveal.js'
+
+useSeo('my-page')
+useScrollReveal()
+</script>
+```
+
+## Adding content
+
+- Put new adhkar, phrases and similar lists in `src/data/`, in the shape the existing entries use.
+- Mark Arabic text with `lang="ar"`. It is set right to left in the Arabic typeface.
+- Use the existing components for verses and FAQs, so every page looks the same.
+- Follow the content rules below. They matter more than anything else in this guide.
+
+## Content rules
+
+- **Every scholarly claim carries a reference.** For the Qur'an, give the surah and ayah (Qur'an 9:103). For a hadith, give the collection and number (Sahih Bukhari 1454).
+- **Hadith numbers follow the Arabic edition.** Some English translations number differently. Check the number against the Arabic-edition numbering.
+- **Check every citation against its source.** Do not quote a verse, a hadith or a number from memory.
+- **Where the schools differ, show both positions.** IslamicHub informs; it does not choose a madhab.
+- **Calculators are guides, not rulings.** Any page that calculates something says so and directs the reader to a qualified scholar.
+- **If you are not sure a statement is correct, open an issue** instead of publishing it. A discussion is better than an error.
+- **Translations of religious content are reviewed** by a named reviewer before they go live.
+
+## Style
+
+- Plain JavaScript with Vue's `<script setup>`. No TypeScript.
+- Write code that explains itself through clear names. Add a comment only where the logic is genuinely hard to follow.
+- Write the simplest code that meets the need, and use what Vue, the browser and plain CSS already provide before adding anything.
+- Take colours, spacing, radii and typefaces from `src/assets/css/tokens.css`. Do not hard-code them.
+- Use semantic HTML. Every interactive element must be reachable by keyboard and have an accessible name. Decorative elements carry `aria-hidden="true"`.
+- Check your change at phone width. Most visitors are on a phone.
+
+## Checks
+
+Run these before opening a pull request, and fix anything they report:
 
 ```bash
-# Clone the repository
-git clone https://github.com/Zubs/pillarsofislam.git
-cd pillarsofislam
-
-# Serve with any static server — pick whichever you have:
-npx serve .
-# or
-python3 -m http.server 8080
-# or
-npx http-server .
-
-# Open in browser
-open http://localhost:3000
+npm run lint
+npm run format
+npm test
+npm run build
 ```
 
-> **Why a server?** Native ES modules (`type="module"`) cannot load from `file://` due to browser security restrictions. You must serve from `http://localhost`.
+All four must finish without errors. Netlify runs the tests before every deploy, so a failing test stops the site from being published.
 
----
+A test sits beside the file it covers and takes its name: `src/utils/prayer.test.js` covers `src/utils/prayer.js`. Tests need no network and give the same result in any timezone. `npm run test:watch` re-runs them as you work.
 
-## Project structure
+One check reads this guide and the README: it fails if either names an npm command, a file or a folder that does not exist. If you rename something, update the docs with it.
 
-```
-islamichub/
-├── index.html                  ← App entry point, loading screen, bootstrap
-├── css/
-│   ├── tokens.css              ← Design tokens (colours, spacing, fonts)
-│   ├── base.css                ← Reset, typography, shared layout
-│   ├── components.css          ← Nav, footer, pillar cards, tool styles
-│   └── ornament.css            ← Islamic geometric design system
-├── js/
-│   ├── app.js                  ← Nav/footer builder, route registration
-│   ├── router.js               ← Hash-based SPA router
-│   ├── seo.js                  ← Per-route meta, JSON-LD, canonical
-│   ├── state.js                ← Shared reactive state (prices, currency)
-│   └── utils/
-│       ├── prayer.js           ← Astronomical prayer time algorithm
-│       ├── qibla.js            ← Qibla bearing & distance calculation
-│       ├── hijri.js            ← Gregorian ↔ Hijri calendar conversion
-│       └── inheritance.js      ← Islamic Fara'id calculation engine
-└── pages/
-    ├── Home.js                 ← Landing page
-    ├── pillar/
-    │   ├── Faith.js            ← Shahada page
-    │   ├── Prayer.js           ← Prayer times + Qibla page
-    │   ├── Zakat.js            ← Zakat calculator page
-    │   ├── Fasting.js          ← Fasting + Ramadan tracker page
-    │   └── Hajj.js             ← Hajj rites guide page
-    └── tools/
-        ├── Inheritance.js      ← Fara'id calculator page
-        ├── About.js            ← About page
-        └── Changelog.js        ← Changelog page
-```
+### Adding a dependency
 
-### How pages work
+Ask in an issue before adding one. The project keeps its dependencies few. After adding one, commit `package.json` and `package-lock.json` together.
 
-Each page file exports a single `render(outlet)` function that injects HTML into the `<main id="app">` element. Pages return a cleanup function (or `null`) that the router calls before navigating away.
+## Opening a pull request
 
-```js
-// pages/pillar/MyPage.js
-export function render(outlet) {
-  outlet.innerHTML = `<div>...</div>`;
+1. Fork the repository and create a branch from `main`.
+2. Make your change, with tests for any new behaviour.
+3. Run the four checks.
+4. Update `CHANGELOG.md` if a visitor would notice the change, and [Spec.md](Spec.md) if it changes how a feature behaves.
+5. Open a pull request that says what changed and why, and links its issue.
 
-  // Set up any event listeners or intervals
-  const timer = setInterval(...);
+Before you ask for review, confirm:
 
-  // Return cleanup function
-  return () => clearInterval(timer);
-}
-```
+- [ ] The four checks pass.
+- [ ] It works at phone width and with the keyboard alone.
+- [ ] The browser console shows no errors.
+- [ ] Every scholarly claim has a reference, checked against its source.
+- [ ] Nothing a visitor enters is sent anywhere new.
 
----
+## Reporting a bug
 
-## Submitting changes
+Open an issue at [github.com/Zubs/islamichub/issues](https://github.com/Zubs/islamichub/issues) with:
 
-### For small fixes (typos, scholarly corrections, CSS tweaks)
+1. What you expected to happen.
+2. What happened, with any error from the browser console.
+3. The steps to reproduce it: which page, and what you did.
+4. Your browser and device.
+5. A screenshot, if the problem is visual.
 
-1. Fork the repository on GitHub
-2. Make your change directly on GitHub's web editor, or clone and edit locally
-3. Open a pull request with a clear description of what you changed and why
+For a scholarly error, such as a wrong hadith number or a misattributed quote, include the correct source.
 
-### For larger features
-
-1. **Open an issue first** — describe what you want to add or change. This avoids duplicated effort and lets maintainers give early feedback.
-2. Fork and clone the repo
-3. Create a branch: `git checkout -b feature/my-feature`
-4. Make your changes following the [style guide](#style-guide)
-5. Test in at least two browsers
-6. Open a pull request referencing your issue
-
-### Pull request checklist
-
-- [ ] Tested in Chrome and Firefox
-- [ ] Tested on mobile (or browser devtools mobile emulation)
-- [ ] No console errors
-- [ ] Scholarly claims include a source (Qur'an verse, Hadith number, or named scholar)
-- [ ] New educational content reviewed for accuracy before PR
-- [ ] Description explains what changed and why
-
----
-
-## Scholarly accuracy
-
-This is the most important section for content contributors.
-
-**All scholarly claims must be sourced.** Every Qur'anic verse, Hadith citation, and ruling should include:
-- Qur'an: surah and ayah number (e.g. *Qur'an 9:103*)
-- Hadith: collection and number in the standard Arabic-edition numbering (e.g. *Sahih Bukhari 1454*)
-- Scholarly opinion: the scholar's name and school (e.g. *Imam al-Nawawi (Shafi'i), Al-Majmu'*)
-
-**If you are unsure whether a ruling is correct**, open an issue rather than making the change. We would rather discuss it than publish something inaccurate.
-
-**Hadith numbering:** Use the standard Arabic-edition numbers. The English Muhsin Khan translations use a different numbering system — please verify against the Arabic-edition number.
-
-**Schools of thought:** Where scholars disagree, present both positions. IslamicHub aims to inform, not to impose a single madhab.
-
----
-
-## Style guide
-
-### JavaScript
-
-- Native ES modules — no bundler, no TypeScript, no JSX
-- Functions over classes for page modules
-- Keep page `render()` functions self-contained — import what you need at the top
-- Use `const` and `let`; no `var`
-- Template literals for HTML strings
-- Comment any non-obvious logic
-
-### CSS
-
-- Use CSS custom properties from `css/tokens.css` — never hardcode colours or spacing values
-- Follow BEM-ish naming already in the codebase (`.card`, `.card-green`, `.prayer-grid`)
-- Add new component styles to `css/components.css`; new Islamic ornament styles to `css/ornament.css`
-- Mobile-first is not strictly enforced, but test mobile before submitting
-
-### HTML (in template literals)
-
-- Use semantic elements (`<article>`, `<section>`, `<nav>`, `<h2>`, etc.)
-- All interactive elements must be keyboard accessible
-- Decorative elements get `aria-hidden="true"`
-- Images need descriptive `alt` attributes
-
----
-
-## Reporting bugs
-
-Open a [GitHub issue](https://github.com/Zubs/pillarsofislam/issues) with:
-
-1. **What you expected** to happen
-2. **What actually happened** (include any console errors)
-3. **Steps to reproduce** (be specific — which page, which browser, which action)
-4. **Browser and OS** (e.g. Chrome 124 on macOS 14)
-5. **Screenshots** if the issue is visual
-
-For **scholarly errors** (wrong Hadith number, inaccurate ruling, misattributed quote), please include the correct source.
-
----
-
-## Questions?
-
-Open a [GitHub Discussion](https://github.com/Zubs/pillarsofislam/discussions) or tag `@Zubs` in an issue.
+Questions are welcome as issues too.
 
 جَزَاكُمُ اللَّهُ خَيْرًا — May Allah reward you with good.

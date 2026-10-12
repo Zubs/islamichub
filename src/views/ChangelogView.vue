@@ -166,6 +166,16 @@ const releases = [
             scope: 'Code quality',
             desc: 'Fixed the seven existing lint errors (unused variables and parameters) and formatted every source file with Prettier. No change to any calculation.',
           },
+          {
+            title: 'README and contribution guide rewritten',
+            scope: 'Docs',
+            desc: 'Both now describe the Vue and Vite project: setup, scripts, the folder layout, how to add a page or content, the content rules and the pull request steps. An automated check fails if either names a command, file or folder that does not exist.',
+          },
+          {
+            title: 'Licence',
+            scope: 'Project',
+            desc: 'IslamicHub is now licensed under the GNU General Public License, version 3.',
+          },
         ],
       },
       {

@@ -12,7 +12,7 @@ Tests are written in plain English and ordered the same way under every feature:
 
 - [x] 1. Test suite
 - [x] 2. Local day key
-- [ ] 3. Contributor docs
+- [x] 3. Contributor docs
 - [ ] 4. Dead file cleanup
 - [ ] 5. Zakat exchange rates
 - [ ] 6. Naira in the Zakat calculator
@@ -110,6 +110,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - `CONTRIBUTING.md` covers the folder layout and layering rules, how to add a page, how to add content, how to run tests and lint, and the pull request steps.
 - A content rule section: every scholarly claim carries a Qur'an or hadith reference, hadith numbers follow the Arabic edition, and where schools differ both positions are shown.
 - Both link to `Spec.md` and `Features.md` instead of repeating them.
+- `.env.example` holds the one variable the site reads, so setup is one copy command.
+- An automated check, `test/docs.test.js`, fails if either file names an npm command, file, folder or relative link that does not exist, or describes the old app.
+- The second, older copy of the guide published with the site (`public/CONTRIBUTING.md`) is deleted.
+- The project is licensed under the GNU General Public License, version 3, with the text in `LICENSE`.
 
 **Tests**
 - Neither file mentions the hash router, a `js/` or `pages/` folder, or "no build step".
@@ -129,12 +133,15 @@ Tests are written in plain English and ordered the same way under every feature:
 - Delete the old `service-worker.js`. Feature 12 adds a new one.
 - Remove the `console.log` of the API key length in `fetchBooks`.
 - Remove the web manifest link until feature 12 supplies a correct manifest, since the current one points to missing icons and old hash URLs.
+- Delete `public/CHANGELOG.md`, a stale copy of the root changelog that is published at `/CHANGELOG.md`.
+- Update `GITHUB_REPO` in `src/components/SiteNav.vue`, `src/components/SiteFooter.vue`, `src/views/AboutView.vue` and `src/views/ChangelogView.vue` from `Zubs/pillarsofislam` to `Zubs/islamichub`. The old name redirects, so the links work today.
 
 **Tests**
 - A deep link such as `/prayer` still loads on a deploy preview after `_redirects` is gone.
 - Opening the hadith library logs nothing about the API key.
 - The browser console shows no manifest or missing-icon warnings on any page.
-- The build output contains no `service-worker.js`.
+- The build output contains no `service-worker.js` and no `CHANGELOG.md`.
+- No file in `src/` contains the repository's old name.
 - Lint and tests still pass.
 
 **Done when:** A deploy preview loads every route with a clean console.

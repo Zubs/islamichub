@@ -64,7 +64,7 @@ There is no TypeScript. The app is currently client-only; a backend is not ruled
 |-----------------------|----------|------------------------------------------------------|
 | `VITE_HADITH_API_KEY` | For the hadith library | API key for hadithapi.com. Without it the library views show a "no API key" state instead of fetching. |
 
-`.env` is git-ignored. Because the variable is `VITE_`-prefixed it is compiled into the client bundle and is visible to
+Copy `.env.example` to `.env` to set it. `.env` is git-ignored. Because the variable is `VITE_`-prefixed it is compiled into the client bundle and is visible to
 anyone who loads the site.
 
 ---
@@ -461,8 +461,9 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 ### Housekeeping
 
-- **`README.md` and `CONTRIBUTING.md` describe the old app** (vanilla JS, hash router, no build step, `js/` and
-  `pages/` directories). They need rewriting for the Vue/Vite stack.
+- **The site's repository links use the old name.** `GITHUB_REPO` in `SiteNav.vue`, `SiteFooter.vue`, `AboutView.vue`
+  and `ChangelogView.vue` points to `Zubs/pillarsofislam`, which redirects to `Zubs/islamichub`.
+- **`public/CHANGELOG.md` is a stale published copy** of the root changelog, served at `/CHANGELOG.md`.
 - **`service-worker.js` is stale and unregistered.** It precaches paths from the old app and nothing registers it, so
   there is currently no offline support.
 - **`site.webmanifest`** shortcuts use hash URLs (`/#/prayer`), and it references icon files that are not in
