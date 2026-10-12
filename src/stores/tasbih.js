@@ -1,21 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { TASBIH_PHRASES, getPhrase } from '@/data/tasbihPhrases.js'
+import { dayKey } from '@/utils/day.js'
+import { parseStoredObject } from '@/utils/storage.js'
 
 const CURRENT_KEY = 'tasbih-current-phrase'
 const TOTALS_KEY = 'tasbih-totals' // { [date]: { [phraseId]: count } }
-
-function loadTotals() {
-  try {
-    return JSON.parse(localStorage.getItem(TOTALS_KEY) || '{}')
-  } catch {
-    return {}
-  }
-}
-
-function todayKey() {
-  return new Date().toISOString().slice(0, 10)
-}
 
 export const useTasbihStore = defineStore('tasbih', () => {
   const phrases = TASBIH_PHRASES
@@ -24,7 +14,7 @@ export const useTasbihStore = defineStore('tasbih', () => {
   const currentId = ref(localStorage.getItem(CURRENT_KEY) || phrases[0].id)
   const count = ref(0) // current session count for the active phrase
   const target = ref(getPhrase(currentId.value).defaultTarget)
-  const totals = ref(loadTotals()) // persisted per-day, per-phrase totals
+  const totals = ref(parseStoredObject(localStorage.getItem(TOTALS_KEY))) // persisted per-day, per-phrase totals
 
   const currentPhrase = computed(() => getPhrase(currentId.value))
 
@@ -44,7 +34,7 @@ export const useTasbihStore = defineStore('tasbih', () => {
   function tap() {
     count.value++
 
-    const key = todayKey()
+    const key = dayKey()
     if (!totals.value[key]) {
       totals.value[key] = {}
     }
@@ -75,14 +65,14 @@ export const useTasbihStore = defineStore('tasbih', () => {
   }
 
   // ── Stats ────────────────────────────────────────────────────
-  const todayTotalForCurrent = computed(() => totals.value[todayKey()]?.[currentId.value] || 0)
+  const todayTotalForCurrent = computed(() => totals.value[dayKey()]?.[currentId.value] || 0)
 
   const lifetimeTotalForCurrent = computed(() =>
     Object.values(totals.value).reduce((sum, day) => sum + (day[currentId.value] || 0), 0),
   )
 
   const todayTotalAllPhrases = computed(() =>
-    Object.values(totals.value[todayKey()] || {}).reduce((a, b) => a + b, 0),
+    Object.values(totals.value[dayKey()] || {}).reduce((a, b) => a + b, 0),
   )
 
   const lifetimeTotalAllPhrases = computed(() =>

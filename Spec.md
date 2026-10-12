@@ -85,7 +85,7 @@ src/
   components/           SiteNav, SiteFooter, QuranBlock, FaqList, GeoPattern, ZakatAccordion, adhkar/AdhkarCard
   stores/               zakat, adhkar, tasbih
   composables/          useSeo, useScrollReveal, useHadithApi
-  utils/                prayer, qibla, hijri, inheritance (pure functions, no Vue imports)
+  utils/                prayer, qibla, hijri, inheritance, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
 public/                 robots.txt, sitemap.xml, site.webmanifest, favicons
@@ -269,6 +269,7 @@ Behaviour (`stores/adhkar.js`):
   session counts for that category's adhkar. Completing twice in one day is a no-op.
 - **Streak.** The number of consecutive days, counting back from today, on which the category was completed. A streak
   is zero if today is not yet complete.
+- **Today** is the device's local calendar day (see [State and persistence](#6-state-and-persistence)).
 
 ### 5.8 Tasbih counter (`/tasbih`)
 
@@ -291,7 +292,8 @@ Behaviour (`stores/tasbih.js`):
 - **Reset** zeroes the session count only; totals are untouched.
 - **Custom target:** rounded to an integer, minimum 1.
 - **Switching phrase** resets the session count and target to the new phrase's default, and remembers the selection.
-- **Stats:** today and lifetime totals, for the current phrase and across all phrases.
+- **Stats:** today and lifetime totals, for the current phrase and across all phrases. "Today" is the device's local
+  calendar day.
 
 ### 5.9 Inheritance calculator (`/inheritance`)
 
@@ -348,7 +350,10 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 
 Rules:
 
-- Reads must tolerate missing or corrupt JSON and fall back to an empty value.
+- Reads must tolerate missing or corrupt JSON, and valid JSON that is not a keyed record (`null`, a number, a string,
+  a list), and fall back to an empty value. `utils/storage.js` provides `parseStoredObject` for this.
+- Anything recorded by day is keyed by the device's local date as `YYYY-MM-DD`, so the day changes at local midnight.
+  `utils/day.js` is the only place a day key is built (`dayKey`) or stepped (`addDays`).
 - Zakat inputs, inheritance inputs, and the user's location are never persisted.
 - Changing a stored shape requires a migration or a new key, since existing users have data under the current keys.
 
@@ -447,8 +452,6 @@ Places where the code does not yet meet this spec, or where supporting files are
     80%, while the share label still reads 1/8. Whether spouses take part in radd is a point of scholarly difference
     and should be an explicit decision.
   - Arithmetic is floating-point, not fractional.
-- **Day keys are UTC.** Adhkar and tasbih use `toISOString()` for "today", so the day rolls over at UTC midnight
-  rather than local midnight.
 - **SEO is set two ways.** The hadith, adhkar, tasbih, and articles-of-faith views call `useHead` directly, so their
   entries in `useSeo`'s `ROUTE_META` are unused. `useSeo` also builds canonical URLs from the route name, which is only
   correct while name and path match; it would be wrong for `hadith-books` or `articles-of-faith` if they adopted it. The hadith, adhkar, and tasbih views set no canonical link
@@ -473,6 +476,8 @@ Places where the code does not yet meet this spec, or where supporting files are
   not use prices.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
   stores are tested. The Zakat store, the inheritance engine, the composables and the views are not yet.
-- **Stored data of the wrong shape is not handled.** The adhkar and tasbih stores fall back to empty when stored text
-  is not valid JSON, but valid JSON of the wrong shape (for example `null` under `adhkar-completion-log` or
-  `tasbih-totals`) would throw.
+- **A damaged entry inside a stored record is not handled.** A stored record of the wrong kind is read as empty, but
+  a valid record holding a bad entry (for example a day whose value is `null` under `adhkar-completion-log` or
+  `tasbih-totals`) would still throw.
+- **"Today" is not refreshed while a page stays open.** A page left open past local midnight shows the previous
+  day's state until it is next re-read.

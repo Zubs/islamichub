@@ -178,6 +178,16 @@ const releases = [
             scope: 'Hadith book page',
             desc: 'The message for a chapter filter with no results sat in a branch that could never run. It now shows when a search matches no chapter.',
           },
+          {
+            title: 'The day now changes at your own midnight',
+            scope: 'Adhkar and Tasbih',
+            desc: "Completions, streaks and daily totals were filed by the UTC date, so the day turned over at 1am in Lagos and in the evening in New York. They now follow the device's local date. Entries made before this change keep the date they were saved under, so a streak may shift by one day, once.",
+          },
+          {
+            title: 'Unreadable saved data no longer breaks the page',
+            scope: 'Adhkar and Tasbih',
+            desc: 'Saved data of an unexpected kind is now read as empty instead of causing an error.',
+          },
         ],
       },
     ],
