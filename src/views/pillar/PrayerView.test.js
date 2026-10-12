@@ -1,16 +1,9 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { mount, RouterLinkStub } from '@vue/test-utils'
-import { createHead } from '@unhead/vue/client'
 import PrayerView from './PrayerView.vue'
+import { mountPage as mountView } from '../../../test/mountPage.js'
 
-function mountPage() {
-  return mount(PrayerView, {
-    global: {
-      plugins: [createHead()],
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: { path: '/prayer' } },
-    },
-  })
+async function mountPage() {
+  return (await mountView(PrayerView, { path: '/prayer' })).wrapper
 }
 
 function minutes(time) {
@@ -34,8 +27,8 @@ describe('Prayer page Asr method', () => {
     vi.useRealTimers()
   })
 
-  it('offers Standard by default and names both options', () => {
-    const wrapper = mountPage()
+  it('offers Standard by default and names both options', async () => {
+    const wrapper = await mountPage()
     const selector = wrapper.find('#asr-method')
 
     expect(selector.element.value).toBe('standard')
@@ -44,7 +37,7 @@ describe('Prayer page Asr method', () => {
   })
 
   it('calculates nothing when the selector changes before a location is given', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
 
     await wrapper.find('#asr-method').setValue('hanafi')
 
@@ -55,7 +48,7 @@ describe('Prayer page Asr method', () => {
   it('moves Asr later and keeps the countdown when Hanafi is chosen', async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 2, 20, 14, 0))
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
     await calculateFor(wrapper, 51.5074, -0.1278)
     const before = shownTimes(wrapper)
     expect(wrapper.text()).toContain('Next Prayer')
@@ -74,7 +67,7 @@ describe('Prayer page Asr method', () => {
   })
 
   it('recalculates when the calculation method changes', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
     await calculateFor(wrapper, 51.5074, -0.1278)
     const before = shownTimes(wrapper)
 

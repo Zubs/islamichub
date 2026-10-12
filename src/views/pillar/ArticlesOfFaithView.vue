@@ -185,36 +185,13 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 
-useHead({
-  title: 'The Six Articles of Faith (Arkan al-Iman) | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        "Learn the six articles of Islamic faith — belief in Allah, angels, scriptures, prophets, the Day of Judgement, and divine decree (Qadr). Grounded in Qur'an and the Hadith of Jibril.",
-    },
-    {
-      property: 'og:title',
-      content: 'The Six Articles of Faith | IslamicHub',
-    },
-    {
-      property: 'og:description',
-      content:
-        "The six pillars of Iman: Allah, angels, scriptures, prophets, Day of Judgement, and divine decree — with Qur'anic evidence and scholarly explanation.",
-    },
-    {
-      name: 'robots',
-      content: 'index, follow',
-    },
-  ],
-  link: [{ rel: 'canonical', href: 'https://islamichub.xyz/faith/articles' }],
-})
+useSeo('articles-of-faith')
 
 useScrollReveal()
 

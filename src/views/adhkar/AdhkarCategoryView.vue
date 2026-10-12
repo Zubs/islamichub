@@ -87,7 +87,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import AdhkarCard from '@/components/adhkar/AdhkarCard.vue'
@@ -102,19 +102,12 @@ const categorySlug = computed(() => route.params.categorySlug)
 const meta = computed(() => getCategoryMeta(categorySlug.value))
 const dhikrList = computed(() => getAdhkarByCategory(categorySlug.value))
 
-useHead(
-  computed(() => ({
-    title: `${meta.value?.name || 'Adhkar'} | IslamicHub`,
-    meta: [
-      {
-        name: 'description',
-        content:
-          meta.value?.description ||
-          'Daily Islamic supplications with Arabic, transliteration, and translation.',
-      },
-    ],
-  })),
-)
+useSeo({
+  title: () => `${meta.value?.name || 'Adhkar'} | IslamicHub`,
+  description: () =>
+    meta.value?.description ||
+    'Daily Islamic supplications with Arabic, transliteration, and translation.',
+})
 
 function isDhikrFullyDone(d) {
   if (d.parts) {

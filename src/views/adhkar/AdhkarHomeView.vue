@@ -56,22 +56,13 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { ADHKAR_CATEGORIES, getAdhkarByCategory } from '@/data/adhkar.js'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 
-useHead({
-  title: 'Adhkar & Duas — Morning, Evening & Daily Supplications | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Morning and evening adhkar, remembrance after prayer, before sleep, and daily dhikr — with Arabic, transliteration, translation, and a tap-to-count tracker.',
-    },
-  ],
-})
+useSeo('adhkar')
 useScrollReveal()
 
 const store = useAdhkarStore()

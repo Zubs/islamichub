@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { countPage, sourceTag } from '@/composables/useStats.js'
 
-const routes = [
+export const routes = [
   {
     path: '/',
     name: 'home',

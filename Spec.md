@@ -430,9 +430,13 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 
 ### SEO
 
-- Every route sets a title, description, Open Graph and Twitter tags, and a canonical URL matching its path. Static
-  routes do this through `useSeo`; dynamic routes (hadith book and chapter, adhkar category) use `useHead` with loaded
-  data.
+- Every route sets a title, description, Open Graph and Twitter tags, and a canonical URL through `useSeo`, the only
+  way a view sets its head (a lint rule forbids importing `@unhead/vue` in views and components). `useSeo` takes a key
+  into its `PAGE_META` table, or a title and description that may be values, refs or getters, so a title can arrive
+  after the page opens. A page that gives neither gets the site's defaults.
+- The canonical URL is the site address plus the route's path, with no query string. The 404 page is marked `noindex`.
+- `test/sitemap.test.js` fails if a fixed route is missing from `sitemap.xml` or the sitemap lists an address no route
+  serves.
 - `robots.txt` and `sitemap.xml` are served from `public/` and must be updated when routes are added.
 
 ### Accessibility
@@ -476,10 +480,6 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 - **Zakat prices are daily, and the built-in reference prices age.** Prices come from one dataset maintained by one
   person. If it is unavailable the calculator falls back to reference prices dated 12 October 2026, and says so.
-- **SEO is set two ways.** The hadith, adhkar, tasbih, and articles-of-faith views call `useHead` directly, so their
-  entries in `useSeo`'s `ROUTE_META` are unused. `useSeo` also builds canonical URLs from the route name, which is only
-  correct while name and path match; it would be wrong for `hadith-books` or `articles-of-faith` if they adopted it. The hadith, adhkar, and tasbih views set no canonical link
-  at all.
 
 ### Housekeeping
 

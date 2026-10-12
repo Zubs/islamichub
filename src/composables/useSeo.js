@@ -1,12 +1,14 @@
+import { computed, toValue } from 'vue'
+import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 
-const BASE = 'https://islamichub.xyz'
+export const SITE_URL = 'https://islamichub.xyz'
 
-const ROUTE_META = {
+const PAGE_META = {
   hadith: {
     title: 'Hadith — Prophetic Tradition, Sciences & Library | IslamicHub',
     description:
-      "Learn what Hadith is, how it was preserved through isnad, the six grades (Sahih, Hasan, Da'eef), the great scholars, and browse 9 authenticated collections including Sahih Bukhari and Sahih Muslim.",
+      "Learn what Hadith is, how it was preserved, the six grades (Sahih, Hasan, Da'eef), the great hadith scholars, and browse 9 authenticated collections including Sahih Bukhari and Sahih Muslim.",
   },
   'hadith-books': {
     title: 'Hadith Library — All Collections | IslamicHub',
@@ -17,11 +19,6 @@ const ROUTE_META = {
     title: 'Adhkar & Duas — Morning, Evening & Daily Supplications | IslamicHub',
     description:
       'Morning and evening adhkar, remembrance after prayer, before sleep, and daily dhikr — with Arabic, transliteration, translation, and a tap-to-count tracker.',
-  },
-  'adhkar-category': {
-    title: 'Adhkar | IslamicHub',
-    description:
-      'Recite and track a category of daily Islamic supplications with Arabic, transliteration, and translation.',
   },
   tasbih: {
     title: 'Tasbih Counter — Digital Dhikr Counter | IslamicHub',
@@ -73,20 +70,45 @@ const ROUTE_META = {
     description:
       'Full changelog for IslamicHub: version history, new features, bug fixes, and improvements.',
   },
+  'articles-of-faith': {
+    title: 'The Six Articles of Faith (Arkan al-Iman) | IslamicHub',
+    description:
+      "Learn the six articles of Islamic faith — belief in Allah, angels, scriptures, prophets, the Day of Judgement, and divine decree (Qadr). Grounded in Qur'an and the Hadith of Jibril.",
+  },
+  'not-found': {
+    title: 'Page Not Found — IslamicHub',
+    noindex: true,
+  },
 }
 
-export function useSeo(routeName) {
-  const meta = ROUTE_META[routeName] || ROUTE_META.home
-  useHead({
-    title: meta.title,
-    meta: [
-      { name: 'description', content: meta.description },
-      { property: 'og:title', content: meta.title },
-      { property: 'og:description', content: meta.description },
-      { property: 'og:url', content: `${BASE}/${routeName === 'home' ? '' : routeName}` },
-      { name: 'twitter:title', content: meta.title },
-      { name: 'twitter:description', content: meta.description },
-    ],
-    link: [{ rel: 'canonical', href: `${BASE}/${routeName === 'home' ? '' : routeName}` }],
-  })
+export function canonicalFor(path) {
+  return SITE_URL + (path === '/' ? '/' : path.replace(/\/+$/, ''))
+}
+
+// `page` is a key of PAGE_META, or { title, description, noindex } whose values may be refs or getters.
+export function useSeo(page = {}) {
+  const route = useRoute()
+  const source = typeof page === 'string' ? (PAGE_META[page] ?? {}) : page
+
+  useHead(
+    computed(() => {
+      const title = toValue(source.title) || PAGE_META.home.title
+      const description = toValue(source.description) || PAGE_META.home.description
+      const canonical = canonicalFor(route.path)
+
+      return {
+        title,
+        meta: [
+          { name: 'description', content: description },
+          { property: 'og:title', content: title },
+          { property: 'og:description', content: description },
+          { property: 'og:url', content: canonical },
+          { name: 'twitter:title', content: title },
+          { name: 'twitter:description', content: description },
+          ...(toValue(source.noindex) ? [{ name: 'robots', content: 'noindex' }] : []),
+        ],
+        link: [{ rel: 'canonical', href: canonical }],
+      }
+    }),
+  )
 }

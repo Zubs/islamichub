@@ -144,12 +144,9 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 
-useHead({
-  title: 'Page Not Found — IslamicHub',
-  meta: [{ name: 'robots', content: 'noindex' }],
-})
+useSeo('not-found')
 
 const pillars = [
   {

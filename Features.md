@@ -18,7 +18,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 6. Naira in the Zakat calculator
 - [x] 7. Inheritance engine
 - [x] 8. Asr method
-- [ ] 9. SEO through one path
+- [x] 9. SEO through one path
 - [ ] 10. Loading screen
 - [ ] 11. Saved prayer settings
 - [ ] 12. Installable and offline
@@ -285,7 +285,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - `useSeo` becomes the only way a view sets its head. It accepts fixed values or values that arrive later, such as a hadith chapter name.
 - The canonical URL is built from the route's path, not its name.
 - Views that call `useHead` directly are moved over, and unused entries in `ROUTE_META` are removed.
-- A test compares the router with `public/sitemap.xml`, so a route added later cannot be left out.
+- A test compares the router with `public/sitemap.xml`, so a route added later cannot be left out. The sitemap gains the pages it lacked: `/adhkar` and its six categories, `/tasbih` and `/faith/articles`.
+- A lint rule forbids importing `@unhead/vue` in views and components.
 
 **Tests**
 - A page given no values still gets the site's default title and description.

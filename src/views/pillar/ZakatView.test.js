@@ -1,17 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { mount, RouterLinkStub } from '@vue/test-utils'
-import { createHead } from '@unhead/vue/client'
 import ZakatView from './ZakatView.vue'
+import { mountPage as mountView } from '../../../test/mountPage.js'
 import { useZakatStore } from '@/stores/zakat.js'
 
-function mountPage() {
-  return mount(ZakatView, {
-    global: {
-      plugins: [createHead()],
-      stubs: { RouterLink: RouterLinkStub },
-      mocks: { $route: { path: '/zakat' } },
-    },
-  })
+async function mountPage() {
+  return (await mountView(ZakatView, { path: '/zakat' })).wrapper
 }
 
 function currencyButton(wrapper, code) {
@@ -19,8 +12,8 @@ function currencyButton(wrapper, code) {
 }
 
 describe('Zakat page in naira', () => {
-  it('offers naira and keeps pounds as the default', () => {
-    const wrapper = mountPage()
+  it('offers naira and keeps pounds as the default', async () => {
+    const wrapper = await mountPage()
 
     expect(currencyButton(wrapper, 'NGN').exists()).toBe(true)
     expect(useZakatStore().currency).toBe('GBP')
@@ -28,7 +21,7 @@ describe('Zakat page in naira', () => {
   })
 
   it('says the official rate is used once naira is selected', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
 
     await currencyButton(wrapper, 'NGN').trigger('click')
 
@@ -38,7 +31,7 @@ describe('Zakat page in naira', () => {
   })
 
   it('rejects a typed price of zero, a negative number or text and keeps the fetched price', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
     const store = useZakatStore()
     const fetchedGold = store.goldLocal
 
@@ -51,7 +44,7 @@ describe('Zakat page in naira', () => {
   })
 
   it('returns to the fetched price when the typed price is cleared', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
     const store = useZakatStore()
     const fetchedGold = store.goldLocal
 
@@ -65,7 +58,7 @@ describe('Zakat page in naira', () => {
   })
 
   it('works out Zakat in naira from a dealer price and savings', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
 
     await currencyButton(wrapper, 'NGN').trigger('click')
     await wrapper.find('#typed-gold').setValue('150000')

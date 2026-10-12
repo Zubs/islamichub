@@ -128,7 +128,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
@@ -139,17 +139,11 @@ const route = useRoute()
 const bookSlug = computed(() => route.params.bookSlug)
 const meta = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
 
-useHead(
-  computed(() => ({
-    title: `${meta.value?.name || bookSlug.value} — Chapters | IslamicHub`,
-    meta: [
-      {
-        name: 'description',
-        content: `Browse all chapters of ${meta.value?.name || bookSlug.value} — ${meta.value?.hadithCount || ''} hadiths from ${meta.value?.author || ''}.`,
-      },
-    ],
-  })),
-)
+useSeo({
+  title: () => `${meta.value?.name || bookSlug.value} — Chapters | IslamicHub`,
+  description: () =>
+    `Browse all chapters of ${meta.value?.name || bookSlug.value} — ${meta.value?.hadithCount || ''} hadiths from ${meta.value?.author || ''}.`,
+})
 
 const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
 const loading = ref(false)

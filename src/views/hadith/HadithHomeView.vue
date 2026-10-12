@@ -375,22 +375,13 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 
-useHead({
-  title: 'Hadith — Prophetic Tradition, Sciences & Library | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        "Learn what Hadith is, how it was preserved, the six grades (Sahih, Hasan, Da'eef), the great hadith scholars, and browse 9 authenticated collections including Sahih Bukhari and Sahih Muslim.",
-    },
-  ],
-})
+useSeo('hadith')
 useScrollReveal()
 
 const hadithTypes = [

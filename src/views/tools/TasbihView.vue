@@ -140,21 +140,12 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { useTasbihStore } from '@/stores/tasbih.js'
 
-useHead({
-  title: 'Tasbih Counter — Digital Dhikr Counter | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'A free digital tasbih counter for dhikr — SubhanAllah, Alhamdulillah, Allahu Akbar, and more. Set a target, tap to count, and track your daily and lifetime totals.',
-    },
-  ],
-})
+useSeo('tasbih')
 useScrollReveal()
 
 const store = useTasbihStore()

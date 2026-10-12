@@ -1,12 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { createHead } from '@unhead/vue/client'
 import InheritanceView from './InheritanceView.vue'
+import { mountPage as mountView } from '../../../test/mountPage.js'
 
-function mountPage() {
-  return mount(InheritanceView, {
-    global: { plugins: [createHead()], mocks: { $route: { path: '/inheritance' } } },
-  })
+async function mountPage() {
+  return (await mountView(InheritanceView, { path: '/inheritance' })).wrapper
 }
 
 async function add(wrapper, label, count) {
@@ -18,19 +15,19 @@ async function add(wrapper, label, count) {
 }
 
 describe('Inheritance page', () => {
-  it('asks for at least one heir and shows no result', () => {
-    const wrapper = mountPage()
+  it('asks for at least one heir and shows no result', async () => {
+    const wrapper = await mountPage()
 
     expect(wrapper.find('.inh-message').text()).toBe('Select at least one heir.')
     expect(wrapper.findAll('.inh-row')).toHaveLength(0)
   })
 
-  it('says the result is a guide and not a ruling', () => {
-    expect(mountPage().text()).toContain('a guide, not a ruling')
+  it('says the result is a guide and not a ruling', async () => {
+    expect((await mountPage()).text()).toContain('a guide, not a ruling')
   })
 
   it('rejects a husband and a wife together', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
 
     await add(wrapper, 'Husband')
     await add(wrapper, 'Wife / Wives')
@@ -40,7 +37,7 @@ describe('Inheritance page', () => {
   })
 
   it('rejects five wives and a negative count', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
 
     await add(wrapper, 'Wife / Wives', 5)
     expect(wrapper.find('.inh-message').text()).toContain('no more than 4')
@@ -50,7 +47,7 @@ describe('Inheritance page', () => {
   })
 
   it('rejects an estate that is not a number', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
     await add(wrapper, 'Son(s)')
 
     await wrapper.find('input[step="1000"]').setValue('')
@@ -59,7 +56,7 @@ describe('Inheritance page', () => {
   })
 
   it('divides 120,000 between a wife, two sons and a daughter', async () => {
-    const wrapper = mountPage()
+    const wrapper = await mountPage()
 
     await wrapper.find('input[step="1000"]').setValue(120000)
     await add(wrapper, 'Wife / Wives')

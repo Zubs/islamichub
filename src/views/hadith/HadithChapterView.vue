@@ -193,7 +193,7 @@
 <script setup>
 import { ref, computed, onMounted, watch, reactive } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { fetchHadiths, fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
@@ -225,17 +225,12 @@ const nextChapter = computed(() => {
   return idx !== -1 && idx < allChapterNums.value.length - 1 ? allChapterNums.value[idx + 1] : null
 })
 
-useHead(
-  computed(() => ({
-    title: `${chapterTitle.value || 'Chapter ' + chapterNumber.value} — ${meta.value?.name || bookSlug.value} | IslamicHub`,
-    meta: [
-      {
-        name: 'description',
-        content: `Read hadiths from Chapter ${chapterNumber.value} of ${meta.value?.name || bookSlug.value}: ${chapterTitle.value}`,
-      },
-    ],
-  })),
-)
+useSeo({
+  title: () =>
+    `${chapterTitle.value || 'Chapter ' + chapterNumber.value} — ${meta.value?.name || bookSlug.value} | IslamicHub`,
+  description: () =>
+    `Read hadiths from Chapter ${chapterNumber.value} of ${meta.value?.name || bookSlug.value}: ${chapterTitle.value}`,
+})
 
 // Expand / collapse individual hadith
 const expanded = reactive(new Set())

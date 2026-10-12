@@ -122,21 +122,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import { fetchBooks, BOOKS_META } from '@/composables/useHadithApi.js'
 
-useHead({
-  title: 'Hadith Library — All Collections | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Browse all 9 major hadith collections including Sahih Bukhari, Sahih Muslim, and the four Sunan — by chapter and individual hadith.',
-    },
-  ],
-})
+useSeo('hadith-books')
 useScrollReveal()
 
 const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY

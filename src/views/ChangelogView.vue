@@ -194,6 +194,11 @@ const releases = [
         dotColor: '#c0392b',
         entries: [
           {
+            title: 'Every page now has a correct canonical link',
+            scope: 'Search engines',
+            desc: 'Titles, descriptions and canonical links are now set one way on every page. The hadith, adhkar, tasbih and Articles of Faith pages had no canonical link, and the sitemap was missing the adhkar, tasbih and Articles of Faith pages; both are corrected, and a test keeps the sitemap in step with the pages that exist.',
+          },
+          {
             title: 'Inheritance shares corrected',
             scope: 'Inheritance calculator',
             desc: 'The calculator was rebuilt and several results have changed. A sister now shares with a brother, two parts to one. A granddaughter beside one daughter receives her sixth. A remainder with no residuary heir returns to the fixed-share heirs other than the spouse, so a wife beside one daughter takes 12.5%, not 20%. Every line names the rule behind it and amounts always add up to the estate. The result remains a guide, not a ruling.',
