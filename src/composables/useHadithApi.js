@@ -1,18 +1,19 @@
+import { t } from '@/i18n.js'
+
 const BASE = '/api/hadith'
 const OFFLINE_CACHE = 'islamichub-hadith'
 const FORMER_HOST = 'hadithapi.com'
 
-export const OFFLINE_MESSAGE =
-  'You are offline, and this page has not been saved on this device yet. Open it once while connected and it will be kept for next time.'
-
-export const NOT_CONFIGURED_MESSAGE = 'The hadith library is not configured on this server.'
-
 export function loadErrorMessage(error) {
   if (error.notConfigured) {
-    return NOT_CONFIGURED_MESSAGE
+    return t('hadithApi.notConfigured')
   }
 
-  return navigator.onLine === false ? OFFLINE_MESSAGE : error.message
+  if (navigator.onLine === false) {
+    return t('hadithApi.offline')
+  }
+
+  return error.status ? t('hadithApi.failed', { status: error.status }) : error.message
 }
 
 function buildUrl(path, params = {}) {
@@ -60,6 +61,7 @@ async function request(path, params) {
 
   const body = await res.json().catch(() => ({}))
   const error = new Error(`The hadith library could not be loaded (${res.status}).`)
+  error.status = res.status
   error.notConfigured = body.error === 'not_configured'
   throw error
 }

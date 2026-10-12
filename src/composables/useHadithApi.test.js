@@ -1,12 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import {
-  fetchBooks,
-  fetchChapters,
-  fetchHadiths,
-  loadErrorMessage,
-  NOT_CONFIGURED_MESSAGE,
-  OFFLINE_MESSAGE,
-} from './useHadithApi.js'
+import { fetchBooks, fetchChapters, fetchHadiths, loadErrorMessage } from './useHadithApi.js'
 
 function json(body, status = 200) {
   return { ok: status < 400, status, json: async () => body }
@@ -55,7 +48,7 @@ describe('useHadithApi', () => {
     const error = await fetchBooks().catch((caught) => caught)
 
     expect(error.notConfigured).toBe(true)
-    expect(loadErrorMessage(error)).toBe(NOT_CONFIGURED_MESSAGE)
+    expect(loadErrorMessage(error)).toBe('The hadith library is not configured on this server.')
   })
 
   it('raises an ordinary error when the proxy reports hadithapi.com is down', async () => {
@@ -70,7 +63,7 @@ describe('useHadithApi', () => {
   it('says the page is not saved when offline', () => {
     vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false)
 
-    expect(loadErrorMessage(new TypeError('Failed to fetch'))).toBe(OFFLINE_MESSAGE)
+    expect(loadErrorMessage(new TypeError('Failed to fetch'))).toContain('You are offline')
   })
 
   it('opens a chapter stored before the move to the proxy when the request fails', async () => {

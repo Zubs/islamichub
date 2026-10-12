@@ -6,12 +6,11 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Daily Worship &nbsp;·&nbsp; الأذكار
+          {{ $t('adhkarHome.dailyWorship') }}
         </div>
-        <h1>Adhkar &amp; Duas</h1>
+        <h1>{{ $t('adhkarHome.adhkarDuas') }}</h1>
         <p>
-          Morning and evening supplications, remembrance after prayer, and daily dhikr — with
-          Arabic, transliteration, translation, and a tap-to-count tracker for each.
+          {{ $t('adhkarHome.morningAndEveningSupplicationsRemembranceAfter') }}
         </p>
       </div>
     </div>
@@ -37,7 +36,7 @@
           <div class="acc-top">
             <div class="acc-icon" aria-hidden="true">{{ cat.icon }}</div>
             <div v-if="store.isCategoryCompletedToday(cat.slug)" class="acc-done-badge">
-              ✓ Done today
+              {{ $t('adhkarHome.doneToday') }}
             </div>
           </div>
           <div class="acc-arabic" lang="ar" dir="rtl">{{ cat.arabicName }}</div>
@@ -45,7 +44,7 @@
           <p class="acc-desc">{{ cat.description }}</p>
           <div class="acc-footer">
             <span class="acc-time">{{ cat.timeHint }}</span>
-            <span class="acc-count">{{ countFor(cat.slug) }} adhkar</span>
+            <span class="acc-count">{{ $t('adhkarHome.adhkar', { a: countFor(cat.slug) }) }}</span>
           </div>
         </RouterLink>
       </div>

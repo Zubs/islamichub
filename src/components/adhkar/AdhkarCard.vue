@@ -3,7 +3,7 @@
     <!-- Reference badge -->
     <div class="dc-top">
       <span class="dc-ref"><HadithRef :text="dhikr.reference" /></span>
-      <span v-if="counter && isFullyDone" class="dc-done-badge">✓ Done</span>
+      <span v-if="counter && isFullyDone" class="dc-done-badge">{{ $t('adhkarCard.done') }}</span>
     </div>
 
     <h3 v-if="dhikr.title" class="dc-title">{{ dhikr.title }}</h3>
@@ -44,7 +44,7 @@
       <button v-else class="dc-tap-btn" @click="tapSimple">
         <span class="dc-tap-count">{{ simpleDone }} / {{ dhikr.repeat }}</span>
         <span class="dc-tap-hint">{{
-          simpleDone >= dhikr.repeat ? 'Tap to reset' : 'Tap to count'
+          simpleDone >= dhikr.repeat ? $t('adhkarCard.tapToReset') : $t('adhkarCard.tapToCount')
         }}</span>
       </button>
     </div>

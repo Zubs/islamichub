@@ -762,6 +762,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - Each page tells search engines about its other language versions, and `<html lang>` is set to the current language.
 - Numbers, dates and currency use the current language's formatting.
 - Long-form page content is not covered here. That is feature 26.
+- Built for the shell, every shared component, the 404 page, the adhkar, duas, hadith library, tracker and tasbih views, and the calculators on the Prayer, Zakat, Fasting and Inheritance pages, with their results and error messages: about 440 messages in `src/locales/en.js`.
+- Not yet moved, and left for feature 26 because it is content or held in data: the long-form writing; names and labels in `data/` (adhkar categories, dua titles, tasbih phrases); page titles and descriptions; and the hadith home and About pages. Reminders sent by the server (feature 24) are in English, because the server does not know the reader's language.
+- Sentences that had inline markup inside them were split into fragments by the script that moved the text. They read correctly in English; a translator may need some merged.
+- Links inside a second-language page are written without a prefix and kept in that language by the router.
 
 **Tests**
 - With only English available, the switcher is hidden and every address works as before.
@@ -1074,6 +1078,8 @@ Tests are written in plain English and ordered the same way under every feature:
 | 25 | 24 | May a server hold rounded coordinates for push? | Yes, at the proposed default: only for a user who switches push on; rounded to two decimal places by the server itself; with timezone, the two methods and the chosen reminders; deleted on switching off, on turning reminders off, on "Forget my location", and when the subscription expires. Stated on the About page | Do not set the VAPID keys: the switch is then never offered and nothing is ever stored. To remove the code, drop `netlify/functions/push*.js` |
 | 26 | 24 | A dependency was added without asking: `@netlify/blobs` (CLAUDE.md says to ask first) | Added, because feature 24 needs somewhere on the server to keep each device's record and Netlify Blobs is the storage that comes with Netlify Functions. No push library was added; signing and encryption use Node's built-in `crypto` | `npm uninstall @netlify/blobs` and choose another store for `netlify/functions/push.js` and `push-send.js` |
 | 27 | 24 | Push encryption and signing were written by hand rather than with the `web-push` package, to avoid a second dependency | `netlify/functions/lib/webPush.js`, tested by decrypting what it encrypts and verifying its signature, but never run against a real push service | `npm install web-push` and replace `sendPush` with its `sendNotification` |
+| 28 | 25 | How far does "all interface text" go in feature 25? | The shell, shared components, tools and calculators are moved (about 440 messages), with a test that fails on hard-coded text in them. Long-form writing, labels held in `data/`, page titles and descriptions, and the hadith home and About pages were left for feature 26. Feature 25 is therefore left unticked | Nothing to reverse; finish with feature 26 |
+| 29 | 25 | Reminders pushed by the server are in English, because the server does not know the reader's language | Left in English | Send the language with the push record (one more stored field) and translate on the server |
 
 **Checks only Zubair can do**
 

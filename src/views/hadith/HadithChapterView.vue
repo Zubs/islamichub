@@ -6,9 +6,9 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          {{ meta?.name || bookSlug }} · Chapter {{ chapterNumber }}
+          {{ $t('hadithChapter.chapter', { a: meta?.name || bookSlug, b: chapterNumber }) }}
         </div>
-        <h1>{{ chapterTitle || 'Loading…' }}</h1>
+        <h1>{{ chapterTitle || $t('common.loading') }}</h1>
         <p
           v-if="chapterArabic"
           lang="ar"
@@ -28,32 +28,37 @@
     <div class="content-wrap" style="max-width: 860px">
       <!-- Breadcrumb -->
       <div class="had-breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">Hadith</RouterLink>
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{
+          $t('hadithChapter.hadith')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <RouterLink to="/hadith/books" class="had-breadcrumb-link">All Books</RouterLink>
+        <RouterLink to="/hadith/books" class="had-breadcrumb-link">{{
+          $t('hadithChapter.allBooks')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
         <RouterLink :to="'/hadith/books/' + bookSlug" class="had-breadcrumb-link">{{
           meta?.name || bookSlug
         }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <span>Chapter {{ chapterNumber }}</span>
+        <span>{{ $t('hadithChapter.chapter2', { a: chapterNumber }) }}</span>
       </div>
 
       <!-- Loading -->
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading hadiths…</span>
+        <span>{{ $t('hadithChapter.loadingHadiths') }}</span>
       </div>
 
       <!-- Error -->
       <div v-else-if="error" class="had-error">
-        <div class="had-error-title">Could not load hadiths</div>
+        <div class="had-error-title">{{ $t('hadithChapter.couldNotLoadHadiths') }}</div>
         <div>{{ error }}</div>
         <div v-if="notConfigured" style="margin-top: 8px; font-size: 13px">
-          Set <code>HADITH_API_KEY</code> where the site is hosted (see the README). A free key is
-          available at
-          <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
-            >hadithapi.com</a
+          {{ $t('hadithChapter.set') }} <code>HADITH_API_KEY</code>
+          {{ $t('hadithChapter.whereTheSiteIsHostedSee') }}
+          <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer">{{
+            $t('hadithChapter.hadithapiCom')
+          }}</a
           >.
         </div>
       </div>
@@ -62,8 +67,10 @@
       <div v-else>
         <!-- Summary bar -->
         <div class="hcv-summary">
-          <span>{{ total }} hadiths in this chapter</span>
-          <span class="hcv-page-info">Page {{ currentPage }} of {{ lastPage }}</span>
+          <span>{{ $t('hadithChapter.hadithsInThisChapter', { a: total }) }}</span>
+          <span class="hcv-page-info">{{
+            $t('hadithChapter.pageOf', { a: currentPage, b: lastPage })
+          }}</span>
         </div>
 
         <!-- Individual hadith cards -->
@@ -89,7 +96,9 @@
               </div>
               <button
                 class="hc-expand-btn"
-                :aria-label="expanded.has(h.id) ? 'Collapse hadith' : 'Expand hadith'"
+                :aria-label="
+                  expanded.has(h.id) ? $t('hadithChapter.collapse') : $t('hadithChapter.expand')
+                "
                 :aria-expanded="String(expanded.has(h.id))"
               >
                 <svg
@@ -116,20 +125,22 @@
             <Transition name="hc-expand">
               <div v-if="expanded.has(h.id)" class="hc-body">
                 <div class="hc-english">
-                  <div class="hc-lang-label">English</div>
+                  <div class="hc-lang-label">{{ $t('hadithChapter.english') }}</div>
                   <div class="hc-text">{{ h.englishNarrator }} "{{ h.hadithEnglish }}"</div>
                 </div>
                 <div class="hc-footer">
                   <div class="hc-ref">
-                    <span class="hc-ref-label">Reference</span>
-                    {{ meta?.name || bookSlug }}, Hadith {{ h.hadithNumber }}
+                    <span class="hc-ref-label">{{ $t('hadithChapter.reference') }}</span>
+                    {{
+                      $t('hadithChapter.hadith2', { a: meta?.name || bookSlug, b: h.hadithNumber })
+                    }}
                   </div>
                   <button
                     class="hc-copy-btn"
                     @click.stop="copy(h)"
                     :class="{ copied: copied === h.id }"
                   >
-                    {{ copied === h.id ? '✓ Copied' : 'Copy' }}
+                    {{ copied === h.id ? $t('common.copied') : $t('common.copy') }}
                   </button>
                 </div>
               </div>
@@ -144,7 +155,7 @@
             :disabled="currentPage === 1"
             @click="goToPage(currentPage - 1)"
           >
-            ← Previous
+            {{ $t('hadithChapter.previous') }}
           </button>
 
           <div class="hcv-page-pills">
@@ -165,7 +176,7 @@
             :disabled="currentPage === lastPage"
             @click="goToPage(currentPage + 1)"
           >
-            Next →
+            {{ $t('hadithChapter.next') }}
           </button>
         </div>
 
@@ -175,19 +186,19 @@
             v-if="prevChapter"
             :to="`/hadith/books/${bookSlug}/${prevChapter}`"
             class="btn btn-secondary"
-            >← Chapter {{ prevChapter }}</RouterLink
+            >{{ $t('hadithChapter.chapter3', { a: prevChapter }) }}</RouterLink
           >
           <RouterLink
             :to="'/hadith/books/' + bookSlug"
             class="btn btn-secondary"
             style="margin: 0 auto"
-            >All chapters</RouterLink
+            >{{ $t('hadithChapter.allChapters') }}</RouterLink
           >
           <RouterLink
             v-if="nextChapter"
             :to="`/hadith/books/${bookSlug}/${nextChapter}`"
             class="btn btn-secondary"
-            >Chapter {{ nextChapter }} →</RouterLink
+            >{{ $t('hadithChapter.chapter4', { a: nextChapter }) }}</RouterLink
           >
         </div>
       </div>

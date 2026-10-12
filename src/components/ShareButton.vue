@@ -1,30 +1,39 @@
 <template>
   <div class="share">
     <button class="btn btn-secondary share-button" :disabled="working" @click="share">
-      {{ working ? 'Preparing…' : 'Share' }}
+      {{ working ? $t('shareButton.preparing') : $t('shareButton.share') }}
     </button>
 
-    <div v-if="fallback" class="share-panel" role="group" aria-label="Share options">
+    <div
+      v-if="fallback"
+      class="share-panel"
+      role="group"
+      :aria-label="$t('shareButton.shareOptions')"
+    >
       <img v-if="imageUrl" class="share-preview" :src="imageUrl" alt="" />
       <p v-else class="share-note">
-        This text is too long for an image card, so it is shared as text with a link.
+        {{ $t('shareButton.thisTextIsTooLongFor') }}
       </p>
       <div class="share-actions">
-        <a v-if="imageUrl" class="btn btn-secondary" :href="imageUrl" download="islamichub.png"
-          >Save image</a
-        >
+        <a v-if="imageUrl" class="btn btn-secondary" :href="imageUrl" download="islamichub.png">{{
+          $t('shareButton.saveImage')
+        }}</a>
         <a
           class="btn btn-primary"
           :href="fallback.whatsapp"
           target="_blank"
           rel="noopener noreferrer"
-          >Share on WhatsApp</a
+          >{{ $t('shareButton.shareOnWhatsapp') }}</a
         >
         <button class="btn btn-secondary" @click="copyLink">
-          {{ copied ? '✓ Link copied' : 'Copy link' }}
+          {{ copied ? $t('shareButton.linkCopied') : $t('shareButton.copyLink') }}
         </button>
-        <button class="btn btn-secondary" aria-label="Close share options" @click="close">
-          Close
+        <button
+          class="btn btn-secondary"
+          :aria-label="$t('shareButton.closeShareOptions')"
+          @click="close"
+        >
+          {{ $t('shareButton.close') }}
         </button>
       </div>
     </div>

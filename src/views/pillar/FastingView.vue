@@ -30,12 +30,12 @@
 
       <!-- Ramadan status -->
       <div style="margin-top: 2.5rem">
-        <span class="eyebrow">Ramadan {{ hijri.year }} AH</span>
+        <span class="eyebrow">{{ $t('fasting.ramadanAh', { a: hijri.year }) }}</span>
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
         >
-          {{ inRamadan ? 'رمضان مبارك — Ramadan Mubarak!' : `${daysLeft} days until Ramadan` }}
+          {{ inRamadan ? $t('fasting.ramadanMubarak') : $t('fasting.daysUntilRamadan', daysLeft) }}
         </h2>
 
         <div
@@ -70,7 +70,7 @@
                   margin-bottom: 6px;
                 "
               >
-                Current Hijri date
+                {{ $t('fasting.currentHijriDate') }}
               </div>
               <div
                 style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: #fff"
@@ -78,7 +78,7 @@
                 {{ hijri.day }} {{ hijri.monthName }}
               </div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
-                {{ hijri.year }} AH
+                {{ $t('fasting.ah', { a: hijri.year }) }}
               </div>
             </div>
             <div style="text-align: center">
@@ -92,7 +92,7 @@
                   margin-bottom: 6px;
                 "
               >
-                {{ inRamadan ? 'Ramadan day' : 'Months remaining' }}
+                {{ inRamadan ? $t('fasting.ramadanDay') : $t('fasting.monthsRemaining') }}
               </div>
               <div
                 style="font-family: var(--serif); font-size: 2rem; font-weight: 600"
@@ -101,7 +101,7 @@
                 {{ inRamadan ? hijri.day : Math.max(0, 9 - hijri.month) }}
               </div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
-                {{ inRamadan ? 'of 29–30 days' : 'until Ramaḍān' }}
+                {{ inRamadan ? $t('fasting.ofDays') : $t('fasting.untilRamadan') }}
               </div>
             </div>
             <div style="text-align: center">
@@ -115,11 +115,11 @@
                   margin-bottom: 6px;
                 "
               >
-                Status
+                {{ $t('fasting.status') }}
               </div>
               <div style="font-size: 1.5rem">{{ inRamadan ? '🌙' : '⭐' }}</div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
-                {{ inRamadan ? 'Ramadan is here' : "Sha'ban / waiting" }}
+                {{ inRamadan ? $t('fasting.ramadanIsHere') : $t('fasting.waiting') }}
               </div>
             </div>
           </div>
@@ -135,15 +135,14 @@
               margin-bottom: 12px;
             "
           >
-            Suhoor &amp; Iftar times today
+            {{ $t('fasting.suhoorIftarTimesToday') }}
           </h3>
           <p style="font-size: 13.5px; color: var(--muted); margin-bottom: 14px">
-            Enter your coordinates to calculate today's Suhoor (before Fajr) and Iftar (at Maghrib)
-            times.
+            {{ $t('fasting.enterYourCoordinatesToCalculateToday') }}
           </p>
           <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end">
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Latitude</label
+              <label>{{ $t('fasting.latitude') }}</label
               ><input
                 v-model.number="lat"
                 type="number"
@@ -153,7 +152,7 @@
               />
             </div>
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Longitude</label
+              <label>{{ $t('fasting.longitude') }}</label
               ><input
                 v-model.number="lng"
                 type="number"
@@ -162,8 +161,12 @@
                 step="0.0001"
               />
             </div>
-            <button class="btn btn-primary" @click="calculate">Calculate</button>
-            <button class="btn btn-secondary" @click="locate">📍 My location</button>
+            <button class="btn btn-primary" @click="calculate">
+              {{ $t('fasting.calculate') }}
+            </button>
+            <button class="btn btn-secondary" @click="locate">
+              {{ $t('fasting.myLocation') }}
+            </button>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem">
             <div
@@ -184,7 +187,7 @@
                   margin-bottom: 6px;
                 "
               >
-                🌅 Suhoor ends (Fajr)
+                {{ $t('fasting.suhoorEndsFajr') }}
               </div>
               <div
                 style="
@@ -196,7 +199,9 @@
               >
                 {{ suhoorTime }}
               </div>
-              <div style="font-size: 12px; color: var(--muted)">Last moment to eat</div>
+              <div style="font-size: 12px; color: var(--muted)">
+                {{ $t('fasting.lastMomentToEat') }}
+              </div>
             </div>
             <div
               style="
@@ -217,7 +222,7 @@
                   margin-bottom: 6px;
                 "
               >
-                🌇 Iftar (Maghrib)
+                {{ $t('fasting.iftarMaghrib') }}
               </div>
               <div
                 style="
@@ -229,7 +234,7 @@
               >
                 {{ iftarTime }}
               </div>
-              <div style="font-size: 12px; color: #7a5a10">Time to break fast</div>
+              <div style="font-size: 12px; color: #7a5a10">{{ $t('fasting.timeToBreakFast') }}</div>
             </div>
           </div>
           <div v-if="fastStatus" style="margin-top: 10px; font-size: 13px; color: var(--muted)">
@@ -245,7 +250,8 @@
                 margin-bottom: 5px;
               "
             >
-              <span>Fasting in progress</span><span>{{ fastPct }}%</span>
+              <span>{{ $t('fasting.fastingInProgress') }}</span
+              ><span>{{ fastPct }}%</span>
             </div>
             <div class="progress-bar">
               <div
@@ -428,6 +434,7 @@ import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { t } from '@/i18n.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import GeoPattern from '@/components/GeoPattern.vue'
@@ -494,17 +501,17 @@ function calculate() {
       const rem = magM - now
       const h = Math.floor(rem / 60),
         m = rem % 60
-      fastStatus.value = `⏱ ${h}h ${m}m until Iftar`
+      fastStatus.value = t('fasting.untilIftar', { hours: h, minutes: m })
     } else if (now >= magM) {
       showProgress.value = true
       fastPct.value = 100
-      fastStatus.value = '🌙 Iftar time — Ramadan Mubarak!'
+      fastStatus.value = t('fasting.iftarTime')
     } else {
       showProgress.value = false
       const rem = fajrM - now
       const h = Math.floor(rem / 60),
         m = rem % 60
-      fastStatus.value = `🌅 Suhoor in ${h}h ${m}m`
+      fastStatus.value = t('fasting.suhoorIn', { hours: h, minutes: m })
     }
   }
   update()

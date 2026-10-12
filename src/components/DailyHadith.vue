@@ -1,9 +1,11 @@
 <template>
   <section v-if="hadith" class="daily-hadith" aria-labelledby="daily-hadith-title">
-    <span id="daily-hadith-title" class="eyebrow">Hadith of the day</span>
+    <span id="daily-hadith-title" class="eyebrow">{{ $t('dailyHadith.hadithOfTheDay') }}</span>
     <HadithBlock :reference="hadith.reference">
       {{ hadith.text }}
-      <span class="daily-hadith-narrator">Narrated by {{ hadith.narrator }}</span>
+      <span class="daily-hadith-narrator">{{
+        $t('dailyHadith.narratedBy', { a: hadith.narrator })
+      }}</span>
     </HadithBlock>
     <ShareButton :item="shareable" />
   </section>

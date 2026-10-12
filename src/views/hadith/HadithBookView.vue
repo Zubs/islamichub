@@ -7,7 +7,7 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          {{ meta?.grade || 'Hadith Collection' }}
+          {{ meta?.grade || $t('hadithBook.hadithCollection') }}
         </div>
         <h1 :lang="meta ? 'en' : undefined">
           {{ meta?.name || bookSlug.replace(/-/g, ' ') }}
@@ -17,7 +17,7 @@
           <span style="opacity: 0.4">·</span>
           <span>d. {{ meta.death }}</span>
           <span style="opacity: 0.4">·</span>
-          <span>{{ meta.hadithCount }} hadiths</span>
+          <span>{{ $t('hadithBook.hadiths', { a: meta.hadithCount }) }}</span>
         </p>
       </div>
     </div>
@@ -25,9 +25,13 @@
     <div class="content-wrap" style="max-width: 1000px">
       <!-- Breadcrumb -->
       <div class="had-breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">Hadith</RouterLink>
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{
+          $t('hadithBook.hadith')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <RouterLink to="/hadith/books" class="had-breadcrumb-link">All Books</RouterLink>
+        <RouterLink to="/hadith/books" class="had-breadcrumb-link">{{
+          $t('hadithBook.allBooks')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
         <span>{{ meta?.name || bookSlug }}</span>
       </div>
@@ -39,15 +43,15 @@
         <div class="bac-stats">
           <div class="bac-stat">
             <div class="bac-stat-num">{{ chapters.length || '—' }}</div>
-            <div class="bac-stat-label">Chapters</div>
+            <div class="bac-stat-label">{{ $t('hadithBook.chapters') }}</div>
           </div>
           <div class="bac-stat">
             <div class="bac-stat-num">{{ meta.hadithCount }}</div>
-            <div class="bac-stat-label">Hadiths</div>
+            <div class="bac-stat-label">{{ $t('hadithBook.hadiths2') }}</div>
           </div>
           <div class="bac-stat">
             <div class="bac-stat-num" :style="{ color: meta.gradeColor }">{{ meta.grade }}</div>
-            <div class="bac-stat-label">Grade</div>
+            <div class="bac-stat-label">{{ $t('hadithBook.grade') }}</div>
           </div>
         </div>
       </div>
@@ -55,19 +59,20 @@
       <!-- Loading -->
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading chapters…</span>
+        <span>{{ $t('hadithBook.loadingChapters') }}</span>
       </div>
 
       <!-- Error -->
       <div v-else-if="error" class="had-error">
         <div>
-          <div class="had-error-title">Could not load chapters</div>
+          <div class="had-error-title">{{ $t('hadithBook.couldNotLoadChapters') }}</div>
           <div class="had-error-desc">{{ error }}</div>
           <div v-if="notConfigured" style="margin-top: 8px; font-size: 13px">
-            Set <code>HADITH_API_KEY</code> where the site is hosted (see the README). A free key is
-            available at
-            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
-              >hadithapi.com</a
+            {{ $t('hadithBook.set') }} <code>HADITH_API_KEY</code>
+            {{ $t('hadithBook.whereTheSiteIsHostedSee') }}
+            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer">{{
+              $t('hadithBook.hadithapiCom')
+            }}</a
             >.
           </div>
         </div>
@@ -81,10 +86,12 @@
             v-model="search"
             type="search"
             class="input-field"
-            placeholder="Filter chapters…"
-            aria-label="Filter chapters by name"
+            :placeholder="$t('hadithBook.filterChapters')"
+            :aria-label="$t('hadithBook.filterChaptersByName')"
           />
-          <span class="chap-count">{{ filteredChapters.length }} chapters</span>
+          <span class="chap-count">{{
+            $t('hadithBook.chapters2', { a: filteredChapters.length })
+          }}</span>
         </div>
 
         <div class="chap-grid">
@@ -99,7 +106,7 @@
               <div class="chap-en">{{ chapter.chapterEnglish }}</div>
               <div class="chap-ar" lang="ar">{{ chapter.chapterArabic }}</div>
               <div v-if="chapter.hadithCount" class="chap-count-badge">
-                {{ chapter.hadithCount }} hadith
+                {{ $t('hadithBook.hadith2', { a: chapter.hadithCount }) }}
               </div>
             </div>
             <div class="chap-arrow" aria-hidden="true">
@@ -118,7 +125,7 @@
         </div>
 
         <div v-if="search && !filteredChapters.length" class="had-empty">
-          No chapters match "{{ search }}"
+          {{ $t('hadithBook.noChaptersMatch', { a: search }) }}
         </div>
       </div>
     </div>

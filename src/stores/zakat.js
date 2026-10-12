@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { formatNumber, t } from '@/i18n.js'
 import {
   perGram,
   nisabFor,
@@ -90,7 +91,7 @@ export const useZakatStore = defineStore('zakat', () => {
   function fmt(n) {
     return (
       sym.value +
-      Number(n).toLocaleString('en-GB', {
+      formatNumber(n, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })
@@ -153,14 +154,14 @@ export const useZakatStore = defineStore('zakat', () => {
   async function requestLocation() {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        locationError.value = 'Geolocation not supported by your browser'
+        locationError.value = t('location.unsupported')
         return reject(locationError.value)
       }
 
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude: lat, longitude: lng } = pos.coords
-          let name = 'Your location'
+          let name = t('location.yours')
           try {
             const r = await fetch(
               `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
@@ -177,7 +178,7 @@ export const useZakatStore = defineStore('zakat', () => {
           resolve(location.value)
         },
         () => {
-          locationError.value = 'Location access denied. Enter coordinates manually.'
+          locationError.value = t('location.denied')
           reject(locationError.value)
         },
         { timeout: 10000 },

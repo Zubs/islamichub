@@ -12,7 +12,11 @@ function line(heirs, key, estate = 100) {
 
 describe('validation', () => {
   it('asks for at least one heir', () => {
-    expect(calcInheritance({}, 1000)).toEqual({ error: 'Select at least one heir.', shares: [] })
+    expect(calcInheritance({}, 1000)).toEqual({
+      error: 'Select at least one heir.',
+      problem: { code: 'none', params: {} },
+      shares: [],
+    })
     expect(calcInheritance({ son: 0 }, 1000).error).toBe('Select at least one heir.')
   })
 

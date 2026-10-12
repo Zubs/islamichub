@@ -40,6 +40,7 @@ a browsable hadith library.
 | Styling      | Global CSS with custom properties; scoped styles inside views     |
 | Lint/format  | oxlint, ESLint (`eslint-plugin-vue`), Prettier                    |
 | Offline      | `vite-plugin-pwa` (workbox)                                       |
+| Translation  | `vue-i18n`; messages in `src/locales/`                            |
 | Testing      | Vitest with Vue Test Utils and jsdom; tests sit beside their code |
 | Hosting      | Netlify (`npm test && npm run build` → `dist/`)                   |
 | Node         | `^20.19.0 \|\| >=22.12.0`                                         |
@@ -487,6 +488,7 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `locale`                 | The code of the language the user chose       | i18n          |
 | `reminder-settings`      | `{ enabled, push, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar" } }` | reminders store |
 | `fasting-log`            | `{ "YYYY-MM-DD": "fasted" \| "missed" \| "made-up" \| "voluntary" }` | fasting store |
 | `ramadan-starts`         | `{ "<Hijri year>": "YYYY-MM-DD" }`, only dates the user set | fasting store |
@@ -552,6 +554,35 @@ Rules:
   reminders off or "Forget my location" deletes it and unsubscribes. The switch is disabled on an iPhone where the app
   is not installed, and is not offered without `VITE_VAPID_PUBLIC_KEY` or in a browser with no push support. The worker
   shows the pushed reminder (`push` in `sw-notifications.js`).
+
+---
+
+## 6d. Languages
+
+- Interface text is held in `src/locales/<code>.js`, one file per language, grouped by the component that uses it.
+  `en.js` is the source and the fallback: a text missing from another language is shown in English.
+  Components read text with `$t('group.key')`; scripts import `t` from `src/i18n.js`. A message's `{name}` is a value,
+  and `|` separates its forms for zero, one and many.
+- `src/locales/index.js` is the registry: code, the language's own name, the `Intl` locale for numbers, dates and
+  currency, direction, messages, and `complete`. Only complete languages are offered. English is the only one today.
+- English keeps the unprefixed addresses. Every other available language has the same pages under its code
+  (`/yo/prayer`), added by `localizedRoutes`. An unknown prefix matches no route and shows the 404 page.
+- `localeGuard` in the router decides the language of each navigation: on arrival the address wins; an unprefixed
+  arrival follows the remembered choice (`locale`), then the browser's languages, then English; inside the site the
+  current language is kept, so links written without a prefix stay in the reader's language.
+- `LanguageSwitcher.vue`, in the navigation, is shown only when more than one language is available. Switching keeps the
+  page, changes the prefix and remembers the choice.
+- `useSeo` sets `lang` and `dir` on `<html>` and, with more than one language, lists every language's address as an
+  `hreflang` alternate with an `x-default`.
+- `formatNumber` and `formatDate` in `src/i18n.js` format for the current language; the Zakat store's amounts use them.
+- `test/locales.test.js` adds a made-up language to test switching, prefixes, fallback and formatting; fails if a
+  translation holds a key English lacks or a complete language lacks one; and fails if any interface component holds
+  hard-coded text.
+- Moved so far: the shell, every shared component, the 404 page, the adhkar, duas, hadith library, tracker and tasbih
+  views, and the calculators on the Prayer, Zakat, Fasting and Inheritance pages, including their results and error
+  messages. The inheritance engine returns each rule and problem as data (`ruleParts`, `problem`) beside its English
+  text, so the page can word it in any language. Long-form writing, labels held in `data/`, page titles and
+  descriptions, and reminders sent by the server are still English.
 
 ---
 

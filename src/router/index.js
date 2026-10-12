@@ -1,6 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, START_LOCATION } from 'vue-router'
 import { countPage, sourceTag } from '@/composables/useStats.js'
 import { getSituation } from '@/data/duas.js'
+import { localeCodes, isAvailable, setLocale, rememberedLocale, rememberLocale } from '@/i18n.js'
+import {
+  SOURCE_LOCALE,
+  localePath,
+  splitLocale,
+  matchLocale,
+  localizedRoutes,
+} from '@/utils/locale.js'
 
 const HASH_SCROLL_DELAY_MS = 350
 
@@ -138,11 +146,64 @@ export function scrollBehavior(to, from, savedPosition) {
   return { top: 0, behavior: 'instant' }
 }
 
+let switchingTo = null
+
+// Decides the language of every navigation. On arrival the address wins, then the remembered
+// choice, then the browser's languages. Inside the site the current language is kept, so links
+// written without a prefix stay in the reader's language.
+export function localeGuard(to, from) {
+  const isArrival = from === START_LOCATION
+  const addressed = to.meta.locale ?? SOURCE_LOCALE
+  let wanted = addressed
+  if (switchingTo) {
+    wanted = switchingTo
+    switchingTo = null
+  } else if (isArrival && !to.meta.locale) {
+    wanted = rememberedLocale() ?? matchLocale(navigator.languages, localeCodes()) ?? SOURCE_LOCALE
+  } else if (!isArrival) {
+    wanted = from.meta.locale ?? SOURCE_LOCALE
+  }
+
+  if (!isAvailable(wanted)) {
+    wanted = SOURCE_LOCALE
+  }
+
+  if (to.name !== 'not-found' && addressed !== wanted) {
+    const { path } = splitLocale(to.path, localeCodes())
+    return { path: localePath(path, wanted), query: to.query, hash: to.hash, replace: isArrival }
+  }
+
+  setLocale(to.name === 'not-found' ? wanted : addressed)
+  return true
+}
+
+// Adds a language's pages under its prefix.
+export function addLocaleRoutes(target, code) {
+  localizedRoutes(
+    routes.filter((route) => route.name !== 'not-found'),
+    code,
+  ).forEach((route) => target.addRoute(route))
+}
+
+// Takes the reader to the same page in another language and remembers the choice.
+export function switchLocale(target, code) {
+  const current = target.currentRoute.value
+  const { path } = splitLocale(current.path, localeCodes())
+  rememberLocale(code)
+  switchingTo = code
+  return target.push({ path: localePath(path, code), query: current.query, hash: current.hash })
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior,
 })
+
+localeCodes()
+  .filter((code) => code !== SOURCE_LOCALE)
+  .forEach((code) => addLocaleRoutes(router, code))
+router.beforeEach(localeGuard)
 
 let previousPath = ''
 

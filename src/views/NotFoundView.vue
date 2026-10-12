@@ -107,22 +107,27 @@
 
       <!-- Heading + body -->
       <div class="nf-text">
-        <h1 class="nf-heading">Page not found</h1>
+        <h1 class="nf-heading">{{ $t('notFound.pageNotFound') }}</h1>
         <p class="nf-arabic" lang="ar">وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ</p>
-        <p class="nf-ayah-ref">Qur'an 65:3</p>
+        <p class="nf-ayah-ref">{{ $t('notFound.qurAn653') }}</p>
         <p class="nf-body">
-          "And whoever relies upon Allah — then He is sufficient for him."
+          {{ $t('notFound.andWhoeverReliesUponAllahThen') }}
           <br />
-          The page you were looking for doesn't exist — but you're always in the right place with
-          Allah.
+          {{ $t('notFound.thePageYouWereLookingFor') }}
         </p>
       </div>
 
       <!-- Navigation options -->
       <div class="nf-actions">
-        <RouterLink to="/" class="btn btn-primary btn-lg nf-btn-home"> ← Return home </RouterLink>
-        <div class="nf-pillar-links" role="navigation" aria-label="Quick pillar links">
-          <span class="nf-links-label">Or go directly to:</span>
+        <RouterLink to="/" class="btn btn-primary btn-lg nf-btn-home">
+          {{ $t('notFound.returnHome') }}
+        </RouterLink>
+        <div
+          class="nf-pillar-links"
+          role="navigation"
+          :aria-label="$t('notFound.quickPillarLinks')"
+        >
+          <span class="nf-links-label">{{ $t('notFound.orGoDirectlyTo') }}</span>
           <div class="nf-links-grid">
             <RouterLink v-for="p in pillars" :key="p.to" :to="p.to" class="nf-pillar-link">
               <span class="nf-pl-icon" aria-hidden="true">{{ p.icon }}</span>

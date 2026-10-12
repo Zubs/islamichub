@@ -31,22 +31,21 @@
       >
         <!-- Left: heir selection -->
         <div>
-          <span class="eyebrow">Step 1</span>
+          <span class="eyebrow">{{ $t('inheritance.step1') }}</span>
           <h2
             class="section-title"
             style="font-size: clamp(1.4rem, 2.5vw, 1.8rem); margin-bottom: 0.75rem"
           >
-            Select the heirs present
+            {{ $t('inheritance.selectTheHeirsPresent') }}
           </h2>
           <p style="font-size: 14px; color: var(--muted); margin-bottom: 1.5rem">
-            Toggle each heir present in the estate. For heirs where count matters, enter the number
-            after toggling.
+            {{ $t('inheritance.toggleEachHeirPresentInThe') }}
           </p>
 
           <!-- Estate value -->
           <div class="card" style="margin-bottom: 1.25rem">
             <div class="field">
-              <label>Total estate value (after debts &amp; funeral expenses)</label>
+              <label>{{ $t('inheritance.totalEstateValueAfterDebtsFuneral') }}</label>
               <div class="pfx-wrap">
                 <span class="pfx">{{ store.sym }}</span>
                 <input
@@ -58,17 +57,19 @@
                 />
               </div>
               <div class="hint">
-                Zakat on any zakatable portions should be calculated separately
+                {{ $t('inheritance.zakatOnAnyZakatablePortionsShould') }}
               </div>
             </div>
           </div>
 
           <!-- Heir groups -->
           <div v-for="group in heirGroups" :key="group.name" style="margin-bottom: 1.25rem">
-            <div class="eyebrow" style="margin-bottom: 8px">{{ group.name }}</div>
+            <div class="eyebrow" style="margin-bottom: 8px">
+              {{ $t('inheritance.groups.' + group.name) }}
+            </div>
             <div v-for="heir in group.heirs" :key="heir.key" class="heir-toggle">
               <div class="heir-info">
-                <h4>{{ heir.label }}</h4>
+                <h4>{{ $t('inheritance.heirs.' + heir.key) }}</h4>
                 <p>
                   <HadithRef :text="heir.desc" />
                   <span style="color: var(--gold); font-weight: 500"
@@ -90,7 +91,11 @@
                   class="toggle-switch"
                   :class="{ on: !!activeHeirs[heir.key] }"
                   @click="toggleHeir(heir.key)"
-                  :aria-label="(activeHeirs[heir.key] ? 'Remove' : 'Add') + ' ' + heir.label"
+                  :aria-label="
+                    $t(activeHeirs[heir.key] ? 'inheritance.remove' : 'inheritance.add', {
+                      heir: $t('inheritance.heirs.' + heir.key),
+                    })
+                  "
                 ></button>
               </div>
             </div>
@@ -100,14 +105,15 @@
         <!-- Right: results -->
         <div style="position: sticky; top: 84px">
           <div class="inheritance-results">
-            <div class="inh-title">Inheritance Breakdown</div>
+            <div class="inh-title">{{ $t('inheritance.inheritanceBreakdown') }}</div>
             <div v-if="outcome.error" class="inh-message" role="status">
-              {{ outcome.error }}
+              {{ problemText }}
             </div>
             <div v-for="r in results" :key="r.key" class="inh-row">
               <div class="inh-heir">
-                {{ r.label }}<span v-if="r.count > 1"> ×{{ r.count }}</span>
-                <div class="inh-rule"><HadithRef :text="r.rule" /></div>
+                {{ $t('inheritance.heirs.' + r.key)
+                }}<span v-if="r.count > 1"> ×{{ r.count }}</span>
+                <div class="inh-rule"><HadithRef :text="ruleSentence(r.ruleParts)" /></div>
               </div>
               <div class="inh-bar-wrap">
                 <div class="inh-bar-fill" :style="{ width: r.percent + '%' }"></div>
@@ -130,7 +136,7 @@
                 color: rgba(255, 255, 255, 0.5);
               "
             >
-              <span>Total estate distributed</span>
+              <span>{{ $t('inheritance.totalEstateDistributed') }}</span>
               <span style="color: var(--gold); font-weight: 600">{{ store.fmt(estateValue) }}</span>
             </div>
           </div>
@@ -146,13 +152,10 @@
                 margin-bottom: 6px;
               "
             >
-              ⚠ Important note
+              {{ $t('inheritance.importantNote') }}
             </div>
             <p style="font-size: 13px; color: #5a3e0a; line-height: 1.6">
-              This result is a guide, not a ruling. Inheritance law is complex and this calculator
-              covers standard cases only. Before dividing an estate, and for anything non-standard
-              (half-siblings, missing heirs, bequests, disputes), consult a qualified Islamic
-              scholar or mufti.
+              {{ $t('inheritance.thisResultIsAGuideNot') }}
             </p>
           </div>
         </div>
@@ -284,6 +287,7 @@ import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import { calcInheritance, HEIR_DEFS } from '@/utils/inheritance.js'
+import { t } from '@/i18n.js'
 
 useSeo('inheritance')
 useScrollReveal()
@@ -314,11 +318,31 @@ function setHeirCount(key, val) {
 
 const outcome = computed(() => calcInheritance({ ...activeHeirs }, estateValue.value))
 const results = computed(() => outcome.value.shares)
+const problemText = computed(() => {
+  const problem = outcome.value.problem
+  const heir = problem.params.heirKey ? t(`inheritance.heirs.${problem.params.heirKey}`) : undefined
+  return t(`inheritance.problem.${problem.code}`, { ...problem.params, heir })
+})
+
+function ruleSentence({ base, share, extras, source }) {
+  const sentence =
+    t(`inheritance.rule.${base}`, { share }) +
+    extras.map((extra) => t(`inheritance.extra.${extra}`)).join('')
+  if (!source) {
+    return sentence
+  }
+
+  const origin =
+    source === 'Hadith'
+      ? t('inheritance.source.hadith')
+      : t('inheritance.source.quran', { reference: source })
+  return `${sentence} · ${origin}`
+}
 
 function eachText(share) {
   const [first, ...rest] = share.each
   return rest.every((amount) => amount === first)
-    ? `${store.fmt(first)} each`
+    ? t('inheritance.each', { amount: store.fmt(first) })
     : share.each.map(store.fmt).join(' · ')
 }
 
@@ -351,27 +375,7 @@ const heirGroups = computed(() => {
 })
 
 function getHeirDesc(key) {
-  const descs = {
-    husband: 'Receives 1/4 beside a child or grandchild, otherwise 1/2',
-    wife: 'Receives 1/8 beside a child or grandchild, otherwise 1/4, shared equally among wives',
-    father:
-      'Receives 1/6 beside a child or grandchild, and the residue when no son or grandson takes it',
-    mother: 'Receives 1/6 beside a child, grandchild or two or more siblings, otherwise 1/3',
-    son: "Residuary — receives double a daughter's share",
-    daughter: 'Receives 1/2 (one), 2/3 (two+), or residue with son',
-    grandson: "Son's son — blocked by a son",
-    granddaughter:
-      "Son's daughter — 1/6 beside one daughter; excluded by a son, or by two daughters unless a grandson is present",
-    brother: 'Full brother — residuary; excluded by a son, grandson, father or grandfather',
-    sister:
-      'Full sister — 1/2 (one) or 2/3 (two+); shares the residue with a brother; excluded by a son, grandson, father or grandfather',
-    paternal_grandfather: "Father's father — blocked by father",
-    paternal_grandmother:
-      'Receives 1/6, shared if both grandmothers inherit — excluded by mother or father',
-    maternal_grandmother: 'Receives 1/6, shared if both grandmothers inherit — excluded by mother',
-  }
-
-  return descs[key] || ''
+  return t(`inheritance.heirDesc.${key}`)
 }
 
 const sharesTable = [

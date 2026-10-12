@@ -6,9 +6,9 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          {{ meta?.timeHint || 'Adhkar' }}
+          {{ meta?.timeHint || $t('adhkarCategory.adhkar') }}
         </div>
-        <h1>{{ meta?.name || 'Adhkar' }}</h1>
+        <h1>{{ meta?.name || $t('adhkarCategory.adhkar') }}</h1>
         <p v-if="meta">{{ meta.description }}</p>
       </div>
     </div>
@@ -16,22 +16,28 @@
     <div class="content-narrow">
       <!-- Breadcrumb -->
       <div class="adh-breadcrumb">
-        <RouterLink to="/adhkar" class="adh-breadcrumb-link">← All Adhkar</RouterLink>
+        <RouterLink to="/adhkar" class="adh-breadcrumb-link">{{
+          $t('adhkarCategory.allAdhkar')
+        }}</RouterLink>
         <span class="adh-sep" aria-hidden="true">/</span>
         <span>{{ meta?.name || categorySlug }}</span>
       </div>
 
-      <div v-if="!meta" class="had-empty">Category not found.</div>
+      <div v-if="!meta" class="had-empty">{{ $t('adhkarCategory.categoryNotFound') }}</div>
 
       <template v-else>
         <!-- Progress summary -->
         <div class="adh-progress-card anim-target">
           <div class="apc-top">
             <div>
-              <div class="apc-label">Today's progress</div>
-              <div class="apc-count">{{ completedCount }} / {{ dhikrList.length }} recited</div>
+              <div class="apc-label">{{ $t('adhkarCategory.todaySProgress') }}</div>
+              <div class="apc-count">
+                {{ $t('adhkarCategory.recited', { a: completedCount, b: dhikrList.length }) }}
+              </div>
             </div>
-            <div v-if="streak > 0" class="apc-streak">🔥 {{ streak }}-day streak</div>
+            <div v-if="streak > 0" class="apc-streak">
+              {{ $t('adhkarCategory.dayStreak', { a: streak }) }}
+            </div>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" :style="{ width: progressPct + '%' }"></div>
@@ -45,12 +51,12 @@
           >
             {{
               completedCount < dhikrList.length
-                ? `Complete all ${dhikrList.length} to finish`
-                : 'Mark ' + meta.name + ' complete for today'
+                ? $t('adhkarCategory.completeAll', { count: dhikrList.length })
+                : $t('adhkarCategory.markComplete', { name: meta.name })
             }}
           </button>
           <div v-else class="apc-done-msg">
-            ✓ {{ meta.name }} completed today — جَزَاكَ اللَّهُ خَيْرًا
+            {{ $t('adhkarCategory.completedToday', { a: meta.name }) }}
           </div>
         </div>
 
@@ -75,7 +81,7 @@
             ← {{ prevCategory.name }}
           </RouterLink>
           <RouterLink to="/adhkar" class="btn btn-secondary" style="margin: 0 auto">
-            All categories
+            {{ $t('adhkarCategory.allCategories') }}
           </RouterLink>
           <RouterLink
             v-if="nextCategory"

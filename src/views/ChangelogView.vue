@@ -232,6 +232,11 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: 'The site is ready to be translated',
+            scope: 'Whole site',
+            desc: 'The text of the navigation, the tools and the calculators now lives in one message file per language instead of inside the pages, and the site can serve each language at its own address, with a language switcher that appears once a second language is ready. Nothing changes for English readers yet.',
+          },
+          {
             title: "The hadith library's key is no longer public",
             scope: 'Hadith library',
             desc: "The hadith library now asks the site's own server for books, chapters and hadiths, and the server adds the API key. The key used to be readable in the site's code. Replies are cached for a day, so pages you have opened load faster.",

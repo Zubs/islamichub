@@ -8,6 +8,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { t, formatDate } from '@/i18n.js'
 
 const props = defineProps({
   metalsFetched: { type: Boolean, required: true },
@@ -26,21 +27,16 @@ const dateText = computed(() => {
   }
 
   const [year, month, day] = props.date.split('-').map(Number)
-  return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
+  return formatDate(new Date(year, month - 1, day), {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
 })
 
-const customNote = computed(() => {
-  if (!props.custom.length) {
-    return null
-  }
-
-  const metals = props.custom.join(' and ')
-  return `Your own ${metals} price per gram is in use in place of the fetched one.`
-})
+const customNote = computed(() =>
+  props.custom.length ? t(`zakatPriceStatus.custom.${props.custom.join('-')}`) : null,
+)
 
 const ageDays = computed(() => {
   if (!props.date) {
@@ -54,55 +50,24 @@ const ageDays = computed(() => {
   return Math.max(0, Math.round((to - from) / 86400000))
 })
 
-const ageText = computed(() => {
-  if (ageDays.value === null) {
-    return ''
-  }
-
-  if (ageDays.value === 0) {
-    return ', fetched earlier today'
-  }
-
-  return ageDays.value === 1 ? ', 1 day old' : `, ${ageDays.value} days old`
-})
-
-const label = computed(() => {
+const state = computed(() => {
   if (props.loading) {
     return 'loading'
   }
 
-  if (!props.metalsFetched && props.saved) {
-    return 'saved'
-  }
-
   if (!props.metalsFetched) {
-    return 'reference'
+    return props.saved ? 'saved' : 'reference'
   }
 
-  return props.ratesFetched ? 'current' : 'rates not current'
+  return props.ratesFetched ? 'current' : 'ratesNotCurrent'
 })
 
+const label = computed(() => t(`zakatPriceStatus.label.${state.value}`))
+
 const note = computed(() => {
-  const forDate = dateText.value ? ` for ${dateText.value}` : ''
-  const fromDate = dateText.value ? ` from ${dateText.value}` : ''
-
-  if (props.loading) {
-    return "Fetching today's prices. You can fill in the calculator meanwhile."
-  }
-
-  if (!props.metalsFetched && props.saved) {
-    return `Saved prices${fromDate}${ageText.value}. Today's prices could not be loaded, so these are the last ones this device fetched.`
-  }
-
-  if (!props.metalsFetched) {
-    return `Reference prices${fromDate}. Today's prices could not be loaded, so check the current price before relying on this result.`
-  }
-
-  if (!props.ratesFetched) {
-    return `Gold and silver prices${forDate}, converted with reference exchange rates that are not current.`
-  }
-
-  return `Gold and silver prices${forDate}.`
+  const dated = dateText.value ? 'dated' : 'undated'
+  const age = ageDays.value === null ? '' : t('zakatPriceStatus.age', ageDays.value)
+  return t(`zakatPriceStatus.note.${state.value}.${dated}`, { date: dateText.value, age })
 })
 </script>
 

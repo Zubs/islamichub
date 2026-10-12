@@ -1,31 +1,39 @@
 <template>
   <section class="fasting-tracker" aria-labelledby="fasting-tracker-heading">
-    <span class="eyebrow">Fasting tracker</span>
-    <h2 id="fasting-tracker-heading" class="section-title ft-title">Your fasts</h2>
+    <span class="eyebrow">{{ $t('fastingTracker.fastingTracker') }}</span>
+    <h2 id="fasting-tracker-heading" class="section-title ft-title">
+      {{ $t('fastingTracker.yourFasts') }}
+    </h2>
     <p class="ft-hint">
-      Record each fast and see what is still to be made up. Everything stays on this device.
+      {{ $t('fastingTracker.recordEachFastAndSeeWhat') }}
     </p>
 
     <div class="ft-summary">
       <div class="card">
-        <div class="ft-label">Still to make up</div>
+        <div class="ft-label">{{ $t('fastingTracker.stillToMakeUp') }}</div>
         <div class="ft-figure" data-test="to-make-up">{{ fasting.toMakeUp }}</div>
         <ul v-if="fasting.summary.length" class="ft-years">
           <li v-for="entry in fasting.summary" :key="entry.year">
-            Ramadan {{ entry.year }} AH: {{ entry.missed }} missed, {{ entry.madeUp }} made up,
-            {{ entry.remaining }} remaining
+            {{
+              $t('fastingTracker.ramadanAhMissedMadeUpRemaining', {
+                a: entry.year,
+                b: entry.missed,
+                c: entry.madeUp,
+                d: entry.remaining,
+              })
+            }}
           </li>
         </ul>
       </div>
       <div class="card">
-        <div class="ft-label">Voluntary fasts</div>
+        <div class="ft-label">{{ $t('fastingTracker.voluntaryFasts') }}</div>
         <div class="ft-figure" data-test="voluntary">{{ fasting.voluntary }}</div>
       </div>
     </div>
 
     <div class="btn-group ft-views">
       <button class="pill-btn" :class="{ active: view === 'ramadan' }" @click="view = 'ramadan'">
-        Ramadan {{ ramadanYear }} AH
+        {{ $t('fastingTracker.ramadanAh', { a: ramadanYear }) }}
       </button>
       <button class="pill-btn" :class="{ active: view === 'month' }" @click="view = 'month'">
         {{ monthTitle }}
@@ -33,7 +41,9 @@
     </div>
 
     <div v-if="view === 'ramadan'" class="ft-start">
-      <label for="ramadan-start">First day of Ramadan {{ ramadanYear }} AH</label>
+      <label for="ramadan-start">{{
+        $t('fastingTracker.firstDayOfRamadanAh', { a: ramadanYear })
+      }}</label>
       <div class="ft-start-row">
         <input
           id="ramadan-start"
@@ -47,12 +57,11 @@
           class="btn btn-secondary"
           @click="fasting.setRamadanStart(ramadanYear, null)"
         >
-          Use the estimate
+          {{ $t('fastingTracker.useTheEstimate') }}
         </button>
       </div>
       <p class="ft-hint">
-        This date is an estimate. The month begins with the sighting of the moon, so set it to the
-        day Ramadan began where you are.
+        {{ $t('fastingTracker.thisDateIsAnEstimateThe') }}
       </p>
     </div>
 
@@ -79,7 +88,7 @@
 
     <div v-if="selectedDay" class="card ft-selected">
       <div class="ft-selected-day">{{ longDate(selectedDay) }}</div>
-      <div class="ft-statuses" role="group" aria-label="Fast status">
+      <div class="ft-statuses" role="group" :aria-label="$t('fastingTracker.fastStatus')">
         <button
           v-for="status in offered"
           :key="status.key"
@@ -91,15 +100,11 @@
           :aria-pressed="fasting.statusOf(selectedDay) === status.key"
           @click="fasting.setStatus(selectedDay, status.key)"
         >
-          {{ status.label }}
+          {{ $t('common.fastStatus.' + status.key) }}
         </button>
       </div>
       <p class="ft-hint">
-        {{
-          isRamadanDay
-            ? 'A day in Ramadan is marked fasted or missed.'
-            : 'A day outside Ramadan is marked as a made-up fast or a voluntary one.'
-        }}
+        {{ isRamadanDay ? $t('fastingTracker.ramadanDayHint') : $t('fastingTracker.otherDayHint') }}
       </p>
     </div>
   </section>
@@ -117,6 +122,7 @@ import {
   ramadanYearOf,
   latestRamadanYear,
 } from '@/utils/fasting.js'
+import { t, formatDate } from '@/i18n.js'
 
 const fasting = useFastingStore()
 const today = dayKey()
@@ -134,7 +140,7 @@ function dateOf(day) {
 }
 
 const now = dateOf(today)
-const monthTitle = now.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
+const monthTitle = computed(() => formatDate(now, { month: 'long', year: 'numeric' }))
 
 const days = computed(() =>
   view.value === 'ramadan'
@@ -149,7 +155,7 @@ const offered = computed(() => {
 const isRamadanDay = computed(() => ramadanYearOf(selectedDay.value, fasting.starts) !== null)
 
 function longDate(day) {
-  return dateOf(day).toLocaleDateString('en-GB', {
+  return formatDate(dateOf(day), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -158,7 +164,7 @@ function longDate(day) {
 }
 
 function shortDate(day) {
-  return dateOf(day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+  return formatDate(dateOf(day), { day: 'numeric', month: 'short' })
 }
 
 function dayNumber(day) {
@@ -166,7 +172,7 @@ function dayNumber(day) {
 }
 
 function statusLabel(status) {
-  return FAST_STATUSES.find((entry) => entry.key === status)?.label ?? 'not logged'
+  return status ? t(`common.fastStatus.${status}`) : t('common.salahStatus.none')
 }
 </script>
 

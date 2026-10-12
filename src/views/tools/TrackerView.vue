@@ -6,29 +6,28 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Daily Worship
+          {{ $t('tracker.dailyWorship') }}
         </div>
-        <h1>Prayer Tracker</h1>
+        <h1>{{ $t('tracker.prayerTracker') }}</h1>
         <p>
-          Record each of the five daily prayers and see how consistent you have been. Everything
-          stays on this device.
+          {{ $t('tracker.recordEachOfTheFiveDaily') }}
         </p>
       </div>
     </div>
 
     <div class="content-narrow">
-      <section class="card tracker-summary" aria-label="Streak">
+      <section class="card tracker-summary" :aria-label="$t('tracker.streak')">
         <div>
-          <div class="tracker-label">Current streak</div>
+          <div class="tracker-label">{{ $t('tracker.currentStreak') }}</div>
           <div class="tracker-streak">
-            {{ salah.streak }} {{ salah.streak === 1 ? 'day' : 'days' }}
+            {{ $t('common.days', salah.streak) }}
           </div>
         </div>
-        <p class="tracker-hint">A day counts when all five prayers are marked on time or late.</p>
+        <p class="tracker-hint">{{ $t('tracker.aDayCountsWhenAllFive') }}</p>
       </section>
 
       <section aria-labelledby="week-heading">
-        <h2 id="week-heading" class="tracker-heading">Last seven days</h2>
+        <h2 id="week-heading" class="tracker-heading">{{ $t('tracker.lastSevenDays') }}</h2>
         <div class="tracker-week">
           <button
             v-for="day in week"
@@ -47,11 +46,11 @@
 
       <section class="card" aria-labelledby="day-heading">
         <h2 id="day-heading" class="tracker-heading">
-          {{ selectedDay === salah.today ? 'Today' : longDate(selectedDay) }}
+          {{ selectedDay === salah.today ? $t('tracker.today') : longDate(selectedDay) }}
         </h2>
         <p v-if="selectedDay === salah.today && !settings.saved" class="tracker-hint">
-          <RouterLink to="/prayer">Remember a location on the Prayer page</RouterLink> to see each
-          prayer's time here.
+          <RouterLink to="/prayer">{{ $t('tracker.rememberALocationOnThePrayer') }}</RouterLink>
+          {{ $t('tracker.toSeeEachPrayerSTime') }}
         </p>
         <div
           v-for="prayer in prayers"
@@ -60,14 +59,20 @@
           :data-prayer="prayer.key"
         >
           <div class="tracker-prayer">
-            <span class="tracker-prayer-name">{{ prayer.label }}</span>
+            <span class="tracker-prayer-name">{{ $t('common.prayers.' + prayer.key) }}</span>
             <span v-if="timeOf(prayer.key)" class="tracker-time">{{ timeOf(prayer.key) }}</span>
-            <span v-if="isNotYet(prayer.key)" class="tracker-not-yet">not yet</span>
-            <span v-else-if="!salah.statusOf(selectedDay, prayer.key)" class="tracker-unlogged"
-              >not logged</span
-            >
+            <span v-if="isNotYet(prayer.key)" class="tracker-not-yet">{{
+              $t('tracker.notYet')
+            }}</span>
+            <span v-else-if="!salah.statusOf(selectedDay, prayer.key)" class="tracker-unlogged">{{
+              $t('tracker.notLogged')
+            }}</span>
           </div>
-          <div class="tracker-statuses" role="group" :aria-label="`${prayer.label} status`">
+          <div
+            class="tracker-statuses"
+            role="group"
+            :aria-label="$t('tracker.statusOf', { prayer: $t('common.prayers.' + prayer.key) })"
+          >
             <button
               v-for="status in statuses"
               :key="status.key"
@@ -80,7 +85,7 @@
               :disabled="isNotYet(prayer.key)"
               @click="salah.setStatus(selectedDay, prayer.key, status.key)"
             >
-              {{ status.label }}
+              {{ $t('common.salahStatus.' + status.key) }}
             </button>
           </div>
         </div>
@@ -88,13 +93,17 @@
 
       <section class="card" aria-labelledby="month-heading">
         <div class="tracker-month-head">
-          <button class="btn btn-secondary" aria-label="Previous month" @click="moveMonth(-1)">
+          <button
+            class="btn btn-secondary"
+            :aria-label="$t('tracker.previousMonth')"
+            @click="moveMonth(-1)"
+          >
             ←
           </button>
           <h2 id="month-heading" class="tracker-heading">{{ monthTitle }}</h2>
           <button
             class="btn btn-secondary"
-            aria-label="Next month"
+            :aria-label="$t('tracker.nextMonth')"
             :disabled="isCurrentMonth"
             @click="moveMonth(1)"
           >
@@ -120,18 +129,20 @@
           </template>
         </div>
         <ul class="tracker-legend">
-          <li><span class="tracker-dot state-complete"></span> All five prayed</li>
-          <li><span class="tracker-dot state-partial"></span> Partly logged</li>
-          <li><span class="tracker-dot state-missed"></span> A prayer missed</li>
+          <li>
+            <span class="tracker-dot state-complete"></span> {{ $t('tracker.allFivePrayed') }}
+          </li>
+          <li><span class="tracker-dot state-partial"></span> {{ $t('tracker.partlyLogged') }}</li>
+          <li><span class="tracker-dot state-missed"></span> {{ $t('tracker.aPrayerMissed') }}</li>
         </ul>
       </section>
 
       <section class="tracker-clear">
         <p class="tracker-hint">
-          Your log is kept only in this browser, on this device. It is never sent anywhere.
+          {{ $t('tracker.yourLogIsKeptOnlyIn') }}
         </p>
         <button class="btn btn-secondary" :disabled="!hasData" @click="clearLog">
-          Clear my data
+          {{ $t('tracker.clearMyData') }}
         </button>
       </section>
     </div>
@@ -148,14 +159,15 @@ import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { SALAH_PRAYERS, SALAH_STATUSES, dayState, canLog, weekEnding } from '@/utils/salah.js'
 import { monthGrid } from '@/utils/day.js'
 import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
+import { t, formatDate } from '@/i18n.js'
 
-const WEEKDAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const STATE_LABELS = {
-  complete: 'all five prayed',
-  partial: 'partly logged',
-  missed: 'a prayer missed',
-  empty: 'nothing logged',
-}
+// A Monday, so the seven dates that follow give the weekday names in order.
+const A_MONDAY = new Date(2024, 0, 1)
+const WEEKDAY_NAMES = computed(() =>
+  Array.from({ length: 7 }, (_, index) =>
+    formatDate(new Date(2024, 0, A_MONDAY.getDate() + index), { weekday: 'short' }),
+  ),
+)
 const MINUTE_MS = 60000
 
 useSeo('tracker')
@@ -176,11 +188,11 @@ function dateOf(day) {
 }
 
 function longDate(day) {
-  return dateOf(day).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
+  return formatDate(dateOf(day), { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
 function weekdayOf(day) {
-  return dateOf(day).toLocaleDateString('en-GB', { weekday: 'short' })
+  return formatDate(dateOf(day), { weekday: 'short' })
 }
 
 function dayNumberOf(day) {
@@ -192,7 +204,7 @@ function stateOf(day) {
 }
 
 function stateLabel(day) {
-  return STATE_LABELS[stateOf(day)]
+  return t(`tracker.state.${stateOf(day)}`)
 }
 
 function selectDay(day) {
@@ -204,7 +216,7 @@ function selectDay(day) {
 const week = computed(() => weekEnding(salah.today))
 const grid = computed(() => monthGrid(shownMonth.value.year, shownMonth.value.month))
 const monthTitle = computed(() =>
-  new Date(shownMonth.value.year, shownMonth.value.month - 1, 1).toLocaleDateString('en-GB', {
+  formatDate(new Date(shownMonth.value.year, shownMonth.value.month - 1, 1), {
     month: 'long',
     year: 'numeric',
   }),
@@ -251,7 +263,7 @@ function isNotYet(prayer) {
 }
 
 function clearLog() {
-  if (window.confirm('Clear your whole prayer log from this device? This cannot be undone.')) {
+  if (window.confirm(t('tracker.confirmClear'))) {
     salah.clear()
   }
 }

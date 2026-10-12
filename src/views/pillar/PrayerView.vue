@@ -30,22 +30,21 @@
 
       <!-- ── PRAYER TIMES TOOL ─────────────────────────────── -->
       <div style="margin-top: 2.5rem">
-        <span class="eyebrow">Prayer Times Tool</span>
+        <span class="eyebrow">{{ $t('prayer.prayerTimesTool') }}</span>
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
         >
-          Today's prayer times
+          {{ $t('prayer.todaySPrayerTimes') }}
         </h2>
         <p class="prose" style="margin-bottom: 1.5rem">
-          Enter your location to get accurate prayer times calculated using your coordinates and the
-          selected method.
+          {{ $t('prayer.enterYourLocationToGetAccurate') }}
         </p>
 
         <div class="card" style="margin-bottom: 1rem">
           <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap">
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Latitude</label>
+              <label>{{ $t('prayer.latitude') }}</label>
               <input
                 v-model.number="lat"
                 type="number"
@@ -55,7 +54,7 @@
               />
             </div>
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Longitude</label>
+              <label>{{ $t('prayer.longitude') }}</label>
               <input
                 v-model.number="lng"
                 type="number"
@@ -65,50 +64,49 @@
               />
             </div>
             <div class="field" style="min-width: 160px">
-              <label>Calculation method</label>
+              <label>{{ $t('prayer.calculationMethod') }}</label>
               <select v-model="method" class="select-field">
-                <option value="MWL">Muslim World League</option>
-                <option value="ISNA">ISNA (North America)</option>
-                <option value="Egypt">Egyptian Authority</option>
-                <option value="Makkah">Umm Al-Qura (Makkah)</option>
-                <option value="Karachi">Karachi University</option>
+                <option value="MWL">{{ $t('prayer.muslimWorldLeague') }}</option>
+                <option value="ISNA">{{ $t('prayer.isnaNorthAmerica') }}</option>
+                <option value="Egypt">{{ $t('prayer.egyptianAuthority') }}</option>
+                <option value="Makkah">{{ $t('prayer.ummAlQuraMakkah') }}</option>
+                <option value="Karachi">{{ $t('prayer.karachiUniversity') }}</option>
               </select>
             </div>
             <div class="field" style="min-width: 160px">
-              <label for="asr-method">Asr time</label>
+              <label for="asr-method">{{ $t('prayer.asrTime') }}</label>
               <select id="asr-method" v-model="asrMethod" class="select-field">
-                <option value="standard">Standard (Shafi'i, Maliki, Hanbali)</option>
-                <option value="hanafi">Hanafi</option>
+                <option value="standard">{{ $t('prayer.standardShafiIMalikiHanbali') }}</option>
+                <option value="hanafi">{{ $t('prayer.hanafi') }}</option>
               </select>
             </div>
             <button class="btn btn-secondary" @click="locate" :disabled="locating">
-              {{ locating ? 'Locating…' : '📍 Use my location' }}
+              {{ locating ? $t('prayer.locating') : $t('prayer.useMyLocation') }}
             </button>
-            <button class="btn btn-primary" @click="calculate">Calculate</button>
+            <button class="btn btn-primary" @click="calculate">{{ $t('prayer.calculate') }}</button>
           </div>
           <div v-if="locationStatus" style="margin-top: 8px; font-size: 13px; color: var(--muted)">
             {{ locationStatus }}
           </div>
           <div v-if="shownLocation || settings.saved" class="remember-row">
             <span v-if="isRemembered" class="remember-state">
-              📍 Remembered on this device: {{ settings.saved.name }}
+              {{ $t('prayer.rememberedOnThisDevice', { a: settings.saved.name }) }}
             </span>
             <button
               v-else-if="shownLocation && settings.canRemember"
               class="btn btn-secondary"
               @click="rememberLocation"
             >
-              Remember this location
+              {{ $t('prayer.rememberThisLocation') }}
             </button>
             <span v-else-if="shownLocation" class="remember-state" role="status">
-              Your browser is blocking storage, so this location cannot be remembered. Times still
-              work for this visit.
+              {{ $t('prayer.yourBrowserIsBlockingStorageSo') }}
             </span>
             <button v-if="settings.saved" class="btn btn-secondary" @click="settings.forget()">
-              Forget my location
+              {{ $t('prayer.forgetMyLocation') }}
             </button>
             <span v-if="settings.canRemember" class="remember-note">
-              Kept on this device only and never sent anywhere.
+              {{ $t('prayer.keptOnThisDeviceOnlyAnd') }}
             </span>
           </div>
           <ReminderSettings />
@@ -140,7 +138,7 @@
                   margin-bottom: 3px;
                 "
               >
-                Next Prayer
+                {{ $t('prayer.nextPrayer') }}
               </div>
               <div style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600">
                 {{ nextPrayer?.label }}
@@ -150,7 +148,7 @@
               <div
                 style="font-size: 11px; font-weight: 600; color: var(--green); margin-bottom: 3px"
               >
-                Time remaining
+                {{ $t('prayer.timeRemaining') }}
               </div>
               <div
                 style="
@@ -175,25 +173,24 @@
             :class="{ current: currentPrayer === p.key }"
             :id="'pc-' + p.key"
           >
-            <div class="prayer-name">{{ p.label }}</div>
+            <div class="prayer-name">{{ $t('common.prayers.' + p.key) }}</div>
             <div class="prayer-time">{{ prayerTimes ? prayerTimes[p.key] : '—:—' }}</div>
-            <div class="prayer-sub">{{ p.key === 'sunrise' ? 'Not a prayer' : '' }}</div>
+            <div class="prayer-sub">{{ p.key === 'sunrise' ? $t('prayer.notAPrayer') : '' }}</div>
           </div>
         </div>
       </div>
 
       <!-- ── QIBLA ────────────────────────────────────────── -->
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-      <span class="eyebrow">Qibla Finder</span>
+      <span class="eyebrow">{{ $t('prayer.qiblaFinder') }}</span>
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
       >
-        Direction of the Ka'bah
+        {{ $t('prayer.directionOfTheKaBah') }}
       </h2>
       <p class="prose" style="margin-bottom: 1.5rem">
-        The Qibla (قِبْلَة) is the direction of the Masjid al-Haram in Makkah. Uses the same
-        coordinates entered above.
+        {{ $t('prayer.theQiblaIsTheDirectionOf') }}
       </p>
 
       <div class="card" style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap">
@@ -249,7 +246,7 @@
                 "
               ></div>
             </div>
-            <div class="compass-kaaba" aria-label="Ka'bah">🕋</div>
+            <div class="compass-kaaba" :aria-label="$t('prayer.kaBah')">🕋</div>
             <div
               aria-hidden="true"
               style="
@@ -279,7 +276,7 @@
                 margin-bottom: 5px;
               "
             >
-              Qibla bearing
+              {{ $t('prayer.qiblaBearing') }}
             </div>
             <div
               style="
@@ -305,7 +302,7 @@
                 margin-bottom: 5px;
               "
             >
-              Distance to Makkah
+              {{ $t('prayer.distanceToMakkah') }}
             </div>
             <div
               style="font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1"
@@ -324,7 +321,7 @@
               line-height: 1.5;
             "
           >
-            💡 Face the bearing shown above. The green end of the needle points toward Makkah.
+            {{ $t('prayer.faceTheBearingShownAboveThe') }}
           </div>
         </div>
       </div>
@@ -475,6 +472,7 @@ import { useZakatStore } from '@/stores/zakat.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import { track } from '@/composables/useStats.js'
+import { t } from '@/i18n.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import ReminderSettings from '@/components/ReminderSettings.vue'
 import HadithBlock from '@/components/HadithBlock.vue'
@@ -531,7 +529,7 @@ const currentPrayer = ref(null)
 const nextPrayer = ref(null)
 const countdown = ref('')
 const qiblaBearing = ref(null)
-const qiblaDir = ref('Enter coordinates above and press Calculate')
+const qiblaDir = ref(t('prayer.qiblaPrompt'))
 const qiblaDist = ref(null)
 
 // ── DOM refs for needle ───────────────────────────────────────
@@ -552,7 +550,7 @@ const prayerOrder = [
 // ── Locate ─────────────────────────────────────────────────────
 async function locate() {
   locating.value = true
-  locationStatus.value = 'Requesting location…'
+  locationStatus.value = t('prayer.requestingLocation')
   try {
     const loc = await store.requestLocation()
     lat.value = parseFloat(loc.lat.toFixed(4))
@@ -560,8 +558,7 @@ async function locate() {
     locationStatus.value = `📍 ${loc.name}`
     calculate()
   } catch {
-    locationStatus.value =
-      store.locationError || 'Could not get location. Enter coordinates manually.'
+    locationStatus.value = store.locationError || t('prayer.locationFailed')
   } finally {
     locating.value = false
   }
@@ -578,8 +575,7 @@ function showTimes() {
   const latV = parseFloat(lat.value)
   const lngV = parseFloat(lng.value)
   if (!isValidCoordinates(latV, lngV)) {
-    locationStatus.value =
-      'Please enter valid coordinates: latitude from -90 to 90 and longitude from -180 to 180.'
+    locationStatus.value = t('prayer.invalidCoordinates')
     return false
   }
 
@@ -607,7 +603,7 @@ function showTimes() {
   // Qibla
   const bearing = calcQibla(latV, lngV)
   qiblaBearing.value = bearing
-  qiblaDir.value = `${bearingToLabel(bearing)} from your location`
+  qiblaDir.value = t('prayer.qiblaFrom', { direction: bearingToLabel(bearing) })
   qiblaDist.value = distanceToMakkah(latV, lngV)
 
   // Rotate needle via DOM refs (reactive style binding causes repaint issues with transitions)

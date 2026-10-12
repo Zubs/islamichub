@@ -1,6 +1,8 @@
 import { computed, toValue } from 'vue'
 import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
+import { availableLocales, currentLocale, localeCodes } from '@/i18n.js'
+import { SOURCE_LOCALE, localePath, splitLocale } from '@/utils/locale.js'
 
 export const SITE_URL = 'https://islamichub.xyz'
 
@@ -105,6 +107,22 @@ export function useSeo(page = {}) {
       const title = toValue(source.title) || PAGE_META.home.title
       const description = toValue(source.description) || PAGE_META.home.description
       const canonical = canonicalFor(route.path)
+      const { path: sourcePath } = splitLocale(route.path, localeCodes())
+      const alternates =
+        availableLocales.value.length > 1
+          ? [
+              ...availableLocales.value.map((locale) => ({
+                rel: 'alternate',
+                hreflang: locale.code,
+                href: canonicalFor(localePath(sourcePath, locale.code)),
+              })),
+              {
+                rel: 'alternate',
+                hreflang: 'x-default',
+                href: canonicalFor(localePath(sourcePath, SOURCE_LOCALE)),
+              },
+            ]
+          : []
 
       return {
         title,
@@ -117,7 +135,8 @@ export function useSeo(page = {}) {
           { name: 'twitter:description', content: description },
           ...(toValue(source.noindex) ? [{ name: 'robots', content: 'noindex' }] : []),
         ],
-        link: [{ rel: 'canonical', href: canonical }],
+        htmlAttrs: { lang: currentLocale.value.code, dir: currentLocale.value.dir },
+        link: [{ rel: 'canonical', href: canonical }, ...alternates],
       }
     }),
   )

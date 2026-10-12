@@ -3,6 +3,7 @@ import { useRemindersStore } from '@/stores/reminders.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { dueReminders, nextMidnight } from '@/utils/reminders.js'
 import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
+import { t } from '@/i18n.js'
 
 const ICON = '/icon-192.png'
 
@@ -14,19 +15,20 @@ function clearTimers() {
 }
 
 async function notify(reminder, open) {
+  const title = t(`reminders.${reminder.key}.title`)
   const options = {
-    body: reminder.body,
+    body: t(`reminders.${reminder.key}.body`),
     icon: ICON,
     tag: reminder.key,
     data: { path: reminder.path },
   }
   const registration = await navigator.serviceWorker?.getRegistration?.().catch(() => null)
   if (registration?.showNotification) {
-    await registration.showNotification(reminder.title, options)
+    await registration.showNotification(title, options)
     return
   }
 
-  const notification = new Notification(reminder.title, options)
+  const notification = new Notification(title, options)
   notification.onclick = () => {
     window.focus()
     open(reminder.path)

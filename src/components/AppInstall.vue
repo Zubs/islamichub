@@ -1,16 +1,18 @@
 <template>
   <div v-if="needRefresh || canInstall || showIosNote" class="app-bar" role="status">
     <template v-if="needRefresh">
-      <span>Update available.</span>
-      <button class="btn btn-primary" @click="refreshApp">Refresh</button>
+      <span>{{ $t('appInstall.updateAvailable') }}</span>
+      <button class="btn btn-primary" @click="refreshApp">{{ $t('appInstall.refresh') }}</button>
     </template>
     <template v-else-if="canInstall">
-      <span>Install IslamicHub to use it offline.</span>
-      <button class="btn btn-primary" @click="installApp">Install</button>
+      <span>{{ $t('appInstall.installIslamichubToUseItOffline') }}</span>
+      <button class="btn btn-primary" @click="installApp">{{ $t('appInstall.install') }}</button>
     </template>
     <template v-else>
-      <span> To install on iPhone: tap Share, then &ldquo;Add to Home Screen&rdquo;. </span>
-      <button class="btn btn-secondary" @click="dismissIosNote">Dismiss</button>
+      <span> {{ $t('appInstall.toInstallOnIphoneTapShare') }} </span>
+      <button class="btn btn-secondary" @click="dismissIosNote">
+        {{ $t('appInstall.dismiss') }}
+      </button>
     </template>
   </div>
 </template>

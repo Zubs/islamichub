@@ -1,9 +1,9 @@
 <template>
   <section class="reminders" aria-labelledby="reminders-heading">
-    <h3 id="reminders-heading" class="reminders-title">Reminders</h3>
+    <h3 id="reminders-heading" class="reminders-title">{{ $t('reminderSettings.reminders') }}</h3>
 
     <p v-if="!reminders.supported" class="reminders-note" role="status">
-      This browser cannot show notifications, so reminders are not available here.
+      {{ $t('reminderSettings.thisBrowserCannotShowNotificationsSo') }}
     </p>
 
     <template v-else>
@@ -14,15 +14,14 @@
           :disabled="!prayerSettings.saved"
           @change="toggle($event.target)"
         />
-        <span>Remind me at prayer times</span>
+        <span>{{ $t('reminderSettings.remindMeAtPrayerTimes') }}</span>
       </label>
 
       <p v-if="!prayerSettings.saved" class="reminders-note">
-        Remember a location above first. Reminder times are worked out from it.
+        {{ $t('reminderSettings.rememberALocationAboveFirstReminder') }}
       </p>
       <p v-else-if="refused" class="reminders-note reminders-warning" role="alert">
-        Notifications are blocked for this site, so reminders were turned off. Allow notifications
-        for islamichub.xyz in your browser's site settings, then turn this on again.
+        {{ $t('reminderSettings.notificationsAreBlockedForThisSite') }}
       </p>
 
       <div v-if="reminders.settings.enabled && prayerSettings.saved" class="reminders-items">
@@ -32,13 +31,12 @@
             :checked="reminders.settings.items[reminder.key]"
             @change="reminders.setItem(reminder.key, $event.target.checked)"
           />
-          <span>{{ reminder.label }}</span>
+          <span>{{ $t('reminderSettings.items.' + reminder.key) }}</span>
         </label>
       </div>
 
       <p class="reminders-note">
-        These reminders arrive only while IslamicHub is open or running in the background. They do
-        not arrive once the app is fully closed.
+        {{ $t('reminderSettings.theseRemindersArriveOnlyWhileIslamichub') }}
       </p>
 
       <template v-if="reminders.settings.enabled && prayerSettings.saved">
@@ -53,24 +51,20 @@
               :disabled="reminders.pushState !== 'ready' || pushBusy"
               @change="togglePush($event.target)"
             />
-            <span>Also notify me when the app is closed</span>
+            <span>{{ $t('reminderSettings.alsoNotifyMeWhenTheApp') }}</span>
           </label>
           <p v-if="reminders.pushState === 'ios-not-installed'" class="reminders-note">
-            On iPhone, notifications for a closed app only work once IslamicHub is installed. Tap
-            Share, then &ldquo;Add to Home Screen&rdquo;, and turn this on from the installed app.
+            {{ $t('reminderSettings.onIphoneNotificationsForAClosed') }}
           </p>
           <p v-else-if="pushFailed" class="reminders-note reminders-warning" role="alert">
-            This could not be turned on. Check your connection and try again.
+            {{ $t('reminderSettings.thisCouldNotBeTurnedOn') }}
           </p>
           <p class="reminders-note">
-            Turning this on stores, on our server, what is needed to send the reminder at the right
-            time: your location rounded to about 1 km, your timezone, your calculation and Asr
-            methods, and the reminders you chose. No name, email or account. Turning it off, or
-            &ldquo;Forget my location&rdquo;, deletes it.
+            {{ $t('reminderSettings.turningThisOnStoresOnOur') }}
           </p>
         </template>
         <p v-else-if="reminders.pushState === 'unsupported'" class="reminders-note">
-          This browser cannot receive notifications when the app is closed.
+          {{ $t('reminderSettings.thisBrowserCannotReceiveNotificationsWhen') }}
         </p>
       </template>
     </template>

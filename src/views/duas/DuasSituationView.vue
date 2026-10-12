@@ -6,7 +6,7 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Duas
+          {{ $t('duasSituation.duas') }}
         </div>
         <h1>{{ situation?.name }}</h1>
         <p>{{ situation?.description }}</p>
@@ -14,8 +14,10 @@
     </div>
 
     <div class="content-narrow">
-      <nav class="duas-breadcrumb" aria-label="Breadcrumb">
-        <RouterLink to="/duas" class="duas-breadcrumb-link">← All duas</RouterLink>
+      <nav class="duas-breadcrumb" :aria-label="$t('duasSituation.breadcrumb')">
+        <RouterLink to="/duas" class="duas-breadcrumb-link">{{
+          $t('duasSituation.allDuas')
+        }}</RouterLink>
         <span aria-hidden="true">/</span>
         <span>{{ situation?.name }}</span>
       </nav>
@@ -31,11 +33,13 @@
         />
       </div>
 
-      <nav class="duas-nav" aria-label="Situations">
+      <nav class="duas-nav" :aria-label="$t('duasSituation.situations')">
         <RouterLink v-if="previous" :to="'/duas/' + previous.slug" class="btn btn-secondary">
           ← {{ previous.name }}
         </RouterLink>
-        <RouterLink to="/duas" class="btn btn-secondary duas-nav-middle">All situations</RouterLink>
+        <RouterLink to="/duas" class="btn btn-secondary duas-nav-middle">{{
+          $t('duasSituation.allSituations')
+        }}</RouterLink>
         <RouterLink v-if="next" :to="'/duas/' + next.slug" class="btn btn-secondary">
           {{ next.name }} →
         </RouterLink>

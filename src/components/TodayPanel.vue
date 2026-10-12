@@ -1,65 +1,71 @@
 <template>
   <section class="today" aria-labelledby="today-heading">
     <div class="today-head">
-      <span class="eyebrow">Today</span>
+      <span class="eyebrow">{{ $t('todayPanel.today') }}</span>
       <h2 id="today-heading" class="today-title">{{ dateTitle }}</h2>
     </div>
 
     <div class="today-grid">
       <RouterLink v-if="nextPrayer" to="/tracker" class="today-tile" data-part="next-prayer">
-        <span class="today-label">Next prayer</span>
-        <span class="today-value">{{ nextPrayer.label }}</span>
-        <span class="today-note">in {{ countdown }} · at {{ nextPrayerTime }}</span>
+        <span class="today-label">{{ $t('todayPanel.nextPrayer') }}</span>
+        <span class="today-value">{{ nextPrayerLabel }}</span>
+        <span class="today-note">{{
+          $t('todayPanel.inAt', { a: countdown, b: nextPrayerTime })
+        }}</span>
       </RouterLink>
       <RouterLink v-else to="/prayer" class="today-tile today-tile-start" data-part="next-prayer">
-        <span class="today-label">Next prayer</span>
-        <span class="today-value">Set your location</span>
-        <span class="today-note"
-          >Remember a location on the Prayer page to see prayer times here</span
-        >
+        <span class="today-label">{{ $t('todayPanel.nextPrayer') }}</span>
+        <span class="today-value">{{ $t('todayPanel.setYourLocation') }}</span>
+        <span class="today-note">{{ $t('todayPanel.rememberALocationOnThePrayer') }}</span>
       </RouterLink>
 
       <RouterLink to="/tracker" class="today-tile" data-part="prayers">
-        <span class="today-label">Today's prayers</span>
-        <span class="today-value">{{ prayedCount }} of 5 prayed</span>
+        <span class="today-label">{{ $t('todayPanel.todaySPrayers') }}</span>
+        <span class="today-value">{{ $t('todayPanel.of5Prayed', { a: prayedCount }) }}</span>
         <span class="today-prayers">
           <span
             v-for="prayer in prayers"
             :key="prayer.key"
             class="today-prayer"
             :class="'status-' + (salah.statusOf(today, prayer.key) ?? 'none')"
-            :title="`${prayer.label}: ${statusLabel(prayer.key)}`"
+            :title="`${$t('common.prayers.' + prayer.key)}: ${statusLabel(prayer.key)}`"
           >
-            {{ prayer.label }}
+            {{ $t('common.prayers.' + prayer.key) }}
           </span>
         </span>
-        <span v-if="!loggedCount" class="today-note">Tap to log your prayers</span>
+        <span v-if="!loggedCount" class="today-note">{{
+          $t('todayPanel.tapToLogYourPrayers')
+        }}</span>
       </RouterLink>
 
       <RouterLink to="/adhkar" class="today-tile" data-part="adhkar">
-        <span class="today-label">Adhkar</span>
-        <span class="today-value">{{ adhkarDone.length }} of {{ categories.length }} done</span>
+        <span class="today-label">{{ $t('todayPanel.adhkar') }}</span>
+        <span class="today-value">{{
+          $t('todayPanel.ofDone', { a: adhkarDone.length, b: categories.length })
+        }}</span>
         <span class="today-note">
           {{
             adhkarDone.length
               ? adhkarDone.map((category) => category.name).join(' · ')
-              : 'Tap to begin the adhkar'
+              : $t('todayPanel.tapToBeginAdhkar')
           }}
         </span>
       </RouterLink>
 
       <RouterLink to="/tasbih" class="today-tile" data-part="tasbih">
-        <span class="today-label">Tasbih</span>
+        <span class="today-label">{{ $t('todayPanel.tasbih') }}</span>
         <span class="today-value">{{ tasbihTotal }}</span>
         <span class="today-note">{{
-          tasbihTotal ? 'counted today' : 'Tap to start counting'
+          tasbihTotal ? $t('todayPanel.countedToday') : $t('todayPanel.tapToStartCounting')
         }}</span>
       </RouterLink>
 
       <RouterLink v-if="inRamadan" to="/fasting" class="today-tile" data-part="fasting">
-        <span class="today-label">Today's fast</span>
+        <span class="today-label">{{ $t('todayPanel.todaySFast') }}</span>
         <span class="today-value">{{ fastLabel }}</span>
-        <span v-if="!fasting.statusOf(today)" class="today-note">Tap to record today's fast</span>
+        <span v-if="!fasting.statusOf(today)" class="today-note">{{
+          $t('todayPanel.tapToRecordTodaySFast')
+        }}</span>
       </RouterLink>
     </div>
 
@@ -77,10 +83,11 @@ import { useAdhkarStore } from '@/stores/adhkar.js'
 import { useTasbihStore } from '@/stores/tasbih.js'
 import { useFastingStore } from '@/stores/fasting.js'
 import { ADHKAR_CATEGORIES } from '@/data/adhkar.js'
-import { SALAH_PRAYERS, SALAH_STATUSES, loggedCount as countLogged } from '@/utils/salah.js'
-import { FAST_STATUSES, ramadanYearOf } from '@/utils/fasting.js'
+import { SALAH_PRAYERS, loggedCount as countLogged } from '@/utils/salah.js'
+import { ramadanYearOf } from '@/utils/fasting.js'
 import { calcPrayerTimes, getNextPrayer, getTimezoneOffset } from '@/utils/prayer.js'
 import { dayKey } from '@/utils/day.js'
+import { t, formatDate } from '@/i18n.js'
 
 const MINUTE_MS = 60000
 
@@ -96,7 +103,7 @@ const now = ref(new Date())
 const today = computed(() => dayKey(now.value))
 
 const dateTitle = computed(() =>
-  now.value.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }),
+  formatDate(now.value, { weekday: 'long', day: 'numeric', month: 'long' }),
 )
 
 const times = computed(() => {
@@ -113,11 +120,18 @@ const times = computed(() => {
     : null
 })
 const nextPrayer = computed(() => (times.value && now.value ? getNextPrayer(times.value) : null))
+const nextPrayerLabel = computed(() =>
+  nextPrayer.value.label.includes('tomorrow')
+    ? t('todayPanel.tomorrow', { prayer: t(`common.prayers.${nextPrayer.value.key}`) })
+    : t(`common.prayers.${nextPrayer.value.key}`),
+)
 const nextPrayerTime = computed(() => times.value?.[nextPrayer.value?.key])
 const countdown = computed(() => {
   const minutes = nextPrayer.value?.minsRemaining ?? 0
   const hours = Math.floor(minutes / 60)
-  return hours > 0 ? `${hours}h ${minutes % 60}m` : `${minutes} min`
+  return hours > 0
+    ? t('common.hoursMinutes', { hours, minutes: minutes % 60 })
+    : t('common.minutes', { minutes })
 })
 
 const todaysEntry = computed(() => salah.log[today.value])
@@ -130,7 +144,7 @@ const prayedCount = computed(
 
 function statusLabel(prayer) {
   const status = salah.statusOf(today.value, prayer)
-  return SALAH_STATUSES.find((entry) => entry.key === status)?.label.toLowerCase() ?? 'not logged'
+  return t(`common.salahStatus.${status ?? 'none'}`).toLowerCase()
 }
 
 const adhkarDone = computed(() =>
@@ -141,11 +155,7 @@ const tasbihTotal = computed(() =>
 )
 
 const inRamadan = computed(() => ramadanYearOf(today.value, fasting.starts) !== null)
-const fastLabel = computed(
-  () =>
-    FAST_STATUSES.find((status) => status.key === fasting.statusOf(today.value))?.label ??
-    'Not recorded',
-)
+const fastLabel = computed(() => t(`common.fastStatus.${fasting.statusOf(today.value) ?? 'none'}`))
 
 function tick() {
   now.value = new Date()

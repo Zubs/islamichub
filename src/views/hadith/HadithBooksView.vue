@@ -6,12 +6,11 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Hadith Library &nbsp;·&nbsp; كتب الحديث
+          {{ $t('hadithBooks.hadithLibrary') }}
         </div>
-        <h1>The Nine Collections</h1>
+        <h1>{{ $t('hadithBooks.theNineCollections') }}</h1>
         <p>
-          Browse authenticated hadith from the major collections — Sahih Bukhari, Sahih Muslim, the
-          four Sunan, and more.
+          {{ $t('hadithBooks.browseAuthenticatedHadithFromTheMajor') }}
         </p>
       </div>
     </div>
@@ -19,22 +18,25 @@
     <div class="content-wrap" style="max-width: 1100px">
       <!-- Breadcrumb -->
       <div class="had-breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">← Hadith</RouterLink>
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{
+          $t('hadithBooks.hadith')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <span>All Books</span>
+        <span>{{ $t('hadithBooks.allBooks') }}</span>
       </div>
 
       <!-- Notice when the server has no API key -->
       <div v-if="notConfigured" class="api-key-notice">
         <div class="akn-icon" aria-hidden="true">🔑</div>
         <div>
-          <div class="akn-title">API key required</div>
+          <div class="akn-title">{{ $t('hadithBooks.apiKeyRequired') }}</div>
           <div class="akn-desc">
-            The hadith library is not configured on this server. Set <code>HADITH_API_KEY</code>
-            where the site is hosted (see the README); a free key is available at
-            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
-              >hadithapi.com/register</a
-            >. The book cards below use static metadata.
+            {{ $t('hadithBooks.theHadithLibraryIsNotConfigured') }} <code>HADITH_API_KEY</code>
+            {{ $t('hadithBooks.whereTheSiteIsHostedSee') }}
+            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer">{{
+              $t('hadithBooks.hadithapiComRegister')
+            }}</a
+            >{{ $t('hadithBooks.theBookCardsBelowUseStatic') }}
           </div>
         </div>
       </div>
@@ -42,21 +44,23 @@
       <!-- Loading state -->
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading collections…</span>
+        <span>{{ $t('hadithBooks.loadingCollections') }}</span>
       </div>
 
       <!-- Error state -->
       <div v-else-if="error" class="had-error">
         <div class="had-error-icon" aria-hidden="true">⚠</div>
         <div>
-          <div class="had-error-title">Could not load live data</div>
-          <div class="had-error-desc">{{ error }} Showing static metadata meanwhile.</div>
+          <div class="had-error-title">{{ $t('hadithBooks.couldNotLoadLiveData') }}</div>
+          <div class="had-error-desc">
+            {{ $t('hadithBooks.showingStaticMetadataMeanwhile', { a: error }) }}
+          </div>
         </div>
       </div>
 
       <!-- Grade filter -->
       <div class="had-filter-bar">
-        <span class="had-filter-label">Filter by grade:</span>
+        <span class="had-filter-label">{{ $t('hadithBooks.filterByGrade') }}</span>
         <div class="btn-group">
           <button
             v-for="f in filters"
@@ -68,7 +72,9 @@
             {{ f }}
           </button>
         </div>
-        <span class="had-book-count">{{ filteredBooks.length }} collections</span>
+        <span class="had-book-count">{{
+          $t('hadithBooks.collections', { a: filteredBooks.length })
+        }}</span>
       </div>
 
       <!-- Book cards grid -->
@@ -96,7 +102,7 @@
           <div class="hbc-footer">
             <div class="hbc-count">
               <span class="hbc-count-num">{{ getLiveCount(book.slug) || book.hadithCount }}</span>
-              <span class="hbc-count-label">hadiths</span>
+              <span class="hbc-count-label">{{ $t('hadithBooks.hadiths') }}</span>
             </div>
             <div class="hbc-arrow" aria-hidden="true">
               <svg

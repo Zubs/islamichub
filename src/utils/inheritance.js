@@ -92,35 +92,50 @@ function text(fraction) {
   return fraction.d === 1 ? 'All' : `${fraction.n}/${fraction.d}`
 }
 
-export function validateInheritance(heirs, estate) {
+const PROBLEM_TEXT = {
+  estate: () => 'Enter the estate as a number of zero or more.',
+  count: ({ heir }) => `Enter a whole number of zero or more for ${heir}.`,
+  onlyOne: ({ heir }) => `There can be only one ${heir}.`,
+  spouses: () => 'The deceased leaves either a husband or a wife, not both. Remove one.',
+  wives: ({ max }) => `Enter no more than ${max} wives.`,
+  none: () => 'Select at least one heir.',
+}
+
+// What is wrong with the input, as { code, params }, or null when it can be calculated.
+export function inheritanceProblem(heirs, estate) {
   if (typeof estate !== 'number' || !Number.isFinite(estate) || estate < 0) {
-    return 'Enter the estate as a number of zero or more.'
+    return { code: 'estate', params: {} }
   }
 
   for (const def of HEIR_DEFS) {
     const count = heirs[def.key] ?? 0
     if (!Number.isInteger(count) || count < 0) {
-      return `Enter a whole number of zero or more for ${def.label}.`
+      return { code: 'count', params: { heir: def.label, heirKey: def.key } }
     }
 
     if (count > 1 && !def.countable) {
-      return `There can be only one ${def.label}.`
+      return { code: 'onlyOne', params: { heir: def.label, heirKey: def.key } }
     }
   }
 
   if (heirs.husband && heirs.wife) {
-    return 'The deceased leaves either a husband or a wife, not both. Remove one.'
+    return { code: 'spouses', params: {} }
   }
 
   if (heirs.wife > MAX_WIVES) {
-    return `Enter no more than ${MAX_WIVES} wives.`
+    return { code: 'wives', params: { max: MAX_WIVES } }
   }
 
   if (!HEIR_DEFS.some((def) => heirs[def.key] > 0)) {
-    return 'Select at least one heir.'
+    return { code: 'none', params: {} }
   }
 
   return null
+}
+
+export function validateInheritance(heirs, estate) {
+  const problem = inheritanceProblem(heirs, estate)
+  return problem ? PROBLEM_TEXT[problem.code](problem.params) : null
 }
 
 export function excludedHeirs(heirs) {
@@ -245,10 +260,36 @@ function settleToTotal(values, total) {
   return values
 }
 
+const RULE_TEXT = {
+  fixed: ({ share }) => `Fixed share of ${share}`,
+  motherThird: () => "A third of what remains after the spouse's share",
+  grandmothers: () => 'Half of the one sixth the grandmothers share',
+  residueNone: () => 'Residuary, but the fixed shares used the whole estate',
+  residueMixed: () => 'Residue, two parts to each male and one to each female',
+  residueWithDaughters: () => 'Residue beside a daughter or granddaughter',
+  residue: () => 'Residue after the fixed shares',
+  remainder: () => 'No other heir was selected to receive this. Ask a scholar where it goes.',
+}
+const EXTRA_TEXT = {
+  awl: ", reduced in proportion because the fixed shares exceed the estate ('awl)",
+  plusResidue: ', plus the residue',
+  radd: ', plus a part of the remainder returned to the fixed-share heirs (radd)',
+}
+
+// The English sentence for a rule; the page builds the same sentence in the reader's language.
+export function ruleText({ base, share, extras, source }) {
+  const sentence = RULE_TEXT[base]({ share }) + extras.map((extra) => EXTRA_TEXT[extra]).join('')
+  if (!source) {
+    return sentence
+  }
+
+  return `${sentence} · ${source === 'Hadith' ? 'Hadith' : `Qur'an ${source}`}`
+}
+
 export function calcInheritance(heirs, estate = 100) {
-  const error = validateInheritance(heirs, estate)
-  if (error) {
-    return { error, shares: [] }
+  const problem = inheritanceProblem(heirs, estate)
+  if (problem) {
+    return { error: PROBLEM_TEXT[problem.code](problem.params), problem, shares: [] }
   }
 
   const excluded = excludedHeirs(heirs)
@@ -266,23 +307,23 @@ export function calcInheritance(heirs, estate = 100) {
   const final = { ...fixed }
   const rule = {}
   for (const [key, share] of Object.entries(fixed)) {
-    rule[key] = `Fixed share of ${text(share)}`
+    rule[key] = { base: 'fixed', share: text(share), extras: [] }
   }
 
   if (motherTakesThirdOfRemainder) {
-    rule.mother = "A third of what remains after the spouse's share"
+    rule.mother.base = 'motherThird'
   }
 
   if (sharedSixth) {
-    rule.paternal_grandmother = 'Half of the one sixth the grandmothers share'
-    rule.maternal_grandmother = rule.paternal_grandmother
+    rule.paternal_grandmother.base = 'grandmothers'
+    rule.maternal_grandmother.base = 'grandmothers'
   }
 
   const fixedTotal = sumOf(Object.values(fixed))
   if (exceedsOne(fixedTotal)) {
     for (const key of Object.keys(fixed)) {
       final[key] = divide(fixed[key], fixedTotal)
-      rule[key] += ", reduced in proportion because the fixed shares exceed the estate ('awl)"
+      rule[key].extras.push('awl')
     }
   }
 
@@ -297,15 +338,17 @@ export function calcInheritance(heirs, estate = 100) {
       const share = multiply(remainder, frac(parts[key], totalParts))
       final[key] = add(final[key] ?? ZERO, share)
       if (fixed[key]) {
-        rule[key] += isPositive(share) ? ', plus the residue' : ''
+        if (isPositive(share)) {
+          rule[key].extras.push('plusResidue')
+        }
       } else if (!isPositive(remainder)) {
-        rule[key] = 'Residuary, but the fixed shares used the whole estate'
+        rule[key] = { base: 'residueNone', extras: [] }
       } else if (mixed) {
-        rule[key] = 'Residue, two parts to each male and one to each female'
+        rule[key] = { base: 'residueMixed', extras: [] }
       } else if (key === 'sister') {
-        rule[key] = 'Residue beside a daughter or granddaughter'
+        rule[key] = { base: 'residueWithDaughters', extras: [] }
       } else {
-        rule[key] = 'Residue after the fixed shares'
+        rule[key] = { base: 'residue', extras: [] }
       }
     }
   } else if (isPositive(remainder)) {
@@ -315,27 +358,33 @@ export function calcInheritance(heirs, estate = 100) {
     const returnedBase = sumOf(returnedTo.map((key) => fixed[key]))
     for (const key of returnedTo) {
       final[key] = add(fixed[key], multiply(remainder, divide(fixed[key], returnedBase)))
-      rule[key] += ', plus a part of the remainder returned to the fixed-share heirs (radd)'
+      rule[key].extras.push('radd')
     }
     if (!returnedTo.length) {
       unclaimed = remainder
     }
   }
 
-  const lines = HEIR_DEFS.filter((def) => final[def.key]).map((def) => ({
-    key: def.key,
-    label: def.label,
-    count: present[def.key],
-    fraction: final[def.key],
-    rule: `${rule[def.key]} · ${def.quran === 'Hadith' ? 'Hadith' : `Qur'an ${def.quran}`}`,
-  }))
+  const lines = HEIR_DEFS.filter((def) => final[def.key]).map((def) => {
+    const ruleParts = { ...rule[def.key], source: def.quran }
+    return {
+      key: def.key,
+      label: def.label,
+      count: present[def.key],
+      fraction: final[def.key],
+      ruleParts,
+      rule: ruleText(ruleParts),
+    }
+  })
   if (isPositive(unclaimed)) {
+    const ruleParts = { base: 'remainder', extras: [], source: null }
     lines.push({
       key: 'remainder',
       label: 'Remainder',
       count: 1,
       fraction: unclaimed,
-      rule: 'No other heir was selected to receive this. Ask a scholar where it goes.',
+      ruleParts,
+      rule: ruleText(ruleParts),
     })
   }
 

@@ -6,35 +6,36 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Daily Worship &nbsp;·&nbsp; <span lang="ar">الدعاء</span>
+          {{ $t('duasHome.dailyWorship') }} <span lang="ar">الدعاء</span>
         </div>
-        <h1>Duas</h1>
+        <h1>{{ $t('duasHome.duas') }}</h1>
         <p>
-          Supplications from the Qur'an and the Sunnah for everyday situations, each with its Arabic
-          text, transliteration, translation and source.
+          {{ $t('duasHome.supplicationsFromTheQurAnAnd') }}
         </p>
       </div>
     </div>
 
     <div class="content-wrap" style="max-width: 1100px">
       <div class="duas-search">
-        <label for="dua-search">Search duas</label>
+        <label for="dua-search">{{ $t('duasHome.searchDuas') }}</label>
         <div class="duas-search-row">
           <input
             id="dua-search"
             v-model="query"
             type="search"
             class="input-field"
-            placeholder="Try “travel”, “rain” or “bismillah”"
+            :placeholder="$t('duasHome.tryTravelRainOrBismillah')"
             autocomplete="off"
           />
-          <button v-if="query" class="btn btn-secondary" @click="query = ''">Clear</button>
+          <button v-if="query" class="btn btn-secondary" @click="query = ''">
+            {{ $t('duasHome.clear') }}
+          </button>
         </div>
       </div>
 
       <template v-if="query.trim()">
         <p class="duas-result-count" role="status">
-          {{ results.length === 1 ? '1 dua found' : `${results.length} duas found` }}
+          {{ $t('duasHome.found', results.length) }}
         </p>
         <div v-if="results.length" class="duas-results">
           <RouterLink v-for="dua in results" :key="dua.id" :to="duaPath(dua)" class="duas-result">
@@ -44,8 +45,10 @@
           </RouterLink>
         </div>
         <div v-else class="duas-empty">
-          <p>No duas found for “{{ query }}”.</p>
-          <button class="btn btn-primary" @click="query = ''">Clear search</button>
+          <p>{{ $t('duasHome.noDuasFoundFor', { a: query }) }}</p>
+          <button class="btn btn-primary" @click="query = ''">
+            {{ $t('duasHome.clearSearch') }}
+          </button>
         </div>
       </template>
 
@@ -60,7 +63,7 @@
           <h2 class="duas-card-name">{{ situation.name }}</h2>
           <p class="duas-card-desc">{{ situation.description }}</p>
           <span class="duas-card-count">
-            {{ situation.count === 1 ? '1 dua' : `${situation.count} duas` }}
+            {{ $t('duasHome.count', situation.count) }}
           </span>
         </RouterLink>
       </div>

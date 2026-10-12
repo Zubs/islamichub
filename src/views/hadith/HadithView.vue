@@ -8,16 +8,22 @@
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
           {{ bookName }}
         </div>
-        <h1>{{ notFound ? 'Hadith not found' : `Hadith ${hadithNumber}` }}</h1>
+        <h1>
+          {{
+            notFound ? $t('hadith.notFound') : $t('hadith.hadithNumber', { number: hadithNumber })
+          }}
+        </h1>
         <p v-if="chapterName">{{ chapterName }}</p>
       </div>
     </div>
 
     <div class="content-wrap" style="max-width: 860px">
-      <nav class="had-breadcrumb" aria-label="Breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">Hadith</RouterLink>
+      <nav class="had-breadcrumb" :aria-label="$t('hadith.breadcrumb')">
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{ $t('hadith.hadith') }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <RouterLink to="/hadith/books" class="had-breadcrumb-link">All Books</RouterLink>
+        <RouterLink to="/hadith/books" class="had-breadcrumb-link">{{
+          $t('hadith.allBooks')
+        }}</RouterLink>
         <template v-if="book">
           <span class="had-sep" aria-hidden="true">/</span>
           <RouterLink :to="'/hadith/books/' + bookSlug" class="had-breadcrumb-link">{{
@@ -26,37 +32,39 @@
         </template>
         <template v-if="chapterPath">
           <span class="had-sep" aria-hidden="true">/</span>
-          <RouterLink :to="chapterPath" class="had-breadcrumb-link"
-            >Chapter {{ hadith.chapter.chapterNumber }}</RouterLink
-          >
+          <RouterLink :to="chapterPath" class="had-breadcrumb-link">{{
+            $t('hadith.chapter', { a: hadith.chapter.chapterNumber })
+          }}</RouterLink>
         </template>
       </nav>
 
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading hadith…</span>
+        <span>{{ $t('hadith.loadingHadith') }}</span>
       </div>
 
       <div v-else-if="notFound" class="hv-missing">
         <p>
-          There is no hadith at this address. Check the number, or browse the collection from its
-          chapter list.
+          {{ $t('hadith.thereIsNoHadithAtThis') }}
         </p>
         <RouterLink
           :to="book ? '/hadith/books/' + bookSlug : '/hadith/books'"
           class="btn btn-primary"
         >
-          {{ book ? `Browse ${book.name}` : 'Browse all books' }}
+          {{ book ? $t('hadith.browseBook', { name: book.name }) : $t('hadith.browseAll') }}
         </RouterLink>
       </div>
 
       <div v-else-if="error" class="had-error" role="alert">
-        <div class="had-error-title">Could not load this hadith</div>
+        <div class="had-error-title">{{ $t('hadith.couldNotLoadThisHadith') }}</div>
         <div>{{ error }}</div>
         <div v-if="notConfigured" class="hv-error-note">
-          Set <code>HADITH_API_KEY</code> where the site is hosted (see the README).
+          {{ $t('hadith.set') }} <code>HADITH_API_KEY</code>
+          {{ $t('hadith.whereTheSiteIsHostedSee') }}
         </div>
-        <button class="btn btn-secondary hv-retry" @click="load">Try again</button>
+        <button class="btn btn-secondary hv-retry" @click="load">
+          {{ $t('hadith.tryAgain') }}
+        </button>
       </div>
 
       <article v-else-if="hadith" class="hv-card">
@@ -78,29 +86,29 @@
 
         <footer class="hv-foot">
           <div class="hv-ref">
-            <span class="hv-ref-label">Reference</span>
-            {{ bookName }}, Hadith {{ hadith.hadithNumber }}
+            <span class="hv-ref-label">{{ $t('hadith.reference') }}</span>
+            {{ $t('hadith.hadith2', { a: bookName, b: hadith.hadithNumber }) }}
             <template v-if="chapterName"> · {{ chapterName }}</template>
           </div>
           <div class="hv-actions">
             <button class="btn btn-secondary" @click="copy">
-              {{ notice === 'copied' ? '✓ Copied' : 'Copy' }}
+              {{ notice === 'copied' ? $t('common.copied') : $t('common.copy') }}
             </button>
             <ShareButton :item="shareable" />
           </div>
         </footer>
       </article>
 
-      <nav v-if="hadith && !notFound" class="hv-nav" aria-label="Hadith navigation">
-        <RouterLink v-if="previousPath" :to="previousPath" class="btn btn-secondary"
-          >← Hadith {{ Number(hadithNumber) - 1 }}</RouterLink
-        >
-        <RouterLink v-if="chapterPath" :to="chapterPath" class="btn btn-secondary hv-nav-middle"
-          >Back to chapter</RouterLink
-        >
-        <RouterLink v-if="nextPath" :to="nextPath" class="btn btn-secondary"
-          >Hadith {{ Number(hadithNumber) + 1 }} →</RouterLink
-        >
+      <nav v-if="hadith && !notFound" class="hv-nav" :aria-label="$t('hadith.hadithNavigation')">
+        <RouterLink v-if="previousPath" :to="previousPath" class="btn btn-secondary">{{
+          $t('hadith.hadith3', { a: Number(hadithNumber) - 1 })
+        }}</RouterLink>
+        <RouterLink v-if="chapterPath" :to="chapterPath" class="btn btn-secondary hv-nav-middle">{{
+          $t('hadith.backToChapter')
+        }}</RouterLink>
+        <RouterLink v-if="nextPath" :to="nextPath" class="btn btn-secondary">{{
+          $t('hadith.hadith4', { a: Number(hadithNumber) + 1 })
+        }}</RouterLink>
       </nav>
     </div>
   </div>
