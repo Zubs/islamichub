@@ -38,6 +38,7 @@ const CONTENT_VIEWS = {
   hadith: 'src/views/hadith/HadithHomeView.vue',
   inheritance: 'src/views/tools/InheritanceView.vue',
   about: 'src/views/AboutView.vue',
+  eid: 'src/views/EidView.vue',
 }
 
 async function open(path) {

@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Eid guide',
+            scope: 'Eid',
+            desc: 'A new page explains Eid al-Fitr and Eid al-Adha: what they are, the sunnahs of the day, how the Eid prayer is performed, the takbirat in Arabic with transliteration and translation, and Zakat al-Fitr. Where the schools differ on the extra takbirs, both positions are shown with their evidence. A countdown shows the days to the next Eid, with a reminder that the day itself depends on the sighting of the moon. The page awaits scholarly review.',
+          },
+          {
             title: 'Reminders when the app is closed',
             scope: 'Prayer page',
             desc: 'A new switch, "Also notify me when the app is closed", delivers prayer reminders even when IslamicHub is not open. It is off unless you turn it on. To send a reminder at the right minute a server keeps your location rounded to about 1 km, your timezone, your calculation methods and the reminders you chose, and nothing else: no name, no email, no account. Turning the switch off, or "Forget my location", deletes it. On iPhone it works once the app is installed.',
@@ -234,7 +239,7 @@ const releases = [
           {
             title: 'Ready for right-to-left languages',
             scope: 'Layout',
-            desc: "The site's styles no longer say \"left\" and \"right\" but \"start\" and \"end\", so the whole layout will mirror by itself for a right-to-left language such as Arabic or Urdu. Arabic verses, the Qibla compass and the tasbih counter stay as they are. Nothing changes in English.",
+            desc: 'The site\'s styles no longer say "left" and "right" but "start" and "end", so the whole layout will mirror by itself for a right-to-left language such as Arabic or Urdu. Arabic verses, the Qibla compass and the tasbih counter stay as they are. Nothing changes in English.',
           },
           {
             title: 'Groundwork for Hausa',

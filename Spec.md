@@ -158,6 +158,7 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/adhkar/:categorySlug`                   | `adhkar-category`   | AdhkarCategoryView    |
 | `/duas`                                   | `duas`              | DuasHomeView          |
 | `/duas/:situationSlug`                    | `duas-situation`    | DuasSituationView     |
+| `/eid`                                    | `eid`               | EidView               |
 | `/tracker`                                | `tracker`           | TrackerView           |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
@@ -397,6 +398,27 @@ logged". `stores/salah.js` owns the log (`salah-log`), and `utils/salah.js` hold
 - "Clear my data" removes the log after a confirmation. Unreadable stored data, and unknown days, prayers or statuses,
   are ignored.
 - Nothing leaves the device. The installed app has a Tracker shortcut.
+
+### 5.7c Eid (`/eid`)
+
+A guide to Eid al-Fitr and Eid al-Adha, awaiting scholarly review.
+
+- It is the first page written section by section. `data/eidSections.js` holds what every language shares: the order
+  and kind of each section, the Arabic and the references. `data/content/eid/en.js` holds the words under the same
+  section ids, so a translation supplies words only. `ContentSections.vue` draws the kinds: prose, verse, hadith,
+  points (numbered when ordered), positions (two views side by side), recitation (Arabic, transliteration and
+  translation) and FAQ. A section with no translation is shown in English with the usual note.
+- Sections: what the two Eids are, the hadith of their origin, the sunnahs of the day, the Eid prayer in six steps, the
+  extra takbirs, the takbirat, Zakat al-Fitr (with links to the Zakat and Fasting pages) and four questions.
+- The number of extra takbirs is shown as two positions with their evidence, seven and five (Abu Dawud 1149, 1151) and
+  four as in the funeral prayer (Abu Dawud 1153), without preferring either.
+- Every section carries a reference, and every hadith reference links to the library. The page cites only collections
+  the library holds. The wording of the takbirat is the one widely recited; its source is not in those collections, and
+  the page says that it awaits confirmation.
+- **Countdown:** `utils/eid.js` places Eid al-Fitr on 1 Shawwal and Eid al-Adha on 10 Dhul Hijjah with
+  `firstDayOfHijriMonth`, and `nextEid` gives whichever comes next, with the days remaining. On the day itself the page
+  shows a greeting in place of the countdown. The dates are calculated and can differ from the announced date by a day,
+  and the page says to follow the local moon sighting.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 

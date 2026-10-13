@@ -911,6 +911,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - A countdown to the next Eid from `utils/hijri.js`: 1 Shawwal for Eid al-Fitr and 10 Dhul Hijjah for Eid al-Adha, with a note that the date depends on moon sighting.
 - Where schools differ, such as the number of extra takbirs in the prayer, both positions are shown.
 - Links to the Fasting, Zakat and Qurbani pages. Added to the navigation and the sitemap.
+- Built: the page, its countdown and its tests. It is the first page written as sections (`data/eidSections.js` for the shared order, Arabic and references; `data/content/eid/en.js` for the words; `ContentSections.vue` to draw them). Every hadith and verse on it was checked against the text of its source. The calculated dates of the next four Eids fall within a day of a published calendar.
+- Not done: no reviewer has been named, the wording of the takbirat has no numbered source, and the page is not live, so the feature stays unticked; see Final.
 
 **Tests**
 - On an ordinary day the countdown shows the days to whichever Eid is nearer.
@@ -1098,6 +1100,10 @@ Tests are written in plain English and ordered the same way under every feature:
 | 34 | 28 | Who translates the site into Hausa, and who reviews it? | Nobody yet, for the same reason as Yoruba. The work left is filling `src/locales/ha.js` and a `ha.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer; a machine-drafted starting point can be produced on request |
 | 35 | 28 | Which published Hausa translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Abubakar Mahmoud Gumi's translation, as published by Tanzil | Change `quran` in the Hausa entry of `src/locales/index.js` |
 | 36 | 29 | Which right-to-left language comes first, if any? `Features.md` names Arabic and Urdu as examples but plans neither | None registered. The layout is ready for one | Add the language to `src/locales/index.js` with `dir: 'rtl'` and its translation files |
+| 37 | 30 | Who reviews the Eid page? | Nobody yet. The page is built and every hadith and verse was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read the page |
+| 38 | 30 | Which wording of the takbirat, and from what source? | "Allāhu akbar, Allāhu akbar, lā ilāha illa-llāh, wa-llāhu akbar, Allāhu akbar, wa lillāhi-l-ḥamd", typed by hand. It is reported from Ibn Mas'ud in the Musannaf of Ibn Abi Shaybah, which is not among the collections I could check, so the page says the source awaits confirmation | Have the reviewer confirm the Arabic and supply the reference, in `data/eidSections.js` and `data/content/eid/en.js` | |
+| 39 | 30 | Which schools are named beside each number of extra takbirs? | Seven and five is given as the Maliki, Shafi'i and Hanbali view and three extra in each rak'ah as the Hanafi view. The hadiths are verified; which school holds which view is from general knowledge, not a checked source | Correct the two position texts in `data/content/eid/en.js` | |
+| 40 | 30 | Does the Eid page link to Qurbani before that page is reviewed? | Yes, once feature 31 is built | Remove the link in `EidView.vue` | |
 
 **Checks only Zubair can do**
 
@@ -1123,6 +1129,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 18 | 27 | Once Yoruba text exists: on a real Android phone and a real iPhone, confirm letters with tone marks and under-dots (for example ẹ̀, ọ́, ṣ) display as single, correctly formed letters in headings, body text and buttons |
 | 19 | 28 | Once Hausa text exists: on a real Android phone and a real iPhone, confirm the hooked letters ɓ, ɗ, ƙ and ƴ display as single, correctly formed letters in headings, body text and buttons |
 | 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 |
+| 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

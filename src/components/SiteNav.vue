@@ -207,6 +207,11 @@ const allLinks = [
     icon: '🤲',
   },
   {
+    to: '/eid',
+    key: 'eid',
+    icon: '🌙',
+  },
+  {
     to: '/tracker',
     key: 'tracker',
     icon: '✅',

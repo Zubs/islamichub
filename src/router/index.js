@@ -69,6 +69,11 @@ export const routes = [
     beforeEnter: (to) => (getSituation(to.params.situationSlug) ? true : notFound(to)),
   },
   {
+    path: '/eid',
+    name: 'eid',
+    component: () => import('@/views/EidView.vue'),
+  },
+  {
     path: '/tracker',
     name: 'tracker',
     component: () => import('@/views/tools/TrackerView.vue'),

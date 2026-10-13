@@ -8,7 +8,9 @@ export function lookup(content, path) {
 
 // Puts values into a text's {name} places.
 export function fill(text, params = {}) {
-  return text.replace(/\{(\w+)\}/g, (place, name) => (name in params ? String(params[name]) : place))
+  return text.replace(/\{(\w+)\}/g, (place, name) =>
+    name in params ? String(params[name]) : place,
+  )
 }
 
 function mergeItem(base, translated) {

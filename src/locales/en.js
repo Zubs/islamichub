@@ -122,6 +122,7 @@ export default {
       hadith: 'Hadith',
     },
     onGithub: 'IslamicHub on GitHub',
+    eid: 'The Two Eids',
   },
   siteNav: {
     islamichubHome: 'IslamicHub home',
@@ -181,6 +182,7 @@ export default {
       inheritance: "Inheritance (Fara'id) Calculator",
       about: 'About & Contributors',
       changelog: 'Changelog',
+      eid: 'The Two Eids',
     },
   },
   statsOptOut: {
@@ -842,8 +844,25 @@ export default {
     'not-found': {
       title: 'Page Not Found — IslamicHub',
     },
+    eid: {
+      title:
+        "Eid al-Fitr and Eid al-Adha — Sunnahs, Prayer, Takbirat and Countdown {'|'} IslamicHub",
+      description:
+        'A sourced guide to the two Eids: the sunnahs of the day, the Eid prayer step by step, the takbirat in Arabic with translation, Zakat al-Fitr, and a countdown to the next Eid.',
+    },
   },
   about: {
     quranTranslations: "Qur'an translations used:",
+  },
+  eid: {
+    next: {
+      fitr: 'Next: Eid al-Fitr',
+      adha: 'Next: Eid al-Adha',
+    },
+    greeting: {
+      fitr: 'Eid Mubarak! Today is Eid al-Fitr',
+      adha: 'Eid Mubarak! Today is Eid al-Adha',
+    },
+    expected: 'Expected on {date}',
   },
 }
