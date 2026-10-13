@@ -39,12 +39,13 @@ Tests are written in plain English and ordered the same way under every feature:
 - [ ] 27. Yoruba
 - [ ] 28. Hausa
 - [ ] 29. Right-to-left layout
-- [ ] 30. Eid
-- [ ] 31. Qurbani
-- [ ] 32. Prophets
+- [x] 30. Eid
+- [x] 31. Qurbani
+- [x] 32. Prophets
 - [ ] 33. Journeys of the prophets
 - [x] 34. Usage statistics
 - [ ] 35. Final
+- [ ] 36. Complete prophets stories
 
 ---
 
@@ -912,7 +913,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Where schools differ, such as the number of extra takbirs in the prayer, both positions are shown.
 - Links to the Fasting, Zakat and Qurbani pages. Added to the navigation and the sitemap.
 - Built: the page, its countdown and its tests. It is the first page written as sections (`data/eidSections.js` for the shared order, Arabic and references; `data/content/eid/en.js` for the words; `ContentSections.vue` to draw them). Every hadith and verse on it was checked against the text of its source. The calculated dates of the next four Eids fall within a day of a published calendar.
-- Not done: no reviewer has been named and the wording of the takbirat has no numbered source, so the feature stays unticked; see Final.
+- Ticked by Zubair on 13 October 2026 without a reviewer, who is still being sought. Still open: a scholar's review of the page, and a numbered source for the wording of the takbirat; see Final.
 
 **Tests**
 - On an ordinary day the countdown shows the days to whichever Eid is nearer.
@@ -940,7 +941,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The helper is a pure function in `utils/qurbani.js`. It states that it is a guide and not a ruling.
 - Linked from the Eid and Hajj pages. Added to the navigation and the sitemap.
 - Built: the page, the shares helper and their tests. Every hadith and verse on it was checked against the text of its source, and the helper's answers match a hand count for 1 to 21 people. The helper also offers full large animals plus small ones for the rest when the number is above seven.
-- Not done: no reviewer has been named and three points on the page say they could not be checked, so the feature stays unticked; see Final.
+- Ticked by Zubair on 13 October 2026 without a reviewer, who is still being sought. Still open: a scholar's review of the page, and the three points the page says could not be checked; see Final.
 
 **Tests**
 - With no number entered, the helper shows nothing.
@@ -969,7 +970,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Honorifics follow one convention across the section.
 - Added to the navigation, the home page and the sitemap.
 - Built: the list of 25 with their Qur'an references, the story page, and Ibrahim's story in 21 sections from the Qur'an and Sahih al-Bukhari only. Every reference was checked against its text, and the Arabic of each verse was taken from a Qur'an dataset. Honorifics: "peace be upon him" at first mention and عليه السلام in the header; ﷺ for the Prophet Muhammad.
-- Not done: no reviewer has been named, so the feature stays unticked; see Final.
+- Ticked by Zubair on 13 October 2026 without a reviewer, who is still being sought. The review of the list and of Ibrahim's story now belongs to feature 36, where every story is reviewed together.
 
 **Tests**
 - The list shows all 25 prophets in order.
@@ -1013,6 +1014,36 @@ Tests are written in plain English and ordered the same way under every feature:
 - A user opens Ibrahim's page, steps through the stops in order and reads what happened at each.
 
 **Done when:** Ibrahim's journey can be followed stop by stop on a phone, each stop is sourced, and the map works offline.
+
+### 36. Complete prophets stories
+
+**What it does:** Writes the stories of the other 24 prophets, and then has every story, Ibrahim's included, verified by a scholar.
+
+**How it works**
+- Each remaining prophet in `data/prophets.js` gets a story written the way Ibrahim's is: a sections file for the order, the Arabic and the references, a content file for the words, an entry in `data/prophetStories.js`, and `story: true`. No component is edited to add a story.
+- Stories draw on the Qur'an and authentic hadith only. Where the sources are silent the story says so, and details from other sources are left out or clearly labelled.
+- The Arabic of each verse is taken from a Qur'an dataset, not typed. Every reference is checked against its text when it is written.
+- A prophet about whom the Qur'an says little has a short story. Nothing is added to fill it out.
+- Where two prophets share one account, as Musa and Harun do, each page tells its own part and links to the other.
+- "The people they were sent to" is filled in for the ten prophets who have none today, wherever a verse states it.
+- Honorifics follow the convention feature 32 set.
+- Each new story is added to the sitemap. A journey (feature 33) is added only where the sources name the places or historians identify them, and is labelled as Ibrahim's is.
+- Once all 25 are written, a reviewer named by Zubair reads every story, Ibrahim's and the five journey texts included. Their corrections are made, and their name and the date are recorded with each story.
+- This feature carries the review that features 32 and 33 were waiting for. The points left open for the reviewer on Ibrahim's story (the son in the dream, the order of events, whose translation of the verses is used, the stops of the journey) are settled here.
+
+**Tests**
+- All 25 prophets in the list link to a story, and none shows "Story not yet written".
+- Every prophet address opens a story, and an unknown one still shows the 404 page.
+- Every section of every story carries at least one Qur'an or hadith reference, and every Qur'an reference is a verse that exists.
+- Every verse block shows Arabic, translation and reference.
+- Every hadith reference links to a hadith the library holds.
+- Each story links to the previous and next prophet, with Adam having no previous and Muhammad no next.
+- Each story has its own title and description, and is in the sitemap.
+- A story is not marked as reviewed until it records a reviewer's name and a date.
+- A story with no translation is shown in English with the usual note, section by section.
+- A user opens the list, reads the stories of Nuh, Musa and 'Isa in turn, and follows a verse reference in each.
+
+**Done when:** All 25 stories are live and fully referenced, and each one records the name of the reviewer Zubair named and the date they verified it.
 
 ---
 
@@ -1106,11 +1137,11 @@ Tests are written in plain English and ordered the same way under every feature:
 | 34 | 28 | Who translates the site into Hausa, and who reviews it? | Nobody yet, for the same reason as Yoruba. The work left is filling `src/locales/ha.js` and a `ha.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer; a machine-drafted starting point can be produced on request |
 | 35 | 28 | Which published Hausa translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Abubakar Mahmoud Gumi's translation, as published by Tanzil | Change `quran` in the Hausa entry of `src/locales/index.js` |
 | 36 | 29 | Which right-to-left language comes first, if any? `Features.md` names Arabic and Urdu as examples but plans neither | None registered. The layout is ready for one | Add the language to `src/locales/index.js` with `dir: 'rtl'` and its translation files |
-| 37 | 30 | Who reviews the Eid page? | Nobody yet. The page is built and every hadith and verse was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read the page **Deferred, 13 October 2026: Zubair is still looking for a reviewer.** |
+| 37 | 30 | Who reviews the Eid page? | Nobody yet. The page is built and every hadith and verse was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read the page **13 October 2026: ticked by Zubair without a reviewer; the review stays open here until one is named.** |
 | 38 | 30 | Which wording of the takbirat, and from what source? | "Allāhu akbar, Allāhu akbar, lā ilāha illa-llāh, wa-llāhu akbar, Allāhu akbar, wa lillāhi-l-ḥamd", typed by hand. It is reported from Ibn Mas'ud in the Musannaf of Ibn Abi Shaybah, which is not among the collections I could check, so the page says the source awaits confirmation | Have the reviewer confirm the Arabic and supply the reference, in `data/eidSections.js` and `data/content/eid/en.js` |
 | 39 | 30 | Which schools are named beside each number of extra takbirs? | Seven and five is given as the Maliki, Shafi'i and Hanbali view and three extra in each rak'ah as the Hanafi view. The hadiths are verified; which school holds which view is from general knowledge, not a checked source | Correct the two position texts in `data/content/eid/en.js` |
 | 40 | 30 | Does the Eid page link to Qurbani before that page is reviewed? | Yes, once feature 31 is built | Remove the link in `EidView.vue` |
-| 41 | 31 | Who reviews the Qurbani page? | Nobody yet. Every hadith and verse was checked against its text, but no scholar has read the page | Name the reviewer; the feature is ticked once they have read the page **Deferred, 13 October 2026: Zubair is still looking for a reviewer.** |
+| 41 | 31 | Who reviews the Qurbani page? | Nobody yet. Every hadith and verse was checked against its text, but no scholar has read the page | Name the reviewer; the feature is ticked once they have read the page **13 October 2026: ticked by Zubair without a reviewer; the review stays open here until one is named.** |
 | 42 | 31 | Which schools hold which view on the ruling and on the days? | Obligatory: Hanafi (on a resident adult who owns the nisab). Confirmed sunnah: Maliki, Shafi'i, Hanbali. Three days: Hanafi, Maliki, Hanbali. Four days: Shafi'i. The hadiths are verified; the attribution to schools is from general knowledge | Correct `ruling` and `dayCount` in `data/content/qurbani/en.js` |
 | 43 | 31 | What are the minimum ages of the animals? | Camel five years, cow two, goat one, sheep from six months, with a sentence saying the schools differ slightly and that the ages are from the books of fiqh and await review. Only the hadith (Abu Dawud 2797) is verified | Have the reviewer correct `animals.i2` and remove the caveat |
 | 44 | 31 | What is the evidence for four days of sacrifice? | The page names the report in Musnad Ahmad that all the days of Tashriq are days of slaughter, without a number, and says it could not be checked | Have the reviewer supply the number in `dayCount.text2` |
@@ -1118,7 +1149,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 46 | 31 | Is Ibn Majah 3123 acceptable as evidence? | It is quoted as "reported from Abu Hurairah", since scholars differ on whether it goes back to the Prophet. Its grade was not checked | Reword or remove it in `who` and `ruling` |
 | 47 | 31 | Is the son in the story of Ibrahim named? | No. The page says "his son", as the verses do | Add the name in `origin` once the reviewer agrees the wording |
 | 48 | 31 | Is the recommendation to divide the meat in thirds stated? | Yes, as what many scholars recommend, with a sentence that the texts set no fixed portions. It has no numbered source | Remove the sentence in `meat.i2` |
-| 49 | 32 | Who reviews the story of Ibrahim and the list of prophets? | Nobody yet. Every verse and hadith was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read both pages **Deferred, 13 October 2026: Zubair is still looking for a reviewer.** |
+| 49 | 32 | Who reviews the story of Ibrahim and the list of prophets? | Nobody yet. Every verse and hadith was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read both pages **13 October 2026: ticked by Zubair; the review moves to feature 36, where all 25 stories are verified together.** |
 | 50 | 32 | In what order are the 25 prophets listed? | Adam, Idris, Nuh, Hud, Salih, Ibrahim, Lut, Isma'il, Ishaq, Ya'qub, Yusuf, Ayyub, Shu'ayb, Musa, Harun, Dhul-Kifl, Dawud, Sulayman, Ilyas, Al-Yasa', Yunus, Zakariyya, Yahya, 'Isa, Muhammad. This is the customary order; it is not from a numbered source | Reorder `data/prophets.js` (and the order in its test) |
 | 51 | 32 | What is shown for "the people they were sent to"? | Only what a verse states, with that verse, for 15 prophets. For the other ten (Idris, Ishaq, Ya'qub, Ayyub, Dhul-Kifl, Dawud, Sulayman, Al-Yasa', Zakariyya, Yahya) nothing is shown, since I found no verse naming a people | Add `people` and `peopleRefs` in `data/prophets.js` |
 | 52 | 32 | Which honorific convention? | "peace be upon him" written out at a prophet's first mention in a story, عليه السلام in the page header, and ﷺ for the Prophet Muhammad. The older Hajj page still writes "Ibrahim ﷺ" and was left as it is | Change the story text and `HONORIFIC` in `ProphetView.vue` |
@@ -1128,14 +1159,14 @@ Tests are written in plain English and ordered the same way under every feature:
 | 56 | 33 | Where are the stops of Ibrahim's journey, and how is each known? | Ur (30.96, 46.10), Harran (36.86, 39.03), Canaan at Hebron (31.53, 35.10), Egypt at Memphis (29.84, 31.25), Makkah (21.42, 39.83). Only Makkah is marked as named in the Qur'an; the other four are marked "identified by historians". The identifications and coordinates are from general historical knowledge, not a cited work | Change `data/ibrahimJourney.js` and the `journey` texts in `data/content/ibrahim/en.js` |
 | 57 | 33 | Is Harran a stop at all? | Yes, because `Features.md` lists it. No verse or hadith I checked mentions it; its text says only that historians place a stage of the journey there | Remove the `harran` stop and its two texts |
 | 58 | 33 | In what order did Ibrahim travel? | Ur, Harran, Canaan, Egypt, Makkah, as `Features.md` lists them. The sources do not give the order of Canaan and Egypt | Reorder `data/ibrahimJourney.js` |
-| 59 | 33 | Does the journey need the reviewer of feature 32? | It adds five short texts about Ibrahim, so I have treated it as needing the same reviewer | Tick it without review if you judge the texts need none **Deferred, 13 October 2026: Zubair is still looking for a reviewer.** |
+| 59 | 33 | Does the journey need the reviewer of feature 32? | It adds five short texts about Ibrahim, so I have treated it as needing the same reviewer | Tick it without review if you judge the texts need none **13 October 2026: the review of the journey texts moves to feature 36.** |
 
 **Checks only Zubair can do**
 
 | # | Feature | Check |
 |---|---|---|
 | 1 | 12 | On a real Android phone and a real iPhone: install the app, turn on flight mode, open it from the home screen and read the morning adhkar; confirm prayer times (with a saved location) and tasbih also work. Then tick feature 12 **Done, 13 October 2026.** |
-| 2 | 12 | Run Lighthouse on the live site and confirm it reports the site as installable with no manifest or icon warnings |
+| 2 | 12 | Run Lighthouse on the live site and confirm it reports the site as installable with no manifest or icon warnings **Run by Zubair on a deploy preview, 13 October 2026 (Lighthouse 13.4.1, phone profile). The manifest loaded and no manifest or icon problem was reported; this version of Lighthouse has no "installable" check, and installing was confirmed on phones (row 1). Scores: accessibility 92, best practices 92, performance 49 and SEO 69. The run warned that Chrome extensions slowed the page, and the SEO score reflects the `noindex` Netlify puts on previews, so both want a clean run on the live site.** |
 | 3 | 12 | On a throttled "Slow 3G" connection, confirm a first visit to the home page is usable within five seconds, and that the Arabic and heading fonts still show after going offline on a second visit |
 | 4 | 12 | After the next deploy, with a tab already open, confirm "Update available" appears and Refresh loads the new version |
 | 5 | 13 | In Netlify, add `HADITH_API_KEY` (scoped to Functions) and delete `VITE_HADITH_API_KEY`. The old key was readable in the site's JavaScript, so get a fresh key from hadithapi.com and retire the old one **Done, 13 October 2026.** |
@@ -1177,4 +1208,4 @@ Each of these blocks the feature named. A proposed default is given where there 
 | May the site count visits at all? | 34 | **Decided:** Yes, as anonymous counts only. Reverses the "no analytics" rule in `Spec.md`, `CLAUDE.md`, `CONTRIBUTING.md` and the About page |
 | Which statistics service? | 34 | **Decided:** GoatCounter: open source, no cookies, counts named actions, free for non-commercial sites |
 | Are visitors asked first? | 34 | **Decided:** No banner. Nothing identifying is collected; Do Not Track is honoured and an opt-out switch is offered |
-| Who reviews translations and new religious content? | 27, 28, 30 to 32 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer |
+| Who reviews translations and new religious content? | 27, 28, 36 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer. **13 October 2026:** Zubair ticked 30 to 32 while still looking for a reviewer; the prophets' stories are verified under feature 36, and the Eid and Qurbani reviews stay open under Final |
