@@ -10,12 +10,14 @@ export const PROPHETS = [
     people: 'The first human being, placed on the earth as a successor',
     peopleRefs: ["Qur'an 2:30"],
     mentions: ["Qur'an 2:31", "Qur'an 3:33", "Qur'an 7:11", "Qur'an 20:115"],
+    story: true,
   },
   {
     slug: 'idris',
     name: 'Idris',
     arabic: 'إدريس',
     mentions: ["Qur'an 19:56", "Qur'an 21:85"],
+    story: true,
   },
   {
     slug: 'nuh',
@@ -24,6 +26,7 @@ export const PROPHETS = [
     people: 'Sent to his people',
     peopleRefs: ["Qur'an 71:1"],
     mentions: ["Qur'an 7:59", "Qur'an 11:25", "Qur'an 71:1"],
+    story: true,
   },
   {
     slug: 'hud',

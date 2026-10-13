@@ -457,14 +457,12 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
 - `/prophets` shows all 25. A prophet with a story links to it; one without is shown with his references, "Story not
   yet written" and no link. `/prophets/:slug` is guarded: an unknown prophet, or one without a story, shows the 404 page.
 - A story is written as sections, like the Eid page. `data/prophetStories.js` maps a slug to its structure and English
-  words; Ibrahim's are `data/ibrahimSections.js` and `data/content/ibrahim/en.js`. `ProphetView` draws them with
-  `ContentSections`, with the page's own title and description, a breadcrumb, and links to the previous and next
-  prophet that has a story (`storyNeighbours` in `utils/prophets.js`).
-- Ibrahim's story has 21 sections: who he was, the star, moon and sun, his father, the idols, the fire, the king, his
-  emigration, the four birds, the guests, Hajar and Isma'il in Makkah, the sacrifice, the building of the Ka'bah, his
-  supplications and his legacy, with seven verse blocks. It draws on the Qur'an and Sahih al-Bukhari only, and says
-  where they are silent: the king, the land of the tyrant and the son in the dream are not named, and the order of
-  events is for reading.
+  words; written stories include Adam (`data/adamSections.js`, `data/content/adam/en.js`), Idris (`data/idrisSections.js`,
+  `data/content/idris/en.js`), Nuh (`data/nuhSections.js`, `data/content/nuh/en.js`), and Ibrahim (`data/ibrahimSections.js`,
+  `data/content/ibrahim/en.js`). `ProphetView` draws them with `ContentSections`, with the page's own title and
+  description, a breadcrumb, and links to the previous and next prophet that has a story (`storyNeighbours` in
+  `utils/prophets.js`).
+- Stories draw on the Qur'an and authentic hadith in Sahih al-Bukhari only, and say where they are silent.
 - The Arabic of each verse was taken from an open Qur'an dataset, not typed. A test checks that every Qur'an reference
   in the list and in each story is a verse that exists (`test/fixtures/ayahCounts.json`), that every section carries a
   reference and that every verse block has Arabic, translation and reference.
