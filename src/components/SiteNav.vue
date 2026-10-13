@@ -212,6 +212,11 @@ const allLinks = [
     icon: '🌙',
   },
   {
+    to: '/qurbani',
+    key: 'qurbani',
+    icon: '🐑',
+  },
+  {
     to: '/tracker',
     key: 'tracker',
     icon: '✅',

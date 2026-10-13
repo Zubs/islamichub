@@ -283,6 +283,12 @@
             style="color: #fff; border-color: rgba(255, 255, 255, 0.3)"
             >{{ c('lesserPilgrimage.inheritance') }}
           </RouterLink>
+          <RouterLink
+            to="/qurbani"
+            class="btn btn-secondary btn-lg"
+            style="color: #fff; border-color: rgba(255, 255, 255, 0.3)"
+            >{{ c('lesserPilgrimage.qurbani') }}
+          </RouterLink>
         </div>
       </div>
     </div>

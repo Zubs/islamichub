@@ -39,6 +39,7 @@ const CONTENT_VIEWS = {
   inheritance: 'src/views/tools/InheritanceView.vue',
   about: 'src/views/AboutView.vue',
   eid: 'src/views/EidView.vue',
+  qurbani: 'src/views/QurbaniView.vue',
 }
 
 async function open(path) {

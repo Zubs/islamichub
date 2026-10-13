@@ -159,6 +159,7 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/duas`                                   | `duas`              | DuasHomeView          |
 | `/duas/:situationSlug`                    | `duas-situation`    | DuasSituationView     |
 | `/eid`                                    | `eid`               | EidView               |
+| `/qurbani`                                | `qurbani`           | QurbaniView           |
 | `/tracker`                                | `tracker`           | TrackerView           |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
@@ -419,6 +420,28 @@ A guide to Eid al-Fitr and Eid al-Adha, awaiting scholarly review.
   `firstDayOfHijriMonth`, and `nextEid` gives whichever comes next, with the days remaining. On the day itself the page
   shows a greeting in place of the countdown. The dates are calculated and can differ from the announced date by a day,
   and the page says to follow the local moon sighting.
+
+### 5.7d Qurbani (`/qurbani`)
+
+A guide to the Eid al-Adha sacrifice, awaiting scholarly review. It is written as sections like the Eid page:
+`data/qurbaniSections.js` for the structure, Arabic and references, `data/content/qurbani/en.js` for the words.
+
+- Sections: what the sacrifice is, its origin in the story of Ibrahim (Qur'an 37:102 to 37:107), who it is due on, the
+  ruling, which animals qualify, when it can be done, shares, how the meat is shared, how it is carried out, and four
+  questions.
+- Two differences between the schools are shown as two positions each, without preferring either: obligatory (Hanafi;
+  Ibn Majah 3123, Qur'an 108:2) or a confirmed sunnah (Maliki, Shafi'i, Hanbali; Abu Dawud 2791, Al-Tirmidhi 1506), and
+  three days or four.
+- The page says plainly where a source could not be checked: the minimum ages of the animals (from the books of fiqh),
+  and the report in Musnad Ahmad used for four days. The report of Ibn Umar for three days is in the Muwatta, which the
+  library does not hold, so it is cited without a link.
+- **Shares helper:** the reader types a number of people. `parsePeople` in `utils/qurbani.js` accepts only a whole
+  number above zero; anything else shows "Enter a whole number of people, 1 or more." `shareOptions` counts a sheep or
+  goat for one person and a cow or camel for seven shares (Abu Dawud 2808) and lists: small animals only; when the
+  number is above seven and not a multiple of seven, full large animals plus small animals for the rest; and large
+  animals only, with the spare shares. The helper says it is a guide, not a ruling. Nothing typed leaves the device or
+  is stored.
+- Linked from the Eid and Hajj pages, the menu and the footer.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 

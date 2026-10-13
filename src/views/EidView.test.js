@@ -152,7 +152,7 @@ describe('Eid page', () => {
     const links = wrapper
       .findAll('#zakatAlFitr .eid-links a')
       .map((link) => link.attributes('href'))
-    expect(links).toEqual(['/zakat', '/fasting'])
+    expect(links).toEqual(['/zakat', '/fasting', '/qurbani'])
   })
 
   it('reads a translated section in another language with the same Arabic and references', async () => {

@@ -69,6 +69,11 @@ export const routes = [
     beforeEnter: (to) => (getSituation(to.params.situationSlug) ? true : notFound(to)),
   },
   {
+    path: '/qurbani',
+    name: 'qurbani',
+    component: () => import('@/views/QurbaniView.vue'),
+  },
+  {
     path: '/eid',
     name: 'eid',
     component: () => import('@/views/EidView.vue'),

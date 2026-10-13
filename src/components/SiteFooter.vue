@@ -76,6 +76,7 @@
           <RouterLink to="/tasbih">{{ $t('siteFooter.tasbihCounter') }}</RouterLink>
           <RouterLink to="/hadith/books">{{ $t('siteFooter.hadithLibrary') }}</RouterLink>
           <RouterLink to="/eid">{{ $t('siteFooter.eid') }}</RouterLink>
+          <RouterLink to="/qurbani">{{ $t('siteFooter.qurbani') }}</RouterLink>
         </div>
 
         <div class="footer-col">

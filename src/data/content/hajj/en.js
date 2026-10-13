@@ -47,6 +47,7 @@ export default {
     calculateYourZakatCheckPrayerTimes:
       'Calculate your Zakat, check prayer times, find the Qibla, or plan your inheritance — all in one place.',
     zakatCalculator: 'Zakat Calculator',
+    qurbani: 'Qurbani guide',
     inheritance: 'Inheritance',
   },
   lists: {

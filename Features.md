@@ -939,6 +939,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - A shares helper: the user enters the number of people, and it shows the options. A sheep or goat counts for one person. A cow or camel holds up to seven shares.
 - The helper is a pure function in `utils/qurbani.js`. It states that it is a guide and not a ruling.
 - Linked from the Eid and Hajj pages. Added to the navigation and the sitemap.
+- Built: the page, the shares helper and their tests. Every hadith and verse on it was checked against the text of its source, and the helper's answers match a hand count for 1 to 21 people. The helper also offers full large animals plus small ones for the rest when the number is above seven.
+- Not done: no reviewer has been named, three points on the page say they could not be checked, and the page is not live, so the feature stays unticked; see Final.
 
 **Tests**
 - With no number entered, the helper shows nothing.
@@ -1104,6 +1106,14 @@ Tests are written in plain English and ordered the same way under every feature:
 | 38 | 30 | Which wording of the takbirat, and from what source? | "Allāhu akbar, Allāhu akbar, lā ilāha illa-llāh, wa-llāhu akbar, Allāhu akbar, wa lillāhi-l-ḥamd", typed by hand. It is reported from Ibn Mas'ud in the Musannaf of Ibn Abi Shaybah, which is not among the collections I could check, so the page says the source awaits confirmation | Have the reviewer confirm the Arabic and supply the reference, in `data/eidSections.js` and `data/content/eid/en.js` | |
 | 39 | 30 | Which schools are named beside each number of extra takbirs? | Seven and five is given as the Maliki, Shafi'i and Hanbali view and three extra in each rak'ah as the Hanafi view. The hadiths are verified; which school holds which view is from general knowledge, not a checked source | Correct the two position texts in `data/content/eid/en.js` | |
 | 40 | 30 | Does the Eid page link to Qurbani before that page is reviewed? | Yes, once feature 31 is built | Remove the link in `EidView.vue` | |
+| 41 | 31 | Who reviews the Qurbani page? | Nobody yet. Every hadith and verse was checked against its text, but no scholar has read the page | Name the reviewer; the feature is ticked once they have read the page |
+| 42 | 31 | Which schools hold which view on the ruling and on the days? | Obligatory: Hanafi (on a resident adult who owns the nisab). Confirmed sunnah: Maliki, Shafi'i, Hanbali. Three days: Hanafi, Maliki, Hanbali. Four days: Shafi'i. The hadiths are verified; the attribution to schools is from general knowledge | Correct `ruling` and `dayCount` in `data/content/qurbani/en.js` |
+| 43 | 31 | What are the minimum ages of the animals? | Camel five years, cow two, goat one, sheep from six months, with a sentence saying the schools differ slightly and that the ages are from the books of fiqh and await review. Only the hadith (Abu Dawud 2797) is verified | Have the reviewer correct `animals.i2` and remove the caveat |
+| 44 | 31 | What is the evidence for four days of sacrifice? | The page names the report in Musnad Ahmad that all the days of Tashriq are days of slaughter, without a number, and says it could not be checked | Have the reviewer supply the number in `dayCount.text2` |
+| 45 | 31 | How is the Muwatta report of Ibn Umar cited? | As "Muwatta Malik 1039", the number in the open dataset I checked the text against. Editions of the Muwatta number differently and the library does not hold it, so it is not a link | Confirm the Arabic-edition number in `data/qurbaniSections.js` |
+| 46 | 31 | Is Ibn Majah 3123 acceptable as evidence? | It is quoted as "reported from Abu Hurairah", since scholars differ on whether it goes back to the Prophet. Its grade was not checked | Reword or remove it in `who` and `ruling` |
+| 47 | 31 | Is the son in the story of Ibrahim named? | No. The page says "his son", as the verses do | Add the name in `origin` once the reviewer agrees the wording |
+| 48 | 31 | Is the recommendation to divide the meat in thirds stated? | Yes, as what many scholars recommend, with a sentence that the texts set no fixed portions. It has no numbered source | Remove the sentence in `meat.i2` |
 
 **Checks only Zubair can do**
 
@@ -1130,6 +1140,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 19 | 28 | Once Hausa text exists: on a real Android phone and a real iPhone, confirm the hooked letters ɓ, ɗ, ƙ and ƴ display as single, correctly formed letters in headings, body text and buttons |
 | 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 |
 | 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) |
+| 22 | 31 | Read the Qurbani page on a phone at 360px wide and try the shares helper with the on-screen keyboard |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

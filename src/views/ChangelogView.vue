@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'Qurbani guide',
+            scope: 'Qurbani',
+            desc: 'A new page explains the Eid al-Adha sacrifice: its origin in the story of Ibrahim, who it is due on, which animals qualify, when it can be done, how the meat is shared and how it is carried out. Where the schools differ, on whether it is obligatory and on three or four days, both positions are shown with their evidence. A helper works out the ways a group can sacrifice: enter the number of people and it lists sheep or goats, shares of a cow or camel, or a mix. The page awaits scholarly review.',
+          },
+          {
             title: 'Eid guide',
             scope: 'Eid',
             desc: 'A new page explains Eid al-Fitr and Eid al-Adha: what they are, the sunnahs of the day, how the Eid prayer is performed, the takbirat in Arabic with transliteration and translation, and Zakat al-Fitr. Where the schools differ on the extra takbirs, both positions are shown with their evidence. A countdown shows the days to the next Eid, with a reminder that the day itself depends on the sighting of the moon. The page awaits scholarly review.',

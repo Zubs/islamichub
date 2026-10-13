@@ -123,6 +123,7 @@ export default {
     },
     onGithub: 'IslamicHub on GitHub',
     eid: 'The Two Eids',
+    qurbani: 'Qurbani',
   },
   siteNav: {
     islamichubHome: 'IslamicHub home',
@@ -183,6 +184,7 @@ export default {
       about: 'About & Contributors',
       changelog: 'Changelog',
       eid: 'The Two Eids',
+      qurbani: 'Qurbani',
     },
   },
   statsOptOut: {
@@ -850,6 +852,11 @@ export default {
       description:
         'A sourced guide to the two Eids: the sunnahs of the day, the Eid prayer step by step, the takbirat in Arabic with translation, Zakat al-Fitr, and a countdown to the next Eid.',
     },
+    qurbani: {
+      title: "Qurbani — The Eid al-Adha Sacrifice, Rules and Shares {'|'} IslamicHub",
+      description:
+        'A sourced guide to Qurbani: who it is due on, which animals qualify, the days of sacrifice, how the meat is shared, and a helper for working out shares of a cow or camel.',
+    },
   },
   about: {
     quranTranslations: "Qur'an translations used:",
@@ -864,5 +871,18 @@ export default {
       adha: 'Eid Mubarak! Today is Eid al-Adha',
     },
     expected: 'Expected on {date}',
+  },
+  qurbani: {
+    people: 'Number of people',
+    invalid: 'Enter a whole number of people, 1 or more.',
+    options: 'Ways to do it',
+    small: '{n} sheep or goats | {n} sheep or goat | {n} sheep or goats',
+    large: '{n} cows or camels | {n} cow or camel | {n} cows or camels',
+    sharesOfOne:
+      '{n} shares of one cow or camel | {n} share of one cow or camel | {n} shares of one cow or camel',
+    mixed: '{large} and {small}',
+    spare:
+      '{animals}, with {n} shares spare | {animals}, with {n} share spare | {animals}, with {n} shares spare',
+    exact: 'every share filled',
   },
 }

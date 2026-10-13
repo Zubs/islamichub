@@ -36,6 +36,9 @@
             <RouterLink to="/fasting" class="btn btn-secondary">{{
               c('zakatAlFitr.linkFasting')
             }}</RouterLink>
+            <RouterLink to="/qurbani" class="btn btn-secondary">{{
+              c('zakatAlFitr.linkQurbani')
+            }}</RouterLink>
           </div>
         </template>
       </ContentSections>

@@ -1,4 +1,4 @@
-// The words of the Eid page in English. Sections and keys follow source.js: `p1`, `p2` are a
+// The words of the Eid page in English. Sections and keys follow data/eidSections.js: `p1`, `p2` are a
 // section's paragraphs, `i1`, `i2` its items, `q1`/`a1` a question and its answer.
 export default {
   header: {
@@ -74,6 +74,7 @@ export default {
     p1: 'Zakat al-Fitr is due at the end of Ramadan on every Muslim, young or old, male or female. The Prophet ﷺ set it at one sa’ of dates or of barley, a measure of the staple food, and ordered that it be given before people go out to the Eid prayer (Sahih Bukhari 1503).',
     p2: 'It purifies the fasting person from idle and indecent talk and feeds the poor. Given before the prayer it is accepted as Zakat al-Fitr; given after the prayer it is ordinary charity (Abu Dawud 1609).',
     linkZakat: 'Work out your Zakat',
+    linkQurbani: 'The Qurbani guide',
     linkFasting: 'Read about fasting in Ramadan',
   },
   faq: {
