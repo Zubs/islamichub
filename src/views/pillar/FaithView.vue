@@ -155,7 +155,7 @@
           >
             {{ c.arabic }}
           </div>
-          <h4
+          <h3
             style="
               font-family: var(--serif);
               font-size: 0.9rem;
@@ -164,7 +164,7 @@
             "
           >
             {{ c.title }}
-          </h4>
+          </h3>
           <p style="font-size: 12.5px; color: var(--muted); line-height: 1.5">
             <HadithRef :text="c.desc" />
           </p>
@@ -194,7 +194,7 @@
         <div v-for="t in tawhidDimensions" :key="t.title" class="tl-item">
           <div class="tl-marker">{{ t.num }}</div>
           <div class="tl-content">
-            <h4>{{ t.title }}</h4>
+            <h3>{{ t.title }}</h3>
             <p><HadithRef :text="t.desc" /></p>
           </div>
         </div>

@@ -744,8 +744,8 @@ origin requires updating `connect-src` (or the relevant directive) in the CSP in
 
 Tokens live in `src/assets/css/tokens.css`. Components must use tokens rather than hard-coded values.
 
-- **Colour:** cream background (`--cream`), green primary (`--green`), gold accent (`--gold`), ink text (`--ink`),
-  muted text (`--muted`). Each pillar has an accent pair: faith (purple), prayer (green), zakat (gold), fasting (blue),
+- **Colour:** cream background (`--cream`), green primary (`--green`), gold accent (`--gold`), dark gold for text on cream (`--gold-dark`), ink text (`--ink`),
+  muted text (`--muted`). Each pillar has an accent pair: faith (purple), prayer (green), zakat (gold, `--zakat-color: #855b0a` meeting 4.5:1 contrast against `--zakat-light` and `--cream`), fasting (blue),
   hajj (brown).
 - **Type:** `--serif` Cormorant Garamond for headings, `--sans` DM Sans for UI, `--arabic` Amiri for all Arabic. Base
   size 17 px.
@@ -772,14 +772,16 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 - The canonical URL is the site address plus the route's path, with no query string. The 404 page is marked `noindex`.
 - `test/sitemap.test.js` fails if a fixed route is missing from `sitemap.xml` or the sitemap lists an address no route
   serves.
-- `robots.txt` and `sitemap.xml` are served from `public/` and must be updated when routes are added.
+- `robots.txt`, `sitemap.xml` and `llms.txt` are served from `public/` and must be updated when routes are added.
 
 ### Accessibility
 
-- Semantic landmarks (`<nav>`, `<main>`, `<footer>`) and a logical heading order.
-- All interactive elements are keyboard-reachable and have accessible names.
+- Semantic landmarks (`<nav>`, `<main>`, `<footer>`), valid `<ul>`/`<li>` list structures for card groupings on the home page, and a strictly descending heading order with no skipped levels across every page.
+- All text and UI colours meet WCAG 2.1 AA 4.5:1 contrast against their backgrounds: footer text and disclaimer on dark ink, gold tags on pillar cards, gold verse references on cream frames, and CTA strip paragraphs on green.
+- All interactive elements are keyboard-reachable, links within text (such as footer author credits) are underlined, and interactive controls have accessible names.
 - Decorative ornaments and icons carry `aria-hidden="true"`.
 - The loading screen is exposed as `role="status"`.
+- Web fonts are loaded asynchronously with standard fallback typefaces to prevent render-blocking on first paint.
 
 ### Privacy
 

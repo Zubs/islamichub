@@ -362,7 +362,7 @@
           style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))"
         >
           <div v-for="m in muftirat" :key="m.title" class="card">
-            <h4
+            <h3
               style="
                 font-family: var(--serif);
                 font-size: 0.9rem;
@@ -371,7 +371,7 @@
               "
             >
               {{ m.title }}
-            </h4>
+            </h3>
             <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">
               <HadithRef :text="m.desc" />
             </p>
@@ -401,7 +401,7 @@
         <div v-for="v in virtues" :key="v.title" class="tl-item">
           <div class="tl-marker">{{ v.icon }}</div>
           <div class="tl-content">
-            <h4>{{ v.title }}</h4>
+            <h3>{{ v.title }}</h3>
             <p><HadithRef :text="v.desc" /></p>
           </div>
         </div>

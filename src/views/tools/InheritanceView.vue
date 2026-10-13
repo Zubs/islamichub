@@ -68,7 +68,7 @@
             </div>
             <div v-for="heir in group.heirs" :key="heir.key" class="heir-toggle">
               <div class="heir-info">
-                <h4>{{ $t('inheritance.heirs.' + heir.key) }}</h4>
+                <h3>{{ $t('inheritance.heirs.' + heir.key) }}</h3>
                 <p>
                   <HadithRef :text="heir.desc" />
                   <span style="color: var(--gold); font-weight: 500"

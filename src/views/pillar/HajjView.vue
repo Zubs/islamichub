@@ -44,7 +44,7 @@
           style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))"
         >
           <div v-for="c in conditions" :key="c.title" class="card">
-            <h4
+            <h3
               style="
                 font-family: var(--serif);
                 font-size: 0.9rem;
@@ -54,7 +54,7 @@
               "
             >
               {{ c.title }}
-            </h4>
+            </h3>
             <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">
               <HadithRef :text="c.desc" />
             </p>
@@ -204,7 +204,7 @@
               🕋
             </div>
             <div class="tl-content">
-              <h4>{{ rite.name }}</h4>
+              <h3>{{ rite.name }}</h3>
               <p><HadithRef :text="rite.desc" /></p>
             </div>
           </div>

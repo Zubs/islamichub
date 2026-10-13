@@ -353,7 +353,7 @@ const faqs = computed(() => list('faqs'))
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--gold);
+  color: var(--gold-dark);
   margin-bottom: 0.4rem;
 }
 

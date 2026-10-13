@@ -11,6 +11,7 @@ const PUBLISHED_FILES = [
   'icon-192.png',
   'icon-512.png',
   'icon-maskable-512.png',
+  'llms.txt',
   'og-image.png',
   'robots.txt',
   'sitemap.xml',

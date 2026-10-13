@@ -57,14 +57,14 @@
         </div>
 
         <div class="footer-col">
-          <h4>{{ $t('siteFooter.fivePillars') }}</h4>
+          <div class="footer-col-title">{{ $t('siteFooter.fivePillars') }}</div>
           <RouterLink v-for="p in pillars" :key="p.to" :to="p.to">{{
             $t('siteFooter.pillars.' + p.key)
           }}</RouterLink>
         </div>
 
         <div class="footer-col">
-          <h4>{{ $t('siteFooter.tools') }}</h4>
+          <div class="footer-col-title">{{ $t('siteFooter.tools') }}</div>
           <RouterLink to="/zakat">{{ $t('siteFooter.zakatCalculator') }}</RouterLink>
           <RouterLink to="/prayer">{{ $t('siteFooter.prayerTimes') }}</RouterLink>
           <RouterLink to="/prayer">{{ $t('siteFooter.qiblaFinder') }}</RouterLink>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="footer-col">
-          <h4>{{ $t('siteFooter.project') }}</h4>
+          <div class="footer-col-title">{{ $t('siteFooter.project') }}</div>
           <RouterLink to="/about">{{ $t('siteFooter.aboutTeam') }}</RouterLink>
           <RouterLink to="/changelog">{{ $t('siteFooter.changelog') }}</RouterLink>
           <a :href="GITHUB_REPO" target="_blank" rel="noopener noreferrer">{{
@@ -106,7 +106,7 @@
             href="https://github.com/Zubs"
             target="_blank"
             rel="noopener noreferrer"
-            style="color: rgba(255, 255, 255, 0.55); text-decoration: none"
+            style="color: rgba(255, 255, 255, 0.85); text-decoration: underline"
             >{{ $t('siteFooter.zubair') }}</a
           >
           {{ $t('siteFooter.text') }}
@@ -114,7 +114,7 @@
             href="https://github.com/yusuf-saif"
             target="_blank"
             rel="noopener noreferrer"
-            style="color: rgba(255, 255, 255, 0.55); text-decoration: none"
+            style="color: rgba(255, 255, 255, 0.85); text-decoration: underline"
             >{{ $t('siteFooter.yusuf') }}</a
           >
         </span>
@@ -158,16 +158,16 @@ const socials = [
   align-items: center;
   gap: 6px;
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   padding: 5px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   transition: all 0.15s;
 }
 
 .footer-social-link:hover {
-  color: rgba(255, 255, 255, 0.85);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
 }
 </style>
