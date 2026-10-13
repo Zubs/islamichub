@@ -304,6 +304,11 @@ const releases = [
         dotColor: '#c0392b',
         entries: [
           {
+            title: 'Deploys no longer fail on the link preview',
+            scope: 'Build',
+            desc: 'The function that gives shared links their title and picture was reaching a file Netlify could not bundle, which stopped the site from deploying. The list of hadith collections it needs now lives in a file of its own, and a test stops this from happening again.',
+          },
+          {
             title: 'Visits from shared links are counted as such',
             scope: 'Usage statistics',
             desc: 'A link shared from the site carries a short tag so the visit can be counted as coming from WhatsApp. The code that read the tag never ran; it does now, and the tag is removed from the address bar after it is counted.',

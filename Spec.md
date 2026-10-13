@@ -304,7 +304,9 @@ in `utils/fasting.js`.
 ### 5.6 Hadith library (`/hadith/*`)
 
 - `/hadith` — educational overview: what hadith is, isnad, grades, major scholars.
-- `/hadith/books` — nine collections from static `BOOKS_META`: Sahih al-Bukhari, Sahih Muslim, Jami' al-Tirmidhi,
+- `/hadith/books` — nine collections from static `BOOKS_META` (`data/hadithBooks.js`, which has no imports because the
+  link-preview edge function reads it too; Netlify bundles functions without Vite, so nothing under `netlify/` may
+  reach a file that uses the `@` alias or `import.meta.env`, and `test/server-imports.test.js` checks this): Sahih al-Bukhari, Sahih Muslim, Jami' al-Tirmidhi,
   Sunan Abu Dawood, Sunan Ibn Majah, Sunan an-Nasa'i, Mishkat al-Masabih, Musnad Ahmad, Al-Silsila al-Sahiha. Each
   shows the author, death date, grade, hadith count, and a description.
 - `/hadith/books/:bookSlug` — chapter list fetched from hadithapi.com through the proxy.

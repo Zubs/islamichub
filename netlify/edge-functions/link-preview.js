@@ -1,7 +1,7 @@
 // Gives hadith, dua and adhkar addresses their own title, description and preview image.
 // Services such as WhatsApp read a link's page without running its scripts, so the head
 // the app sets in the browser never reaches them.
-import { BOOKS_META } from '../../src/composables/useHadithApi.js'
+import { BOOKS_META } from '../../src/data/hadithBooks.js'
 import { DUA_SITUATIONS, DUAS } from '../../src/data/duas.js'
 import { ADHKAR_CATEGORIES } from '../../src/data/adhkar.js'
 
