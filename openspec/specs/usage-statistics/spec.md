@@ -155,3 +155,14 @@ The site SHALL state in plain words, on the About page, what is counted, what is
 #### Scenario: The old promise is not left standing
 - **WHEN** the site's text and the project's documents are searched
 - **THEN** none still says the site has no analytics or statistics
+
+### Requirement: Shared links carry a source tag
+Links produced by the site's Share control SHALL carry a short source tag. A visit that arrives by such a link SHALL be counted under that tag as its source, and the tag SHALL then be removed from the address shown in the browser without counting the page twice.
+
+#### Scenario: Arriving from a shared link
+- **WHEN** a visitor opens a link shared on WhatsApp that carries the tag
+- **THEN** one page view is counted with the tag as its source, and the address bar no longer shows the tag
+
+#### Scenario: Other query values
+- **WHEN** the address carries other query values beside the tag
+- **THEN** they are kept and only the tag is removed

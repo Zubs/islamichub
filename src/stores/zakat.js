@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { formatNumber, t } from '@/i18n.js'
 import {
   perGram,
   nisabFor,
   parsePrices,
+  parseSavedPrices,
   GOLD_NISAB_GRAMS,
   SILVER_NISAB_GRAMS,
 } from '@/utils/zakat.js'
@@ -13,11 +15,28 @@ const PRICE_SOURCES = [
   'https://latest.currency-api.pages.dev/v1/currencies/usd.json',
 ]
 const SOURCE_TIME_LIMIT_MS = 6000
+const SAVED_PRICES_KEY = 'zakat-prices' // { usdPerOunce, rates, date } as last fetched
 
 // Reference values on a US dollar base, used when today's prices cannot be fetched.
 const REFERENCE_DATE = '2026-10-12'
 const REFERENCE_USD_PER_OUNCE = { gold: 4186.27, silver: 60.83 }
-const REFERENCE_RATES = { USD: 1, GBP: 0.7555, EUR: 0.8928, SAR: 3.75 }
+const REFERENCE_RATES = { USD: 1, GBP: 0.7555, EUR: 0.8928, SAR: 3.75, NGN: 1331.59 }
+
+function readSavedPrices() {
+  try {
+    return parseSavedPrices(localStorage.getItem(SAVED_PRICES_KEY))
+  } catch {
+    return null
+  }
+}
+
+function savePrices(prices) {
+  try {
+    localStorage.setItem(SAVED_PRICES_KEY, JSON.stringify(prices))
+  } catch {
+    // storage is full or blocked; prices are simply fetched again next time
+  }
+}
 
 async function fetchFrom(url) {
   const controller = new AbortController()
@@ -38,12 +57,15 @@ export const useZakatStore = defineStore('zakat', () => {
   // ── State ────────────────────────────────────────────────────
   const currency = ref('GBP')
   const sym = ref('£')
-  const usdPerOunce = ref({ ...REFERENCE_USD_PER_OUNCE })
-  const rates = ref({ ...REFERENCE_RATES })
+  const savedPrices = readSavedPrices()
+  const usdPerOunce = ref({ ...(savedPrices?.usdPerOunce ?? REFERENCE_USD_PER_OUNCE) })
+  const rates = ref({ ...(savedPrices?.rates ?? REFERENCE_RATES) })
   const metalsFetched = ref(false)
   const ratesFetched = ref(false)
-  const pricesDate = ref(REFERENCE_DATE)
+  const pricesSaved = ref(!!savedPrices)
+  const pricesDate = ref(savedPrices?.date ?? REFERENCE_DATE)
   const pricesLoading = ref(false)
+  const customPerGram = ref({ gold: null, silver: null })
   const nisabMethod = ref('gold') // 'gold' | 'silver'
   const location = ref(null) // { lat, lng, name }
   const locationError = ref(null)
@@ -55,8 +77,10 @@ export const useZakatStore = defineStore('zakat', () => {
     return perGram(usdPerOunce.value[metal], rates.value[currencyCode])
   }
 
-  const goldLocal = computed(() => pricePerGram('gold', currency.value))
-  const silverLocal = computed(() => pricePerGram('silver', currency.value))
+  const goldLocal = computed(() => customPerGram.value.gold ?? pricePerGram('gold', currency.value))
+  const silverLocal = computed(
+    () => customPerGram.value.silver ?? pricePerGram('silver', currency.value),
+  )
   const nisabValue = computed(() =>
     nisabFor(nisabMethod.value, {
       goldPerGram: goldLocal.value,
@@ -67,7 +91,7 @@ export const useZakatStore = defineStore('zakat', () => {
   function fmt(n) {
     return (
       sym.value +
-      Number(n).toLocaleString('en-GB', {
+      formatNumber(n, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })
@@ -76,8 +100,15 @@ export const useZakatStore = defineStore('zakat', () => {
 
   // ── Actions ──────────────────────────────────────────────────
   function setCurrency(c, s) {
+    if (c !== currency.value) {
+      customPerGram.value = { gold: null, silver: null }
+    }
     currency.value = c
     sym.value = s
+  }
+
+  function setCustomPrice(metal, price) {
+    customPerGram.value = { ...customPerGram.value, [metal]: price }
   }
 
   function setNisabMethod(m) {
@@ -88,11 +119,14 @@ export const useZakatStore = defineStore('zakat', () => {
     location.value = loc
   }
 
+  let pricesRequested = false
+
   async function fetchPrices() {
-    if (pricesLoading.value) {
+    if (pricesRequested) {
       return
     }
 
+    pricesRequested = true
     pricesLoading.value = true
     for (const url of PRICE_SOURCES) {
       try {
@@ -108,6 +142,7 @@ export const useZakatStore = defineStore('zakat', () => {
           rates.value = prices.rates
           ratesFetched.value = true
         }
+        savePrices(prices)
         break
       } catch {
         // try the next source; the values already held stay in use
@@ -119,14 +154,14 @@ export const useZakatStore = defineStore('zakat', () => {
   async function requestLocation() {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        locationError.value = 'Geolocation not supported by your browser'
+        locationError.value = t('location.unsupported')
         return reject(locationError.value)
       }
 
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude: lat, longitude: lng } = pos.coords
-          let name = 'Your location'
+          let name = t('location.yours')
           try {
             const r = await fetch(
               `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
@@ -143,7 +178,7 @@ export const useZakatStore = defineStore('zakat', () => {
           resolve(location.value)
         },
         () => {
-          locationError.value = 'Location access denied. Enter coordinates manually.'
+          locationError.value = t('location.denied')
           reject(locationError.value)
         },
         { timeout: 10000 },
@@ -158,8 +193,10 @@ export const useZakatStore = defineStore('zakat', () => {
     rates,
     metalsFetched,
     ratesFetched,
+    pricesSaved,
     pricesDate,
     pricesLoading,
+    customPerGram,
     nisabMethod,
     location,
     locationError,
@@ -171,6 +208,7 @@ export const useZakatStore = defineStore('zakat', () => {
     nisabValue,
     fmt,
     setCurrency,
+    setCustomPrice,
     setNisabMethod,
     setLocation,
     fetchPrices,

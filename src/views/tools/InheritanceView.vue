@@ -6,12 +6,11 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Islamic Tool &nbsp;·&nbsp; الميراث
+          {{ c('header.islamicTool') }}
         </div>
-        <h1>Fara'id — Islamic Inheritance Calculator</h1>
+        <h1>{{ c('header.faraIdIslamicInheritanceCalculator') }}</h1>
         <p>
-          Calculate the Qur'anic shares of inheritance based on the heirs present. Each heir's share
-          is derived directly from Qur'an 4:11–12 and 4:176.
+          {{ c('header.calculateTheQurAnicSharesOf') }}
         </p>
       </div>
     </div>
@@ -20,8 +19,8 @@
       <QuranBlock
         arabic="يُوصِيكُمُ اللَّهُ فِي أَوْلَادِكُمْ ۖ لِلذَّكَرِ مِثْلُ حَظِّ الْأُنثَيَيْنِ"
         reference="Qur'an 4:11"
-        translation="Allah instructs you concerning your children: for the male, what is equal to the share of two females."
-        note="The foundational verse of Islamic inheritance law."
+        :translation="c('header.allahInstructsYouConcerningYourChildren')"
+        :note="c('header.theFoundationalVerseOfIslamicInheritance')"
         style="max-width: 860px; margin-bottom: 2rem"
       />
 
@@ -31,22 +30,21 @@
       >
         <!-- Left: heir selection -->
         <div>
-          <span class="eyebrow">Step 1</span>
+          <span class="eyebrow">{{ $t('inheritance.step1') }}</span>
           <h2
             class="section-title"
             style="font-size: clamp(1.4rem, 2.5vw, 1.8rem); margin-bottom: 0.75rem"
           >
-            Select the heirs present
+            {{ $t('inheritance.selectTheHeirsPresent') }}
           </h2>
           <p style="font-size: 14px; color: var(--muted); margin-bottom: 1.5rem">
-            Toggle each heir present in the estate. For heirs where count matters, enter the number
-            after toggling.
+            {{ $t('inheritance.toggleEachHeirPresentInThe') }}
           </p>
 
           <!-- Estate value -->
           <div class="card" style="margin-bottom: 1.25rem">
             <div class="field">
-              <label>Total estate value (after debts &amp; funeral expenses)</label>
+              <label>{{ $t('inheritance.totalEstateValueAfterDebtsFuneral') }}</label>
               <div class="pfx-wrap">
                 <span class="pfx">{{ store.sym }}</span>
                 <input
@@ -58,20 +56,24 @@
                 />
               </div>
               <div class="hint">
-                Zakat on any zakatable portions should be calculated separately
+                {{ $t('inheritance.zakatOnAnyZakatablePortionsShould') }}
               </div>
             </div>
           </div>
 
           <!-- Heir groups -->
           <div v-for="group in heirGroups" :key="group.name" style="margin-bottom: 1.25rem">
-            <div class="eyebrow" style="margin-bottom: 8px">{{ group.name }}</div>
+            <div class="eyebrow" style="margin-bottom: 8px">
+              {{ $t('inheritance.groups.' + group.name) }}
+            </div>
             <div v-for="heir in group.heirs" :key="heir.key" class="heir-toggle">
               <div class="heir-info">
-                <h4>{{ heir.label }}</h4>
+                <h4>{{ $t('inheritance.heirs.' + heir.key) }}</h4>
                 <p>
-                  {{ heir.desc }}
-                  <span style="color: var(--gold); font-weight: 500">· {{ heir.quran }}</span>
+                  <HadithRef :text="heir.desc" />
+                  <span style="color: var(--gold); font-weight: 500"
+                    >· <HadithRef :text="heir.quran"
+                  /></span>
                 </p>
               </div>
               <div style="display: flex; align-items: center; gap: 10px">
@@ -88,7 +90,11 @@
                   class="toggle-switch"
                   :class="{ on: !!activeHeirs[heir.key] }"
                   @click="toggleHeir(heir.key)"
-                  :aria-label="(activeHeirs[heir.key] ? 'Remove' : 'Add') + ' ' + heir.label"
+                  :aria-label="
+                    $t(activeHeirs[heir.key] ? 'inheritance.remove' : 'inheritance.add', {
+                      heir: $t('inheritance.heirs.' + heir.key),
+                    })
+                  "
                 ></button>
               </div>
             </div>
@@ -98,38 +104,23 @@
         <!-- Right: results -->
         <div style="position: sticky; top: 84px">
           <div class="inheritance-results">
-            <div class="inh-title">Inheritance Breakdown</div>
-            <div
-              v-if="results.length === 0"
-              style="
-                color: rgba(255, 255, 255, 0.4);
-                font-size: 14px;
-                text-align: center;
-                padding: 1rem 0;
-              "
-            >
-              Select heirs on the left to calculate shares
+            <div class="inh-title">{{ $t('inheritance.inheritanceBreakdown') }}</div>
+            <div v-if="outcome.error" class="inh-message" role="status">
+              {{ problemText }}
             </div>
             <div v-for="r in results" :key="r.key" class="inh-row">
               <div class="inh-heir">
-                {{ r.label }}<span v-if="r.count > 1"> ×{{ r.count }}</span>
+                {{ $t('inheritance.heirs.' + r.key)
+                }}<span v-if="r.count > 1"> ×{{ r.count }}</span>
+                <div class="inh-rule"><HadithRef :text="ruleSentence(r.ruleParts)" /></div>
               </div>
               <div class="inh-bar-wrap">
                 <div class="inh-bar-fill" :style="{ width: r.percent + '%' }"></div>
               </div>
               <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
-                <div class="inh-share">
-                  {{ r.shareStr === 'Residue' ? 'Residue' : r.shareStr }} ({{ r.percent }}%)
-                </div>
-                <div class="inh-amount">
-                  {{ store.sym
-                  }}{{
-                    Number(r.amount).toLocaleString('en-GB', {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
-                  }}
-                </div>
+                <div class="inh-share">{{ r.share }} ({{ r.percent }}%)</div>
+                <div class="inh-amount">{{ store.fmt(r.amount) }}</div>
+                <div v-if="r.count > 1" class="inh-each">{{ eachText(r) }}</div>
               </div>
             </div>
             <div
@@ -144,16 +135,8 @@
                 color: rgba(255, 255, 255, 0.5);
               "
             >
-              <span>Total estate distributed</span>
-              <span style="color: var(--gold); font-weight: 600"
-                >{{ store.sym
-                }}{{
-                  estateValue.toLocaleString('en-GB', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                }}</span
-              >
+              <span>{{ $t('inheritance.totalEstateDistributed') }}</span>
+              <span style="color: var(--gold); font-weight: 600">{{ store.fmt(estateValue) }}</span>
             </div>
           </div>
 
@@ -168,12 +151,10 @@
                 margin-bottom: 6px;
               "
             >
-              ⚠ Important note
+              {{ $t('inheritance.importantNote') }}
             </div>
             <p style="font-size: 13px; color: #5a3e0a; line-height: 1.6">
-              Inheritance law is complex. This calculator covers standard cases. For non-standard
-              situations (multiple marriages, missing heirs, disputes), consult a qualified Islamic
-              scholar or mufti.
+              {{ $t('inheritance.thisResultIsAGuideNot') }}
             </p>
           </div>
         </div>
@@ -182,37 +163,30 @@
       <!-- Education -->
       <div style="max-width: 860px; margin-top: 3rem">
         <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-        <span class="eyebrow">Understanding Fara'id</span>
+        <span class="eyebrow">{{ c('understandingFaraId.understandingFaraId') }}</span
+        ><UntranslatedNote v-if="untranslated('understandingFaraId')" />
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
         >
-          The Qur'anic system of inheritance
+          {{ c('understandingFaraId.theQurAnicSystemOfInheritance') }}
         </h2>
         <div class="prose">
           <p>
-            Fara'id (فَرَائِض) — from the root meaning "obligatory portions" — is the Islamic law of
-            inheritance derived primarily from Qur'an 4:11–12 and 4:176. It is one of the most
-            precisely legislated areas of Islamic law, with specific fractional shares assigned
-            directly by divine revelation.
+            {{ c('understandingFaraId.faraIdFromTheRootMeaning') }}
           </p>
           <p>
-            The system has two main categories of heirs: <strong>Dhawu al-furud</strong> (those with
-            fixed Qur'anic shares) and <strong>Asaba</strong> (residuaries who receive the remainder
-            after fixed shares are distributed). Males generally receive double the share of their
-            equivalent female relative, reflecting the greater financial obligations Islam places on
-            men.
+            {{ c('understandingFaraId.theSystemHasTwoMainCategories') }}
+            <strong>{{ c('understandingFaraId.dhawuAlFurud') }}</strong>
+            {{ c('understandingFaraId.thoseWithFixedQurAnicShares') }}
+            <strong>{{ c('understandingFaraId.asaba') }}</strong>
+            {{ c('understandingFaraId.residuariesWhoReceiveTheRemainderAfter') }}
           </p>
         </div>
 
-        <div class="hadith-block anim-target" style="margin: 1.5rem 0">
-          <div class="hadith-source">Sahih Bukhari 6732 · Abu Dawud 2886</div>
-          <div class="hadith-text">
-            "Learn the Fara'id (laws of inheritance) and teach them, for it is half of knowledge,
-            and it will be forgotten. It is the first thing that will be taken away from my nation."
-            — The Prophet Muhammad ﷺ
-          </div>
-        </div>
+        <HadithBlock reference="Sahih Bukhari 6732 · Abu Dawud 2898" style="margin: 1.5rem 0">
+          {{ c('understandingFaraId.giveTheFaraIdTheShares') }}
+        </HadithBlock>
 
         <!-- Fixed shares table -->
         <h3
@@ -224,7 +198,7 @@
             margin-top: 1.5rem;
           "
         >
-          Fixed Qur'anic shares at a glance
+          {{ c('understandingFaraId.fixedQurAnicSharesAtA') }}
         </h3>
         <div
           style="
@@ -238,14 +212,18 @@
           <table style="width: 100%; border-collapse: collapse; font-size: 13.5px">
             <thead>
               <tr style="background: var(--ink); color: #fff">
-                <th style="padding: 10px 14px; text-align: left; font-weight: 600">Heir</th>
-                <th style="padding: 10px 14px; text-align: center; font-weight: 600">
-                  With children
+                <th style="padding: 10px 14px; text-align: start; font-weight: 600">
+                  {{ c('understandingFaraId.heir') }}
                 </th>
                 <th style="padding: 10px 14px; text-align: center; font-weight: 600">
-                  Without children
+                  {{ c('understandingFaraId.withChildren') }}
                 </th>
-                <th style="padding: 10px 14px; text-align: left; font-weight: 600">Source</th>
+                <th style="padding: 10px 14px; text-align: center; font-weight: 600">
+                  {{ c('understandingFaraId.withoutChildren') }}
+                </th>
+                <th style="padding: 10px 14px; text-align: start; font-weight: 600">
+                  {{ c('understandingFaraId.source') }}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -296,15 +274,23 @@
 </template>
 
 <script setup>
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/inheritance/en.js'
 import { ref, reactive, computed, watch } from 'vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
 import { track } from '@/composables/useStats.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import { calcInheritance, HEIR_DEFS } from '@/utils/inheritance.js'
+import { t } from '@/i18n.js'
+
+const { c, list, untranslated } = useContent('inheritance', content)
 
 useSeo('inheritance')
 useScrollReveal()
@@ -313,15 +299,7 @@ const store = useZakatStore()
 const estateValue = ref(100000)
 const activeHeirs = reactive({})
 
-const countableKeys = new Set([
-  'wife',
-  'son',
-  'daughter',
-  'grandson',
-  'granddaughter',
-  'brother',
-  'sister',
-])
+const countableKeys = new Set(HEIR_DEFS.filter((def) => def.countable).map((def) => def.key))
 
 function needsCount(key) {
   return countableKeys.has(key)
@@ -336,19 +314,40 @@ function toggleHeir(key) {
 }
 
 function setHeirCount(key, val) {
-  const n = parseInt(val)
-  if (n > 0) {
-    activeHeirs[key] = n
+  if (val !== '') {
+    activeHeirs[key] = Number(val)
   }
 }
 
-const results = computed(() => {
-  if (Object.keys(activeHeirs).length === 0) {
-    return []
+const outcome = computed(() => calcInheritance({ ...activeHeirs }, estateValue.value))
+const results = computed(() => outcome.value.shares)
+const problemText = computed(() => {
+  const problem = outcome.value.problem
+  const heir = problem.params.heirKey ? t(`inheritance.heirs.${problem.params.heirKey}`) : undefined
+  return t(`inheritance.problem.${problem.code}`, { ...problem.params, heir })
+})
+
+function ruleSentence({ base, share, extras, source }) {
+  const sentence =
+    t(`inheritance.rule.${base}`, { share }) +
+    extras.map((extra) => t(`inheritance.extra.${extra}`)).join('')
+  if (!source) {
+    return sentence
   }
 
-  return calcInheritance({ ...activeHeirs }, estateValue.value)
-})
+  const origin =
+    source === 'Hadith'
+      ? t('inheritance.source.hadith')
+      : t('inheritance.source.quran', { reference: source })
+  return `${sentence} · ${origin}`
+}
+
+function eachText(share) {
+  const [first, ...rest] = share.each
+  return rest.every((amount) => amount === first)
+    ? t('inheritance.each', { amount: store.fmt(first) })
+    : share.each.map(store.fmt).join(' · ')
+}
 
 // Track inheritance result reached (once per page visit)
 let inheritanceTracked = false
@@ -379,57 +378,34 @@ const heirGroups = computed(() => {
 })
 
 function getHeirDesc(key) {
-  const descs = {
-    husband: 'Receives 1/4 or 1/2 depending on children',
-    wife: 'Receives 1/8 or 1/4 — divided equally among all wives',
-    father: 'Receives 1/6 fixed or residue depending on sons',
-    mother: 'Receives 1/6 or 1/3 depending on children & siblings',
-    son: "Residuary — receives double a daughter's share",
-    daughter: 'Receives 1/2 (one), 2/3 (two+), or residue with son',
-    grandson: "Son's son — blocked by a son",
-    granddaughter: "Son's daughter — partially blocked",
-    brother: 'Full brother — blocked by father or son',
-    sister: 'Full sister — blocked by brother or father',
-    paternal_grandfather: "Father's father — blocked by father",
-    paternal_grandmother: 'Receives 1/6 — blocked by mother or father',
-    maternal_grandmother: 'Receives 1/6 — blocked by mother',
-  }
-
-  return descs[key] || ''
+  return t(`inheritance.heirDesc.${key}`)
 }
 
-const sharesTable = [
-  ['Husband', '1/4', '1/2', "Qur'an 4:12"],
-  ['Wife (or wives)', '1/8', '1/4', "Qur'an 4:12"],
-  ['Father', '1/6 (with sons)', 'Residue', "Qur'an 4:11"],
-  ['Mother', '1/6', '1/3', "Qur'an 4:11"],
-  ['Daughter (1)', '1/2 (no sons)', '1/2', "Qur'an 4:11"],
-  ['Daughters (2+)', '2/3 (no sons)', '2/3', "Qur'an 4:11"],
-  ['Son', 'Residue (double daughter)', 'Residue', "Qur'an 4:11"],
-  ['Full Sister (1)', '1/2 (if no closer heirs)', '1/2', "Qur'an 4:176"],
-]
+const sharesTable = computed(() => list('sharesTable'))
 
-const faqs = [
-  {
-    q: 'What is awl (proportional reduction)?',
-    a: 'When the sum of all fixed shares exceeds the estate, the shares are proportionally reduced so they sum to the estate. This is called awl (العَوْل) — the consensus of the Companions, adopted by all schools.',
-  },
-  {
-    q: 'What is radd (return)?',
-    a: 'When the fixed shares do not exhaust the estate and there are no residuary heirs, the remainder is returned proportionally to the fixed-share heirs. This is called radd (الرَّدّ). Husband/wife do not generally receive radd.',
-  },
-  {
-    q: 'Who is excluded from inheritance?',
-    a: 'A murderer of the deceased, an apostate (those who leave Islam), and non-Muslims cannot inherit from a Muslim. These are the three main exclusions.',
-  },
-  {
-    q: "Does a will override Qur'anic shares?",
-    a: "No — the Qur'anic shares (fara'id) are mandatory and cannot be altered by a will. However, a Muslim may leave up to one-third of their estate to non-heirs through a valid wasiyyah (bequest).",
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>
 
 <style scoped>
+.inh-heir {
+  flex: 0 1 45%;
+}
+
+.inh-message {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  text-align: center;
+  padding: var(--space-4) 0;
+}
+
+.inh-rule,
+.inh-each {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 @media (max-width: 900px) {
   #inh-layout {
     grid-template-columns: 1fr !important;

@@ -9,12 +9,11 @@
           class="pillar-num-badge"
           style="background: var(--prayer-light); color: var(--prayer-color)"
         >
-          Pillar 2 of 5 &nbsp;·&nbsp; الصلاة
+          {{ c('header.pillar2Of5') }}
         </div>
-        <h1>Salah — The Five Daily Prayers</h1>
+        <h1>{{ c('header.salahTheFiveDailyPrayers') }}</h1>
         <p>
-          The second pillar and the most repeated act of worship in Islam — five prayers daily, at
-          prescribed times, facing the Ka'bah in Makkah.
+          {{ c('header.theSecondPillarAndTheMost') }}
         </p>
       </div>
     </div>
@@ -23,29 +22,28 @@
       <QuranBlock
         arabic="إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَوْقُوتًا"
         reference="Qur'an 4:103"
-        translation="Indeed, prayer has been decreed upon the believers a decree of specified times."
-        note="Prayer has specific, divinely-ordained times; it is not flexible or approximate."
+        :translation="c('header.indeedPrayerHasBeenDecreedUpon')"
+        :note="c('header.prayerHasSpecificDivinelyOrdainedTimes')"
         class="anim-target"
       />
 
       <!-- ── PRAYER TIMES TOOL ─────────────────────────────── -->
       <div style="margin-top: 2.5rem">
-        <span class="eyebrow">Prayer Times Tool</span>
+        <span class="eyebrow">{{ $t('prayer.prayerTimesTool') }}</span>
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
         >
-          Today's prayer times
+          {{ $t('prayer.todaySPrayerTimes') }}
         </h2>
         <p class="prose" style="margin-bottom: 1.5rem">
-          Enter your location to get accurate prayer times calculated using your coordinates and the
-          selected method.
+          {{ $t('prayer.enterYourLocationToGetAccurate') }}
         </p>
 
         <div class="card" style="margin-bottom: 1rem">
           <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap">
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Latitude</label>
+              <label>{{ $t('prayer.latitude') }}</label>
               <input
                 v-model.number="lat"
                 type="number"
@@ -55,7 +53,7 @@
               />
             </div>
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Longitude</label>
+              <label>{{ $t('prayer.longitude') }}</label>
               <input
                 v-model.number="lng"
                 type="number"
@@ -65,23 +63,52 @@
               />
             </div>
             <div class="field" style="min-width: 160px">
-              <label>Calculation method</label>
+              <label>{{ $t('prayer.calculationMethod') }}</label>
               <select v-model="method" class="select-field">
-                <option value="MWL">Muslim World League</option>
-                <option value="ISNA">ISNA (North America)</option>
-                <option value="Egypt">Egyptian Authority</option>
-                <option value="Makkah">Umm Al-Qura (Makkah)</option>
-                <option value="Karachi">Karachi University</option>
+                <option value="MWL">{{ $t('prayer.muslimWorldLeague') }}</option>
+                <option value="ISNA">{{ $t('prayer.isnaNorthAmerica') }}</option>
+                <option value="Egypt">{{ $t('prayer.egyptianAuthority') }}</option>
+                <option value="Makkah">{{ $t('prayer.ummAlQuraMakkah') }}</option>
+                <option value="Karachi">{{ $t('prayer.karachiUniversity') }}</option>
+              </select>
+            </div>
+            <div class="field" style="min-width: 160px">
+              <label for="asr-method">{{ $t('prayer.asrTime') }}</label>
+              <select id="asr-method" v-model="asrMethod" class="select-field">
+                <option value="standard">{{ $t('prayer.standardShafiIMalikiHanbali') }}</option>
+                <option value="hanafi">{{ $t('prayer.hanafi') }}</option>
               </select>
             </div>
             <button class="btn btn-secondary" @click="locate" :disabled="locating">
-              {{ locating ? 'Locating…' : '📍 Use my location' }}
+              {{ locating ? $t('prayer.locating') : $t('prayer.useMyLocation') }}
             </button>
-            <button class="btn btn-primary" @click="calculate">Calculate</button>
+            <button class="btn btn-primary" @click="calculate">{{ $t('prayer.calculate') }}</button>
           </div>
           <div v-if="locationStatus" style="margin-top: 8px; font-size: 13px; color: var(--muted)">
             {{ locationStatus }}
           </div>
+          <div v-if="shownLocation || settings.saved" class="remember-row">
+            <span v-if="isRemembered" class="remember-state">
+              {{ $t('prayer.rememberedOnThisDevice', { a: settings.saved.name }) }}
+            </span>
+            <button
+              v-else-if="shownLocation && settings.canRemember"
+              class="btn btn-secondary"
+              @click="rememberLocation"
+            >
+              {{ $t('prayer.rememberThisLocation') }}
+            </button>
+            <span v-else-if="shownLocation" class="remember-state" role="status">
+              {{ $t('prayer.yourBrowserIsBlockingStorageSo') }}
+            </span>
+            <button v-if="settings.saved" class="btn btn-secondary" @click="settings.forget()">
+              {{ $t('prayer.forgetMyLocation') }}
+            </button>
+            <span v-if="settings.canRemember" class="remember-note">
+              {{ $t('prayer.keptOnThisDeviceOnlyAnd') }}
+            </span>
+          </div>
+          <ReminderSettings />
         </div>
 
         <!-- Next prayer banner -->
@@ -110,17 +137,17 @@
                   margin-bottom: 3px;
                 "
               >
-                Next Prayer
+                {{ $t('prayer.nextPrayer') }}
               </div>
               <div style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600">
-                {{ nextPrayer?.label }}
+                {{ nextPrayerLabel }}
               </div>
             </div>
-            <div style="text-align: right">
+            <div style="text-align: end">
               <div
                 style="font-size: 11px; font-weight: 600; color: var(--green); margin-bottom: 3px"
               >
-                Time remaining
+                {{ $t('prayer.timeRemaining') }}
               </div>
               <div
                 style="
@@ -145,25 +172,24 @@
             :class="{ current: currentPrayer === p.key }"
             :id="'pc-' + p.key"
           >
-            <div class="prayer-name">{{ p.label }}</div>
+            <div class="prayer-name">{{ $t('common.prayers.' + p.key) }}</div>
             <div class="prayer-time">{{ prayerTimes ? prayerTimes[p.key] : '—:—' }}</div>
-            <div class="prayer-sub">{{ p.key === 'sunrise' ? 'Not a prayer' : '' }}</div>
+            <div class="prayer-sub">{{ p.key === 'sunrise' ? $t('prayer.notAPrayer') : '' }}</div>
           </div>
         </div>
       </div>
 
       <!-- ── QIBLA ────────────────────────────────────────── -->
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-      <span class="eyebrow">Qibla Finder</span>
+      <span class="eyebrow">{{ $t('prayer.qiblaFinder') }}</span>
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
       >
-        Direction of the Ka'bah
+        {{ $t('prayer.directionOfTheKaBah') }}
       </h2>
       <p class="prose" style="margin-bottom: 1.5rem">
-        The Qibla (قِبْلَة) is the direction of the Masjid al-Haram in Makkah. Uses the same
-        coordinates entered above.
+        {{ $t('prayer.theQiblaIsTheDirectionOf') }}
       </p>
 
       <div class="card" style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap">
@@ -219,7 +245,7 @@
                 "
               ></div>
             </div>
-            <div class="compass-kaaba" aria-label="Ka'bah">🕋</div>
+            <div class="compass-kaaba" :aria-label="$t('prayer.kaBah')">🕋</div>
             <div
               aria-hidden="true"
               style="
@@ -249,7 +275,7 @@
                 margin-bottom: 5px;
               "
             >
-              Qibla bearing
+              {{ $t('prayer.qiblaBearing') }}
             </div>
             <div
               style="
@@ -275,7 +301,7 @@
                 margin-bottom: 5px;
               "
             >
-              Distance to Makkah
+              {{ $t('prayer.distanceToMakkah') }}
             </div>
             <div
               style="font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1"
@@ -294,7 +320,7 @@
               line-height: 1.5;
             "
           >
-            💡 Face the bearing shown above. The green end of the needle points toward Makkah.
+            {{ $t('prayer.faceTheBearingShownAboveThe') }}
           </div>
         </div>
       </div>
@@ -302,9 +328,10 @@
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
       <!-- Educational -->
-      <span class="eyebrow">Understanding Salah</span>
+      <span class="eyebrow">{{ c('understandingSalah.understandingSalah') }}</span
+      ><UntranslatedNote v-if="untranslated('understandingSalah')" />
       <h2 class="section-title" style="font-size: clamp(1.5rem, 2.5vw, 1.9rem)">
-        The five daily prayers
+        {{ c('understandingSalah.theFiveDailyPrayers') }}
       </h2>
       <div
         class="card-grid anim-target"
@@ -352,23 +379,19 @@
         </div>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Bukhari 8 · Sahih Muslim 16</div>
-        <div class="hadith-text">
-          "Islam is built on five [pillars]: testifying that there is no god but Allah and that
-          Muhammad is the Messenger of Allah, establishing the prayer, paying the Zakat, making the
-          pilgrimage to the House, and fasting in Ramadan."
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Bukhari 8 · Sahih Muslim 16">
+        {{ c('understandingSalah.islamIsBuiltOnFivePillars') }}
+      </HadithBlock>
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
-      <span class="eyebrow">Conditions &amp; Structure</span>
+      <span class="eyebrow">{{ c('conditionsStructure.conditionsStructure') }}</span
+      ><UntranslatedNote v-if="untranslated('conditionsStructure')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        Prerequisites for a valid prayer
+        {{ c('conditionsStructure.prerequisitesForAValidPrayer') }}
       </h2>
       <div class="card-grid card-grid-2 anim-target">
         <div class="card">
@@ -381,7 +404,7 @@
               color: var(--green);
             "
           >
-            Conditions (Shurut)
+            {{ c('conditionsStructure.conditionsShurut') }}
           </h3>
           <div
             v-for="c in shurut"
@@ -406,7 +429,7 @@
               color: var(--green);
             "
           >
-            Pillars (Arkan)
+            {{ c('conditionsStructure.pillarsArkan') }}
           </h3>
           <div
             v-for="a in arkan"
@@ -428,25 +451,34 @@
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
-        <h2>Continue to the third pillar</h2>
+        <h2>{{ c('conditionsStructure.continueToTheThirdPillar') }}</h2>
         <p>
-          Zakat — the obligation of almsgiving, calculated on your wealth at 2.5% once the Nisab
-          threshold is met.
+          {{ c('conditionsStructure.zakatTheObligationOfAlmsgivingCalculated') }}
         </p>
-        <RouterLink to="/zakat" class="btn btn-white btn-lg">Explore Zakat →</RouterLink>
+        <RouterLink to="/zakat" class="btn btn-white btn-lg">{{
+          c('conditionsStructure.exploreZakat')
+        }}</RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/prayer/en.js'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
+import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import { track } from '@/composables/useStats.js'
+import { t } from '@/i18n.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import ReminderSettings from '@/components/ReminderSettings.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import {
@@ -457,15 +489,42 @@ import {
 } from '@/utils/prayer.js'
 import { calcQibla, bearingToLabel, distanceToMakkah } from '@/utils/qibla.js'
 
+const { c, list, untranslated } = useContent('prayer', content)
+
 useSeo('prayer')
 useScrollReveal()
 
 const store = useZakatStore()
 
 // ── Form state ───────────────────────────────────────────────
-const lat = ref(store.location?.lat ?? '')
-const lng = ref(store.location?.lng ?? '')
-const method = ref('MWL')
+const settings = usePrayerSettingsStore()
+const lat = ref(settings.saved?.lat ?? store.location?.lat ?? '')
+const lng = ref(settings.saved?.lng ?? store.location?.lng ?? '')
+const method = ref(settings.saved?.method ?? 'MWL')
+const asrMethod = ref(settings.saved?.asrMethod ?? 'standard')
+const shownLocation = ref(null)
+const isRemembered = computed(
+  () =>
+    !!settings.saved &&
+    settings.saved.lat === shownLocation.value?.lat &&
+    settings.saved.lng === shownLocation.value?.lng,
+)
+
+function rememberLocation() {
+  const { lat: shownLat, lng: shownLng } = shownLocation.value
+  const found = store.location
+  const wasFound =
+    found &&
+    parseFloat(found.lat.toFixed(4)) === shownLat &&
+    parseFloat(found.lng.toFixed(4)) === shownLng
+  settings.remember({
+    lat: shownLat,
+    lng: shownLng,
+    name: wasFound ? found.name : `${shownLat}, ${shownLng}`,
+    method: method.value,
+    asrMethod: asrMethod.value,
+  })
+}
 const locating = ref(false)
 const locationStatus = ref('')
 
@@ -474,8 +533,18 @@ const prayerTimes = ref(null)
 const currentPrayer = ref(null)
 const nextPrayer = ref(null)
 const countdown = ref('')
+const nextPrayerLabel = computed(() => {
+  if (!nextPrayer.value) {
+    return ''
+  }
+
+  const name = t(`common.prayers.${nextPrayer.value.key}`)
+  return nextPrayer.value.label.includes('tomorrow')
+    ? t('todayPanel.tomorrow', { prayer: name })
+    : name
+})
 const qiblaBearing = ref(null)
-const qiblaDir = ref('Enter coordinates above and press Calculate')
+const qiblaDir = ref(t('prayer.qiblaPrompt'))
 const qiblaDist = ref(null)
 
 // ── DOM refs for needle ───────────────────────────────────────
@@ -496,7 +565,7 @@ const prayerOrder = [
 // ── Locate ─────────────────────────────────────────────────────
 async function locate() {
   locating.value = true
-  locationStatus.value = 'Requesting location…'
+  locationStatus.value = t('prayer.requestingLocation')
   try {
     const loc = await store.requestLocation()
     lat.value = parseFloat(loc.lat.toFixed(4))
@@ -504,8 +573,7 @@ async function locate() {
     locationStatus.value = `📍 ${loc.name}`
     calculate()
   } catch {
-    locationStatus.value =
-      store.locationError || 'Could not get location. Enter coordinates manually.'
+    locationStatus.value = store.locationError || t('prayer.locationFailed')
   } finally {
     locating.value = false
   }
@@ -513,20 +581,25 @@ async function locate() {
 
 // ── Calculate prayer times + Qibla ────────────────────────────
 function calculate() {
+  if (showTimes()) {
+    track('prayer times shown')
+  }
+}
+
+function showTimes() {
   const latV = parseFloat(lat.value)
   const lngV = parseFloat(lng.value)
-  if (isNaN(latV) || isNaN(lngV)) {
-    locationStatus.value = 'Please enter valid coordinates.'
-    return
+  if (!isValidCoordinates(latV, lngV)) {
+    locationStatus.value = t('prayer.invalidCoordinates')
+    return false
   }
 
+  shownLocation.value = { lat: latV, lng: lngV }
+
   const tz = getTimezoneOffset()
-  const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value)
+  const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value, asrMethod.value)
   prayerTimes.value = times
   currentPrayer.value = getCurrentPrayer(times)
-
-  // Track prayer times shown
-  track('prayer times shown')
 
   // Countdown
   clearInterval(countdownTimer)
@@ -536,7 +609,10 @@ function calculate() {
     nextPrayer.value = next
     const h = Math.floor(next.minsRemaining / 60)
     const m = next.minsRemaining % 60
-    countdown.value = h > 0 ? `${h}h ${m}m` : `${m} min`
+    countdown.value =
+      h > 0
+        ? t('common.hoursMinutes', { hours: h, minutes: m })
+        : t('common.minutes', { minutes: m })
   }
 
   tick()
@@ -545,7 +621,7 @@ function calculate() {
   // Qibla
   const bearing = calcQibla(latV, lngV)
   qiblaBearing.value = bearing
-  qiblaDir.value = `${bearingToLabel(bearing)} from your location`
+  qiblaDir.value = t('prayer.qiblaFrom', { direction: bearingToLabel(bearing) })
   qiblaDist.value = distanceToMakkah(latV, lngV)
 
   // Rotate needle via DOM refs (reactive style binding causes repaint issues with transitions)
@@ -556,90 +632,50 @@ function calculate() {
   if (needleTail.value) {
     needleTail.value.style.transform = `rotate(${bearing}deg)`
   }
+
+  return true
 }
 
+watch([method, asrMethod], () => {
+  settings.setMethods(method.value, asrMethod.value)
+  if (prayerTimes.value) {
+    showTimes()
+  }
+})
+
 // Pre-calculate if location already known
-if (store.location) {
+if (settings.saved || store.location) {
   calculate()
 }
 
 onUnmounted(() => clearInterval(countdownTimer))
 
 // ── Static data ────────────────────────────────────────────────
-const prayerInfo = [
-  {
-    en: 'Fajr',
-    ar: 'الفجر',
-    meaning: 'Dawn',
-    rakahs: "2 rak'ahs",
-    time: 'Before sunrise',
-  },
-  {
-    en: 'Dhuhr',
-    ar: 'الظهر',
-    meaning: 'Midday',
-    rakahs: "4 rak'ahs",
-    time: 'After solar noon',
-  },
-  {
-    en: 'Asr',
-    ar: 'العصر',
-    meaning: 'Afternoon',
-    rakahs: "4 rak'ahs",
-    time: 'Mid-afternoon',
-  },
-  {
-    en: 'Maghrib',
-    ar: 'المغرب',
-    meaning: 'Sunset',
-    rakahs: "3 rak'ahs",
-    time: 'After sunset',
-  },
-  {
-    en: 'Isha',
-    ar: 'العشاء',
-    meaning: 'Night',
-    rakahs: "4 rak'ahs",
-    time: 'After twilight',
-  },
-]
+const prayerInfo = computed(() => list('prayerInfo'))
 
-const shurut = [
-  'Ritual purity (Wudu or Ghusl)',
-  'Entering prayer time',
-  'Facing the Qibla',
-  'Covering the Awrah',
-  'Intention (Niyyah) in the heart',
-  'Clean body, clothes, and place',
-]
-const arkan = [
-  'Opening Takbir (Allahu Akbar)',
-  'Standing (Qiyam)',
-  'Reciting Surah Al-Fatiha',
-  'Bowing (Ruku)',
-  'Rising from Ruku',
-  'Prostration (Sujud) × 2',
-  'Sitting between prostrations',
-  'Final Tashahhud',
-  'Tasleem (Assalamu Alaykum)',
-]
+const shurut = computed(() => list('shurut'))
+const arkan = computed(() => list('arkan'))
 
-const faqs = [
-  {
-    q: 'What breaks Wudu?',
-    a: "Natural discharge (urine, stool, wind), deep sleep lying down, loss of consciousness. Touching private parts: does not break Wudu per Hanafi; does break it per Shafi'i/Hanbali. Sexual intercourse requires Ghusl.",
-  },
-  {
-    q: 'Can I pray in congregation at home?',
-    a: "Yes — congregation (jama'ah) in the mosque is highly recommended for men, especially Fajr and Isha. Women may pray at home. The reward of congregation is 27 times that of praying alone (Sahih Bukhari 645).",
-  },
-  {
-    q: 'What if I miss a prayer?',
-    a: 'A missed prayer (qada) must be made up as soon as remembered. Deliberately missing a prayer is a major sin. The Prophet ﷺ said: "Whoever forgets a prayer, or sleeps through it, let him pray it when he remembers it." (Sahih Muslim 684)',
-  },
-  {
-    q: 'How is prayer time calculated?',
-    a: "Prayer times are derived from the sun's position relative to the observer. Fajr and Isha require the sun a specific number of degrees below the horizon. Dhuhr is solar noon; Maghrib is sunset; Asr is based on shadow length.",
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>
+
+<style scoped>
+.remember-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.remember-state {
+  color: var(--ink);
+}
+
+.remember-note {
+  flex-basis: 100%;
+  font-size: 12px;
+}
+</style>

@@ -1,38 +1,41 @@
 <template>
   <div>
     <!-- HERO -->
-    <section class="hero-section" aria-label="IslamicHub — Islamic education and tools">
+    <section class="hero-section" :aria-label="c('header.islamichubIslamicEducationAndTools')">
       <div class="bg-kufic-grid" aria-hidden="true"></div>
       <div class="ornament-hanging left" aria-hidden="true"></div>
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="hero-inner">
         <div>
-          <div class="hero-badge" role="note">Free · Scholarly · No account needed</div>
-          <h1 class="hero-title">Learn &amp; live the<br /><em>Five Pillars of Islam</em></h1>
+          <div class="hero-badge" role="note">{{ c('header.freeScholarlyNoAccountNeeded') }}</div>
+          <h1 class="hero-title">
+            {{ c('header.learnLiveThe') }}<br /><em>{{ c('header.fivePillars') }}</em>
+          </h1>
           <p class="hero-body">
-            IslamicHub is a free Islamic education and tools platform — accurate prayer times with
-            Qibla finder, Zakat calculator with live gold and silver prices, Islamic inheritance
-            (Fara'id) calculator, and in-depth guides for all five pillars, grounded in Qur'an,
-            Hadith, and all four schools of thought.
+            {{ c('header.islamichubIsAFreeIslamicEducation') }}
           </p>
           <div class="btn-group">
             <RouterLink to="/faith" class="btn btn-primary btn-lg"
-              >Explore the Five Pillars
+              >{{ c('header.exploreTheFivePillars') }}
             </RouterLink>
-            <RouterLink to="/zakat" class="btn btn-secondary btn-lg">Zakat Calculator</RouterLink>
+            <RouterLink to="/zakat" class="btn btn-secondary btn-lg">{{
+              c('header.zakatCalculator')
+            }}</RouterLink>
           </div>
-          <div class="hero-stats" aria-label="Platform highlights">
+          <div class="hero-stats" :aria-label="c('header.platformHighlights')">
             <div>
               <div class="stat-num">5</div>
-              <div class="stat-lbl">Pillars covered</div>
+              <div class="stat-lbl">{{ c('header.pillarsCovered') }}</div>
             </div>
             <div>
               <div class="stat-num">{{ hijri.monthName.split(' ')[0] }}</div>
-              <div class="stat-lbl">{{ hijri.year }} AH · today</div>
+              <div class="stat-lbl">{{ c('header.ahToday', { a: hijri.year }) }}</div>
             </div>
             <div>
               <div class="stat-num">{{ inRamadan ? '🌙' : daysLeft + 'd' }}</div>
-              <div class="stat-lbl">{{ inRamadan ? 'Ramadan Mubarak' : 'until Ramadan' }}</div>
+              <div class="stat-lbl">
+                {{ inRamadan ? c('header.ramadanMubarak') : c('header.untilRamadan') }}
+              </div>
             </div>
           </div>
         </div>
@@ -40,8 +43,8 @@
         <div style="display: flex; flex-direction: column; gap: 16px">
           <div
             class="card"
-            style="border-left: 4px solid var(--green)"
-            aria-label="Today's Islamic date"
+            style="border-inline-start: 4px solid var(--green)"
+            :aria-label="c('header.todaySIslamicDate')"
           >
             <div
               style="
@@ -53,7 +56,7 @@
                 margin-bottom: 6px;
               "
             >
-              Today
+              {{ c('header.today') }}
             </div>
             <div
               style="
@@ -79,21 +82,22 @@
                 font-weight: 500;
               "
             >
-              🌙 Ramadan Day {{ hijri.day }}
+              {{ c('header.ramadanDay', { a: hijri.day }) }}
             </div>
           </div>
 
           <QuranBlock
             arabic="وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ"
             reference="Qur'an 2:43"
-            translation="Establish prayer and give Zakat."
-            note="The two pillars most frequently paired in the Qur'an, named together in over 30 verses."
+            :translation="c('header.establishPrayerAndGiveZakat')"
+            :note="c('header.theTwoPillarsMostFrequentlyPaired')"
             :framed="true"
             :animate="false"
           />
         </div>
       </div>
     </section>
+    <TodayPanel />
 
     <!-- FIVE PILLARS HUB -->
     <section
@@ -102,11 +106,15 @@
       aria-labelledby="pillars-heading"
     >
       <div class="section-wide">
-        <span class="eyebrow">The Five Pillars of Islam · أركان الإسلام</span>
-        <h2 class="section-title" id="pillars-heading">Understand and practise each pillar</h2>
+        <span class="eyebrow">{{ c('theFivePillarsOf.theFivePillars') }}</span
+        ><UntranslatedNote v-if="untranslated('theFivePillarsOf')" />
+        <h2 class="section-title" id="pillars-heading">
+          {{ c('theFivePillarsOf.understandAndPractiseEachPillar') }}
+        </h2>
         <p class="section-sub">
-          Every pillar has a dedicated page with scholarly education <em>and</em> a practical tool —
-          learn the ruling, understand the evidence, and fulfil the obligation.
+          {{ c('theFivePillarsOf.everyPillarHasADedicatedPage') }}
+          <em>{{ c('theFivePillarsOf.and') }}</em>
+          {{ c('theFivePillarsOf.aPracticalToolLearnTheRuling') }}
         </p>
         <div class="pillars-hub" style="margin-top: var(--space-8)" role="list">
           <RouterLink
@@ -131,11 +139,13 @@
     <!-- TOOLS -->
     <section class="section" aria-labelledby="tools-heading">
       <div class="section-wide">
-        <span class="eyebrow">Islamic Tools</span>
-        <h2 class="section-title" id="tools-heading">Practical tools for daily Islamic practice</h2>
+        <span class="eyebrow">{{ c('islamicTools.islamicTools') }}</span
+        ><UntranslatedNote v-if="untranslated('islamicTools')" />
+        <h2 class="section-title" id="tools-heading">
+          {{ c('islamicTools.practicalToolsForDailyIslamicPractice') }}
+        </h2>
         <p class="section-sub">
-          Accurate, free, and private — every tool runs entirely in your browser with no account
-          required and no data stored.
+          {{ c('islamicTools.accurateFreeAndPrivateEveryTool') }}
         </p>
         <div class="tools-strip" style="margin-top: var(--space-8)" role="list">
           <RouterLink
@@ -149,7 +159,7 @@
             <span class="tc-icon" aria-hidden="true">{{ t.icon }}</span>
             <div>
               <div class="tc-name">{{ t.name }}</div>
-              <div class="tc-desc">{{ t.desc }}</div>
+              <div class="tc-desc"><HadithRef :text="t.desc" /></div>
             </div>
           </RouterLink>
         </div>
@@ -159,8 +169,11 @@
     <!-- WHY -->
     <section class="section" style="background: var(--cream-dark)" aria-labelledby="why-heading">
       <div class="section-wide">
-        <span class="eyebrow">Why IslamicHub</span>
-        <h2 class="section-title" id="why-heading">Scholarly accuracy meets modern tools</h2>
+        <span class="eyebrow">{{ c('whyIslamichub.whyIslamichub') }}</span
+        ><UntranslatedNote v-if="untranslated('whyIslamichub')" />
+        <h2 class="section-title" id="why-heading">
+          {{ c('whyIslamichub.scholarlyAccuracyMeetsModernTools') }}
+        </h2>
         <div
           class="why-grid"
           style="
@@ -173,25 +186,23 @@
         >
           <div class="prose">
             <p>
-              IslamicHub is a free Islamic learning platform that combines in-depth education with
-              practical digital tools. Unlike apps that give you a number with no explanation, every
-              section here gives you both: the ruling and the evidence behind it.
+              {{ c('whyIslamichub.islamichubIsAFreeIslamicLearning') }}
             </p>
             <p>
-              Our <strong>Zakat calculator</strong> fetches live gold and silver spot prices,
-              applies your chosen Nisab method (85g gold or 595g silver), deducts valid debts, and
-              shows a precise figure — alongside the Qur'anic verse and Hadith references that
-              establish each rule.
+              {{ c('whyIslamichub.our') }} <strong>{{ c('whyIslamichub.zakatCalculator') }}</strong>
+              {{ c('whyIslamichub.fetchesLiveGoldAndSilverSpot') }}
             </p>
             <p>
-              Our <strong>prayer times calculator</strong> uses a full astronomical algorithm to
-              compute prayer times for any coordinates on Earth — with five calculation methods. The
-              same tool gives you the <strong>Qibla direction</strong> as an exact compass bearing.
+              {{ c('whyIslamichub.our') }}
+              <strong>{{ c('whyIslamichub.prayerTimesCalculator') }}</strong>
+              {{ c('whyIslamichub.usesAFullAstronomicalAlgorithmTo') }}
+              <strong>{{ c('whyIslamichub.qiblaDirection') }}</strong>
+              {{ c('whyIslamichub.asAnExactCompassBearing') }}
             </p>
             <p>
-              Our <strong>Islamic inheritance calculator</strong> implements the complete Fara'id
-              system from Qur'an 4:11–12 and 4:176 — all 13 heir types, automatic hijab (blocking)
-              rules, and awl (proportional reduction).
+              {{ c('whyIslamichub.our') }}
+              <strong>{{ c('whyIslamichub.islamicInheritanceCalculator') }}</strong>
+              {{ c('whyIslamichub.implementsTheCompleteFaraIdSystem') }}
             </p>
           </div>
           <div style="display: flex; flex-direction: column; gap: 1rem">
@@ -216,7 +227,7 @@
                   {{ f.title }}
                 </div>
                 <div style="font-size: 13px; color: var(--muted); line-height: 1.6">
-                  {{ f.desc }}
+                  <HadithRef :text="f.desc" />
                 </div>
               </div>
             </div>
@@ -228,13 +239,14 @@
     <!-- DARK FEATURE GRID -->
     <section class="section" style="background: var(--ink)" aria-labelledby="features-heading">
       <div class="section-wide">
-        <span class="eyebrow" style="color: #8bc4a8">What's inside</span>
+        <span class="eyebrow" style="color: #8bc4a8">{{ c('whatSInside.whatSInside') }}</span
+        ><UntranslatedNote v-if="untranslated('whatSInside')" />
         <h2
           class="section-title"
           style="color: #fff; margin-bottom: var(--space-8)"
           id="features-heading"
         >
-          Everything a Muslim needs in one place
+          {{ c('whatSInside.everythingAMuslimNeedsInOne') }}
         </h2>
         <div class="card-grid card-grid-3" role="list">
           <article
@@ -265,7 +277,7 @@
                 margin-bottom: 1rem;
               "
             >
-              {{ f.desc }}
+              <HadithRef :text="f.desc" />
             </p>
             <RouterLink
               :to="f.to"
@@ -286,13 +298,13 @@
     <!-- BUILDERS -->
     <section class="section" aria-labelledby="team-heading">
       <div class="section-wide">
-        <span class="eyebrow">Open source project</span>
+        <span class="eyebrow">{{ c('openSourceProject.openSourceProject') }}</span
+        ><UntranslatedNote v-if="untranslated('openSourceProject')" />
         <h2 class="section-title" id="team-heading" style="margin-bottom: 0.75rem">
-          Built by the community, for the community
+          {{ c('openSourceProject.builtByTheCommunityForThe') }}
         </h2>
         <p class="section-sub" style="margin-bottom: var(--space-8)">
-          IslamicHub is open source, built by Zubair Idris Aweda and Yusuf Saif, and open to
-          contributions from any Muslim who wants to help improve it.
+          {{ c('openSourceProject.islamichubIsOpenSourceBuiltBy') }}
         </p>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 640px">
           <a
@@ -329,7 +341,7 @@
         </div>
         <div style="margin-top: 1.5rem">
           <RouterLink to="/about" class="btn btn-secondary"
-            >About the project &amp; how to contribute →
+            >{{ c('openSourceProject.aboutTheProjectHowToContribute') }}
           </RouterLink>
         </div>
       </div>
@@ -342,18 +354,19 @@
           <div class="ornament-hanging left" aria-hidden="true"></div>
           <div class="ornament-hanging right" aria-hidden="true"></div>
           <GeoPattern />
-          <h2>Begin with the first pillar</h2>
+          <h2>{{ c('openSourceProject.beginWithTheFirstPillar') }}</h2>
           <p>
-            Start with the Shahada — the declaration that anchors everything in Islam — then work
-            through each pillar with education and practical tools.
+            {{ c('openSourceProject.startWithTheShahadaTheDeclaration') }}
           </p>
           <div class="btn-group" style="justify-content: center">
-            <RouterLink to="/faith" class="btn btn-white btn-lg">Start with Faith →</RouterLink>
+            <RouterLink to="/faith" class="btn btn-white btn-lg">{{
+              c('openSourceProject.startWithFaith')
+            }}</RouterLink>
             <RouterLink
               to="/prayer"
               class="btn btn-secondary btn-lg"
               style="color: #fff; border-color: rgba(255, 255, 255, 0.3)"
-              >Prayer Times &amp; Qibla
+              >{{ c('openSourceProject.prayerTimesQibla') }}
             </RouterLink>
           </div>
         </div>
@@ -363,12 +376,20 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/home/en.js'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import QuranBlock from '@/components/QuranBlock.vue'
 import GeoPattern from '@/components/GeoPattern.vue'
+import TodayPanel from '@/components/TodayPanel.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'
+
+const { c, list, untranslated } = useContent('home', content)
 
 useSeo('home')
 useScrollReveal()
@@ -382,191 +403,15 @@ const today = new Date().toLocaleDateString('en-GB', {
   month: 'long',
 })
 
-const pillars = [
-  {
-    to: '/faith',
-    num: '١',
-    cardClass: 'phc-faith',
-    icon: '☪️',
-    name: 'Shahada',
-    sub: 'Declaration of Faith · Tawhid',
-    tag: 'Educational',
-    ariaLabel: 'Faith — Shahada',
-  },
-  {
-    to: '/prayer',
-    num: '٢',
-    cardClass: 'phc-prayer',
-    icon: '🕌',
-    name: 'Salah',
-    sub: 'Prayer Times & Qibla',
-    tag: '+ Live calculator',
-    ariaLabel: 'Prayer — Salah and prayer times',
-  },
-  {
-    to: '/zakat',
-    num: '٣',
-    cardClass: 'phc-zakat',
-    icon: '✦',
-    name: 'Zakat',
-    sub: 'Almsgiving · Live prices',
-    tag: '+ Calculator',
-    ariaLabel: 'Zakat calculator',
-  },
-  {
-    to: '/fasting',
-    num: '٤',
-    cardClass: 'phc-fasting',
-    icon: '🌙',
-    name: 'Sawm',
-    sub: 'Ramadan & Fasting',
-    tag: '+ Ramadan tracker',
-    ariaLabel: 'Fasting — Sawm and Ramadan',
-  },
-  {
-    to: '/hajj',
-    num: '٥',
-    cardClass: 'phc-hajj',
-    icon: '🕋',
-    name: 'Hajj',
-    sub: 'Pilgrimage to Makkah',
-    tag: '+ Rites guide',
-    ariaLabel: 'Hajj — Pilgrimage guide',
-  },
-]
+const pillars = computed(() => list('pillars'))
 
-const tools = [
-  {
-    to: '/zakat',
-    icon: '⚖️',
-    name: 'Zakat Calculator',
-    desc: 'Live gold & silver prices · dual Nisab methods · all asset types including shares, ISAs, and pension',
-    aria: 'Open Zakat calculator',
-  },
-  {
-    to: '/prayer',
-    icon: '🕐',
-    name: 'Prayer Times',
-    desc: 'Fajr, Dhuhr, Asr, Maghrib & Isha for your city · 5 calculation methods · live countdown',
-    aria: 'Prayer times for your city',
-  },
-  {
-    to: '/prayer',
-    icon: '🧭',
-    name: 'Qibla Finder',
-    desc: "Precise compass bearing to the Ka'bah · distance to Makkah in km · works from any location",
-    aria: 'Find Qibla direction',
-  },
-  {
-    to: '/adhkar',
-    icon: '📿',
-    name: 'Adhkar & Duas',
-    desc: 'Morning, evening & after-prayer supplications · Arabic, transliteration & translation · tap-to-count tracker',
-    aria: 'Adhkar and duas',
-  },
-  {
-    to: '/tasbih',
-    icon: '🔢',
-    name: 'Tasbih Counter',
-    desc: 'Digital dhikr counter with custom targets · daily and lifetime totals · works for any phrase',
-    aria: 'Digital tasbih counter',
-  },
-  {
-    to: '/inheritance',
-    icon: '📜',
-    name: "Inheritance (Fara'id)",
-    desc: "Qur'anic shares for all heirs · automatic blocking rules · visual breakdown by amount and percentage",
-    aria: 'Islamic inheritance calculator',
-  },
-]
+const tools = computed(() => list('tools'))
 
-const features = [
-  {
-    icon: '📖',
-    title: "Qur'an & Hadith first",
-    desc: "Every ruling is cited back to its primary source. We don't just give you an answer; we tell you why.",
-  },
-  {
-    icon: '🕌',
-    title: 'All four schools',
-    desc: "Hanafi, Maliki, Shafi'i, and Hanbali positions are considered. Disagreements are surfaced, not hidden.",
-  },
-  {
-    icon: '🔒',
-    title: 'Private by design',
-    desc: 'No account. No tracking. Everything runs in your browser. Your financial and religious information stays with you.',
-  },
-  {
-    icon: '🌍',
-    title: 'Multi-currency',
-    desc: 'GBP, USD, EUR, or SAR — with live exchange rates fetched automatically alongside metal prices.',
-  },
-  {
-    icon: '🤝',
-    title: 'Open source',
-    desc: 'The entire platform is open source on GitHub. Contributions, corrections, and translations are welcome.',
-  },
-]
+const features = computed(() => list('features'))
 
-const darkFeatures = [
-  {
-    icon: '⚖️',
-    title: 'Accurate Zakat Calculator with Live Gold Prices',
-    desc: 'Calculate Zakat on cash, savings, gold and silver (by weight and purity), shares, ISAs, pensions, and business inventory. Live spot prices. Dual Nisab. Full debt deduction.',
-    to: '/zakat',
-    cta: 'Open calculator',
-  },
-  {
-    icon: '🕌',
-    title: 'Reliable Prayer Times for Any City + Qibla',
-    desc: 'Fajr, Dhuhr, Asr, Maghrib, Isha for your exact coordinates. Five calculation methods. Live countdown. Animated Qibla compass.',
-    to: '/prayer',
-    cta: 'Find prayer times',
-  },
-  {
-    icon: '📿',
-    title: 'Morning & Evening Adhkar, Tracked Daily',
-    desc: 'Authenticated supplications for morning, evening, after prayer, sleep, and waking — with Arabic, transliteration, translation, and daily streaks.',
-    to: '/adhkar',
-    cta: 'Open Adhkar',
-  },
-  {
-    icon: '📜',
-    title: "Free Islamic Inheritance Calculator (Fara'id)",
-    desc: "Qur'anic shares for all 13 heir types. Auto-applies blocking rules. Visual percentage and amount breakdown. Based on Qur'an 4:11–12.",
-    to: '/inheritance',
-    cta: 'Calculate inheritance',
-  },
-  {
-    icon: '☪️',
-    title: 'Understand the First Pillar — Shahada & Tawhid',
-    desc: "The declaration of faith, its seven conditions, the three dimensions of Tawhid, and Risala — with Qur'anic verses and Hadith.",
-    to: '/faith',
-    cta: 'Learn about faith',
-  },
-  {
-    icon: '🌙',
-    title: 'Ramadan Fasting Tracker — Suhoor & Iftar Times',
-    desc: 'Live Suhoor and Iftar times for your location. Fasting progress bar. Ramadan countdown. Comprehensive Sawm rulings.',
-    to: '/fasting',
-    cta: 'Track your fast',
-  },
-]
+const darkFeatures = computed(() => list('darkFeatures'))
 
-const builders = [
-  {
-    name: 'Zubair Idris Aweda',
-    role: 'Software Engineer & Technical Writer',
-    login: 'Zubs',
-    avatar: 'https://avatars.githubusercontent.com/u/53227444?v=4',
-  },
-  {
-    name: 'Yusuf Saif',
-    role: 'Project Manager & Technical Strategist',
-    login: 'yusuf-saif',
-    avatar: 'https://avatars.githubusercontent.com/u/54576722?v=4',
-  },
-]
+const builders = computed(() => list('builders'))
 </script>
 
 <style scoped>

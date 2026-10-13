@@ -1,7 +1,12 @@
 <template>
-  <!-- Loading screen — shown until prices load on first visit -->
+  <!-- Loading screen — shown until the first page is ready to draw -->
   <Transition name="loading">
-    <div v-if="showLoading" class="loading-screen" role="status" aria-label="Loading IslamicHub">
+    <div
+      v-if="showLoading"
+      class="loading-screen"
+      role="status"
+      :aria-label="$t('app.loadingIslamichub')"
+    >
       <div class="loading-inner">
         <div class="loading-ornament" aria-hidden="true">
           <div class="lo-gem"></div>
@@ -20,8 +25,10 @@
             <polygon points="12,6 17,9 17,15 12,18 7,15 7,9" />
           </svg>
         </div>
-        <div class="loading-name">Islamic<span>Hub</span></div>
-        <div class="loading-sub">In the name of Allah, the Most Gracious, the Most Merciful</div>
+        <div class="loading-name">
+          {{ $t('app.islamic') }}<span>{{ $t('app.hub') }}</span>
+        </div>
+        <div class="loading-sub">{{ $t('app.inTheNameOfAllahThe') }}</div>
       </div>
     </div>
   </Transition>
@@ -40,27 +47,25 @@
 
   <!-- Site footer -->
   <SiteFooter />
+
+  <AppInstall />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { RouterView } from 'vue-router'
-import { useZakatStore } from '@/stores/zakat.js'
+import { ref } from 'vue'
+import { RouterView, useRouter } from 'vue-router'
 import SiteNav from '@/components/SiteNav.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
+import AppInstall from '@/components/AppInstall.vue'
+import { startReminders } from '@/composables/useReminders.js'
 
-const store = useZakatStore()
 const showLoading = ref(true)
-const MIN_MS = 2000
-const start = Date.now()
+const router = useRouter()
 
-onMounted(async () => {
-  await store.fetchPrices()
-  const elapsed = Date.now() - start
-  const remaining = Math.max(0, MIN_MS - elapsed)
-  setTimeout(() => {
-    showLoading.value = false
-  }, remaining)
+startReminders((path) => router.push(path))
+
+router.isReady().finally(() => {
+  showLoading.value = false
 })
 </script>
 

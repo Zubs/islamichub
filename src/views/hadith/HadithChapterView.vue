@@ -6,9 +6,9 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          {{ meta?.name || bookSlug }} · Chapter {{ chapterNumber }}
+          {{ $t('hadithChapter.chapter', { a: meta?.name || bookSlug, b: chapterNumber }) }}
         </div>
-        <h1>{{ chapterTitle || 'Loading…' }}</h1>
+        <h1>{{ chapterTitle || $t('common.loading') }}</h1>
         <p
           v-if="chapterArabic"
           lang="ar"
@@ -28,32 +28,37 @@
     <div class="content-wrap" style="max-width: 860px">
       <!-- Breadcrumb -->
       <div class="had-breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">Hadith</RouterLink>
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{
+          $t('hadithChapter.hadith')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <RouterLink to="/hadith/books" class="had-breadcrumb-link">All Books</RouterLink>
+        <RouterLink to="/hadith/books" class="had-breadcrumb-link">{{
+          $t('hadithChapter.allBooks')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
         <RouterLink :to="'/hadith/books/' + bookSlug" class="had-breadcrumb-link">{{
           meta?.name || bookSlug
         }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <span>Chapter {{ chapterNumber }}</span>
+        <span>{{ $t('hadithChapter.chapter2', { a: chapterNumber }) }}</span>
       </div>
 
       <!-- Loading -->
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading hadiths…</span>
+        <span>{{ $t('hadithChapter.loadingHadiths') }}</span>
       </div>
 
       <!-- Error -->
       <div v-else-if="error" class="had-error">
-        <div class="had-error-title">Could not load hadiths</div>
+        <div class="had-error-title">{{ $t('hadithChapter.couldNotLoadHadiths') }}</div>
         <div>{{ error }}</div>
-        <div v-if="!hasApiKey" style="margin-top: 8px; font-size: 13px">
-          Add <code>VITE_HADITH_API_KEY=your_key</code> to <code>.env</code> and restart the dev
-          server. Get a free key at
-          <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
-            >hadithapi.com</a
+        <div v-if="notConfigured" style="margin-top: 8px; font-size: 13px">
+          {{ $t('hadithChapter.set') }} <code>HADITH_API_KEY</code>
+          {{ $t('hadithChapter.whereTheSiteIsHostedSee') }}
+          <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer">{{
+            $t('hadithChapter.hadithapiCom')
+          }}</a
           >.
         </div>
       </div>
@@ -62,8 +67,10 @@
       <div v-else>
         <!-- Summary bar -->
         <div class="hcv-summary">
-          <span>{{ total }} hadiths in this chapter</span>
-          <span class="hcv-page-info">Page {{ currentPage }} of {{ lastPage }}</span>
+          <span>{{ $t('hadithChapter.hadithsInThisChapter', { a: total }) }}</span>
+          <span class="hcv-page-info">{{
+            $t('hadithChapter.pageOf', { a: currentPage, b: lastPage })
+          }}</span>
         </div>
 
         <!-- Individual hadith cards -->
@@ -77,14 +84,21 @@
             <!-- Header row -->
             <div class="hc-header" @click="toggleExpand(h.id)">
               <div class="hc-meta-left">
-                <div class="hc-number"># {{ h.hadithNumber }} {{ h.headingEnglish }}</div>
+                <RouterLink
+                  class="hc-number hc-number-link"
+                  :to="hadithPath(bookSlug, h.hadithNumber)"
+                  @click.stop
+                  ># {{ h.hadithNumber }} {{ h.headingEnglish }}</RouterLink
+                >
                 <div class="hc-status" :style="gradeStyle(h.status)">
-                  {{ h.status || 'Ungraded' }}
+                  {{ gradeLabel(h.status) }}
                 </div>
               </div>
               <button
                 class="hc-expand-btn"
-                :aria-label="expanded.has(h.id) ? 'Collapse hadith' : 'Expand hadith'"
+                :aria-label="
+                  expanded.has(h.id) ? $t('hadithChapter.collapse') : $t('hadithChapter.expand')
+                "
                 :aria-expanded="String(expanded.has(h.id))"
               >
                 <svg
@@ -111,20 +125,22 @@
             <Transition name="hc-expand">
               <div v-if="expanded.has(h.id)" class="hc-body">
                 <div class="hc-english">
-                  <div class="hc-lang-label">English</div>
+                  <div class="hc-lang-label">{{ $t('hadithChapter.english') }}</div>
                   <div class="hc-text">{{ h.englishNarrator }} "{{ h.hadithEnglish }}"</div>
                 </div>
                 <div class="hc-footer">
                   <div class="hc-ref">
-                    <span class="hc-ref-label">Reference</span>
-                    {{ meta?.name || bookSlug }}, Hadith {{ h.hadithNumber }}
+                    <span class="hc-ref-label">{{ $t('hadithChapter.reference') }}</span>
+                    {{
+                      $t('hadithChapter.hadith2', { a: meta?.name || bookSlug, b: h.hadithNumber })
+                    }}
                   </div>
                   <button
                     class="hc-copy-btn"
                     @click.stop="copy(h)"
                     :class="{ copied: copied === h.id }"
                   >
-                    {{ copied === h.id ? '✓ Copied' : 'Copy' }}
+                    {{ copied === h.id ? $t('common.copied') : $t('common.copy') }}
                   </button>
                 </div>
               </div>
@@ -139,7 +155,7 @@
             :disabled="currentPage === 1"
             @click="goToPage(currentPage - 1)"
           >
-            ← Previous
+            {{ $t('hadithChapter.previous') }}
           </button>
 
           <div class="hcv-page-pills">
@@ -160,7 +176,7 @@
             :disabled="currentPage === lastPage"
             @click="goToPage(currentPage + 1)"
           >
-            Next →
+            {{ $t('hadithChapter.next') }}
           </button>
         </div>
 
@@ -170,19 +186,19 @@
             v-if="prevChapter"
             :to="`/hadith/books/${bookSlug}/${prevChapter}`"
             class="btn btn-secondary"
-            >← Chapter {{ prevChapter }}</RouterLink
+            >{{ $t('hadithChapter.chapter3', { a: prevChapter }) }}</RouterLink
           >
           <RouterLink
             :to="'/hadith/books/' + bookSlug"
             class="btn btn-secondary"
             style="margin: 0 auto"
-            >All chapters</RouterLink
+            >{{ $t('hadithChapter.allChapters') }}</RouterLink
           >
           <RouterLink
             v-if="nextChapter"
             :to="`/hadith/books/${bookSlug}/${nextChapter}`"
             class="btn btn-secondary"
-            >Chapter {{ nextChapter }} →</RouterLink
+            >{{ $t('hadithChapter.chapter4', { a: nextChapter }) }}</RouterLink
           >
         </div>
       </div>
@@ -191,20 +207,32 @@
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { ref, computed, onMounted, watch, reactive } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
+import { gradeStyle, gradeLabel, hadithPath, hadithCopyText } from '@/utils/hadith.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import { fetchHadiths, fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
+import {
+  fetchHadiths,
+  fetchChapters,
+  BOOKS_META,
+  loadErrorMessage,
+} from '@/composables/useHadithApi.js'
 
 useScrollReveal()
 
 const route = useRoute()
+const bookText = useDataTranslations('hadithBooks')
+
+function localizedBook(found) {
+  return found ? bookText.localized(found) : null
+}
 const bookSlug = computed(() => route.params.bookSlug)
 const chapterNumber = computed(() => route.params.chapterNumber)
-const meta = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
-const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
+const meta = computed(() => localizedBook(BOOKS_META.find((b) => b.slug === bookSlug.value)))
+const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
 const hadiths = ref([])
@@ -225,17 +253,12 @@ const nextChapter = computed(() => {
   return idx !== -1 && idx < allChapterNums.value.length - 1 ? allChapterNums.value[idx + 1] : null
 })
 
-useHead(
-  computed(() => ({
-    title: `${chapterTitle.value || 'Chapter ' + chapterNumber.value} — ${meta.value?.name || bookSlug.value} | IslamicHub`,
-    meta: [
-      {
-        name: 'description',
-        content: `Read hadiths from Chapter ${chapterNumber.value} of ${meta.value?.name || bookSlug.value}: ${chapterTitle.value}`,
-      },
-    ],
-  })),
-)
+useSeo({
+  title: () =>
+    `${chapterTitle.value || 'Chapter ' + chapterNumber.value} — ${meta.value?.name || bookSlug.value} | IslamicHub`,
+  description: () =>
+    `Read hadiths from Chapter ${chapterNumber.value} of ${meta.value?.name || bookSlug.value}: ${chapterTitle.value}`,
+})
 
 // Expand / collapse individual hadith
 const expanded = reactive(new Set())
@@ -250,25 +273,12 @@ function toggleExpand(id) {
 // Copy hadith to clipboard
 const copied = ref(null)
 async function copy(h) {
-  const text = `${h.hadithEnglish}\n\n— ${meta.value?.name || bookSlug.value}, Hadith ${h.hadithNumber}`
+  const text = hadithCopyText(h, meta.value?.name || bookSlug.value)
   await navigator.clipboard.writeText(text).catch(() => {})
   copied.value = h.id
   setTimeout(() => {
     copied.value = null
   }, 2000)
-}
-
-// Grade badge styling
-const GRADE_STYLES = {
-  Sahih: { background: 'var(--green-light)', color: 'var(--green)' },
-  Hasan: { background: 'var(--gold-light)', color: '#7A5A10' },
-  "Da'eef": { background: '#FDE9E7', color: '#c0392b' },
-  Daif: { background: '#FDE9E7', color: '#c0392b' },
-  Mawdu: { background: '#fde8e8', color: '#922b21' },
-}
-
-function gradeStyle(status) {
-  return GRADE_STYLES[status] || { background: 'var(--cream-dark)', color: 'var(--muted)' }
 }
 
 // Visible page numbers with ellipsis
@@ -321,7 +331,8 @@ async function loadHadiths() {
       hadiths.value.forEach((h) => expanded.add(h.id))
     }
   } catch (e) {
-    error.value = e.message
+    notConfigured.value = !!e.notConfigured
+    error.value = loadErrorMessage(e)
   } finally {
     loading.value = false
   }
@@ -502,8 +513,16 @@ a {
 }
 
 /* Arabic — always visible */
+.hc-number-link {
+  text-decoration: none;
+}
+
+.hc-number-link:hover {
+  text-decoration: underline;
+}
+
 .hc-arabic {
-  font-family: var(--serif);
+  font-family: var(--arabic);
   font-size: clamp(1.05rem, 2.5vw, 1.3rem);
   line-height: 2.1;
   color: var(--ink);
@@ -573,7 +592,7 @@ a {
 .hc-ref-label {
   font-weight: 600;
   color: var(--gold);
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 .hc-copy-btn {
   font-size: 12px;

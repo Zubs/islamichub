@@ -21,22 +21,22 @@
                 <polygon points="12,6 17,9 17,15 12,18 7,15 7,9" />
               </svg>
             </div>
-            <span class="nav-logo-text" style="color: #fff">Islamic<span>Hub</span></span>
+            <span class="nav-logo-text" style="color: #fff"
+              >{{ $t('siteFooter.islamic') }}<span>{{ $t('siteFooter.hub') }}</span></span
+            >
           </RouterLink>
           <p>
-            Free Islamic education and tools for the Muslim community — prayer times, Zakat
-            calculator, Qibla finder, inheritance calculator, and scholarly guides for all Five
-            Pillars.
+            {{ $t('siteFooter.freeIslamicEducationAndToolsFor') }}
           </p>
           <div style="display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap">
             <a
               v-for="social in socials"
-              :key="social.label"
+              :key="social.href"
               :href="social.href"
               target="_blank"
               rel="noopener noreferrer"
               class="footer-social-link"
-              :aria-label="social.label"
+              :aria-label="$t(social.labelKey)"
             >
               <span aria-hidden="true" v-if="social.icon !== 'github'">{{ social.icon }}</span>
               <svg
@@ -57,66 +57,72 @@
         </div>
 
         <div class="footer-col">
-          <h4>Five Pillars</h4>
-          <RouterLink v-for="p in pillars" :key="p.to" :to="p.to">{{ p.label }}</RouterLink>
+          <h4>{{ $t('siteFooter.fivePillars') }}</h4>
+          <RouterLink v-for="p in pillars" :key="p.to" :to="p.to">{{
+            $t('siteFooter.pillars.' + p.key)
+          }}</RouterLink>
         </div>
 
         <div class="footer-col">
-          <h4>Tools</h4>
-          <RouterLink to="/zakat">Zakat Calculator</RouterLink>
-          <RouterLink to="/prayer">Prayer Times</RouterLink>
-          <RouterLink to="/prayer">Qibla Finder</RouterLink>
-          <RouterLink to="/inheritance">Inheritance Calculator</RouterLink>
-          <RouterLink to="/fasting">Ramadan Tracker</RouterLink>
-          <RouterLink to="/adhkar">Adhkar &amp; Duas</RouterLink>
-          <RouterLink to="/tasbih">Tasbih Counter</RouterLink>
-          <RouterLink to="/hadith/books">Hadith Library</RouterLink>
+          <h4>{{ $t('siteFooter.tools') }}</h4>
+          <RouterLink to="/zakat">{{ $t('siteFooter.zakatCalculator') }}</RouterLink>
+          <RouterLink to="/prayer">{{ $t('siteFooter.prayerTimes') }}</RouterLink>
+          <RouterLink to="/prayer">{{ $t('siteFooter.qiblaFinder') }}</RouterLink>
+          <RouterLink to="/inheritance">{{ $t('siteFooter.inheritanceCalculator') }}</RouterLink>
+          <RouterLink to="/fasting">{{ $t('siteFooter.ramadanTracker') }}</RouterLink>
+          <RouterLink to="/adhkar">{{ $t('siteFooter.adhkar') }}</RouterLink>
+          <RouterLink to="/duas">{{ $t('siteFooter.duas') }}</RouterLink>
+          <RouterLink to="/tracker">{{ $t('siteFooter.prayerTracker') }}</RouterLink>
+          <RouterLink to="/tasbih">{{ $t('siteFooter.tasbihCounter') }}</RouterLink>
+          <RouterLink to="/hadith/books">{{ $t('siteFooter.hadithLibrary') }}</RouterLink>
+          <RouterLink to="/eid">{{ $t('siteFooter.eid') }}</RouterLink>
+          <RouterLink to="/qurbani">{{ $t('siteFooter.qurbani') }}</RouterLink>
+          <RouterLink to="/prophets">{{ $t('siteFooter.prophets') }}</RouterLink>
         </div>
 
         <div class="footer-col">
-          <h4>Project</h4>
-          <RouterLink to="/about">About &amp; Team</RouterLink>
-          <RouterLink to="/changelog">Changelog</RouterLink>
-          <a :href="GITHUB_REPO" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-          <a :href="GITHUB_REPO + '/issues'" target="_blank" rel="noopener noreferrer"
-            >Report an issue</a
-          >
+          <h4>{{ $t('siteFooter.project') }}</h4>
+          <RouterLink to="/about">{{ $t('siteFooter.aboutTeam') }}</RouterLink>
+          <RouterLink to="/changelog">{{ $t('siteFooter.changelog') }}</RouterLink>
+          <a :href="GITHUB_REPO" target="_blank" rel="noopener noreferrer">{{
+            $t('siteFooter.githubRepository')
+          }}</a>
+          <a :href="GITHUB_REPO + '/issues'" target="_blank" rel="noopener noreferrer">{{
+            $t('siteFooter.reportAnIssue')
+          }}</a>
           <a
             :href="GITHUB_REPO + '/blob/main/CONTRIBUTING.md'"
             target="_blank"
             rel="noopener noreferrer"
-            >Contribute</a
+            >{{ $t('siteFooter.contribute') }}</a
           >
         </div>
       </div>
 
       <div class="footer-bottom">
         <span>
-          © 2026 IslamicHub — Built by
+          {{ $t('siteFooter.2026IslamichubBuiltBy') }}
           <a
             href="https://github.com/Zubs"
             target="_blank"
             rel="noopener noreferrer"
             style="color: rgba(255, 255, 255, 0.55); text-decoration: none"
-            >Zubair</a
+            >{{ $t('siteFooter.zubair') }}</a
           >
-          &amp;
+          {{ $t('siteFooter.text') }}
           <a
             href="https://github.com/yusuf-saif"
             target="_blank"
             rel="noopener noreferrer"
             style="color: rgba(255, 255, 255, 0.55); text-decoration: none"
-            >Yusuf</a
+            >{{ $t('siteFooter.yusuf') }}</a
           >
         </span>
         <span style="direction: rtl" lang="ar">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</span>
       </div>
 
       <p class="footer-disc">
-        Disclaimer: IslamicHub is an educational and guidance tool — not a fatwa or formal religious
-        ruling. Prayer times are calculated astronomically and may differ from local mosque
-        announcements. For personal religious rulings, consult a qualified Islamic scholar (mufti).
-        Built with sincerity for the Muslim community.
+        {{ $t('siteFooter.disclaimerIslamichubIsAnEducationalAnd') }}
       </p>
     </div>
   </footer>
@@ -128,12 +134,12 @@ import { RouterLink } from 'vue-router'
 const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
 const pillars = [
-  { to: '/faith', label: 'Faith (Shahada)' },
-  { to: '/prayer', label: 'Prayer (Salah)' },
-  { to: '/zakat', label: 'Zakat' },
-  { to: '/fasting', label: 'Fasting (Sawm)' },
-  { to: '/hajj', label: 'Hajj' },
-  { to: '/hadith', label: 'Hadith' },
+  { to: '/faith', key: 'faith' },
+  { to: '/prayer', key: 'prayer' },
+  { to: '/zakat', key: 'zakat' },
+  { to: '/fasting', key: 'fasting' },
+  { to: '/hajj', key: 'hajj' },
+  { to: '/hadith', key: 'hadith' },
 ]
 
 const socials = [
@@ -141,7 +147,7 @@ const socials = [
     href: GITHUB_REPO,
     icon: 'github',
     text: 'GitHub',
-    label: 'IslamicHub on GitHub',
+    labelKey: 'siteFooter.onGithub',
   },
 ]
 </script>

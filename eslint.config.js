@@ -21,6 +21,12 @@ export default defineConfig([
     },
   },
 
+  {
+    name: 'app/server-functions',
+    files: ['netlify/functions/**/*.js', 'netlify/edge-functions/**/*.js'],
+    languageOptions: { globals: { ...globals.node } },
+  },
+
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
 
@@ -30,6 +36,17 @@ export default defineConfig([
     ignores: ['**/*.test.js'],
     rules: {
       'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+
+  {
+    name: 'app/head-through-use-seo',
+    files: ['src/views/**/*.vue', 'src/components/**/*.vue'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { paths: [{ name: '@unhead/vue', message: 'Set the page head with useSeo.' }] },
+      ],
     },
   },
 

@@ -4,8 +4,7 @@
 .site-nav {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   z-index: 200;
   background: rgba(247, 243, 236, 0.95);
   backdrop-filter: blur(14px);
@@ -160,8 +159,7 @@
   display: none;
   position: fixed;
   top: var(--nav-height);
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   background: var(--cream);
   border-bottom: 1px solid var(--border);
   padding: var(--space-4) var(--space-5);
@@ -189,7 +187,7 @@
   border: none;
   font-family: var(--sans);
   width: 100%;
-  text-align: left;
+  text-align: start;
 }
 
 .nav-mobile-item:hover,
@@ -272,7 +270,7 @@
   background: none;
   border: none;
   font-family: var(--sans);
-  text-align: left;
+  text-align: start;
   padding: 0;
 }
 
@@ -446,7 +444,7 @@
   content: attr(data-num);
   position: absolute;
   top: -8px;
-  right: 8px;
+  inset-inline-end: 8px;
   font-family: var(--serif);
   font-size: 4rem;
   font-weight: 600;
@@ -736,7 +734,7 @@
 
 .ref-box {
   background: var(--cream);
-  border-left: 3px solid var(--gold);
+  border-inline-start: 3px solid var(--gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 9px 12px;
   margin-bottom: var(--space-4);

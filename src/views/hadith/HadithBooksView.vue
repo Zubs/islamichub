@@ -6,12 +6,11 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Hadith Library &nbsp;·&nbsp; كتب الحديث
+          {{ $t('hadithBooks.hadithLibrary') }}
         </div>
-        <h1>The Nine Collections</h1>
+        <h1>{{ $t('hadithBooks.theNineCollections') }}</h1>
         <p>
-          Browse authenticated hadith from the major collections — Sahih Bukhari, Sahih Muslim, the
-          four Sunan, and more.
+          {{ $t('hadithBooks.browseAuthenticatedHadithFromTheMajor') }}
         </p>
       </div>
     </div>
@@ -19,22 +18,25 @@
     <div class="content-wrap" style="max-width: 1100px">
       <!-- Breadcrumb -->
       <div class="had-breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">← Hadith</RouterLink>
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{
+          $t('hadithBooks.hadith')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <span>All Books</span>
+        <span>{{ $t('hadithBooks.allBooks') }}</span>
       </div>
 
-      <!-- API key notice if missing -->
-      <div v-if="!hasApiKey" class="api-key-notice">
+      <!-- Notice when the server has no API key -->
+      <div v-if="notConfigured" class="api-key-notice">
         <div class="akn-icon" aria-hidden="true">🔑</div>
         <div>
-          <div class="akn-title">API key required</div>
+          <div class="akn-title">{{ $t('hadithBooks.apiKeyRequired') }}</div>
           <div class="akn-desc">
-            Add <code>VITE_HADITH_API_KEY=your_key</code> to your <code>.env</code> file. Get a free
-            key at
-            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
-              >hadithapi.com/register</a
-            >. The book cards below use static metadata — live chapter counts require your key.
+            {{ $t('hadithBooks.theHadithLibraryIsNotConfigured') }} <code>HADITH_API_KEY</code>
+            {{ $t('hadithBooks.whereTheSiteIsHostedSee') }}
+            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer">{{
+              $t('hadithBooks.hadithapiComRegister')
+            }}</a
+            >{{ $t('hadithBooks.theBookCardsBelowUseStatic') }}
           </div>
         </div>
       </div>
@@ -42,23 +44,23 @@
       <!-- Loading state -->
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading collections…</span>
+        <span>{{ $t('hadithBooks.loadingCollections') }}</span>
       </div>
 
       <!-- Error state -->
       <div v-else-if="error" class="had-error">
         <div class="had-error-icon" aria-hidden="true">⚠</div>
         <div>
-          <div class="had-error-title">Could not load live data</div>
+          <div class="had-error-title">{{ $t('hadithBooks.couldNotLoadLiveData') }}</div>
           <div class="had-error-desc">
-            {{ error }} — Showing static metadata. Check your API key in <code>.env</code>.
+            {{ $t('hadithBooks.showingStaticMetadataMeanwhile', { a: error }) }}
           </div>
         </div>
       </div>
 
       <!-- Grade filter -->
       <div class="had-filter-bar">
-        <span class="had-filter-label">Filter by grade:</span>
+        <span class="had-filter-label">{{ $t('hadithBooks.filterByGrade') }}</span>
         <div class="btn-group">
           <button
             v-for="f in filters"
@@ -70,7 +72,9 @@
             {{ f }}
           </button>
         </div>
-        <span class="had-book-count">{{ filteredBooks.length }} collections</span>
+        <span class="had-book-count">{{
+          $t('hadithBooks.collections', { a: filteredBooks.length })
+        }}</span>
       </div>
 
       <!-- Book cards grid -->
@@ -98,7 +102,7 @@
           <div class="hbc-footer">
             <div class="hbc-count">
               <span class="hbc-count-num">{{ getLiveCount(book.slug) || book.hadithCount }}</span>
-              <span class="hbc-count-label">hadiths</span>
+              <span class="hbc-count-label">{{ $t('hadithBooks.hadiths') }}</span>
             </div>
             <div class="hbc-arrow" aria-hidden="true">
               <svg
@@ -122,24 +126,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import { fetchBooks, BOOKS_META } from '@/composables/useHadithApi.js'
+import { fetchBooks, BOOKS_META, loadErrorMessage } from '@/composables/useHadithApi.js'
 
-useHead({
-  title: 'Hadith Library — All Collections | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Browse all 9 major hadith collections including Sahih Bukhari, Sahih Muslim, and the four Sunan — by chapter and individual hadith.',
-    },
-  ],
-})
+useSeo('hadith-books')
 useScrollReveal()
 
-const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
+const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
 const liveBooks = ref([]) // from API
@@ -181,16 +176,13 @@ function getInitials(name) {
 }
 
 onMounted(async () => {
-  if (!hasApiKey) {
-    return
-  }
-
   loading.value = true
   try {
     const data = await fetchBooks()
     liveBooks.value = data.books || []
   } catch (e) {
-    error.value = e.message
+    notConfigured.value = !!e.notConfigured
+    error.value = e.notConfigured ? null : loadErrorMessage(e)
   } finally {
     loading.value = false
   }
@@ -308,7 +300,7 @@ code {
 .had-book-count {
   font-size: 12px;
   color: var(--muted);
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* Book grid */
@@ -336,8 +328,7 @@ code {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--gold), var(--green));
   opacity: 0;
@@ -429,7 +420,7 @@ code {
 .hbc-count-label {
   font-size: 11px;
   color: var(--muted);
-  margin-left: 4px;
+  margin-inline-start: 4px;
 }
 .hbc-arrow {
   color: var(--muted);

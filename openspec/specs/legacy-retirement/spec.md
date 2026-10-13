@@ -6,29 +6,6 @@ Makes sure nothing from the old version of the app is still published, logged or
 
 ## Requirements
 
-### Requirement: The old service worker retires itself
-A visitor's browser that still holds the service worker registered by the old app SHALL, on its next visit, delete every cache that worker created, remove the worker's registration, and show the current site. The visitor MUST NOT have to clear site data by hand.
-
-#### Scenario: Returning visitor with the old worker
-- **WHEN** a visitor whose browser holds the old worker and its cache opens the site
-- **THEN** the old caches are deleted, the registration is removed, and the open page reloads into the current site
-
-#### Scenario: Visitor without the old worker
-- **WHEN** a visitor whose browser never registered a worker opens the site
-- **THEN** no worker is registered and nothing reloads
-
-#### Scenario: The replacement never serves pages
-- **WHEN** the replacement worker is active, even for a moment
-- **THEN** every request goes to the network and nothing is answered from a cache
-
-#### Scenario: A reload cannot be triggered
-- **WHEN** the replacement worker cannot reload an open page
-- **THEN** the caches are still deleted and the registration is still removed, so the next page load shows the current site
-
-#### Scenario: The worker's address returns a script
-- **WHEN** a browser requests `/service-worker.js`
-- **THEN** it receives a JavaScript file that is not served from a long-lived cache
-
 ### Requirement: No files from the old app are published
 The published site SHALL contain only files the current app uses. It MUST NOT publish a web manifest that points to files that do not exist, or a copy of a document that is kept elsewhere in the repository.
 
@@ -38,7 +15,7 @@ The published site SHALL contain only files the current app uses. It MUST NOT pu
 
 #### Scenario: No manifest warnings
 - **WHEN** any page of the site is opened
-- **THEN** the browser console shows no manifest or missing-icon warning
+- **THEN** the browser console shows no manifest or missing-icon warning, because the manifest now published names only icons that exist in the build
 
 #### Scenario: Deep links still work
 - **WHEN** a visitor opens a deep link such as `/prayer` directly
@@ -65,3 +42,22 @@ Every link from the site to its source repository SHALL use the repository's cur
 #### Scenario: The old name is not used
 - **WHEN** the site's source is searched for the repository's old name
 - **THEN** nothing is found
+
+### Requirement: The site's worker clears what the old app stored
+A browser that still holds the old app's `islamichub-shell-v2` cache SHALL have it deleted on its next visit and SHALL be shown the current site, without the visitor clearing site data by hand. The site's own offline worker does this from the address the old worker used, and MUST NOT reuse the old cache name.
+
+#### Scenario: Returning visitor with the old worker
+- **WHEN** a browser holding the old worker and its `islamichub-shell-v2` cache visits the site
+- **THEN** the new worker takes over at once, the old cache is deleted and open pages reload onto the current site
+
+#### Scenario: Visitor without the old cache
+- **WHEN** a browser with no old cache visits the site
+- **THEN** nothing is deleted and no page is reloaded
+
+#### Scenario: A reload cannot be triggered
+- **WHEN** an open window refuses to reload
+- **THEN** the old cache is still deleted
+
+#### Scenario: The worker's address returns a script
+- **WHEN** a browser requests `/service-worker.js`
+- **THEN** it receives a JavaScript file that is not served from a long-lived cache

@@ -7,7 +7,7 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          {{ meta?.grade || 'Hadith Collection' }}
+          {{ meta?.grade || $t('hadithBook.hadithCollection') }}
         </div>
         <h1 :lang="meta ? 'en' : undefined">
           {{ meta?.name || bookSlug.replace(/-/g, ' ') }}
@@ -17,7 +17,7 @@
           <span style="opacity: 0.4">·</span>
           <span>d. {{ meta.death }}</span>
           <span style="opacity: 0.4">·</span>
-          <span>{{ meta.hadithCount }} hadiths</span>
+          <span>{{ $t('hadithBook.hadiths', { a: meta.hadithCount }) }}</span>
         </p>
       </div>
     </div>
@@ -25,9 +25,13 @@
     <div class="content-wrap" style="max-width: 1000px">
       <!-- Breadcrumb -->
       <div class="had-breadcrumb">
-        <RouterLink to="/hadith" class="had-breadcrumb-link">Hadith</RouterLink>
+        <RouterLink to="/hadith" class="had-breadcrumb-link">{{
+          $t('hadithBook.hadith')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
-        <RouterLink to="/hadith/books" class="had-breadcrumb-link">All Books</RouterLink>
+        <RouterLink to="/hadith/books" class="had-breadcrumb-link">{{
+          $t('hadithBook.allBooks')
+        }}</RouterLink>
         <span class="had-sep" aria-hidden="true">/</span>
         <span>{{ meta?.name || bookSlug }}</span>
       </div>
@@ -39,15 +43,15 @@
         <div class="bac-stats">
           <div class="bac-stat">
             <div class="bac-stat-num">{{ chapters.length || '—' }}</div>
-            <div class="bac-stat-label">Chapters</div>
+            <div class="bac-stat-label">{{ $t('hadithBook.chapters') }}</div>
           </div>
           <div class="bac-stat">
             <div class="bac-stat-num">{{ meta.hadithCount }}</div>
-            <div class="bac-stat-label">Hadiths</div>
+            <div class="bac-stat-label">{{ $t('hadithBook.hadiths2') }}</div>
           </div>
           <div class="bac-stat">
             <div class="bac-stat-num" :style="{ color: meta.gradeColor }">{{ meta.grade }}</div>
-            <div class="bac-stat-label">Grade</div>
+            <div class="bac-stat-label">{{ $t('hadithBook.grade') }}</div>
           </div>
         </div>
       </div>
@@ -55,19 +59,20 @@
       <!-- Loading -->
       <div v-if="loading" class="had-loading" aria-live="polite">
         <div class="had-spinner" aria-hidden="true"></div>
-        <span>Loading chapters…</span>
+        <span>{{ $t('hadithBook.loadingChapters') }}</span>
       </div>
 
       <!-- Error -->
       <div v-else-if="error" class="had-error">
         <div>
-          <div class="had-error-title">Could not load chapters</div>
+          <div class="had-error-title">{{ $t('hadithBook.couldNotLoadChapters') }}</div>
           <div class="had-error-desc">{{ error }}</div>
-          <div v-if="!hasApiKey" style="margin-top: 8px; font-size: 13px">
-            Add <code>VITE_HADITH_API_KEY=your_key</code> to your <code>.env</code> file. Get a free
-            key at
-            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer"
-              >hadithapi.com</a
+          <div v-if="notConfigured" style="margin-top: 8px; font-size: 13px">
+            {{ $t('hadithBook.set') }} <code>HADITH_API_KEY</code>
+            {{ $t('hadithBook.whereTheSiteIsHostedSee') }}
+            <a href="https://hadithapi.com/register" target="_blank" rel="noopener noreferrer">{{
+              $t('hadithBook.hadithapiCom')
+            }}</a
             >.
           </div>
         </div>
@@ -81,10 +86,12 @@
             v-model="search"
             type="search"
             class="input-field"
-            placeholder="Filter chapters…"
-            aria-label="Filter chapters by name"
+            :placeholder="$t('hadithBook.filterChapters')"
+            :aria-label="$t('hadithBook.filterChaptersByName')"
           />
-          <span class="chap-count">{{ filteredChapters.length }} chapters</span>
+          <span class="chap-count">{{
+            $t('hadithBook.chapters2', { a: filteredChapters.length })
+          }}</span>
         </div>
 
         <div class="chap-grid">
@@ -99,7 +106,7 @@
               <div class="chap-en">{{ chapter.chapterEnglish }}</div>
               <div class="chap-ar" lang="ar">{{ chapter.chapterArabic }}</div>
               <div v-if="chapter.hadithCount" class="chap-count-badge">
-                {{ chapter.hadithCount }} hadith
+                {{ $t('hadithBook.hadith2', { a: chapter.hadithCount }) }}
               </div>
             </div>
             <div class="chap-arrow" aria-hidden="true">
@@ -118,7 +125,7 @@
         </div>
 
         <div v-if="search && !filteredChapters.length" class="had-empty">
-          No chapters match "{{ search }}"
+          {{ $t('hadithBook.noChaptersMatch', { a: search }) }}
         </div>
       </div>
     </div>
@@ -126,32 +133,32 @@
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
-import { fetchChapters, BOOKS_META } from '@/composables/useHadithApi.js'
+import { fetchChapters, BOOKS_META, loadErrorMessage } from '@/composables/useHadithApi.js'
 
 useScrollReveal()
 
 const route = useRoute()
+const bookText = useDataTranslations('hadithBooks')
+
+function localizedBook(found) {
+  return found ? bookText.localized(found) : null
+}
 const bookSlug = computed(() => route.params.bookSlug)
-const meta = computed(() => BOOKS_META.find((b) => b.slug === bookSlug.value) || null)
+const meta = computed(() => localizedBook(BOOKS_META.find((b) => b.slug === bookSlug.value)))
 
-useHead(
-  computed(() => ({
-    title: `${meta.value?.name || bookSlug.value} — Chapters | IslamicHub`,
-    meta: [
-      {
-        name: 'description',
-        content: `Browse all chapters of ${meta.value?.name || bookSlug.value} — ${meta.value?.hadithCount || ''} hadiths from ${meta.value?.author || ''}.`,
-      },
-    ],
-  })),
-)
+useSeo({
+  title: () => `${meta.value?.name || bookSlug.value} — Chapters | IslamicHub`,
+  description: () =>
+    `Browse all chapters of ${meta.value?.name || bookSlug.value} — ${meta.value?.hadithCount || ''} hadiths from ${meta.value?.author || ''}.`,
+})
 
-const hasApiKey = !!import.meta.env.VITE_HADITH_API_KEY
+const notConfigured = ref(false)
 const loading = ref(false)
 const error = ref(null)
 const chapters = ref([])
@@ -176,7 +183,8 @@ async function load() {
     const data = await fetchChapters(bookSlug.value)
     chapters.value = data.chapters || []
   } catch (e) {
-    error.value = e.message
+    notConfigured.value = !!e.notConfigured
+    error.value = loadErrorMessage(e)
   } finally {
     loading.value = false
   }

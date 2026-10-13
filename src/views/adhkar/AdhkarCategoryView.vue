@@ -6,9 +6,9 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          {{ meta?.timeHint || 'Adhkar' }}
+          {{ meta?.timeHint || $t('adhkarCategory.adhkar') }}
         </div>
-        <h1>{{ meta?.name || 'Adhkar' }}</h1>
+        <h1>{{ meta?.name || $t('adhkarCategory.adhkar') }}</h1>
         <p v-if="meta">{{ meta.description }}</p>
       </div>
     </div>
@@ -16,22 +16,28 @@
     <div class="content-narrow">
       <!-- Breadcrumb -->
       <div class="adh-breadcrumb">
-        <RouterLink to="/adhkar" class="adh-breadcrumb-link">← All Adhkar</RouterLink>
+        <RouterLink to="/adhkar" class="adh-breadcrumb-link">{{
+          $t('adhkarCategory.allAdhkar')
+        }}</RouterLink>
         <span class="adh-sep" aria-hidden="true">/</span>
         <span>{{ meta?.name || categorySlug }}</span>
       </div>
 
-      <div v-if="!meta" class="had-empty">Category not found.</div>
+      <div v-if="!meta" class="had-empty">{{ $t('adhkarCategory.categoryNotFound') }}</div>
 
       <template v-else>
         <!-- Progress summary -->
         <div class="adh-progress-card anim-target">
           <div class="apc-top">
             <div>
-              <div class="apc-label">Today's progress</div>
-              <div class="apc-count">{{ completedCount }} / {{ dhikrList.length }} recited</div>
+              <div class="apc-label">{{ $t('adhkarCategory.todaySProgress') }}</div>
+              <div class="apc-count">
+                {{ $t('adhkarCategory.recited', { a: completedCount, b: dhikrList.length }) }}
+              </div>
             </div>
-            <div v-if="streak > 0" class="apc-streak">🔥 {{ streak }}-day streak</div>
+            <div v-if="streak > 0" class="apc-streak">
+              {{ $t('adhkarCategory.dayStreak', { a: streak }) }}
+            </div>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" :style="{ width: progressPct + '%' }"></div>
@@ -45,18 +51,24 @@
           >
             {{
               completedCount < dhikrList.length
-                ? `Complete all ${dhikrList.length} to finish`
-                : 'Mark ' + meta.name + ' complete for today'
+                ? $t('adhkarCategory.completeAll', { count: dhikrList.length })
+                : $t('adhkarCategory.markComplete', { name: meta.name })
             }}
           </button>
           <div v-else class="apc-done-msg">
-            ✓ {{ meta.name }} completed today — جَزَاكَ اللَّهُ خَيْرًا
+            {{ $t('adhkarCategory.completedToday', { a: meta.name }) }}
           </div>
         </div>
 
         <!-- Dhikr list -->
         <div class="adh-list">
-          <AdhkarCard v-for="d in dhikrList" :key="d.id" :dhikr="d" />
+          <AdhkarCard
+            v-for="d in dhikrList"
+            :id="d.id"
+            :key="d.id"
+            :dhikr="d"
+            :share-path="`/adhkar/${categorySlug}#${d.id}`"
+          />
         </div>
 
         <!-- Category nav -->
@@ -69,7 +81,7 @@
             ← {{ prevCategory.name }}
           </RouterLink>
           <RouterLink to="/adhkar" class="btn btn-secondary" style="margin: 0 auto">
-            All categories
+            {{ $t('adhkarCategory.allCategories') }}
           </RouterLink>
           <RouterLink
             v-if="nextCategory"
@@ -87,11 +99,12 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import AdhkarCard from '@/components/adhkar/AdhkarCard.vue'
 import { ADHKAR_CATEGORIES, getAdhkarByCategory, getCategoryMeta } from '@/data/adhkar.js'
+import { useDataTranslations } from '@/composables/useContent.js'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 
 useScrollReveal()
@@ -99,22 +112,20 @@ useScrollReveal()
 const route = useRoute()
 const store = useAdhkarStore()
 const categorySlug = computed(() => route.params.categorySlug)
-const meta = computed(() => getCategoryMeta(categorySlug.value))
-const dhikrList = computed(() => getAdhkarByCategory(categorySlug.value))
+const adhkarText = useDataTranslations('adhkar')
+const categoryText = useDataTranslations('adhkarCategories')
+const meta = computed(() => {
+  const category = getCategoryMeta(categorySlug.value)
+  return category ? categoryText.localized(category) : null
+})
+const dhikrList = computed(() => getAdhkarByCategory(categorySlug.value).map(adhkarText.localized))
 
-useHead(
-  computed(() => ({
-    title: `${meta.value?.name || 'Adhkar'} | IslamicHub`,
-    meta: [
-      {
-        name: 'description',
-        content:
-          meta.value?.description ||
-          'Daily Islamic supplications with Arabic, transliteration, and translation.',
-      },
-    ],
-  })),
-)
+useSeo({
+  title: () => `${meta.value?.name || 'Adhkar'} | IslamicHub`,
+  description: () =>
+    meta.value?.description ||
+    'Daily Islamic supplications with Arabic, transliteration, and translation.',
+})
 
 function isDhikrFullyDone(d) {
   if (d.parts) {

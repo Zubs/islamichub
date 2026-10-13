@@ -6,12 +6,11 @@
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
-          Daily Worship &nbsp;·&nbsp; السبحة
+          {{ $t('tasbih.dailyWorship') }}
         </div>
-        <h1>Tasbih Counter</h1>
+        <h1>{{ $t('tasbih.tasbihCounter') }}</h1>
         <p>
-          A digital dhikr counter — pick a phrase, set a target, and tap to count. Your daily and
-          lifetime totals are saved on this device.
+          {{ $t('tasbih.aDigitalDhikrCounterPickA') }}
         </p>
       </div>
     </div>
@@ -37,7 +36,9 @@
 
         <div class="tsb-current-arabic" lang="ar" dir="rtl">{{ store.currentPhrase.arabic }}</div>
         <div class="tsb-current-translit">{{ store.currentPhrase.transliteration }}</div>
-        <div class="tsb-current-translation">{{ store.currentPhrase.translation }}</div>
+        <div class="tsb-current-translation">
+          {{ phraseText.localized(store.currentPhrase).translation }}
+        </div>
 
         <button
           class="tsb-ring"
@@ -52,9 +53,11 @@
         </button>
 
         <div class="tsb-actions">
-          <button class="btn btn-secondary tsb-reset-btn" @click="store.reset()">↺ Reset</button>
+          <button class="btn btn-secondary tsb-reset-btn" @click="store.reset()">
+            {{ $t('tasbih.reset') }}
+          </button>
           <div class="tsb-target-field">
-            <label for="tsb-target-input">Target</label>
+            <label for="tsb-target-input">{{ $t('tasbih.target') }}</label>
             <input
               id="tsb-target-input"
               type="number"
@@ -67,7 +70,7 @@
         </div>
 
         <div class="tsb-presets">
-          <span class="tsb-presets-label">Quick set:</span>
+          <span class="tsb-presets-label">{{ $t('tasbih.quickSet') }}</span>
           <button
             v-for="n in [33, 99, 100]"
             :key="n"
@@ -84,80 +87,68 @@
       <div class="tsb-stats anim-target">
         <div class="tsb-stat">
           <div class="tsb-stat-num">{{ store.todayTotalForCurrent }}</div>
-          <div class="tsb-stat-label">Today · this phrase</div>
+          <div class="tsb-stat-label">{{ $t('tasbih.todayThisPhrase') }}</div>
         </div>
         <div class="tsb-stat">
           <div class="tsb-stat-num">{{ store.lifetimeTotalForCurrent }}</div>
-          <div class="tsb-stat-label">Lifetime · this phrase</div>
+          <div class="tsb-stat-label">{{ $t('tasbih.lifetimeThisPhrase') }}</div>
         </div>
         <div class="tsb-stat">
           <div class="tsb-stat-num">{{ store.todayTotalAllPhrases }}</div>
-          <div class="tsb-stat-label">Today · all dhikr</div>
+          <div class="tsb-stat-label">{{ $t('tasbih.todayAllDhikr') }}</div>
         </div>
         <div class="tsb-stat">
           <div class="tsb-stat-num">{{ store.lifetimeTotalAllPhrases }}</div>
-          <div class="tsb-stat-label">Lifetime · all dhikr</div>
+          <div class="tsb-stat-label">{{ $t('tasbih.lifetimeAllDhikr') }}</div>
         </div>
       </div>
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
       <!-- Educational -->
-      <span class="eyebrow">The virtue of dhikr</span>
+      <span class="eyebrow">{{ $t('tasbih.theVirtueOfDhikr') }}</span>
       <h2 class="section-title" style="font-size: clamp(1.5rem, 2.5vw, 1.9rem)">
-        Why count your dhikr?
+        {{ $t('tasbih.whyCountYourDhikr') }}
       </h2>
       <div class="prose">
         <p>
-          Tasbih (تَسْبِيح) — glorifying Allah through repeated remembrance — is one of the simplest
-          and most rewarded acts of worship. Traditionally counted on prayer beads (misbaha) or the
-          fingers of the right hand, a digital counter serves the same purpose: keeping an accurate,
-          distraction-free tally so the heart stays focused on the words rather than the count.
+          {{ $t('tasbih.tasbihGlorifyingAllahThroughRepeatedRemembrance') }}
         </p>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Muslim 2691</div>
-        <div class="hadith-text">
-          "Whoever says 'Glory be to Allah and praise Him' one hundred times a day will have their
-          sins forgiven, even if they were like the foam of the sea." — The Prophet Muhammad ﷺ
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Muslim 2691">
+        {{ $t('tasbih.whoeverSaysGloryBeToAllah') }}
+      </HadithBlock>
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
-        <h2>Pair it with your daily adhkar</h2>
+        <h2>{{ $t('tasbih.pairItWithYourDailyAdhkar') }}</h2>
         <p>
-          The tasbih counter works well alongside the morning, evening, and after-prayer adhkar —
-          each has its own recommended repetitions built in.
+          {{ $t('tasbih.theTasbihCounterWorksWellAlongside') }}
         </p>
-        <RouterLink to="/adhkar" class="btn btn-white btn-lg">Open Adhkar &amp; Duas →</RouterLink>
+        <RouterLink to="/adhkar" class="btn btn-white btn-lg">{{
+          $t('tasbih.openAdhkarDuas')
+        }}</RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useDataTranslations } from '@/composables/useContent.js'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useHead } from '@unhead/vue'
+import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import { useTasbihStore } from '@/stores/tasbih.js'
 
-useHead({
-  title: 'Tasbih Counter — Digital Dhikr Counter | IslamicHub',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'A free digital tasbih counter for dhikr — SubhanAllah, Alhamdulillah, Allahu Akbar, and more. Set a target, tap to count, and track your daily and lifetime totals.',
-    },
-  ],
-})
+useSeo('tasbih')
 useScrollReveal()
 
 const store = useTasbihStore()
+const phraseText = useDataTranslations('tasbihPhrases')
 
 const ringStyle = computed(() => {
   const pct = Math.min(100, Math.round((store.count / store.target) * 100))

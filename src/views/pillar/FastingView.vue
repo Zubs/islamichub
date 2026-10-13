@@ -9,12 +9,11 @@
           class="pillar-num-badge"
           style="background: var(--fasting-light); color: var(--fasting-color)"
         >
-          Pillar 4 of 5 &nbsp;·&nbsp; الصوم
+          {{ c('header.pillar4Of5') }}
         </div>
-        <h1>Sawm — Fasting</h1>
+        <h1>{{ c('header.sawmFasting') }}</h1>
         <p>
-          The fourth pillar — fasting during the month of Ramadan from dawn to sunset, abstaining
-          from food, drink, and sexual relations as an act of worship and purification.
+          {{ c('header.theFourthPillarFastingDuringThe') }}
         </p>
       </div>
     </div>
@@ -23,19 +22,19 @@
       <QuranBlock
         arabic="يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ"
         reference="Qur'an 2:183"
-        translation="O you who have believed, decreed upon you is fasting as it was decreed upon those before you so that you may become righteous (muttaqin)."
+        :translation="c('header.oYouWhoHaveBelievedDecreed')"
         :framed="true"
         class="anim-target"
       />
 
       <!-- Ramadan status -->
       <div style="margin-top: 2.5rem">
-        <span class="eyebrow">Ramadan {{ hijri.year }} AH</span>
+        <span class="eyebrow">{{ $t('fasting.ramadanAh', { a: hijri.year }) }}</span>
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
         >
-          {{ inRamadan ? 'رمضان مبارك — Ramadan Mubarak!' : `${daysLeft} days until Ramadan` }}
+          {{ inRamadan ? $t('fasting.ramadanMubarak') : $t('fasting.daysUntilRamadan', daysLeft) }}
         </h2>
 
         <div
@@ -70,7 +69,7 @@
                   margin-bottom: 6px;
                 "
               >
-                Current Hijri date
+                {{ $t('fasting.currentHijriDate') }}
               </div>
               <div
                 style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: #fff"
@@ -78,7 +77,7 @@
                 {{ hijri.day }} {{ hijri.monthName }}
               </div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
-                {{ hijri.year }} AH
+                {{ $t('fasting.ah', { a: hijri.year }) }}
               </div>
             </div>
             <div style="text-align: center">
@@ -92,7 +91,7 @@
                   margin-bottom: 6px;
                 "
               >
-                {{ inRamadan ? 'Ramadan day' : 'Months remaining' }}
+                {{ inRamadan ? $t('fasting.ramadanDay') : $t('fasting.monthsRemaining') }}
               </div>
               <div
                 style="font-family: var(--serif); font-size: 2rem; font-weight: 600"
@@ -101,7 +100,7 @@
                 {{ inRamadan ? hijri.day : Math.max(0, 9 - hijri.month) }}
               </div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
-                {{ inRamadan ? 'of 29–30 days' : 'until Ramaḍān' }}
+                {{ inRamadan ? $t('fasting.ofDays') : $t('fasting.untilRamadan') }}
               </div>
             </div>
             <div style="text-align: center">
@@ -115,11 +114,11 @@
                   margin-bottom: 6px;
                 "
               >
-                Status
+                {{ $t('fasting.status') }}
               </div>
               <div style="font-size: 1.5rem">{{ inRamadan ? '🌙' : '⭐' }}</div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
-                {{ inRamadan ? 'Ramadan is here' : "Sha'ban / waiting" }}
+                {{ inRamadan ? $t('fasting.ramadanIsHere') : $t('fasting.waiting') }}
               </div>
             </div>
           </div>
@@ -135,15 +134,14 @@
               margin-bottom: 12px;
             "
           >
-            Suhoor &amp; Iftar times today
+            {{ $t('fasting.suhoorIftarTimesToday') }}
           </h3>
           <p style="font-size: 13.5px; color: var(--muted); margin-bottom: 14px">
-            Enter your coordinates to calculate today's Suhoor (before Fajr) and Iftar (at Maghrib)
-            times.
+            {{ $t('fasting.enterYourCoordinatesToCalculateToday') }}
           </p>
           <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end">
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Latitude</label
+              <label>{{ $t('fasting.latitude') }}</label
               ><input
                 v-model.number="lat"
                 type="number"
@@ -153,7 +151,7 @@
               />
             </div>
             <div class="field" style="flex: 1; min-width: 130px">
-              <label>Longitude</label
+              <label>{{ $t('fasting.longitude') }}</label
               ><input
                 v-model.number="lng"
                 type="number"
@@ -162,8 +160,12 @@
                 step="0.0001"
               />
             </div>
-            <button class="btn btn-primary" @click="calculate">Calculate</button>
-            <button class="btn btn-secondary" @click="locate">📍 My location</button>
+            <button class="btn btn-primary" @click="calculate">
+              {{ $t('fasting.calculate') }}
+            </button>
+            <button class="btn btn-secondary" @click="locate">
+              {{ $t('fasting.myLocation') }}
+            </button>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem">
             <div
@@ -184,7 +186,7 @@
                   margin-bottom: 6px;
                 "
               >
-                🌅 Suhoor ends (Fajr)
+                {{ $t('fasting.suhoorEndsFajr') }}
               </div>
               <div
                 style="
@@ -196,7 +198,9 @@
               >
                 {{ suhoorTime }}
               </div>
-              <div style="font-size: 12px; color: var(--muted)">Last moment to eat</div>
+              <div style="font-size: 12px; color: var(--muted)">
+                {{ $t('fasting.lastMomentToEat') }}
+              </div>
             </div>
             <div
               style="
@@ -217,7 +221,7 @@
                   margin-bottom: 6px;
                 "
               >
-                🌇 Iftar (Maghrib)
+                {{ $t('fasting.iftarMaghrib') }}
               </div>
               <div
                 style="
@@ -229,7 +233,7 @@
               >
                 {{ iftarTime }}
               </div>
-              <div style="font-size: 12px; color: #7a5a10">Time to break fast</div>
+              <div style="font-size: 12px; color: #7a5a10">{{ $t('fasting.timeToBreakFast') }}</div>
             </div>
           </div>
           <div v-if="fastStatus" style="margin-top: 10px; font-size: 13px; color: var(--muted)">
@@ -245,7 +249,8 @@
                 margin-bottom: 5px;
               "
             >
-              <span>Fasting in progress</span><span>{{ fastPct }}%</span>
+              <span>{{ $t('fasting.fastingInProgress') }}</span
+              ><span>{{ fastPct }}%</span>
             </div>
             <div class="progress-bar">
               <div
@@ -257,44 +262,37 @@
         </div>
       </div>
 
+      <FastingTracker />
+
       <div class="divider"></div>
 
-      <span class="eyebrow">What is Sawm?</span>
+      <span class="eyebrow">{{ c('whatIsSawm.whatIsSawm') }}</span
+      ><UntranslatedNote v-if="untranslated('whatIsSawm')" />
       <h2 class="section-title" style="font-size: clamp(1.5rem, 2.5vw, 1.9rem)">
-        The obligation of fasting
+        {{ c('whatIsSawm.theObligationOfFasting') }}
       </h2>
       <div class="prose">
         <p>
-          Sawm (صَوْم, fasting) in Islamic law refers specifically to the obligatory fast of the
-          month of Ramadan — the ninth month of the Islamic lunar calendar. It is one of the five
-          pillars and is obligatory on every adult Muslim who is sane, healthy, resident (not
-          travelling), and not experiencing menstruation or post-natal bleeding.
+          {{ c('whatIsSawm.sawmFastingInIslamicLawRefers') }}
         </p>
         <p>
-          The fast begins at the break of true dawn (Fajr) and ends at sunset (Maghrib). During this
-          time, one must completely abstain from food, drink (including water), smoking, and sexual
-          relations. It is also highly important to guard one's tongue, eyes, and behaviour — the
-          Prophet ﷺ warned that a person who does not abandon false speech while fasting has no need
-          to abandon food and drink (Sahih Bukhari 1903).
+          {{ c('whatIsSawm.theFastBeginsAtTheBreak') }}<HadithRef text="Sahih Bukhari 1903" />).
         </p>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Bukhari 1904 · Sahih Muslim 1151</div>
-        <div class="hadith-text">
-          "Every deed of the son of Adam is for him except fasting — it is for Me and I shall reward
-          it. Fasting is a shield." — Hadith Qudsi, narrated by Abu Hurayrah RA
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Bukhari 1904 · Sahih Muslim 1151">
+        {{ c('whatIsSawm.everyDeedOfTheSonOf') }}
+      </HadithBlock>
 
       <div class="divider"></div>
 
-      <span class="eyebrow">Rulings</span>
+      <span class="eyebrow">{{ c('rulings.rulings') }}</span
+      ><UntranslatedNote v-if="untranslated('rulings')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        Who must fast &amp; valid excuses
+        {{ c('rulings.whoMustFastValidExcuses') }}
       </h2>
       <div class="card-grid card-grid-2 anim-target">
         <div class="card card-green" style="border-color: #b0d8c4">
@@ -307,7 +305,7 @@
               color: var(--green);
             "
           >
-            ✓ Must fast
+            {{ c('rulings.mustFast') }}
           </h3>
           <div
             v-for="c in mustFast"
@@ -332,7 +330,7 @@
               color: var(--red);
             "
           >
-            ✗ Valid excuses (make up later)
+            {{ c('rulings.validExcusesMakeUpLater') }}
           </h3>
           <div
             v-for="c in excuses"
@@ -351,12 +349,13 @@
 
       <!-- Invalidators of the fast -->
       <div style="margin-top: 1.5rem">
-        <span class="eyebrow">Invalidators</span>
+        <span class="eyebrow">{{ c('invalidators.invalidators') }}</span
+        ><UntranslatedNote v-if="untranslated('invalidators')" />
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
         >
-          Invalidators of the fast (Muftirat)
+          {{ c('invalidators.invalidatorsOfTheFastMuftirat') }}
         </h2>
         <div
           class="card-grid anim-target"
@@ -373,25 +372,28 @@
             >
               {{ m.title }}
             </h4>
-            <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">{{ m.desc }}</p>
+            <p style="font-size: 12.5px; color: var(--muted); line-height: 1.55">
+              <HadithRef :text="m.desc" />
+            </p>
           </div>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <span class="eyebrow">Virtues of Ramadan</span>
+      <span class="eyebrow">{{ c('virtuesOfRamadan.virtuesOfRamadan') }}</span
+      ><UntranslatedNote v-if="untranslated('virtuesOfRamadan')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        The blessed month
+        {{ c('virtuesOfRamadan.theBlessedMonth') }}
       </h2>
 
       <QuranBlock
         arabic="شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ هُدًى لِّلنَّاسِ"
         reference="Qur'an 2:185"
-        translation="The month of Ramadan in which was revealed the Qur'an, a guidance for the people and clear proofs of guidance and criterion."
+        :translation="c('virtuesOfRamadan.theMonthOfRamadanInWhich')"
         class="anim-target"
       />
 
@@ -400,7 +402,7 @@
           <div class="tl-marker">{{ v.icon }}</div>
           <div class="tl-content">
             <h4>{{ v.title }}</h4>
-            <p>{{ v.desc }}</p>
+            <p><HadithRef :text="v.desc" /></p>
           </div>
         </div>
       </div>
@@ -410,28 +412,40 @@
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
-        <h2>Continue to the fifth pillar</h2>
+        <h2>{{ c('virtuesOfRamadan.continueToTheFifthPillar') }}</h2>
         <p>
-          Hajj — the pilgrimage to the sacred city of Makkah, obligatory once in a lifetime for
-          those who are able.
+          {{ c('virtuesOfRamadan.hajjThePilgrimageToTheSacred') }}
         </p>
-        <RouterLink to="/hajj" class="btn btn-white btn-lg">Explore Hajj →</RouterLink>
+        <RouterLink to="/hajj" class="btn btn-white btn-lg">{{
+          c('virtuesOfRamadan.exploreHajj')
+        }}</RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/fasting/en.js'
+import { ref, onUnmounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
+import { t } from '@/i18n.js'
+import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
+import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import FastingTracker from '@/components/FastingTracker.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'
 import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
+
+const { c, list, untranslated } = useContent('fasting', content)
 
 useSeo('fasting')
 useScrollReveal()
@@ -440,8 +454,9 @@ const store = useZakatStore()
 const hijri = toHijri()
 const inRamadan = isRamadan()
 const daysLeft = Math.round(daysToRamadan())
-const lat = ref(store.location?.lat ?? '')
-const lng = ref(store.location?.lng ?? '')
+const settings = usePrayerSettingsStore()
+const lat = ref(settings.saved?.lat ?? store.location?.lat ?? '')
+const lng = ref(settings.saved?.lng ?? store.location?.lng ?? '')
 const suhoorTime = ref('—:—')
 const iftarTime = ref('—:—')
 const fastStatus = ref('')
@@ -464,12 +479,12 @@ async function locate() {
 function calculate() {
   const latV = parseFloat(lat.value)
   const lngV = parseFloat(lng.value)
-  if (isNaN(latV) || isNaN(lngV)) {
+  if (!isValidCoordinates(latV, lngV)) {
     return
   }
 
   const tz = getTimezoneOffset()
-  const times = calcPrayerTimes(latV, lngV, new Date(), tz, 'MWL')
+  const times = calcPrayerTimes(latV, lngV, new Date(), tz, settings.saved?.method ?? 'MWL')
   suhoorTime.value = times.fajr
   iftarTime.value = times.maghrib
 
@@ -487,110 +502,35 @@ function calculate() {
       const rem = magM - now
       const h = Math.floor(rem / 60),
         m = rem % 60
-      fastStatus.value = `⏱ ${h}h ${m}m until Iftar`
+      fastStatus.value = t('fasting.untilIftar', { hours: h, minutes: m })
     } else if (now >= magM) {
       showProgress.value = true
       fastPct.value = 100
-      fastStatus.value = '🌙 Iftar time — Ramadan Mubarak!'
+      fastStatus.value = t('fasting.iftarTime')
     } else {
       showProgress.value = false
       const rem = fajrM - now
       const h = Math.floor(rem / 60),
         m = rem % 60
-      fastStatus.value = `🌅 Suhoor in ${h}h ${m}m`
+      fastStatus.value = t('fasting.suhoorIn', { hours: h, minutes: m })
     }
   }
   update()
   fastTimer = setInterval(update, 60000)
 }
 
-if (store.location) {
+if (settings.saved || store.location) {
   calculate()
 }
 
 onUnmounted(() => clearInterval(fastTimer))
 
-const mustFast = [
-  'Muslim adult (baligh)',
-  'Sane (aqil)',
-  'Physically able (healthy)',
-  'Resident (not travelling)',
-  'Not menstruating or in nifas',
-]
-const excuses = [
-  'Illness — where fasting causes harm',
-  'Travel — at the distance of qasr',
-  'Pregnancy/breastfeeding (if harmful)',
-  'Menstruation / post-natal bleeding',
-  'Old age or chronic illness (fidya instead)',
-]
+const mustFast = computed(() => list('mustFast'))
+const excuses = computed(() => list('excuses'))
 
-const muftirat = [
-  {
-    title: 'Eating or drinking',
-    desc: 'Anything consumed intentionally by mouth, nose, or throat during fasting hours',
-  },
-  {
-    title: 'Sexual intercourse',
-    desc: 'Requires both make-up (qada) and expiation (kaffarah) — freeing a slave, fasting 60 consecutive days, or feeding 60 poor people',
-  },
-  {
-    title: 'Deliberate vomiting',
-    desc: 'If one deliberately induces vomiting, the fast is broken',
-  },
-  {
-    title: 'Menstruation / Nifas',
-    desc: 'The fast is broken and must be made up — no kaffarah required',
-  },
-  {
-    title: 'Intention at night',
-    desc: 'Forgetting to make the intention (niyyah) for Ramadan fasting invalidates it per majority scholars',
-  },
-]
+const muftirat = computed(() => list('muftirat'))
 
-const virtues = [
-  {
-    icon: '🌙',
-    title: "Revelation of the Qur'an",
-    desc: "The Qur'an was first revealed to the Prophet ﷺ on Laylat al-Qadr (the Night of Power) during Ramadan — described as 'better than a thousand months' (97:3).",
-  },
-  {
-    icon: '🔒',
-    title: 'Shayateen are chained',
-    desc: 'The Prophet ﷺ said: "When Ramadan begins, the gates of Paradise are opened, the gates of Hell are closed, and the devils are chained." (Sahih Bukhari 1899)',
-  },
-  {
-    icon: '🌟',
-    title: 'Laylat al-Qadr',
-    desc: "The Night of Power, hidden in the last ten nights of Ramadan (most likely on an odd-numbered night), is better in reward than a thousand months of worship (Qur'an 97:3).",
-  },
-  {
-    icon: '🤲',
-    title: 'Itikaf (Seclusion)',
-    desc: 'The Prophet ﷺ used to spend the last ten days of Ramadan in the mosque in seclusion (itikaf), seeking Laylat al-Qadr through prayer and remembrance.',
-  },
-]
+const virtues = computed(() => list('virtues'))
 
-const faqs = [
-  {
-    q: 'Does using a miswak (toothbrush) break the fast?',
-    a: 'No — using a miswak or dry toothbrush does not break the fast. Toothpaste should be avoided as it could be swallowed. Using mouthwash is makruh (disliked) according to many scholars.',
-  },
-  {
-    q: 'Do eye drops or injections break the fast?',
-    a: 'Eye drops do not break the fast per the majority of scholars. Injections that are not nutritional do not break the fast. A nutritional IV drip does break the fast.',
-  },
-  {
-    q: 'What is fidya?',
-    a: 'Fidya is a compensation for those who permanently cannot fast (the elderly, chronically ill) — feeding one poor person per missed day. It is not an option for those who are able to make up fasts.',
-  },
-  {
-    q: 'What is kaffarah?',
-    a: 'Kaffarah is the severe expiation required for deliberately breaking the fast of Ramadan by sexual intercourse. The options: free a slave, fast 60 consecutive days, or feed 60 poor people.',
-  },
-  {
-    q: 'Are voluntary (nafl) fasts rewarded?',
-    a: 'Yes — Monday and Thursday fasts were practiced by the Prophet ﷺ. The fast of Arafah (9th Dhul Hijjah) expiates two years of sins. The six days of Shawwal give the reward of fasting the entire year.',
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>

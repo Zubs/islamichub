@@ -5,28 +5,33 @@
       <div class="ornament-hanging left" aria-hidden="true"></div>
       <div class="ornament-hanging right" aria-hidden="true"></div>
       <div class="page-header-inner">
-        <span class="page-eyebrow">About IslamicHub</span>
-        <h1>Built with sincerity,<br />grounded in scholarship</h1>
+        <span class="page-eyebrow">{{ c('aboutIslamichub.aboutIslamichub') }}</span
+        ><UntranslatedNote v-if="untranslated('aboutIslamichub')" />
+        <h1>
+          {{ c('aboutIslamichub.builtWithSincerity') }}<br />{{
+            c('aboutIslamichub.groundedInScholarship')
+          }}
+        </h1>
         <p>
-          IslamicHub began as two separate projects — ZakatCalc and Kushirik — and grew into a
-          complete platform for learning and living the Five Pillars of Islam, with tools,
-          education, and authentic references in one place.
+          {{ c('aboutIslamichub.islamichubBeganAsTwoSeparateProjects') }}
         </p>
       </div>
     </div>
 
     <div class="content-narrow">
       <!-- Builders -->
-      <span class="eyebrow" style="margin-top: 2.5rem; display: block">The team</span>
+      <span class="eyebrow" style="margin-top: 2.5rem; display: block">{{
+        c('theTeam.theTeam')
+      }}</span
+      ><UntranslatedNote v-if="untranslated('theTeam')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 0.5rem"
       >
-        Built by Muslims, for Muslims
+        {{ c('theTeam.builtByMuslimsForMuslims') }}
       </h2>
       <p class="prose" style="margin-bottom: 2rem">
-        IslamicHub is a passion project by two builders who wanted an Islamic platform that takes
-        both technology and scholarship seriously.
+        {{ c('theTeam.islamichubIsAPassionProjectBy') }}
       </p>
 
       <div class="builder-grid">
@@ -67,7 +72,7 @@
           </div>
           <p class="builder-bio">{{ b.bio }}</p>
           <div>
-            <div class="builder-contribs-label">Contributions</div>
+            <div class="builder-contribs-label">{{ c('theTeam.contributions') }}</div>
             <div class="builder-contribs-list">
               <span v-for="c in b.contributions" :key="c" class="contrib-tag">{{ c }}</span>
             </div>
@@ -78,23 +83,20 @@
       <div class="divider"></div>
 
       <!-- Open source -->
-      <span class="eyebrow">Open source</span>
+      <span class="eyebrow">{{ c('openSource.openSource') }}</span
+      ><UntranslatedNote v-if="untranslated('openSource')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        Contributions welcome
+        {{ c('openSource.contributionsWelcome') }}
       </h2>
       <div class="prose" style="margin-bottom: 2rem">
         <p>
-          IslamicHub is open source and we actively welcome contributions — whether that's a bug
-          fix, a new educational section, a scholarly correction, a new language, or a UI
-          improvement.
+          {{ c('openSource.islamichubIsOpenSourceAndWe') }}
         </p>
         <p>
-          If you notice an error in a scholarly reference, a calculation that feels off, or a
-          feature that would help the Muslim community — please open an issue or submit a pull
-          request.
+          {{ c('openSource.ifYouNoticeAnErrorIn') }}
         </p>
       </div>
 
@@ -113,9 +115,9 @@
               />
             </svg>
           </div>
-          <div class="oss-name">View on GitHub</div>
+          <div class="oss-name">{{ c('openSource.viewOnGithub') }}</div>
           <div class="oss-desc">
-            Browse the source code, fork the repo, and explore the project structure
+            {{ c('openSource.browseTheSourceCodeForkThe') }}
           </div>
         </a>
         <a
@@ -125,9 +127,9 @@
           class="oss-card"
         >
           <div class="oss-icon" style="font-size: 22px">🐛</div>
-          <div class="oss-name">Report an issue</div>
+          <div class="oss-name">{{ c('openSource.reportAnIssue') }}</div>
           <div class="oss-desc">
-            Found a bug, a calculation error, or an incorrect scholarly reference? Open an issue
+            {{ c('openSource.foundABugACalculationError') }}
           </div>
         </a>
         <a
@@ -137,10 +139,9 @@
           class="oss-card"
         >
           <div class="oss-icon" style="font-size: 22px">🤝</div>
-          <div class="oss-name">How to contribute</div>
+          <div class="oss-name">{{ c('openSource.howToContribute') }}</div>
           <div class="oss-desc">
-            Read the contribution guide — all skill levels welcome, from code to content to
-            translations
+            {{ c('openSource.readTheContributionGuideAllSkill') }}
           </div>
         </a>
       </div>
@@ -158,7 +159,7 @@
             margin-bottom: 1rem;
           "
         >
-          Ways you can contribute
+          {{ c('openSource.waysYouCanContribute') }}
         </h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem">
           <div
@@ -182,42 +183,39 @@
       <div class="divider"></div>
 
       <!-- Mission -->
-      <span class="eyebrow">Mission</span>
+      <span class="eyebrow">{{ c('mission.mission') }}</span
+      ><UntranslatedNote v-if="untranslated('mission')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1.25rem"
       >
-        Why we built this
+        {{ c('mission.whyWeBuiltThis') }}
       </h2>
       <div class="prose">
         <p>
-          Too many Islamic tools are either too simple — stripping away nuance until they're
-          misleading — or too academic, presenting rulings without context for ordinary Muslims.
-          IslamicHub was built to sit in the middle: rigorous enough to trust, accessible enough for
-          anyone.
+          {{ c('mission.tooManyIslamicToolsAreEither') }}
         </p>
         <p>
-          The Five Pillars are not just obligations to tick off — they are acts of worship, each
-          with a rich scholarly tradition and deep spiritual meaning. Every page on IslamicHub tries
-          to give you both the practice and the understanding behind it.
+          {{ c('mission.theFivePillarsAreNotJust') }}
         </p>
         <p>
-          This project began as <strong>ZakatCalc</strong> (an accurate, live-priced Zakat
-          calculator) and <strong>Kushirik</strong> (an inheritance sharing application), two
-          separate projects by Zubair that were merged and expanded with Yusuf's direction into what
-          IslamicHub is today.
+          {{ c('mission.thisProjectBeganAs') }} <strong>{{ c('mission.zakatcalc') }}</strong>
+          {{ c('mission.anAccurateLivePricedZakatCalculator') }}
+          <strong>{{ c('mission.kushirik') }}</strong>
+          {{ c('mission.anInheritanceSharingApplicationTwoSeparate') }}
         </p>
       </div>
 
       <div class="divider"></div>
 
       <!-- Principles -->
-      <span class="eyebrow">Principles</span>
+      <span class="eyebrow">{{ c('principles.principles') }}</span
+      ><UntranslatedNote v-if="untranslated('principles')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1.5rem"
       >
-        What we stand for
+        {{ c('principles.whatWeStandFor') }}
       </h2>
       <div style="display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2.5rem">
         <div v-for="p in principles" :key="p.title" style="display: flex; gap: 1rem">
@@ -246,7 +244,9 @@
             >
               {{ p.title }}
             </div>
-            <div style="font-size: 14px; color: var(--muted); line-height: 1.6">{{ p.desc }}</div>
+            <div style="font-size: 14px; color: var(--muted); line-height: 1.6">
+              <HadithRef :text="p.desc" />
+            </div>
           </div>
         </div>
       </div>
@@ -254,69 +254,108 @@
       <div class="divider"></div>
 
       <!-- Usage Statistics -->
-      <span class="eyebrow" id="statistics">Usage statistics</span>
+      <span class="eyebrow" id="statistics">{{ c('usageStatistics.usageStatistics') }}</span
+      ><UntranslatedNote v-if="untranslated('usageStatistics')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1.5rem"
       >
-        How we understand usage
+        {{ c('usageStatistics.howWeUnderstandUsage') }}
       </h2>
       <div class="prose" style="margin-bottom: 1.5rem">
         <p>
-          To understand how IslamicHub is used and which tools are most helpful, we count anonymous
-          usage statistics. This is strictly opt-out — you can turn it off at any time.
-        </p>
-        <p><strong>What is counted:</strong></p>
-        <ul>
-          <li>Page views by address (the path only, never query strings)</li>
-          <li>
-            Where a visit came from (the referring site's name only, e.g., <code>google.com</code> —
-            never the full URL)
-          </li>
-          <li>
-            Five named actions: prayer times shown, a Zakat result reached, an inheritance result
-            reached, an adhkar category completed, and a tasbih target reached
-          </li>
-        </ul>
-        <p><strong>What is never sent:</strong></p>
-        <ul>
-          <li>
-            Any amount, weight, coordinate, place name, heir, search text, or other input you enter
-          </li>
-          <li>
-            Your name, email, or any identifier — no cookies, no localStorage identifiers, no
-            fingerprinting
-          </li>
-          <li>Which specific hadith or article you read beyond the page address</li>
-        </ul>
-        <p>
-          Statistics are sent to <strong>GoatCounter</strong>, a cookieless, open-source analytics
-          service. GoatCounter sees the IP address and browser type of each request (as any server
-          does) and derives country and browser from them. It states that it never stores IP
-          addresses and holds a scrambled form in memory for up to eight hours only to count visits.
+          {{ c('usageStatistics.toUnderstandHowIslamichubIsUsed') }}
         </p>
         <p>
-          Counting happens only on the live site (<code>islamichub.xyz</code>) and only when
-          configured. It is off during local development, tests, and deploy previews.
-          <strong>Do Not Track</strong> and <strong>Global Privacy Control</strong> are honoured
-          automatically.
+          <strong>{{ c('usageStatistics.whatIsCounted') }}</strong>
+        </p>
+        <ul>
+          <li>{{ c('usageStatistics.pageViewsByAddressThePath') }}</li>
+          <li>
+            {{ c('usageStatistics.whereAVisitCameFromThe') }} <code>google.com</code>
+            {{ c('usageStatistics.neverTheFullUrl') }}
+          </li>
+          <li>
+            {{ c('usageStatistics.fiveNamedActionsPrayerTimesShown') }}
+          </li>
+        </ul>
+        <p>
+          <strong>{{ c('usageStatistics.whatIsNeverSent') }}</strong>
+        </p>
+        <ul>
+          <li>
+            {{ c('usageStatistics.anyAmountWeightCoordinatePlaceName') }}
+          </li>
+          <li>
+            {{ c('usageStatistics.yourNameEmailOrAnyIdentifier') }}
+          </li>
+          <li>{{ c('usageStatistics.whichSpecificHadithOrArticleYou') }}</li>
+        </ul>
+        <p>
+          {{ c('usageStatistics.statisticsAreSentTo') }}
+          <strong>{{ c('usageStatistics.goatcounter') }}</strong
+          >{{ c('usageStatistics.aCookielessOpenSourceAnalyticsService') }}
+        </p>
+        <p>
+          {{ c('usageStatistics.countingHappensOnlyOnTheLive') }}<code>islamichub.xyz</code
+          >{{ c('usageStatistics.andOnlyWhenConfiguredItIs') }}
+          <strong>{{ c('usageStatistics.doNotTrack') }}</strong> {{ c('usageStatistics.and') }}
+          <strong>{{ c('usageStatistics.globalPrivacyControl') }}</strong>
+          {{ c('usageStatistics.areHonouredAutomatically') }}
         </p>
       </div>
       <StatsOptOut />
+      <div class="card" style="margin-top: 1rem">
+        <p>
+          <strong>{{ c('usageStatistics.yourLocation') }}</strong>
+        </p>
+        <p style="font-size: 13.5px; color: var(--muted); line-height: 1.7">
+          {{ c('usageStatistics.yourLocationIsAskedForOnly') }}
+        </p>
+      </div>
+      <div class="card" style="margin-top: 1rem">
+        <p>
+          <strong>{{ c('usageStatistics.notificationsWhenTheAppIsClosed') }}</strong>
+        </p>
+        <p style="font-size: 13.5px; color: var(--muted); line-height: 1.7">
+          {{ c('usageStatistics.prayerRemindersWorkOnYourDevice') }}
+        </p>
+      </div>
       <p style="font-size: 12px; color: var(--muted); margin-top: 1rem">
-        This is a change from our earlier &ldquo;no analytics, no tracking&rdquo; promise. We
-        updated it because understanding usage helps us decide which languages to add first and
-        which tools to improve — but we kept the core promise: your data stays on your device, and
-        you can opt out at any time.
+        {{ c('usageStatistics.thisIsAChangeFromOur') }}
       </p>
 
+      <div
+        v-if="quranCredits.length"
+        class="card"
+        style="margin-top: 1rem"
+        data-test="quran-credits"
+      >
+        <p>
+          <strong>{{ $t('about.quranTranslations') }}</strong>
+        </p>
+        <ul
+          style="
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.7;
+            padding-inline-start: 1.2rem;
+          "
+        >
+          <li v-for="locale in quranCredits" :key="locale.code">
+            {{ locale.name }}: {{ locale.quran.translator }} ({{ locale.quran.edition }})
+          </li>
+        </ul>
+      </div>
+
       <div class="divider"></div>
-      <span class="eyebrow" id="scholars">Scholarly sources</span>
+      <span class="eyebrow" id="scholars">{{ c('scholarlySources.scholarlySources') }}</span
+      ><UntranslatedNote v-if="untranslated('scholarlySources')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1.5rem"
       >
-        What we draw from
+        {{ c('scholarlySources.whatWeDrawFrom') }}
       </h2>
       <div class="card-grid card-grid-2" style="margin-bottom: 2.5rem">
         <div v-for="s in sources" :key="s.title" class="card">
@@ -350,23 +389,18 @@
             margin-bottom: 8px;
           "
         >
-          ⚠ Disclaimer
+          {{ c('scholarlySources.disclaimer') }}
         </div>
         <p style="font-size: 13.5px; color: #5a3e0a; line-height: 1.7">
-          IslamicHub is an educational and guidance tool. It is not a fatwa or formal religious
-          ruling. Prayer times are calculated astronomically and may differ from local mosque
-          announcements. Inheritance calculations cover standard cases — complex situations require
-          expert consultation. For personal religious rulings, consult a qualified Islamic scholar
-          (mufti).
+          {{ c('scholarlySources.islamichubIsAnEducationalAndGuidance') }}
         </p>
       </div>
 
       <div class="cta-strip anim-target">
         <GeoPattern />
-        <h2>Join us in building this</h2>
+        <h2>{{ c('scholarlySources.joinUsInBuildingThis') }}</h2>
         <p>
-          Star the repo, open an issue, or submit a pull request. Every contribution helps the
-          Muslim community.
+          {{ c('scholarlySources.starTheRepoOpenAnIssue') }}
         </p>
         <div class="btn-group" style="justify-content: center">
           <a
@@ -380,13 +414,13 @@
                 d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
               />
             </svg>
-            View on GitHub
+            {{ c('scholarlySources.viewOnGithub') }}
           </a>
           <RouterLink
             to="/zakat"
             class="btn btn-secondary btn-lg"
             style="color: #fff; border-color: rgba(255, 255, 255, 0.35)"
-            >Try the Zakat Calculator
+            >{{ c('scholarlySources.tryTheZakatCalculator') }}
           </RouterLink>
         </div>
       </div>
@@ -395,138 +429,33 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/about/en.js'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import StatsOptOut from '@/components/StatsOptOut.vue'
+import { availableLocales } from '@/i18n.js'
+
+const { c, list, untranslated } = useContent('about', content)
+const quranCredits = computed(() => availableLocales.value.filter((locale) => locale.quran))
 
 useSeo('about')
 useScrollReveal()
 
 const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
-const builders = [
-  {
-    login: 'Zubs',
-    name: 'Zubair Idris Aweda',
-    role: 'Software Engineer & Technical Writer',
-    bio: 'Full-stack engineer behind the architecture, calculator engines, prayer time algorithms, and design system. Also built the original ZakatCalc and Kushirik projects that became IslamicHub.',
-    avatar: 'https://avatars.githubusercontent.com/u/53227444?v=4',
-    contributions: [
-      'Architecture & routing',
-      'Zakat calculator',
-      'Prayer times & Qibla engine',
-      "Inheritance (Fara'id) engine",
-      'Design system & CSS',
-    ],
-  },
-  {
-    login: 'yusuf-saif',
-    name: 'Yusuf Saif',
-    role: 'Project Manager & Technical Strategist',
-    bio: 'Seasoned project manager with a robust background in technical solutions. Drives product direction, scholarly accuracy review, and ensures the platform stays true to its educational mission.',
-    avatar: 'https://avatars.githubusercontent.com/u/54576722?v=4',
-    contributions: [
-      'Product strategy',
-      'Scholarly accuracy review',
-      'User experience direction',
-      'Content planning',
-      'Deployment & operations',
-    ],
-  },
-]
+const builders = computed(() => list('builders'))
 
-const ways = [
-  {
-    icon: '💻',
-    text: 'Code — fix bugs, add features, improve performance',
-  },
-  {
-    icon: '📖',
-    text: 'Content — write or improve educational articles',
-  },
-  {
-    icon: '🕌',
-    text: "Scholarship — correct or add Qur'anic / Hadith references",
-  },
-  {
-    icon: '🌍',
-    text: 'Translations — help make IslamicHub multilingual',
-  },
-  {
-    icon: '🎨',
-    text: 'Design — UI improvements, icons, accessibility',
-  },
-  {
-    icon: '🧪',
-    text: 'Testing — test across devices, browsers, and edge cases',
-  },
-  {
-    icon: '📣',
-    text: 'Sharing — spread the word to the Muslim community',
-  },
-  {
-    icon: '⭐',
-    text: 'Star on GitHub — it helps others discover the project',
-  },
-]
+const ways = computed(() => list('ways'))
 
-const principles = [
-  {
-    num: '1',
-    title: 'Primary sources first',
-    desc: "Every ruling, calculation, and claim is traced back to Qur'an or authenticated Hadith. We cite the source, not just the conclusion.",
-  },
-  {
-    num: '2',
-    title: 'All four schools',
-    desc: "Hanafi, Maliki, Shafi'i, and Hanbali positions are all considered. Consensus is stated. Differences are presented as options.",
-  },
-  {
-    num: '3',
-    title: 'Education over efficiency',
-    desc: 'A number without understanding is not enough. Every tool section includes the scholarly basis for how the calculation works.',
-  },
-  {
-    num: '4',
-    title: 'Privacy by design',
-    desc: 'No accounts, no personal tracking, no data storage. Everything runs in your browser. Your financial and personal information stays with you. Anonymous usage statistics can be turned off below.',
-  },
-  {
-    num: '5',
-    title: 'Humility before scholarship',
-    desc: 'We are builders, not scholars. For complex situations, we always direct users to a qualified mufti or scholar.',
-  },
-  {
-    num: '6',
-    title: 'Free, always',
-    desc: 'Helping Muslims fulfil their obligations should not be a commercial transaction. This platform is and will remain free.',
-  },
-]
+const principles = computed(() => list('principles'))
 
-const sources = [
-  {
-    title: 'Primary texts',
-    content:
-      "Qur'an — Surah 2, 3, 4, 9, 97, 112 et al.<br>Sahih Bukhari — Kitab al-Zakat, al-Salah, al-Sawm, al-Hajj<br>Sahih Muslim — multiple books<br>Sunan Abu Dawud · Ibn Majah · Al-Tirmidhi",
-  },
-  {
-    title: 'Classical scholarship',
-    content:
-      "Al-Mughni — Ibn Qudama al-Maqdisi<br>Al-Majmu' — Imam al-Nawawi<br>Bada'i' al-Sana'i' — Al-Kasani<br>Al-Umm — Imam al-Shafi'i<br>Al-Mudawwana — Imam Malik",
-  },
-  {
-    title: 'Contemporary scholarship',
-    content:
-      "Fiqh al-Zakat — Sheikh Yusuf al-Qaradawi<br>Contemporary Fatawa — Mufti Taqi Usmani<br>AAOIFI Shari'ah Standard No. 35<br>Zakat House (Kuwait) guidelines",
-  },
-  {
-    title: 'Technical & data sources',
-    content:
-      'Prayer times: astronomical Adhan algorithm<br>fawazahmed0/exchange-api — daily gold and silver prices and exchange rates (GBP/USD/EUR/SAR)<br>Nominatim (OpenStreetMap) — reverse geocoding',
-  },
-]
+const sources = computed(() => list('sources'))
 </script>
 
 <style scoped>

@@ -103,6 +103,21 @@ describe('useStats composable', () => {
       expect(sendBeaconSpy).not.toHaveBeenCalled()
     })
 
+    it('counts a visit from a tagged link under the tag, even after the first page', async () => {
+      setLocation(LIVE_HOST)
+      setReferrer('https://www.google.com/search')
+      vi.stubEnv('VITE_STATS_ENDPOINT', 'https://islamichub.goatcounter.com/count')
+      const { countPage } = await loadUseStats()
+
+      countPage({ path: '/duas/travel', meta: {} }, 'whatsapp')
+      countPage({ path: '/prayer', meta: {} })
+      countPage({ path: '/hadith/books/sahih-bukhari/hadith/1', meta: {} }, 'whatsapp')
+
+      const sources = sendBeaconSpy.mock.calls.map(([url]) => new URL(url).searchParams.get('r'))
+      expect(sources).toEqual(['whatsapp', null, 'whatsapp'])
+      expect(new URL(sendBeaconSpy.mock.calls[0][0]).searchParams.get('p')).toBe('/duas/travel')
+    })
+
     it('sends one request when all conditions met on live host', async () => {
       setLocation(LIVE_HOST)
       vi.stubEnv('VITE_STATS_ENDPOINT', 'https://islamichub.goatcounter.com/count')

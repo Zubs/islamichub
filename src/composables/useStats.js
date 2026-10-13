@@ -80,7 +80,7 @@ function sendHit(endpoint, hit) {
 
 let firstPageView = true
 
-export function countPage(route) {
+export function countPage(route, tag = '') {
   const endpoint = getEndpoint()
   if (
     !shouldCount({
@@ -95,7 +95,7 @@ export function countPage(route) {
     return
   }
 
-  const source = firstPageView ? sourceName(getReferrer(), LIVE_HOST) : ''
+  const source = tag || (firstPageView ? sourceName(getReferrer(), LIVE_HOST) : '')
   firstPageView = false
 
   const hit = buildHit(route, { source })

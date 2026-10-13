@@ -1,10 +1,13 @@
 <template>
-  <article class="dhikr-card" :class="{ 'dc-done': isFullyDone }">
+  <article class="dhikr-card" :class="{ 'dc-done': counter && isFullyDone }">
     <!-- Reference badge -->
     <div class="dc-top">
-      <span class="dc-ref">{{ dhikr.reference }}</span>
-      <span v-if="isFullyDone" class="dc-done-badge">✓ Done</span>
+      <span class="dc-ref"><HadithRef :text="dhikr.reference" /></span>
+      <span v-if="counter && isFullyDone" class="dc-done-badge">{{ $t('adhkarCard.done') }}</span>
     </div>
+
+    <h3 v-if="dhikr.title" class="dc-title">{{ dhikr.title }}</h3>
+    <div v-if="dhikr.when" class="dc-when">{{ dhikr.when }}</div>
 
     <!-- Arabic -->
     <div class="dc-arabic" lang="ar" dir="rtl">{{ dhikr.arabic }}</div>
@@ -14,13 +17,15 @@
     <div class="dc-translation">{{ dhikr.translation }}</div>
 
     <!-- Optional note (e.g. evening variant wording) -->
-    <div v-if="dhikr.note" class="dc-note">💡 {{ dhikr.note }}</div>
+    <div v-if="dhikr.note" class="dc-note">💡 <HadithRef :text="dhikr.note" /></div>
 
     <!-- Virtue -->
-    <div v-if="dhikr.virtue" class="dc-virtue">{{ dhikr.virtue }}</div>
+    <div v-if="dhikr.virtue" class="dc-virtue"><HadithRef :text="dhikr.virtue" /></div>
+
+    <ShareButton v-if="sharePath" class="dc-share" :item="shareable" />
 
     <!-- Counter controls -->
-    <div class="dc-counters">
+    <div v-if="counter" class="dc-counters">
       <!-- Compound dhikr (e.g. Tasbih Fatimah, Astaghfirullah x3) -->
       <template v-if="dhikr.parts">
         <button
@@ -39,7 +44,7 @@
       <button v-else class="dc-tap-btn" @click="tapSimple">
         <span class="dc-tap-count">{{ simpleDone }} / {{ dhikr.repeat }}</span>
         <span class="dc-tap-hint">{{
-          simpleDone >= dhikr.repeat ? 'Tap to reset' : 'Tap to count'
+          simpleDone >= dhikr.repeat ? $t('adhkarCard.tapToReset') : $t('adhkarCard.tapToCount')
         }}</span>
       </button>
     </div>
@@ -47,12 +52,23 @@
 </template>
 
 <script setup>
+import HadithRef from '@/components/HadithRef.vue'
+import ShareButton from '@/components/ShareButton.vue'
 import { computed, reactive } from 'vue'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 
 const props = defineProps({
   dhikr: { type: Object, required: true },
+  counter: { type: Boolean, default: true },
+  sharePath: { type: String, default: '' },
 })
+
+const shareable = computed(() => ({
+  arabic: props.dhikr.arabic,
+  translation: props.dhikr.translation,
+  reference: props.dhikr.reference,
+  path: props.sharePath,
+}))
 
 const store = useAdhkarStore()
 
@@ -123,6 +139,23 @@ const isFullyDone = computed(() => {
   border-radius: 12px;
 }
 
+.dc-share {
+  margin: var(--space-3) 0;
+}
+
+.dc-title {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.dc-when {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: var(--space-3);
+}
+
 .dc-arabic {
   font-family: var(--arabic, var(--serif));
   font-size: clamp(1.2rem, 3vw, 1.6rem);
@@ -161,7 +194,7 @@ const isFullyDone = computed(() => {
   font-size: 12.5px;
   color: #7a5a10;
   background: var(--gold-light);
-  border-left: 3px solid var(--gold);
+  border-inline-start: 3px solid var(--gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 8px 11px;
   margin-bottom: 1rem;

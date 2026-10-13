@@ -1,7 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, START_LOCATION } from 'vue-router'
 import { countPage, sourceTag } from '@/composables/useStats.js'
+import { getSituation } from '@/data/duas.js'
+import { getProphet } from '@/data/prophets.js'
+import { localeCodes, isAvailable, setLocale, rememberedLocale, rememberLocale } from '@/i18n.js'
+import {
+  SOURCE_LOCALE,
+  localePath,
+  splitLocale,
+  matchLocale,
+  localizedRoutes,
+} from '@/utils/locale.js'
 
-const routes = [
+const HASH_SCROLL_DELAY_MS = 350
+
+function notFound(to) {
+  return { name: 'not-found', params: { pathMatch: to.path.slice(1).split('/') }, replace: true }
+}
+
+export const routes = [
   {
     path: '/',
     name: 'home',
@@ -23,6 +39,11 @@ const routes = [
     component: () => import('@/views/hadith/HadithBookView.vue'),
   },
   {
+    path: '/hadith/books/:bookSlug/hadith/:hadithNumber',
+    name: 'hadith-single',
+    component: () => import('@/views/hadith/HadithView.vue'),
+  },
+  {
     path: '/hadith/books/:bookSlug/:chapterNumber',
     name: 'hadith-chapter',
     component: () => import('@/views/hadith/HadithChapterView.vue'),
@@ -36,6 +57,43 @@ const routes = [
     path: '/adhkar/:categorySlug',
     name: 'adhkar-category',
     component: () => import('@/views/adhkar/AdhkarCategoryView.vue'),
+  },
+  {
+    path: '/duas',
+    name: 'duas',
+    component: () => import('@/views/duas/DuasHomeView.vue'),
+  },
+  {
+    path: '/duas/:situationSlug',
+    name: 'duas-situation',
+    component: () => import('@/views/duas/DuasSituationView.vue'),
+    beforeEnter: (to) => (getSituation(to.params.situationSlug) ? true : notFound(to)),
+  },
+  {
+    path: '/prophets',
+    name: 'prophets',
+    component: () => import('@/views/prophets/ProphetsHomeView.vue'),
+  },
+  {
+    path: '/prophets/:slug',
+    name: 'prophet',
+    component: () => import('@/views/prophets/ProphetView.vue'),
+    beforeEnter: (to) => (getProphet(to.params.slug)?.story ? true : notFound(to)),
+  },
+  {
+    path: '/qurbani',
+    name: 'qurbani',
+    component: () => import('@/views/QurbaniView.vue'),
+  },
+  {
+    path: '/eid',
+    name: 'eid',
+    component: () => import('@/views/EidView.vue'),
+  },
+  {
+    path: '/tracker',
+    name: 'tracker',
+    component: () => import('@/views/tools/TrackerView.vue'),
   },
   {
     path: '/tasbih',
@@ -95,36 +153,93 @@ const routes = [
   },
 ]
 
+export function scrollBehavior(to, from, savedPosition) {
+  if (savedPosition) {
+    return savedPosition
+  }
+
+  if (to.hash) {
+    // wait for the page transition, so the element is on the page
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({ el: to.hash, top: 84 }), HASH_SCROLL_DELAY_MS)
+    })
+  }
+
+  return { top: 0, behavior: 'instant' }
+}
+
+let switchingTo = null
+
+// Decides the language of every navigation. On arrival the address wins, then the remembered
+// choice, then the browser's languages. Inside the site the current language is kept, so links
+// written without a prefix stay in the reader's language.
+export function localeGuard(to, from) {
+  const isArrival = from === START_LOCATION
+  const addressed = to.meta.locale ?? SOURCE_LOCALE
+  let wanted = addressed
+  if (switchingTo) {
+    wanted = switchingTo
+    switchingTo = null
+  } else if (isArrival && !to.meta.locale) {
+    wanted = rememberedLocale() ?? matchLocale(navigator.languages, localeCodes()) ?? SOURCE_LOCALE
+  } else if (!isArrival) {
+    wanted = from.meta.locale ?? SOURCE_LOCALE
+  }
+
+  if (!isAvailable(wanted)) {
+    wanted = SOURCE_LOCALE
+  }
+
+  if (to.name !== 'not-found' && addressed !== wanted) {
+    const { path } = splitLocale(to.path, localeCodes())
+    return { path: localePath(path, wanted), query: to.query, hash: to.hash, replace: isArrival }
+  }
+
+  setLocale(to.name === 'not-found' ? wanted : addressed)
+  return true
+}
+
+// Adds a language's pages under its prefix.
+export function addLocaleRoutes(target, code) {
+  localizedRoutes(
+    routes.filter((route) => route.name !== 'not-found'),
+    code,
+  ).forEach((route) => target.addRoute(route))
+}
+
+// Takes the reader to the same page in another language and remembers the choice.
+export function switchLocale(target, code) {
+  const current = target.currentRoute.value
+  const { path } = splitLocale(current.path, localeCodes())
+  rememberLocale(code)
+  switchingTo = code
+  return target.push({ path: localePath(path, code), query: current.query, hash: current.hash })
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    }
-
-    return { top: 0, behavior: 'instant' }
-  },
+  scrollBehavior,
 })
+
+localeCodes()
+  .filter((code) => code !== SOURCE_LOCALE)
+  .forEach((code) => addLocaleRoutes(router, code))
+router.beforeEach(localeGuard)
 
 let previousPath = ''
 
 router.afterEach((to) => {
-  // Only count when path actually changes
-  if (to.path !== previousPath) {
-    // Handle source tag from incoming link (e.g., WhatsApp shares)
-    const tag = sourceTag(to.path.split('?')[1] || '')
-    if (tag) {
-      // Remove the tag from the URL without triggering navigation
-      const cleanPath = to.path.split('?')[0]
-      const cleanSearch = new URLSearchParams(to.path.split('?')[1] || '')
-      cleanSearch.delete('src')
-      const newSearch = cleanSearch.toString()
-      const newUrl = cleanPath + (newSearch ? '?' + newSearch : '')
-      window.history.replaceState({}, '', newUrl)
-    }
-    countPage(to)
-    previousPath = to.path
+  if (to.path === previousPath) {
+    return
+  }
+
+  previousPath = to.path
+  const tag = sourceTag(new URLSearchParams(to.query).toString())
+  countPage(to, tag)
+  if (tag) {
+    const { src: _tag, ...query } = to.query
+    router.replace({ path: to.path, query, hash: to.hash })
   }
 })
 

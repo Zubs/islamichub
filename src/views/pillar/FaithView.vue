@@ -9,12 +9,11 @@
           class="pillar-num-badge"
           style="background: var(--faith-light); color: var(--faith-color)"
         >
-          Pillar 1 of 5 &nbsp;·&nbsp; الشهادة
+          {{ c('header.pillar1Of5') }}
         </div>
-        <h1>Shahada — The Declaration of Faith</h1>
+        <h1>{{ c('header.shahadaTheDeclarationOfFaith') }}</h1>
         <p>
-          The first and foundational pillar of Islam: the testimony that there is no god but Allah,
-          and that Muhammad ﷺ is His messenger.
+          {{ c('header.theFirstAndFoundationalPillarOf') }}
         </p>
       </div>
     </div>
@@ -36,49 +35,45 @@
         >
           أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ
         </div>
-        <div class="quran-ref" style="text-align: center; margin-top: 0.75rem">The Shahada</div>
+        <div class="quran-ref" style="text-align: center; margin-top: 0.75rem">
+          {{ c('header.theShahada') }}
+        </div>
         <div class="quran-trans" style="text-align: center; font-size: 16px">
-          "I bear witness that there is no god but Allah, and I bear witness that Muhammad is the
-          Messenger of Allah."
+          {{ c('header.iBearWitnessThatThereIs') }}
         </div>
       </div>
 
       <div style="margin-top: 2.5rem">
-        <span class="eyebrow">Foundation</span>
+        <span class="eyebrow">{{ c('foundation.foundation') }}</span
+        ><UntranslatedNote v-if="untranslated('foundation')" />
         <h2 class="section-title" style="font-size: clamp(1.6rem, 3vw, 2.1rem)">
-          What is the Shahada?
+          {{ c('foundation.whatIsTheShahada') }}
         </h2>
         <div class="prose">
           <p>
-            The Shahada (شَهَادَة, meaning "testimony") is the Islamic declaration of faith and the
-            first of the Five Pillars of Islam. It consists of two inseparable clauses — Tawhid (the
-            oneness of God) and Risala (the prophethood of Muhammad ﷺ).
+            {{ c('foundation.theShahadaMeaningTestimonyIsThe') }}
           </p>
           <p>
-            Pronouncing the Shahada with sincere belief and understanding is the entry point into
-            Islam. It is the foundation upon which all other acts of worship stand. A person who
-            dies believing in the Shahada is promised admission to Paradise (Sahih Bukhari 128).
+            {{ c('foundation.pronouncingTheShahadaWithSincereBelief')
+            }}<HadithRef text="Sahih Bukhari 128" />).
           </p>
         </div>
       </div>
 
-      <div class="hadith-block anim-target">
-        <div class="hadith-source">Sahih Bukhari 128 · Sahih Muslim 26</div>
-        <div class="hadith-text">
-          "Whoever dies knowing that there is no god but Allah will enter Paradise." — The Prophet
-          Muhammad ﷺ (narrated by Uthman ibn Affan RA)
-        </div>
-      </div>
+      <HadithBlock reference="Sahih Bukhari 128 · Sahih Muslim 26">
+        {{ c('foundation.whoeverDiesKnowingThatThereIs') }}
+      </HadithBlock>
 
       <div class="divider"></div>
 
       <!-- Two parts -->
-      <span class="eyebrow">The Two Clauses</span>
+      <span class="eyebrow">{{ c('theTwoClauses.theTwoClauses') }}</span
+      ><UntranslatedNote v-if="untranslated('theTwoClauses')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1.5rem"
       >
-        Understanding each part
+        {{ c('theTwoClauses.understandingEachPart') }}
       </h2>
       <div class="card-grid card-grid-2 anim-target">
         <div class="card card-green" style="border-color: #b0d8c4">
@@ -96,12 +91,12 @@
             لَا إِلَهَ إِلَّا اللَّهُ
           </div>
           <h3 style="font-family: var(--serif); margin-bottom: 0.5rem; color: var(--green)">
-            Lā ilāha illallāh
+            {{ c('theTwoClauses.lIlHaIllallH') }}
           </h3>
           <p style="font-size: 13.5px; color: var(--muted); line-height: 1.65">
-            There is no god but Allah. This is <strong>Tawhid</strong> — the absolute oneness and
-            uniqueness of God. It negates all false deities and affirms that worship belongs to
-            Allah alone.
+            {{ c('theTwoClauses.thereIsNoGodButAllah') }}
+            <strong>{{ c('theTwoClauses.tawhid') }}</strong>
+            {{ c('theTwoClauses.theAbsoluteOnenessAndUniquenessOf') }}
           </p>
         </div>
         <div class="card card-gold" style="border-color: #e0c87a">
@@ -119,12 +114,12 @@
             مُحَمَّدٌ رَسُولُ اللَّهِ
           </div>
           <h3 style="font-family: var(--serif); margin-bottom: 0.5rem; color: var(--gold)">
-            Muhammadun Rasūlullāh
+            {{ c('theTwoClauses.muhammadunRasLullH') }}
           </h3>
           <p style="font-size: 13.5px; color: var(--muted); line-height: 1.65">
-            Muhammad is the Messenger of Allah. This is <strong>Risala</strong> — the affirmation of
-            prophethood. It means accepting the Qur'an as revelation and Muhammad ﷺ as the seal of
-            all prophets.
+            {{ c('theTwoClauses.muhammadIsTheMessengerOfAllah') }}
+            <strong>{{ c('theTwoClauses.risala') }}</strong>
+            {{ c('theTwoClauses.theAffirmationOfProphethoodItMeans') }}
           </p>
         </div>
       </div>
@@ -132,16 +127,16 @@
       <div class="divider"></div>
 
       <!-- Seven conditions -->
-      <span class="eyebrow">Conditions of Validity</span>
+      <span class="eyebrow">{{ c('conditionsOfValidity.conditionsOfValidity') }}</span
+      ><UntranslatedNote v-if="untranslated('conditionsOfValidity')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        Seven conditions for the Shahada to be accepted
+        {{ c('conditionsOfValidity.sevenConditionsForTheShahadaTo') }}
       </h2>
       <p class="prose" style="margin-bottom: 1.5rem">
-        Scholars have extracted seven conditions from the Qur'an and Sunnah that must be met for the
-        Shahada to be valid — mere pronunciation without these is insufficient.
+        {{ c('conditionsOfValidity.scholarsHaveExtractedSevenConditionsFrom') }}
       </p>
       <div
         class="card-grid anim-target"
@@ -170,26 +165,29 @@
           >
             {{ c.title }}
           </h4>
-          <p style="font-size: 12.5px; color: var(--muted); line-height: 1.5">{{ c.desc }}</p>
+          <p style="font-size: 12.5px; color: var(--muted); line-height: 1.5">
+            <HadithRef :text="c.desc" />
+          </p>
         </div>
       </div>
 
       <div class="divider"></div>
 
       <!-- Tawhid -->
-      <span class="eyebrow">Tawhid — Divine Oneness</span>
+      <span class="eyebrow">{{ c('tawhidDivineOneness.tawhidDivineOneness') }}</span
+      ><UntranslatedNote v-if="untranslated('tawhidDivineOneness')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        The three dimensions of Tawhid
+        {{ c('tawhidDivineOneness.theThreeDimensionsOfTawhid') }}
       </h2>
 
       <QuranBlock
         arabic="قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ"
         reference="Qur'an 112:1–2"
-        translation="Say: He is Allah, [who is] One. Allah, the Eternal Refuge."
-        note="Surah Al-Ikhlas, described by the Prophet ﷺ as equal to one-third of the Qur'an in meaning (Sahih Bukhari 6267)."
+        :translation="c('tawhidDivineOneness.sayHeIsAllahWhoIs')"
+        :note="c('tawhidDivineOneness.surahAlIkhlasDescribedByThe')"
       />
 
       <div class="timeline anim-target" style="margin-top: 1.5rem">
@@ -197,7 +195,7 @@
           <div class="tl-marker">{{ t.num }}</div>
           <div class="tl-content">
             <h4>{{ t.title }}</h4>
-            <p>{{ t.desc }}</p>
+            <p><HadithRef :text="t.desc" /></p>
           </div>
         </div>
       </div>
@@ -205,33 +203,32 @@
       <div class="divider"></div>
 
       <!-- FAQ -->
-      <span class="eyebrow">Common Questions</span>
+      <span class="eyebrow">{{ c('commonQuestions.commonQuestions') }}</span
+      ><UntranslatedNote v-if="untranslated('commonQuestions')" />
       <h2 class="section-title" style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0">
-        FAQ
+        {{ c('commonQuestions.faq') }}
       </h2>
       <FaqList :faqs="faqs" />
 
       <!-- Six Articles of Faith card -->
       <div class="divider"></div>
-      <span class="eyebrow">Go deeper</span>
+      <span class="eyebrow">{{ c('goDeeper.goDeeper') }}</span
+      ><UntranslatedNote v-if="untranslated('goDeeper')" />
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
       >
-        The Six Articles of Faith (Arkan al-Iman)
+        {{ c('goDeeper.theSixArticlesOfFaithArkan') }}
       </h2>
       <p class="prose" style="margin-bottom: 1.5rem">
-        Alongside the Shahada, a Muslim must hold six fundamental beliefs — the pillars of Iman
-        defined in the Hadith of Jibril. They cover belief in Allah, the angels, the revealed
-        scriptures, the prophets, the Day of Judgement, and divine decree (Qadr).
+        {{ c('goDeeper.alongsideTheShahadaAMuslimMust') }}
       </p>
       <RouterLink to="/faith/articles" class="aof-teaser-card anim-target">
         <div class="aof-teaser-left">
           <div class="aof-teaser-badge">أركان الإيمان</div>
-          <h3 class="aof-teaser-title">The Six Articles of Faith</h3>
+          <h3 class="aof-teaser-title">{{ c('goDeeper.theSixArticlesOfFaith') }}</h3>
           <p class="aof-teaser-desc">
-            A full in-depth guide to each article — with Qur'anic evidence, scholarly explanation,
-            and key points for each belief.
+            {{ c('goDeeper.aFullInDepthGuideTo') }}
           </p>
           <div class="aof-teaser-pills">
             <span v-for="a in articlePreviews" :key="a" class="aof-teaser-pill">{{ a }}</span>
@@ -253,111 +250,44 @@
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
-        <h2>Continue to the second pillar</h2>
+        <h2>{{ c('goDeeper.continueToTheSecondPillar') }}</h2>
         <p>
-          Prayer (Salah) — five times daily, facing Makkah, the connection between servant and
-          Creator.
+          {{ c('goDeeper.prayerSalahFiveTimesDailyFacing') }}
         </p>
-        <RouterLink to="/prayer" class="btn btn-white btn-lg">Explore Salah →</RouterLink>
+        <RouterLink to="/prayer" class="btn btn-white btn-lg">{{
+          c('goDeeper.exploreSalah')
+        }}</RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/faith/en.js'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
+import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
+
+const { c, list, untranslated } = useContent('faith', content)
 
 useSeo('faith')
 useScrollReveal()
 
-const conditions = [
-  {
-    arabic: 'عِلْم',
-    title: '1. Knowledge',
-    desc: 'Knowing what the Shahada affirms and denies — understanding Tawhid.',
-  },
-  {
-    arabic: 'يَقِين',
-    title: '2. Certainty',
-    desc: 'Absolute conviction, free from doubt or wavering.',
-  },
-  {
-    arabic: 'إِخْلَاص',
-    title: '3. Sincerity',
-    desc: 'Pure intention for Allah alone, not for status or worldly gain.',
-  },
-  {
-    arabic: 'صِدْق',
-    title: '4. Truthfulness',
-    desc: 'The heart aligning with what the tongue declares.',
-  },
-  {
-    arabic: 'مَحَبَّة',
-    title: '5. Love',
-    desc: 'Loving Allah, His Messenger, and the obligations that come with the Shahada.',
-  },
-  {
-    arabic: 'اِنْقِيَاد',
-    title: '6. Submission',
-    desc: 'Outward compliance and submission to the implications of the declaration.',
-  },
-  {
-    arabic: 'قَبُول',
-    title: '7. Acceptance',
-    desc: 'Embracing everything the Shahada entails without rejection.',
-  },
-]
+const conditions = computed(() => list('conditions'))
 
-const tawhidDimensions = [
-  {
-    num: '1',
-    title: 'Tawhid al-Rububiyyah — Oneness of Lordship',
-    desc: 'The belief that Allah alone is the Creator, Sustainer, and Sovereign of all existence. No partner shares in His dominion.',
-  },
-  {
-    num: '2',
-    title: 'Tawhid al-Uluhiyyah — Oneness of Worship',
-    desc: 'All acts of worship — prayer, supplication, sacrifice, hope, fear, love — belong exclusively to Allah. Directing any of these to other than Allah is shirk.',
-  },
-  {
-    num: '3',
-    title: "Tawhid al-Asma' wa'l-Sifat — Oneness of Names & Attributes",
-    desc: "Allah's 99 names and attributes are affirmed as He described them in the Qur'an and Sunnah — without distortion, negation, asking how, or likening to creation.",
-  },
-]
+const tawhidDimensions = computed(() => list('tawhidDimensions'))
 
-const faqs = [
-  {
-    q: 'Can non-Muslims say the Shahada?',
-    a: 'Yes — saying the Shahada with sincere belief is what makes a person Muslim. There is no formal ceremony required, though it is recommended to do so in front of witnesses. Ghusl (ritual bath) is recommended after conversion.',
-  },
-  {
-    q: 'Does the Shahada need to be in Arabic?',
-    a: "The majority scholarly position is that understanding the meaning is essential, but the Arabic pronunciation is preferred as the authoritative form. Most scholars permit saying it in one's language initially, with learning the Arabic encouraged.",
-  },
-  {
-    q: 'What is shirk (association)?',
-    a: "Shirk is the act of associating partners with Allah in worship, lordship, or attributes — the opposite of Tawhid. The Qur'an describes it as the only sin that is not forgiven if one dies upon it without repentance (4:48).",
-  },
-  {
-    q: 'How many prophets were there?',
-    a: "The Qur'an mentions 25 prophets by name. Hadith literature mentions 124,000 prophets were sent throughout history. Muhammad ﷺ is the last and final prophet — no prophet comes after him.",
-  },
-]
+const faqs = computed(() => list('faqs'))
 
-const articlePreviews = [
-  'Allah',
-  'Angels',
-  'Scriptures',
-  'Prophets',
-  'Day of Judgement',
-  'Divine Decree',
-]
+const articlePreviews = computed(() => list('articlePreviews'))
 </script>
 
 <style scoped>

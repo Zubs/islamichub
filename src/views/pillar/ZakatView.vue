@@ -9,12 +9,11 @@
           class="pillar-num-badge"
           style="background: var(--zakat-light); color: var(--zakat-color)"
         >
-          Pillar 3 of 5 &nbsp;·&nbsp; الزكاة
+          {{ c('header.pillar3Of5') }}
         </div>
-        <h1>Zakat — Obligatory Almsgiving</h1>
+        <h1>{{ c('header.zakatObligatoryAlmsgiving') }}</h1>
         <p>
-          The third pillar — an annual 2.5% levy on zakatable wealth above the Nisab threshold,
-          obligatory on every Muslim who meets the conditions.
+          {{ c('header.theThirdPillarAnAnnual2') }}
         </p>
       </div>
     </div>
@@ -23,8 +22,8 @@
       <QuranBlock
         arabic="خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا"
         reference="Qur'an 9:103"
-        translation="Take from their wealth a charity by which you purify them and cause them increase."
-        note="The direct divine command establishing Zakat."
+        :translation="c('header.takeFromTheirWealthACharity')"
+        :note="c('header.theDirectDivineCommandEstablishingZakat')"
         style="max-width: 860px; margin-bottom: 2rem"
       />
 
@@ -41,35 +40,35 @@
           "
         >
           <div>
-            <div class="ctrl-label">Currency</div>
+            <div class="ctrl-label">{{ $t('zakat.currency') }}</div>
             <div class="btn-group">
               <button
                 v-for="c in currencies"
                 :key="c.code"
                 class="pill-btn"
                 :class="{ active: store.currency === c.code }"
-                @click="store.setCurrency(c.code, c.sym)"
+                @click="selectCurrency(c)"
               >
                 {{ c.sym }} {{ c.code }}
               </button>
             </div>
           </div>
           <div>
-            <div class="ctrl-label" style="text-align: right">Nisab method</div>
+            <div class="ctrl-label" style="text-align: end">{{ $t('zakat.nisabMethod') }}</div>
             <div class="btn-group">
               <button
                 class="pill-btn"
                 :class="{ active: store.nisabMethod === 'gold' }"
                 @click="store.setNisabMethod('gold')"
               >
-                Gold (85g)
+                {{ $t('zakat.gold85g') }}
               </button>
               <button
                 class="pill-btn"
                 :class="{ active: store.nisabMethod === 'silver' }"
                 @click="store.setNisabMethod('silver')"
               >
-                Silver (595g)
+                {{ $t('zakat.silver595g') }}
               </button>
             </div>
           </div>
@@ -85,7 +84,7 @@
           "
         >
           <div>
-            <div class="ctrl-label">Nisab threshold</div>
+            <div class="ctrl-label">{{ $t('zakat.nisabThreshold') }}</div>
             <span
               style="
                 font-family: var(--serif);
@@ -95,7 +94,7 @@
               "
               >{{ store.fmt(store.nisabValue) }}</span
             >
-            <span style="font-size: 12px; color: var(--muted); margin-left: 6px">
+            <span style="font-size: 12px; color: var(--muted); margin-inline-start: 6px">
               {{
                 store.nisabMethod === 'gold'
                   ? `85g × ${store.sym}${store.goldLocal.toFixed(2)}/g`
@@ -103,8 +102,8 @@
               }}
             </span>
           </div>
-          <div style="text-align: right">
-            <div class="ctrl-label">Gold price</div>
+          <div style="text-align: end">
+            <div class="ctrl-label">{{ $t('zakat.goldPrice') }}</div>
             <span>{{ store.sym }}{{ store.goldLocal.toFixed(2) }}/g</span>
           </div>
         </div>
@@ -113,7 +112,12 @@
           :rates-fetched="store.ratesFetched"
           :date="store.pricesDate"
           :loading="store.pricesLoading"
+          :custom="customMetals"
+          :saved="store.pricesSaved"
         />
+        <p v-if="store.currency === 'NGN'" class="rate-note">
+          {{ $t('zakat.nairaPricesUseTheOfficialExchange') }}
+        </p>
         <div
           style="
             font-size: 11.5px;
@@ -124,8 +128,7 @@
             padding-top: 8px;
           "
         >
-          Gold nisab: Hanafi/Shafi'i/Hanbali/Maliki majority — 85g of 24ct gold &nbsp;·&nbsp; Silver
-          nisab: Some Hanafi scholars — 595g silver (Sahih Bukhari 1454)
+          {{ $t('zakat.goldNisabHanafiShafiIHanbali') }}<HadithRef text="Sahih Bukhari 1454" />)
         </div>
       </div>
 
@@ -134,20 +137,20 @@
         <div>
           <!-- Cash -->
           <ZakatAccordion
-            title="Cash & Bank Savings"
-            sub="All liquid money you hold"
+            :title="$t('zakat.cashBankSavings')"
+            :sub="c('header.allLiquidMoneyYouHold')"
             icon="💵"
             icon-class="ai-teal"
             :total="store.fmt(zakat.cashTotal)"
             :start-open="true"
           >
             <template #reference
-              ><strong>Qur'an 9:103 · Sahih Bukhari 1454</strong> Cash and bank balances held above
-              Nisab for a full lunar year are zakatable at 2.5%.
+              ><strong>{{ $t('zakat.qurAn9103') }} <HadithRef text="Sahih Bukhari 1454" /></strong>
+              {{ $t('zakat.cashAndBankBalancesHeldAbove') }}
             </template>
             <div class="field-grid">
               <div class="field">
-                <label>Cash at home</label>
+                <label>{{ $t('zakat.cashAtHome') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -160,7 +163,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Current accounts</label>
+                <label>{{ $t('zakat.currentAccounts') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -173,7 +176,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Savings accounts</label>
+                <label>{{ $t('zakat.savingsAccounts') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -186,7 +189,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Foreign currency (converted)</label>
+                <label>{{ $t('zakat.foreignCurrencyConverted') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -203,19 +206,19 @@
 
           <!-- Money owed -->
           <ZakatAccordion
-            title="Money Owed To You"
-            sub="Loans given, expected income"
+            :title="$t('zakat.moneyOwedToYou')"
+            :sub="c('header.loansGivenExpectedIncome')"
             icon="💸"
             icon-class="ai-blue"
             :total="store.fmt(zakat.owedTotal)"
           >
             <template #reference
-              ><strong>Scholarly consensus (ijma') · Ibn Qudama, Al-Mughni</strong> Reliably
-              expected money is zakatable. Uncertain receivables: exclude until received.
+              ><strong>{{ $t('zakat.scholarlyConsensusIjmaIbnQudamaAl') }}</strong>
+              {{ $t('zakat.reliablyExpectedMoneyIsZakatableUncertain') }}
             </template>
             <div class="field-grid">
               <div class="field">
-                <label>Loans given (expected back)</label>
+                <label>{{ $t('zakat.loansGivenExpectedBack') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -228,7 +231,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Unpaid salary / income</label>
+                <label>{{ $t('zakat.unpaidSalaryIncome') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -243,7 +246,7 @@
             </div>
             <div class="field-grid field-grid-1">
               <div class="field">
-                <label>Other receivables</label>
+                <label>{{ $t('zakat.otherReceivables') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -260,28 +263,29 @@
 
           <!-- Gold & Silver -->
           <ZakatAccordion
-            title="Gold & Silver"
-            sub="Jewellery, bars, coins — priced per gram"
+            :title="$t('zakat.goldSilver')"
+            :sub="c('header.jewelleryBarsCoinsPricedPerGram')"
             icon="✦"
             icon-class="ai-amber"
             :total="store.fmt(zakat.metalsTotal)"
           >
             <template #reference
-              ><strong>Qur'an 9:34 · Abu Dawud 1558</strong> Gold and silver are zakatable. Hanafi:
-              worn women's ornaments exempt. Shafi'i/Hanbali/Maliki: all gold zakatable.
+              ><strong>{{ $t('zakat.qurAn934') }} <HadithRef text="Abu Dawud 1558" /></strong>
+              {{ $t('zakat.goldAndSilverAreZakatableHanafi') }}
             </template>
             <div class="metal-tiles">
               <div class="metal-tile">
-                <div class="mt-name">Gold · 24ct/gram</div>
+                <div class="mt-name">{{ $t('zakat.gold24ctGram') }}</div>
                 <div class="mt-price">
-                  {{ store.sym }}{{ store.goldLocal.toFixed(2) }}<span class="mt-unit"> /gram</span>
+                  {{ store.sym }}{{ store.goldLocal.toFixed(2)
+                  }}<span class="mt-unit"> {{ $t('zakat.gram') }}</span>
                 </div>
               </div>
               <div class="metal-tile">
-                <div class="mt-name">Silver · per gram</div>
+                <div class="mt-name">{{ $t('zakat.silverPerGram') }}</div>
                 <div class="mt-price">
                   {{ store.sym }}{{ store.silverLocal.toFixed(2)
-                  }}<span class="mt-unit"> /gram</span>
+                  }}<span class="mt-unit"> {{ $t('zakat.gram') }}</span>
                 </div>
               </div>
             </div>
@@ -290,19 +294,61 @@
               :rates-fetched="store.ratesFetched"
               :date="store.pricesDate"
               :loading="store.pricesLoading"
+              :custom="customMetals"
+              :saved="store.pricesSaved"
             />
             <div class="field-grid">
               <div class="field">
-                <label>Gold purity</label>
+                <label for="typed-gold">{{ $t('zakat.yourOwnGoldPricePerGram') }}</label>
+                <div class="pfx-wrap">
+                  <span class="pfx">{{ store.sym }}</span
+                  ><input
+                    id="typed-gold"
+                    type="text"
+                    inputmode="decimal"
+                    class="input-field"
+                    v-model.trim="typedPrice.gold"
+                    :aria-invalid="typedPriceRejected.gold"
+                    :placeholder="$t('zakat.usesTheFetchedPrice')"
+                    @input="applyTypedPrice('gold')"
+                  />
+                </div>
+                <div v-if="typedPriceRejected.gold" class="hint hint-error" role="alert">
+                  {{ $t('zakat.enterAPriceAboveZeroThe') }}
+                </div>
+              </div>
+              <div class="field">
+                <label for="typed-silver">{{ $t('zakat.yourOwnSilverPricePerGram') }}</label>
+                <div class="pfx-wrap">
+                  <span class="pfx">{{ store.sym }}</span
+                  ><input
+                    id="typed-silver"
+                    type="text"
+                    inputmode="decimal"
+                    class="input-field"
+                    v-model.trim="typedPrice.silver"
+                    :aria-invalid="typedPriceRejected.silver"
+                    :placeholder="$t('zakat.usesTheFetchedPrice')"
+                    @input="applyTypedPrice('silver')"
+                  />
+                </div>
+                <div v-if="typedPriceRejected.silver" class="hint hint-error" role="alert">
+                  {{ $t('zakat.enterAPriceAboveZeroThe') }}
+                </div>
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label>{{ $t('zakat.goldPurity') }}</label>
                 <select class="select-field" v-model.number="fields.goldPurity">
-                  <option :value="1">24ct — pure (99.9%)</option>
-                  <option :value="0.9167">22ct (91.7%)</option>
-                  <option :value="0.75">18ct (75%)</option>
-                  <option :value="0.375">9ct (37.5%)</option>
+                  <option :value="1">{{ $t('zakat.24ctPure999') }}</option>
+                  <option :value="0.9167">{{ $t('zakat.22ct917') }}</option>
+                  <option :value="0.75">{{ $t('zakat.18ct75') }}</option>
+                  <option :value="0.375">{{ $t('zakat.9ct375') }}</option>
                 </select>
               </div>
               <div class="field">
-                <label>Gold weight (grams)</label
+                <label>{{ $t('zakat.goldWeightGrams') }}</label
                 ><input
                   type="number"
                   class="input-field"
@@ -315,7 +361,7 @@
             </div>
             <div class="field-grid">
               <div class="field">
-                <label>Silver weight (grams)</label
+                <label>{{ $t('zakat.silverWeightGrams') }}</label
                 ><input
                   type="number"
                   class="input-field"
@@ -326,7 +372,7 @@
                 />
               </div>
               <div class="field">
-                <label>Known total value (optional)</label>
+                <label>{{ $t('zakat.knownTotalValueOptional') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -337,27 +383,26 @@
                     placeholder="0.00"
                   />
                 </div>
-                <div class="hint">Enter if you already know the total</div>
+                <div class="hint">{{ $t('zakat.enterIfYouAlreadyKnowThe') }}</div>
               </div>
             </div>
           </ZakatAccordion>
 
           <!-- Investments -->
           <ZakatAccordion
-            title="Investments & Shares"
-            sub="Stocks, ISAs, pensions, business assets"
+            :title="$t('zakat.investmentsShares')"
+            :sub="c('header.stocksIsasPensionsBusinessAssets')"
             icon="📈"
             icon-class="ai-purple"
             :total="store.fmt(zakat.investTotal)"
           >
             <template #reference
-              ><strong>AAOIFI Standard No. 35 · Sheikh al-Qaradawi</strong>
-              Shares: 2.5% of market value (simplified, widely accepted). Business trade goods: 2.5%
-              of current market value. Pension: include only if accessible.
+              ><strong>{{ $t('zakat.aaoifiStandardNo35SheikhAl') }}</strong>
+              {{ $t('zakat.shares25OfMarketValue') }}
             </template>
             <div class="field-grid">
               <div class="field">
-                <label>Shares / stocks (market value)</label>
+                <label>{{ $t('zakat.sharesStocksMarketValue') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -370,7 +415,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>ISAs / unit trusts</label>
+                <label>{{ $t('zakat.isasUnitTrusts') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -383,7 +428,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Business trade goods</label>
+                <label>{{ $t('zakat.businessTradeGoods') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -396,7 +441,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Pension (accessible only)</label>
+                <label>{{ $t('zakat.pensionAccessibleOnly') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -407,27 +452,26 @@
                     placeholder="0.00"
                   />
                 </div>
-                <div class="hint">Include only if currently withdrawable</div>
+                <div class="hint">{{ $t('zakat.includeOnlyIfCurrentlyWithdrawable') }}</div>
               </div>
             </div>
           </ZakatAccordion>
 
           <!-- Debts -->
           <ZakatAccordion
-            title="Debts & Liabilities"
-            sub="Deducted from your zakatable total"
+            :title="$t('zakat.debtsLiabilities')"
+            :sub="c('header.deductedFromYourZakatableTotal')"
             icon="➖"
             icon-class="ai-coral"
             :total="zakat.debtsTotal > 0 ? '−' + store.fmt(zakat.debtsTotal) : ''"
           >
             <template #reference
-              ><strong>Al-Nawawi (Shafi'i) · Al-Kasani (Hanafi)</strong> Immediate debts due within
-              the year reduce zakatable wealth. For mortgages: deduct only the current year's
-              instalment.
+              ><strong>{{ $t('zakat.alNawawiShafiIAlKasani') }}</strong>
+              {{ $t('zakat.immediateDebtsDueWithinTheYear') }}
             </template>
             <div class="field-grid">
               <div class="field">
-                <label>Loans owed (due this year)</label>
+                <label>{{ $t('zakat.loansOwedDueThisYear') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -440,7 +484,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Credit card balances</label>
+                <label>{{ $t('zakat.creditCardBalances') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -453,7 +497,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Overdue rent / bills</label>
+                <label>{{ $t('zakat.overdueRentBills') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -466,7 +510,7 @@
                 </div>
               </div>
               <div class="field">
-                <label>Other immediate debts</label>
+                <label>{{ $t('zakat.otherImmediateDebts') }}</label>
                 <div class="pfx-wrap">
                   <span class="pfx">{{ store.sym }}</span
                   ><input
@@ -487,22 +531,21 @@
         <div class="calc-sidebar">
           <div class="results-card">
             <div class="rc-header">
-              <span class="rc-title">Your Zakat</span>
-              <span class="rc-rate">2.5% · 1/40th</span>
+              <span class="rc-title">{{ $t('zakat.yourZakat') }}</span>
+              <span class="rc-rate">{{ $t('zakat.25140th') }}</span>
             </div>
             <div class="rc-body">
               <div class="hawl-warn">
-                ⚠ <strong>Hawl:</strong> Zakat is only due after your wealth has exceeded Nisab for
-                one complete lunar year (~354 days).
+                ⚠ <strong>{{ $t('zakat.hawl') }}</strong> {{ $t('zakat.zakatIsOnlyDueAfterYour') }}
               </div>
               <div class="result-box" :class="zakat.obligated ? 'result-due' : 'result-none'">
                 <div class="rb-label">
                   {{
                     zakat.obligated
-                      ? 'Zakat is due — 2.5% of net zakatable wealth:'
+                      ? $t('zakat.due')
                       : zakat.net > 0
-                        ? 'Below Nisab — no obligation this year'
-                        : 'Enter your assets to begin'
+                        ? $t('zakat.belowNisab')
+                        : $t('zakat.enterAssets')
                   }}
                 </div>
                 <div :class="zakat.obligated ? 'rb-amount' : 'rb-empty'">
@@ -510,7 +553,7 @@
                     zakat.obligated
                       ? store.fmt(zakat.zakatDue)
                       : zakat.net > 0
-                        ? 'Below threshold'
+                        ? $t('zakat.belowThreshold')
                         : '—'
                   }}
                 </div>
@@ -529,7 +572,7 @@
               >
                 <span>{{ store.fmt(0) }}</span>
                 <span>{{ store.fmt(store.nisabValue / 2) }}</span>
-                <span>{{ store.fmt(store.nisabValue) }} (Nisab)</span>
+                <span>{{ $t('zakat.nisab', { a: store.fmt(store.nisabValue) }) }}</span>
               </div>
               <div
                 v-for="row in breakdown"
@@ -551,16 +594,16 @@
       <!-- Education below calculator -->
       <div style="max-width: 860px; margin-top: 3rem">
         <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-        <span class="eyebrow">SCHOLARSHIP</span>
+        <span class="eyebrow">{{ c('scholarship.scholarship') }}</span
+        ><UntranslatedNote v-if="untranslated('scholarship')" />
         <h2
           class="section-title"
           style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 1rem"
         >
-          Who receives Zakat?
+          {{ c('scholarship.whoReceivesZakat') }}
         </h2>
         <p class="prose" style="margin-bottom: 1.5rem">
-          The Qur'an (9:60) identifies eight specific categories of Zakat recipients. Zakat cannot
-          be spent on general charity that doesn't fall within these groups.
+          {{ c('scholarship.theQurAn960Identifies') }}
         </p>
         <div
           class="card-grid anim-target"
@@ -577,7 +620,7 @@
             >
               {{ r.title }}
             </h4>
-            <p style="font-size: 12.5px; color: var(--muted)">{{ r.desc }}</p>
+            <p style="font-size: 12.5px; color: var(--muted)"><HadithRef :text="r.desc" /></p>
           </div>
         </div>
 
@@ -585,9 +628,11 @@
 
         <div class="cta-strip anim-target" style="margin-top: 2.5rem">
           <GeoPattern />
-          <h2>Continue to the fourth pillar</h2>
-          <p>Sawm — fasting during the blessed month of Ramadan.</p>
-          <RouterLink to="/fasting" class="btn btn-white btn-lg">Explore Fasting →</RouterLink>
+          <h2>{{ c('scholarship.continueToTheFourthPillar') }}</h2>
+          <p>{{ c('scholarship.sawmFastingDuringTheBlessedMonth') }}</p>
+          <RouterLink to="/fasting" class="btn btn-white btn-lg">{{
+            c('scholarship.exploreFasting')
+          }}</RouterLink>
         </div>
       </div>
     </div>
@@ -595,30 +640,62 @@
 </template>
 
 <script setup>
-import { reactive, computed, watch } from 'vue'
+import { useContent } from '@/composables/useContent.js'
+import UntranslatedNote from '@/components/UntranslatedNote.vue'
+import content from '@/data/content/zakat/en.js'
+import { reactive, computed, watch, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSeo } from '@/composables/useSeo.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import { useZakatStore } from '@/stores/zakat.js'
-import { calculateZakat } from '@/utils/zakat.js'
+import { calculateZakat, parseCustomPrice } from '@/utils/zakat.js'
 import { track } from '@/composables/useStats.js'
+import { t } from '@/i18n.js'
 import GeoPattern from '@/components/GeoPattern.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
 import ZakatAccordion from '@/components/ZakatAccordion.vue'
 import ZakatPriceStatus from '@/components/ZakatPriceStatus.vue'
 
+const { c, list, untranslated } = useContent('zakat', content)
+
 useSeo('zakat')
 useScrollReveal()
 
 const store = useZakatStore()
+onMounted(store.fetchPrices)
 
 const currencies = [
   { code: 'GBP', sym: '£' },
   { code: 'USD', sym: '$' },
   { code: 'EUR', sym: '€' },
   { code: 'SAR', sym: '﷼' },
+  { code: 'NGN', sym: '₦' },
 ]
+
+const typedPrice = reactive({ gold: '', silver: '' })
+const typedPriceRejected = reactive({ gold: false, silver: false })
+
+const customMetals = computed(() =>
+  ['gold', 'silver'].filter((metal) => store.customPerGram[metal] !== null),
+)
+
+function applyTypedPrice(metal) {
+  const price = parseCustomPrice(typedPrice[metal])
+  typedPriceRejected[metal] = price === undefined
+  if (price !== undefined) {
+    store.setCustomPrice(metal, price)
+  }
+}
+
+function selectCurrency(c) {
+  store.setCurrency(c.code, c.sym)
+  typedPrice.gold = ''
+  typedPrice.silver = ''
+  typedPriceRejected.gold = false
+  typedPriceRejected.silver = false
+}
 
 const fields = reactive({
   cashHome: 0,
@@ -652,56 +729,56 @@ const zakat = computed(() =>
 
 const breakdown = computed(() => [
   {
-    label: 'Cash & savings',
+    label: t('zakat.breakdown.cashSavings'),
     value: zakat.value.cashTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
-    label: 'Money owed',
+    label: t('zakat.breakdown.moneyOwed'),
     value: zakat.value.owedTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
-    label: 'Gold & silver',
+    label: t('zakat.breakdown.goldSilver'),
     value: zakat.value.metalsTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
-    label: 'Investments',
+    label: t('zakat.breakdown.investments'),
     value: zakat.value.investTotal,
     deduct: false,
     bold: false,
     highlight: false,
   },
   {
-    label: 'Gross zakatable',
+    label: t('zakat.breakdown.grossZakatable'),
     value: zakat.value.gross,
     deduct: false,
     bold: true,
     highlight: false,
   },
   {
-    label: 'Less: debts',
+    label: t('zakat.breakdown.lessDebts'),
     value: zakat.value.debtsTotal,
     deduct: true,
     bold: true,
     highlight: false,
   },
   {
-    label: 'Net zakatable',
+    label: t('zakat.breakdown.netZakatable'),
     value: zakat.value.net,
     deduct: false,
     bold: true,
     highlight: false,
   },
   {
-    label: 'Zakat due (2.5%)',
+    label: t('zakat.breakdown.zakatDue'),
     value: zakat.value.zakatDue,
     deduct: false,
     bold: true,
@@ -718,57 +795,20 @@ watch(zakat, (val) => {
   }
 })
 
-const recipients = [
-  {
-    title: '1. Al-Fuqara',
-    desc: 'The poor — little or no income',
-  },
-  {
-    title: '2. Al-Masakin',
-    desc: 'The needy — insufficient income',
-  },
-  {
-    title: '3. Al-Amilin',
-    desc: 'Zakat administrators',
-  },
-  {
-    title: "4. Al-Mu'allafah",
-    desc: 'Hearts to be reconciled to Islam',
-  },
-  {
-    title: '5. Ar-Riqab',
-    desc: 'Freeing of captives',
-  },
-  {
-    title: '6. Al-Gharimin',
-    desc: 'Overwhelmed by debt',
-  },
-  {
-    title: '7. Fi Sabilillah',
-    desc: 'In the cause of Allah',
-  },
-  {
-    title: '8. Ibn Al-Sabil',
-    desc: 'Stranded traveller',
-  },
-]
+const recipients = computed(() => list('recipients'))
 
-const faqs = [
-  {
-    q: 'What is the Nisab?',
-    a: 'Nisab is the minimum wealth threshold for Zakat to be obligatory. It is set at 85g of 24ct gold (majority position) or 595g of silver (some Hanafi scholars). If your net zakatable wealth stays above Nisab for one lunar year (hawl), Zakat becomes due.',
-  },
-  {
-    q: 'Is Zakat due on gold jewellery?',
-    a: "Debated. Hanafi: regularly worn women's personal ornaments are exempt. Shafi'i, Hanbali, Maliki: all gold and silver are zakatable. The cautious approach is to include all gold.",
-  },
-  {
-    q: 'Can I deduct my mortgage?',
-    a: "Most scholars allow deducting only the portion currently due (current year's instalment), not the full outstanding balance. Credit cards and short-term debts that are currently owed are deductible in full.",
-  },
-  {
-    q: 'What is the hawl?',
-    a: 'The hawl is the completion of one full Islamic lunar year (~354 days). Zakat becomes due only when your net zakatable wealth has remained above Nisab continuously for this period. If it dips below, the hawl resets.',
-  },
-]
+const faqs = computed(() => list('faqs'))
 </script>
+
+<style scoped>
+.rate-note {
+  margin: var(--space-2) 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.field .hint-error {
+  color: var(--red);
+}
+</style>

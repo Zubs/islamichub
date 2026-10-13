@@ -1,5 +1,6 @@
 // Prayer time calculation using the standard astronomical formulas
-// Methods: MWL, ISNA, Egypt, Makkah, Karachi, Tehran, Jafari
+// Methods: MWL, ISNA, Egypt, Makkah, Karachi
+// Asr: standard (shadow equal to the object's length) or hanafi (twice its length)
 
 const DEG = Math.PI / 180
 const RAD = 180 / Math.PI
@@ -103,6 +104,10 @@ const METHODS = {
   },
 }
 
+export const PRAYER_METHODS = Object.keys(METHODS)
+
+export const ASR_SHADOW_FACTORS = { standard: 1, hanafi: 2 }
+
 /**
  * Calculate prayer times for a given date and location
  * @param {number} lat - latitude
@@ -110,9 +115,10 @@ const METHODS = {
  * @param {Date}   date
  * @param {number} timezone - UTC offset in hours
  * @param {string} method - calculation method key
+ * @param {string} asrMethod - 'standard' or 'hanafi'
  * @returns {{ fajr, sunrise, dhuhr, asr, maghrib, isha }} times in HH:MM
  */
-export function calcPrayerTimes(lat, lng, date, timezone, method = 'MWL') {
+export function calcPrayerTimes(lat, lng, date, timezone, method = 'MWL', asrMethod = 'standard') {
   const m = METHODS[method] || METHODS.MWL
   const jd = julianDate(date.getFullYear(), date.getMonth() + 1, date.getDate()) - lng / 360
   const { decl, eqt } = sunPosition(jd)
@@ -122,9 +128,8 @@ export function calcPrayerTimes(lat, lng, date, timezone, method = 'MWL') {
   const fajr = noon - hourAngle(-m.fajr, decl, lat)
   const isha = m.ishaMin ? sunset + m.isha / 60 : noon + hourAngle(-m.isha, decl, lat)
 
-  // Asr (Shafi'i: shadow = object + 1; Hanafi: shadow = object + 2)
   // Altitude angle is positive (sun above horizon), so no negation here.
-  const asrFactor = 1 // 1 = Shafi'i, 2 = Hanafi
+  const asrFactor = ASR_SHADOW_FACTORS[asrMethod] ?? ASR_SHADOW_FACTORS.standard
   const asrAngle = RAD * Math.atan(1 / (asrFactor + tanD(Math.abs(lat - decl))))
   const asr = noon + hourAngle(asrAngle, decl, lat)
   const toHHMM = (h) => {

@@ -2,11 +2,22 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { TASBIH_PHRASES, getPhrase } from '@/data/tasbihPhrases.js'
 import { dayKey } from '@/utils/day.js'
-import { parseStoredObject } from '@/utils/storage.js'
+import { parseStoredObject, keepEntries, isPlainObject } from '@/utils/storage.js'
 import { track } from '@/composables/useStats.js'
 
 const CURRENT_KEY = 'tasbih-current-phrase'
 const TOTALS_KEY = 'tasbih-totals' // { [date]: { [phraseId]: count } }
+
+function isCount(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0
+}
+
+function readTotals() {
+  const days = keepEntries(parseStoredObject(localStorage.getItem(TOTALS_KEY)), isPlainObject)
+  return Object.fromEntries(
+    Object.entries(days).map(([day, counts]) => [day, keepEntries(counts, isCount)]),
+  )
+}
 
 export const useTasbihStore = defineStore('tasbih', () => {
   const phrases = TASBIH_PHRASES
@@ -15,7 +26,7 @@ export const useTasbihStore = defineStore('tasbih', () => {
   const currentId = ref(localStorage.getItem(CURRENT_KEY) || phrases[0].id)
   const count = ref(0) // current session count for the active phrase
   const target = ref(getPhrase(currentId.value).defaultTarget)
-  const totals = ref(parseStoredObject(localStorage.getItem(TOTALS_KEY))) // persisted per-day, per-phrase totals
+  const totals = ref(readTotals()) // persisted per-day, per-phrase totals
 
   const currentPhrase = computed(() => getPhrase(currentId.value))
 
@@ -88,6 +99,7 @@ export const useTasbihStore = defineStore('tasbih', () => {
 
   return {
     phrases,
+    totals,
     currentId,
     currentPhrase,
     count,

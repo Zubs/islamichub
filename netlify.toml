@@ -2,6 +2,34 @@
 command = "npm test && npm run build"
 publish = "dist"
 
+[functions]
+directory = "netlify/functions"
+
+# ── Hadith proxy — keeps the API key on the server; must come before the SPA rule ──
+[[redirects]]
+from = "/api/hadith/*"
+to = "/.netlify/functions/hadith/:splat"
+status = 200
+
+# ── Push notifications — saves and deletes a device's opt-in record ────────────
+[[redirects]]
+from = "/api/push"
+to = "/.netlify/functions/push"
+status = 200
+
+# ── Link previews — titles and images for hadith, dua and adhkar links ──────────
+[[edge_functions]]
+function = "link-preview"
+path = "/hadith/books/*"
+
+[[edge_functions]]
+function = "link-preview"
+path = "/duas/*"
+
+[[edge_functions]]
+function = "link-preview"
+path = "/adhkar/*"
+
 # ── SPA redirect — all paths serve index.html ────────────────────────────────
 # Required for Vue Router createWebHistory (clean URLs like /zakat, not #/zakat)
 [[redirects]]
@@ -18,7 +46,7 @@ X-Content-Type-Options = "nosniff"
 X-XSS-Protection = "1; mode=block"
 Referrer-Policy = "strict-origin-when-cross-origin"
 Permissions-Policy = "geolocation=(self), camera=(), microphone=(), payment=()"
-Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://hadithapi.com https://cdn.jsdelivr.ne3t https://latest.currency-api.pages.dev https://nominatim.openstreetmap.org https://islamichub.goatcounter.com; img-src 'self' https://avatars.githubusercontent.com data:; frame-ancestors 'none';"
+Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net https://latest.currency-api.pages.dev https://nominatim.openstreetmap.org https://islamichub.goatcounter.com; img-src 'self' https://avatars.githubusercontent.com data:; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none';"
 
 # ── Long cache for Vite-hashed assets (/assets/xxx.abc123.js) ────────────────
 [[headers]]
@@ -50,7 +78,17 @@ for = "/service-worker.js"
 Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
-for = "/site.webmanifest"
+for = "/sw-legacy.js"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/sw-notifications.js"
+[headers.values]
+Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+for = "/manifest.webmanifest"
 [headers.values]
 Cache-Control = "public, max-age=86400"
 Content-Type = "application/manifest+json"

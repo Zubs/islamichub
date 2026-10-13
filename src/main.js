@@ -4,6 +4,8 @@ import { createHead } from '@unhead/vue/client'
 
 import App from './App.vue'
 import router from './router/index.js'
+import { i18n } from './i18n.js'
+import { startPwa } from './composables/usePwa.js'
 
 import './assets/css/tokens.css'
 import './assets/css/base.css'
@@ -17,5 +19,10 @@ const head = createHead()
 app.use(pinia)
 app.use(router)
 app.use(head)
+app.use(i18n)
 
 app.mount('#app')
+
+if (import.meta.env.PROD) {
+  startPwa()
+}

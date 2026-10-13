@@ -39,12 +39,14 @@ a browsable hadith library.
 | Head / SEO   | `@unhead/vue`                                                     |
 | Styling      | Global CSS with custom properties; scoped styles inside views     |
 | Lint/format  | oxlint, ESLint (`eslint-plugin-vue`), Prettier                    |
+| Offline      | `vite-plugin-pwa` (workbox)                                       |
+| Translation  | `vue-i18n`; messages in `src/locales/`                            |
 | Testing      | Vitest with Vue Test Utils and jsdom; tests sit beside their code |
 | Hosting      | Netlify (`npm test && npm run build` → `dist/`)                   |
 | Node         | `^20.19.0 \|\| >=22.12.0`                                         |
 
-There is no TypeScript. The app is currently client-only; a backend is not ruled out (see
-[Backend](#backend-open)).
+There is no TypeScript. Server-side code is limited to Netlify Functions, added only where a feature needs one (see
+[Server-side code](#server-side-code)).
 
 ### Scripts
 
@@ -62,10 +64,11 @@ There is no TypeScript. The app is currently client-only; a backend is not ruled
 
 | Variable              | Required | Purpose                                              |
 |-----------------------|----------|------------------------------------------------------|
-| `VITE_HADITH_API_KEY` | For the hadith library | API key for hadithapi.com. Without it the library views show a "no API key" state instead of fetching. |
+| `HADITH_API_KEY` | For the hadith library | API key for hadithapi.com, read only by the server-side proxy. Without it the proxy answers "not configured" and the library views show a "no API key" state. |
+| `VITE_VAPID_PUBLIC_KEY` | For push notifications | The public Web Push key, read by the site and the server. Without it the push switch is not offered. |
+| `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | For push notifications | The private key and a contact address (`mailto:…`), read only by the server. `node scripts/make-vapid-keys.js` makes a pair. |
 
-Copy `.env.example` to `.env` to set it. `.env` is git-ignored. Because the variable is `VITE_`-prefixed it is compiled into the client bundle and is visible to
-anyone who loads the site.
+Copy `.env.example` to `.env` to set it for `netlify dev`. `.env` is git-ignored. The key is never compiled into the client bundle: `test/build.test.js` builds the site with a key set and fails if it appears in any built file.
 
 ---
 
@@ -88,7 +91,8 @@ src/
   utils/                prayer, qibla, hijri, inheritance, zakat, day, storage (pure functions, no Vue imports)
   data/                 adhkar, tasbihPhrases (static content)
   assets/css/           tokens, base, components, ornament
-public/                 robots.txt, sitemap.xml, favicons, service-worker.js (retires the old app's worker)
+public/                 robots.txt, sitemap.xml, favicons, app icons, og-image.png, sw-legacy.js (clears the old app's cache), sw-notifications.js (opens a tapped reminder)
+scripts/                make-icons.py (draws the app icons)
 netlify.toml            Build, SPA redirect, security and cache headers
 ```
 
@@ -98,23 +102,39 @@ netlify.toml            Build, SPA redirect, security and cache headers
   stores.
 - **`data/`** holds static religious content. Content changes should not require touching view logic.
 - **`stores/`** own state that is shared across views or persisted. View-local form state stays in the view.
-- **Views** compose the above and call `useSeo` (or `useHead` directly for dynamic titles) and `useScrollReveal`.
+- **Views** compose the above and call `useSeo` and `useScrollReveal`.
 
 ### App shell behaviour
 
-- On mount, `App.vue` calls `zakat.fetchPrices()` and shows a full-screen Bismillah loading screen until it settles,
-  with a minimum display time of 2 seconds.
+- `App.vue` shows a full-screen Bismillah loading screen only until the first route is ready to draw
+  (`router.isReady()`), with no minimum time. It waits for no outside service.
+- Prices are requested by the Zakat page when it opens, once per visit; no other page requests them.
 - Route changes use an `out-in` fade keyed on `route.path`.
 - Navigation scrolls to the top instantly, except on back/forward, where the saved position is restored.
 
-### Backend (open)
+### Server-side code
 
-The project is open to adding a backend; none exists yet, and its shape is undecided. Things in the current code that
-would benefit from one:
+Server-side code lives in `netlify/functions/` and is added only where a feature calls for it.
 
-- Proxying hadithapi.com so the API key stays out of the client bundle.
-- Proxying and caching metal prices and FX rates, so there is one consistent rate base and fewer third-party failures.
-- Optional sync of adhkar streaks and tasbih totals across devices.
+- **`hadith.js`** serves `/api/hadith/*` (a rewrite in `netlify.toml`, placed before the SPA rule). It forwards three
+  read requests to hadithapi.com with `HADITH_API_KEY` added: `books`, `<book>/chapters`, and `hadiths` with only
+  `book`, `chapter`, `hadithNumber`, `page` and `paginate` (at most 100). Anything else is rejected without an upstream
+  call. Successful replies are cacheable for a day; errors are `no-store`, written by the proxy and never contain the
+  key. The upstream call is abandoned after nine seconds. With no key it answers 503 `not_configured`.
+- `netlify dev` runs functions locally. Plain `npm run dev` has no proxy.
+
+- **`push.js`** serves `/api/push`. `POST` saves or replaces one record per device in the Netlify Blobs store
+  `push-subscriptions`, keyed by the SHA-256 of the subscription's endpoint; `DELETE` with the endpoint removes it.
+  `lib/pushRecords.js` validates the request (at most 4 KB; an https endpoint and keys; a possible location; a known
+  method, Asr method, timezone and reminders) and rounds the coordinates to two decimal places itself, whatever was
+  sent. A record holds the subscription, rounded coordinates, timezone, the two methods, the chosen reminders and
+  which reminders were sent on which local day. Nothing else.
+- **`push-send.js`** runs every minute. For each record it works out the device's local time with `Intl` and its prayer
+  times with `utils/prayer.js`, and sends a push for each chosen reminder that is 0 to 3 minutes past its time and not
+  yet sent that day. A subscription the push service answers 404 or 410 for is deleted. `lib/webPush.js` builds the
+  VAPID token and encrypts the payload (RFC 8291) with Node's `crypto`; no push library is used.
+
+Still open: proxying and caching metal prices and exchange rates, and optional sync of streaks and totals across devices.
 
 ---
 
@@ -132,9 +152,17 @@ would benefit from one:
 | `/hadith`                                 | `hadith`            | HadithHomeView        |
 | `/hadith/books`                           | `hadith-books`      | HadithBooksView       |
 | `/hadith/books/:bookSlug`                 | `hadith-book`       | HadithBookView        |
+| `/hadith/books/:bookSlug/hadith/:hadithNumber` | `hadith-single` | HadithView          |
 | `/hadith/books/:bookSlug/:chapterNumber`  | `hadith-chapter`    | HadithChapterView     |
 | `/adhkar`                                 | `adhkar`            | AdhkarHomeView        |
 | `/adhkar/:categorySlug`                   | `adhkar-category`   | AdhkarCategoryView    |
+| `/duas`                                   | `duas`              | DuasHomeView          |
+| `/duas/:situationSlug`                    | `duas-situation`    | DuasSituationView     |
+| `/eid`                                    | `eid`               | EidView               |
+| `/prophets`                               | `prophets`          | ProphetsHomeView      |
+| `/prophets/:slug`                         | `prophet`           | ProphetView           |
+| `/qurbani`                                | `qurbani`           | QurbaniView           |
+| `/tracker`                                | `tracker`           | TrackerView           |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
 | `/about`                                  | `about`             | AboutView             |
@@ -158,9 +186,19 @@ Requirements:
 - Arabic text is marked `lang="ar"`, rendered right-to-left in the Arabic typeface.
 - Every verse and hadith shows its reference (surah:ayah, or collection + Arabic-edition number).
 
+### 5.1a Today panel (home page)
+
+`TodayPanel.vue` sits near the top of the home page and shows the user's day from the stores that already hold it: the
+next prayer and its countdown (from `prayer-settings`, with the same functions as the Prayer page), today's five prayers
+and their statuses, the adhkar categories completed today, today's tasbih total across all phrases, the daily hadith,
+and, in Ramadan only, today's fast. Each tile links to its full page; the next-prayer tile links to the tracker. A part
+with nothing to show offers a way to start, and a visitor with no saved location is pointed to the Prayer page. The
+panel stores nothing and makes no request. A minute tick updates the countdown and resets the panel at local midnight.
+Its grid is one column on a narrow screen.
+
 ### 5.2 Prayer times (`/prayer`)
 
-Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset, and method.
+Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset, method and Asr option.
 
 - **Outputs:** Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha as `HH:MM` in the device's timezone.
 - **Methods:**
@@ -175,11 +213,18 @@ Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset
 
   Default is `MWL`; an unknown key falls back to `MWL`.
 - **Sunrise/Maghrib** use a sun altitude of −0.833°.
-- **Asr** uses the standard (Shafi'i) shadow factor of 1.
+- **Asr** takes an option: `standard` (shadow factor 1, the default, followed by the Shafi'i, Maliki and Hanbali
+  schools) or `hanafi` (shadow factor 2). An unknown option falls back to `standard`. The Prayer page has a selector
+  for it beside the calculation method; changing either recalculates times that are already shown. The Fasting page
+  is unaffected.
 - **Next prayer:** `getNextPrayer` returns the next upcoming time and minutes remaining; after Isha it returns
   tomorrow's Fajr. The countdown must recompute on each tick rather than cache the first value.
 - **Location** comes from the browser Geolocation API (10 s timeout), reverse-geocoded to a place name via Nominatim.
   If permission is denied, the user is told to enter coordinates manually.
+- **Coordinates** are accepted from −90 to 90 latitude and −180 to 180 longitude.
+- **Saved settings:** once times are shown, the page offers "Remember this location". Accepting saves the location,
+  method and Asr method through `stores/prayerSettings.js`; later visits to the Prayer and Fasting pages show times
+  without asking, and a change of method is remembered. `utils/prayerSettings.js` validates what is read.
 
 ### 5.3 Qibla (`/prayer`)
 
@@ -214,17 +259,23 @@ zakat due  = net × 2.5%   if net ≥ nisab, otherwise 0
 
 The page shows a line-by-line breakdown, whether Zakat is obligatory and progress toward the nisab (capped at 100%).
 
-**Currencies:** GBP (default), USD, EUR, SAR. Amounts are formatted to two decimals with the currency symbol.
+**Currencies:** GBP (default), USD, EUR, SAR, NGN. Amounts are formatted with the currency symbol, thousands separators
+and two decimals. Naira prices use the official exchange rate, and the page says so when naira is selected.
+
+**Typed prices:** the user can type their own price per gram for gold and for silver in the selected currency. A typed
+price replaces the fetched one for both the calculation and the nisab, and the page marks it as in use. Zero, a negative
+number or text is rejected and the fetched price kept. Typed prices are cleared when the currency changes and are never
+stored or sent.
 
 **Prices:** `stores/zakat.js` fetches one daily dataset that holds gold, silver and the exchange rates on a US dollar
 base. Metal prices are kept in dollars per troy ounce and rates as units per dollar, and `pricePerGram(metal, currency)`
 is the only conversion: dollars per ounce ÷ 31.1035 × the currency's rate. The dataset is tried at jsDelivr and then at
 its mirror, each with a six-second limit. A price or rate is used only if it is a positive number; rates are used only
-when all four are valid. Otherwise the built-in reference values are used (gold $4,186.27 and silver $60.83 per ounce,
-GBP 0.7555, EUR 0.8928, SAR 3.75, dated 12 October 2026). Metals and rates are flagged separately (`metalsFetched`,
+when all five are valid. Otherwise the built-in reference values are used (gold $4,186.27 and silver $60.83 per ounce,
+GBP 0.7555, EUR 0.8928, SAR 3.75, NGN 1,331.59, dated 12 October 2026). Metals and rates are flagged separately (`metalsFetched`,
 `ratesFetched`), and the page states which are in use and the date the prices are from.
 
-The arithmetic lives in `utils/zakat.js` (`calculateZakat`, `nisabFor`, `perGram`, `parsePrices`). Net wealth is
+The arithmetic lives in `utils/zakat.js` (`calculateZakat`, `nisabFor`, `perGram`, `parsePrices`, `parseCustomPrice`). Net wealth is
 compared with the nisab to the penny.
 
 Nothing entered into the calculator is persisted or transmitted.
@@ -236,21 +287,62 @@ Nothing entered into the calculator is persisted or transmitted.
 - Days until Ramadan, or an "it is Ramadan" state when the Hijri month is 9.
 - Suhoor and Iftar times derived from Fajr and Maghrib for the user's location, with a fasting-progress bar.
 
+**Fasting tracker.** `FastingTracker.vue`, on the Fasting page, records one status per local day in `fasting-log`
+(`stores/fasting.js`): fasted or missed for a day inside Ramadan, made up or voluntary for a day outside it. Rules live
+in `utils/fasting.js`.
+
+- Ramadan's first day is estimated by `firstDayOfHijriMonth` in `utils/hijri.js`, and the user can set it themselves
+  (`ramadan-starts`, per Hijri year), since the estimate can be a day out. Moving it moves the 30-day grid and keeps
+  every logged day.
+- In Ramadan the tracker opens on that Ramadan's 30 days; outside it, on the current month, with the most recent
+  Ramadan one tap away. Future days cannot be logged.
+- **Still to make up**, per Ramadan year: days marked missed, less made-up fasts logged between the end of that Ramadan
+  and the start of the next, never below zero. The page shows each year and the total. Voluntary fasts are counted
+  separately.
+- Nothing leaves the device. Unreadable stored data is treated as empty.
+
 ### 5.6 Hadith library (`/hadith/*`)
 
 - `/hadith` — educational overview: what hadith is, isnad, grades, major scholars.
-- `/hadith/books` — nine collections from static `BOOKS_META`: Sahih al-Bukhari, Sahih Muslim, Jami' al-Tirmidhi,
+- `/hadith/books` — nine collections from static `BOOKS_META` (`data/hadithBooks.js`, which has no imports because the
+  link-preview edge function reads it too; Netlify bundles functions without Vite, so nothing under `netlify/` may
+  reach a file that uses the `@` alias or `import.meta.env`, and `test/server-imports.test.js` checks this): Sahih al-Bukhari, Sahih Muslim, Jami' al-Tirmidhi,
   Sunan Abu Dawood, Sunan Ibn Majah, Sunan an-Nasa'i, Mishkat al-Masabih, Musnad Ahmad, Al-Silsila al-Sahiha. Each
   shows the author, death date, grade, hadith count, and a description.
-- `/hadith/books/:bookSlug` — chapter list fetched from hadithapi.com.
+- `/hadith/books/:bookSlug` — chapter list fetched from hadithapi.com through the proxy.
 - `/hadith/books/:bookSlug/:chapterNumber` — hadiths in the chapter, 25 per page, with:
   - numbered pagination with ellipsis (all pages shown when there are 7 or fewer),
   - previous/next chapter links,
   - a grade badge per hadith (Sahih, Hasan, Da'eef, Mawdu', or neutral for unknown),
   - expand/collapse per hadith,
   - copy to clipboard as `<English text>\n\n— <Book name>, Hadith <number>`.
+  - a link from each hadith's number to its own page.
+- `/hadith/books/:bookSlug/hadith/:hadithNumber` — one hadith: Arabic text, English text, narrator where given, grade,
+  book and chapter; Copy (the same text as the chapter list) and Share (the device's share sheet with the canonical
+  address, or the address copied where there is none); links to the previous and next hadith and back to its chapter.
+  The first hadith has no previous link, and the last (the book's `hadithCount` in `BOOKS_META`) no next link. An
+  unknown book, a number that is not a whole positive number, or a number with no hadith shows "Hadith not found",
+  marked `noindex`; a failed request shows an error with a retry button. Title and description come from the hadith.
+  `utils/hadith.js` holds what this page and the chapter list share (address, copy text, grade badge).
 
-Views must handle three non-happy states: no API key configured, request in flight, and request failed.
+**Citations.** Every hadith reference on the site is written as a collection name and Arabic-edition number and
+rendered through `HadithRef` (inline text) or `HadithBlock` (a quoted hadith with its source line). `utils/hadithRefs.js`
+parses the text: a reference to a collection the library holds becomes a link to its single-hadith page, and anything
+else stays text. `data/hadithNumbering.js` maps cited numbers to library numbers where they differ; Sahih Muslim is
+cited by the 'Abd al-Baqi numbering while the library counts its narrations sequentially, so every Sahih Muslim
+reference has an entry (provisional until confirmed against the library). `test/citations.test.js` opens every page and
+fails on a reference left as plain text; `test/citations.live.test.js`, given `CITATIONS_BASE`, requests every cited
+hadith through the proxy.
+
+Views must handle these non-happy states: no API key configured on the server, request in flight, request failed, and
+offline with nothing saved.
+
+**Daily hadith.** `data/dailyHadith.js` holds 67 short hadiths from Sahih al-Bukhari, each with its text (copied word
+for word from the open fawazahmed0/hadith-api dataset), narrator and reference. `dailyHadithFor(dayKey, list)` in
+`utils/dailyHadith.js` picks one from the local day key, so every visitor sees the same hadith on the same date, it
+changes at local midnight, and the list starts again after its last entry. `DailyHadith.vue` shows it on the home page
+in a `HadithBlock`, whose reference links to the hadith in the library. It makes no request, so it works offline; an
+empty list renders nothing.
 
 ### 5.7 Adhkar (`/adhkar`, `/adhkar/:categorySlug`)
 
@@ -271,12 +363,124 @@ A dhikr may belong to several categories.
 Behaviour (`stores/adhkar.js`):
 
 - **Tap to count.** Each tap on a card increments its count toward `repeat`. Tapping once more after reaching the
-  target resets it to 0. Counts are held in memory for the session only.
+  target resets it to 0. Counts are saved for the day under `adhkar-progress` and restored on reload.
 - **Complete a category.** Marks the category done for today, records it in the completion log, and clears the
   session counts for that category's adhkar. Completing twice in one day is a no-op.
 - **Streak.** The number of consecutive days, counting back from today, on which the category was completed. A streak
   is zero if today is not yet complete.
 - **Today** is the device's local calendar day (see [State and persistence](#6-state-and-persistence)).
+
+### 5.7a Duas (`/duas`, `/duas/:situationSlug`)
+
+Static content from `data/duas.js`: 46 supplications across ten situations (travel, eating, home, mosque, clothing,
+weather, distress, illness, forgiveness, parents and family), in the shape of the adhkar plus a title, a "when to say
+it" line and one or more situations. Arabic text is copied from its source (the Qur'an text, or the Arabic of the cited
+hadith), never typed from memory.
+
+- `/duas` lists each situation that has duas, with its count, and has a search box. `searchDuas` in `utils/duas.js`
+  matches English text, transliteration and situation names, ignoring case and the marks used in transliteration.
+  Results link to the dua's anchor. No matches shows "No duas found" with a button to clear the search.
+- `/duas/:situationSlug` shows the situation's duas as `AdhkarCard`s. A dua said once has no counter; one with a count
+  keeps its counter, saved with the day's adhkar progress under `dua:<id>`. A dua in two situations appears under both.
+  An unknown situation shows the 404 page at the same address.
+- Every card has `id="<dua id>"`, and the router scrolls to a hash after the page transition, so
+  `/duas/travel#farewell` opens on that dua.
+- References go through `HadithRef`: hadith references link to the library, Qur'an references are text.
+
+### 5.7b Prayer tracker (`/tracker`)
+
+Records each of the five daily prayers per local day as on time, late or missed; a prayer with no status is "not
+logged". `stores/salah.js` owns the log (`salah-log`), and `utils/salah.js` holds every rule.
+
+- Today's five prayers each have three one-tap status buttons. Choosing the status a prayer already has clears it.
+- **Streak:** consecutive days on which all five were marked on time or late. Today counts once all five are logged; a
+  missed prayer today makes the streak zero; otherwise counting starts from yesterday while today is in progress. A
+  past day with fewer than five logged, or with a missed prayer, ends the streak.
+- A seven-day strip and a month view (Monday first) show each day as complete, partly logged, a prayer missed, or empty,
+  and select the day shown. Past days can be edited; future days cannot be selected or logged.
+- With a saved location (`prayer-settings`), today's prayers show their times and a prayer whose time has not arrived is
+  marked "not yet" and cannot be logged.
+- "Clear my data" removes the log after a confirmation. Unreadable stored data, and unknown days, prayers or statuses,
+  are ignored.
+- Nothing leaves the device. The installed app has a Tracker shortcut.
+
+### 5.7c Eid (`/eid`)
+
+A guide to Eid al-Fitr and Eid al-Adha, awaiting scholarly review.
+
+- It is the first page written section by section. `data/eidSections.js` holds what every language shares: the order
+  and kind of each section, the Arabic and the references. `data/content/eid/en.js` holds the words under the same
+  section ids, so a translation supplies words only. `ContentSections.vue` draws the kinds: prose, verse, hadith,
+  points (numbered when ordered), positions (two views side by side), recitation (Arabic, transliteration and
+  translation) and FAQ. A section with no translation is shown in English with the usual note.
+- Sections: what the two Eids are, the hadith of their origin, the sunnahs of the day, the Eid prayer in six steps, the
+  extra takbirs, the takbirat, Zakat al-Fitr (with links to the Zakat and Fasting pages) and four questions.
+- The number of extra takbirs is shown as two positions with their evidence, seven and five (Abu Dawud 1149, 1151) and
+  four as in the funeral prayer (Abu Dawud 1153), without preferring either.
+- Every section carries a reference, and every hadith reference links to the library. The page cites only collections
+  the library holds. The wording of the takbirat is the one widely recited; its source is not in those collections, and
+  the page says that it awaits confirmation.
+- **Countdown:** `utils/eid.js` places Eid al-Fitr on 1 Shawwal and Eid al-Adha on 10 Dhul Hijjah with
+  `firstDayOfHijriMonth`, and `nextEid` gives whichever comes next, with the days remaining. On the day itself the page
+  shows a greeting in place of the countdown. The dates are calculated and can differ from the announced date by a day,
+  and the page says to follow the local moon sighting.
+
+### 5.7d Qurbani (`/qurbani`)
+
+A guide to the Eid al-Adha sacrifice, awaiting scholarly review. It is written as sections like the Eid page:
+`data/qurbaniSections.js` for the structure, Arabic and references, `data/content/qurbani/en.js` for the words.
+
+- Sections: what the sacrifice is, its origin in the story of Ibrahim (Qur'an 37:102 to 37:107), who it is due on, the
+  ruling, which animals qualify, when it can be done, shares, how the meat is shared, how it is carried out, and four
+  questions.
+- Two differences between the schools are shown as two positions each, without preferring either: obligatory (Hanafi;
+  Ibn Majah 3123, Qur'an 108:2) or a confirmed sunnah (Maliki, Shafi'i, Hanbali; Abu Dawud 2791, Al-Tirmidhi 1506), and
+  three days or four.
+- The page says plainly where a source could not be checked: the minimum ages of the animals (from the books of fiqh),
+  and the report in Musnad Ahmad used for four days. The report of Ibn Umar for three days is in the Muwatta, which the
+  library does not hold, so it is cited without a link.
+- **Shares helper:** the reader types a number of people. `parsePeople` in `utils/qurbani.js` accepts only a whole
+  number above zero; anything else shows "Enter a whole number of people, 1 or more." `shareOptions` counts a sheep or
+  goat for one person and a cow or camel for seven shares (Abu Dawud 2808) and lists: small animals only; when the
+  number is above seven and not a multiple of seven, full large animals plus small animals for the rest; and large
+  animals only, with the spare shares. The helper says it is a guide, not a ruling. Nothing typed leaves the device or
+  is stored.
+- Linked from the Eid and Hajj pages, the menu and the footer.
+
+### 5.7e Prophets (`/prophets`, `/prophets/:slug`)
+
+The prophets named in the Qur'an and their stories, awaiting scholarly review.
+
+- `data/prophets.js` lists the 25 prophets in order, each with a slug, name, Arabic name, `mentions` (verses that name
+  him) and, where the Qur'an states it, `people` (what it says of those he was sent to) with `peopleRefs`. `story: true`
+  marks a prophet whose story is written. Every reference was checked against the text of the Qur'an.
+- `/prophets` shows all 25. A prophet with a story links to it; one without is shown with his references, "Story not
+  yet written" and no link. `/prophets/:slug` is guarded: an unknown prophet, or one without a story, shows the 404 page.
+- A story is written as sections, like the Eid page. `data/prophetStories.js` maps a slug to its structure and English
+  words; Ibrahim's are `data/ibrahimSections.js` and `data/content/ibrahim/en.js`. `ProphetView` draws them with
+  `ContentSections`, with the page's own title and description, a breadcrumb, and links to the previous and next
+  prophet that has a story (`storyNeighbours` in `utils/prophets.js`).
+- Ibrahim's story has 21 sections: who he was, the star, moon and sun, his father, the idols, the fire, the king, his
+  emigration, the four birds, the guests, Hajar and Isma'il in Makkah, the sacrifice, the building of the Ka'bah, his
+  supplications and his legacy, with seven verse blocks. It draws on the Qur'an and Sahih al-Bukhari only, and says
+  where they are silent: the king, the land of the tyrant and the son in the dream are not named, and the order of
+  events is for reading.
+- The Arabic of each verse was taken from an open Qur'an dataset, not typed. A test checks that every Qur'an reference
+  in the list and in each story is a verse that exists (`test/fixtures/ayahCounts.json`), that every section carries a
+  reference and that every verse block has Arabic, translation and reference.
+- **Honorifics:** a prophet is followed by "peace be upon him" at first mention in a story, and عليه السلام is shown
+  in the page header; the Prophet Muhammad is followed by ﷺ.
+- Names and what is said of each prophet's people translate through `useDataTranslations('prophets')`.
+- **Journey:** a story can carry a journey (`journey` in `data/prophetStories.js`): stops with an id, coordinates, a
+  reference and `known`, which is `scripture` when the Qur'an or a hadith names the place and `historians` when the
+  sources tell what happened and historians identify where. Each stop's name and text are in the story's content file
+  under `journey`. `JourneyMap.vue` draws the stops, numbered and joined in order, on an SVG of the region
+  (`data/regionMap.js`, one path made from Natural Earth's public-domain outline; `utils/journey.js` holds the
+  projection), and lists them below with name, label, text and reference. Choosing a stop on the map highlights it in
+  the list and the other way round; markers are keyboard buttons with a 44px touch target at 360px wide. Nothing is
+  requested from any map service, so it works offline. A prophet with no journey shows nothing.
+- Ibrahim's journey is Ur, Harran, Canaan, Egypt and Makkah. Only Makkah is marked as named in the Qur'an; the other
+  four are marked as identified by historians, and each text says what the sources do and do not name.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 
@@ -309,31 +513,44 @@ and amount.
 
 **Heirs and fixed shares (13 types):**
 
-| Heir                  | Share                                                              | Blocked by                     |
-|-----------------------|--------------------------------------------------------------------|--------------------------------|
-| Husband               | 1/4 with descendants, else 1/2                                     | —                              |
-| Wife / wives          | 1/8 with descendants, else 1/4 (shared)                            | —                              |
-| Father                | 1/6 with son or grandson, else residuary                           | —                              |
-| Mother                | 1/6 with son, grandson, or 2+ siblings; else 1/3                   | —                              |
-| Son(s)                | Residuary                                                          | —                              |
-| Daughter(s)           | 1/2 (one), 2/3 (two or more); residuary alongside a son            | —                              |
-| Grandson (son's son)  | Residuary                                                          | son                            |
-| Granddaughter         | 1/2 alone; 1/6 with one daughter; residuary with grandson          | son, two or more daughters     |
-| Full brother(s)       | Residuary                                                          | son, grandson, father          |
-| Full sister(s)        | 1/2 (one), 2/3 (two or more); residuary alongside a brother        | son, grandson, father          |
-| Paternal grandfather  | 1/6 with son or grandson, else residuary                           | father                         |
-| Paternal grandmother  | 1/6                                                                | father, mother                 |
-| Maternal grandmother  | 1/6                                                                | mother                         |
+| Heir                  | Share                                                                          | Excluded by                                  |
+|-----------------------|--------------------------------------------------------------------------------|----------------------------------------------|
+| Husband               | 1/4 with descendants, else 1/2                                                 | —                                            |
+| Wife / wives          | 1/8 with descendants, else 1/4 (shared)                                        | —                                            |
+| Father                | 1/6 with a son or grandson; 1/6 plus the residue with daughters or granddaughters only; else residuary | —                    |
+| Mother                | 1/6 with descendants or 2+ siblings; else 1/3 (a third of the remainder beside a spouse and the father) | —                   |
+| Son(s)                | Residuary                                                                      | —                                            |
+| Daughter(s)           | 1/2 (one), 2/3 (two or more); residuary alongside a son                        | —                                            |
+| Grandson (son's son)  | Residuary                                                                      | son                                          |
+| Granddaughter         | 1/2 (one), 2/3 (two or more); 1/6 with one daughter; residuary with a grandson | son; two or more daughters unless a grandson is present |
+| Full brother(s)       | Residuary                                                                      | son, grandson, father, paternal grandfather  |
+| Full sister(s)        | 1/2 (one), 2/3 (two or more); residuary alongside a brother, or beside a daughter or granddaughter | son, grandson, father, paternal grandfather |
+| Paternal grandfather  | As the father, in his absence                                                  | father                                       |
+| Paternal grandmother  | 1/6, shared with the other grandmother if both inherit                         | father, mother                               |
+| Maternal grandmother  | 1/6, shared with the other grandmother if both inherit                         | mother                                       |
 
-**Algorithm:**
+"Descendants" means a son, daughter, son's son or son's daughter. Sources: Qur'an 4:11, 4:12 and 4:176, and Sahih
+al-Bukhari 6736 for the granddaughter's sixth and the sister's residue beside a daughter.
 
-1. Drop blocked heirs (hijab).
-2. Assign fixed shares; collect the rest as residuaries.
-3. If fixed shares exceed the estate, reduce them proportionally ('awl).
-4. Distribute any remainder to the residuaries. Within a class, a male receives twice the share of a female (son and
-   daughter, brother and sister).
-5. If there is a remainder and no residuary, return it to the fixed-share heirs in proportion to their shares (radd).
-6. Report percentage (1 dp) and amount (2 dp).
+**Algorithm** (`calcInheritance` returns `{ error, shares }`; shares are exact fractions until the last step):
+
+1. Validate: at least one heir; not a husband and a wife together; at most four wives; whole, non-negative counts; a
+   non-negative numeric estate. Otherwise return a message and no shares.
+2. Drop excluded heirs (hijab).
+3. Assign fixed shares and pick the residuary class.
+4. If fixed shares exceed the estate, reduce them proportionally ('awl).
+5. Give any remainder to the first residuary class present: sons with daughters; grandsons with granddaughters; father;
+   paternal grandfather; brothers with sisters; sisters beside daughters. Within a class a male receives twice the share
+   of a female.
+6. If there is a remainder and no residuary, return it to the fixed-share heirs other than the spouse, in proportion to
+   their shares (radd). A spouse who is the only heir keeps the fixed share and the rest is shown as a "Remainder" line.
+7. Report, per line: the share label (the final fraction, so it always matches the percentage), the rule that produced
+   it, the percentage (1 dp, totalling 100) and the amount. Each person's amount is rounded to the penny and any
+   leftover penny goes to the largest share, so the amounts total the estate.
+
+Two points of scholarly difference are fixed by named constants in `utils/inheritance.js`: spouses take no part in
+radd, and a paternal grandfather excludes brothers and sisters. Half-siblings, distant kindred and bequests are not
+covered.
 
 The page must state prominently that the result is a guide and not a ruling.
 
@@ -355,15 +572,155 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-current-phrase`  | phrase id string                              | tasbih store  |
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
+| `locale`                 | The code of the language the user chose       | i18n          |
+| `reminder-settings`      | `{ enabled, push, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar" } }` | reminders store |
+| `fasting-log`            | `{ "YYYY-MM-DD": "fasted" \| "missed" \| "made-up" \| "voluntary" }` | fasting store |
+| `ramadan-starts`         | `{ "<Hijri year>": "YYYY-MM-DD" }`, only dates the user set | fasting store |
+| `salah-log`              | `{ "YYYY-MM-DD": { fajr: "on-time" \| "late" \| "missed", … } }` | salah store |
+| `adhkar-progress`        | `{ day: "YYYY-MM-DD", counts: { [dhikrId]: count } }`; restored only on the same local day | adhkar store |
+| `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |
+| `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
 
 Rules:
 
 - Reads must tolerate missing or corrupt JSON, and valid JSON that is not a keyed record (`null`, a number, a string,
   a list), and fall back to an empty value. `utils/storage.js` provides `parseStoredObject` for this.
+- A damaged entry inside a valid record (a day whose value is `null`, a number or text; a count that is not a
+  positive number) is ignored and the rest of the record is used. `keepEntries` in `utils/storage.js` does this for
+  `adhkar-progress`, `adhkar-completion-log` and `tasbih-totals`. Reading never rewrites what is stored.
 - Anything recorded by day is keyed by the device's local date as `YYYY-MM-DD`, so the day changes at local midnight.
   `utils/day.js` is the only place a day key is built (`dayKey`) or stepped (`addDays`).
-- Zakat inputs, inheritance inputs, and the user's location are never persisted.
+- Zakat and inheritance inputs are never persisted. The user's location is persisted only when they choose "Remember
+  this location" on the Prayer page, under `prayer-settings`, and "Forget my location" removes it. Settings with an
+  impossible location are read as none; an unknown method falls back to the default. If the browser blocks storage the
+  page works for the visit and says the location cannot be remembered.
 - Changing a stored shape requires a migration or a new key, since existing users have data under the current keys.
+
+---
+
+## 6b. Sharing
+
+- `ShareButton.vue` appears on the daily hadith, the single-hadith page and every adhkar and dua card. It shares an
+  item `{ arabic, translation, reference, path }`.
+- `utils/share.js` is pure: `shareAddress(path)` gives the canonical address with `?src=whatsapp` ahead of any anchor;
+  `shareText` joins the Arabic, translation, reference and address; `layoutCard(item, measure)` places every line of a
+  1080px square card, trying smaller type until the text fits, and returns `null` when it cannot fit at a readable size;
+  `drawCard` draws it (Arabic right to left in the `--arabic` typeface, with the site's name and address).
+- `useShare.js` draws the card on a canvas on the device and, where `navigator.canShare({ files })` allows, opens the
+  share sheet with the image. Otherwise the button opens a panel with "Save image", "Share on WhatsApp"
+  (`https://wa.me/?text=…`) and "Copy link". Text too long for a card is shared as text and a link. A cancelled share
+  sheet does nothing. Nothing is uploaded and no request is made.
+- Adhkar and dua cards have `id` anchors, so a shared link opens the page at that item.
+- The router reads `src` from an arriving address, counts the visit under it, and replaces the address without it.
+- `netlify/edge-functions/link-preview.js` runs on `/hadith/books/*`, `/duas/*` and `/adhkar/*` and rewrites the served
+  page's title and description and adds Open Graph tags, for services that read a link without running scripts. A
+  hadith's title is its reference. An address it does not recognise is served unchanged, with the default preview from
+  `index.html`. `public/og-image.png` is the preview image, drawn by `scripts/make-icons.py`.
+
+---
+
+## 6c. Reminders
+
+- `ReminderSettings.vue`, in the prayer settings, turns reminders on (off by default) and has a switch for each of the
+  five prayers and for the morning adhkar (20 minutes after Fajr) and evening adhkar (20 minutes after Asr). Turning on
+  asks for notification permission; anything but "granted" turns it off again with a note on allowing it. With no saved
+  location the switch is disabled, and with no notification support the section says so.
+- `stores/reminders.js` keeps the choices under `reminder-settings`. `utils/reminders.js` holds the list and
+  `dueReminders(items, times, now)`, which gives only the switched-on reminders still ahead today.
+- `useReminders.js`, started from `App.vue`, sets one timer per due reminder and one for the next local midnight, and
+  reschedules when the reminder settings or the saved prayer settings change. Notifications are shown through the
+  service worker's registration, or `new Notification` where there is none, and carry the page to open: the tracker for
+  a prayer, the adhkar category for an adhkar reminder. `public/sw-notifications.js` handles the tap.
+- These reminders arrive only while the app is open or in the background; the settings say so.
+- **Push (opt-in).** A second switch, "Also notify me when the app is closed", subscribes the device to Web Push and
+  saves a record through `/api/push`; the settings say what is stored. While it is on the on-device timers are not set,
+  so a reminder arrives once. A change of method or of a switch re-saves the record; turning the switch off, turning
+  reminders off or "Forget my location" deletes it and unsubscribes. The switch is disabled on an iPhone where the app
+  is not installed, and is not offered without `VITE_VAPID_PUBLIC_KEY` or in a browser with no push support. The worker
+  shows the pushed reminder (`push` in `sw-notifications.js`).
+
+---
+
+## 6d. Languages
+
+- Interface text is held in `src/locales/<code>.js`, one file per language, grouped by the component that uses it.
+  `en.js` is the source and the fallback: a text missing from another language is shown in English.
+  Components read text with `$t('group.key')`; scripts import `t` from `src/i18n.js`. A message's `{name}` is a value,
+  and `|` separates its forms for zero, one and many.
+- `src/locales/index.js` is the registry: code, the language's own name, the `Intl` locale for numbers, dates and
+  currency, direction, messages, and `complete`. Only complete languages are offered. English is the only one today.
+- English keeps the unprefixed addresses. Every other available language has the same pages under its code
+  (`/yo/prayer`), added by `localizedRoutes`. An unknown prefix matches no route and shows the 404 page.
+- `localeGuard` in the router decides the language of each navigation: on arrival the address wins; an unprefixed
+  arrival follows the remembered choice (`locale`), then the browser's languages, then English; inside the site the
+  current language is kept, so links written without a prefix stay in the reader's language.
+- `LanguageSwitcher.vue`, in the navigation, is shown only when more than one language is available. Switching keeps the
+  page, changes the prefix and remembers the choice.
+- `useSeo` sets `lang` and `dir` on `<html>` and, with more than one language, lists every language's address as an
+  `hreflang` alternate with an `x-default`.
+- `formatNumber` and `formatDate` in `src/i18n.js` format for the current language; the Zakat store's amounts use them.
+- `test/locales.test.js` adds a made-up language to test switching, prefixes, fallback and formatting; fails if a
+  translation holds a key English lacks or a complete language lacks one; and fails if any interface component holds
+  hard-coded text.
+- The message file holds the shell, every shared component, the tools and calculators with their results and error
+  messages, and every page's title and description (`seo`). The inheritance engine returns each rule and problem as
+  data (`ruleParts`, `problem`) beside its English text, so the page can word it in any language.
+- **Content.** The writing of each content page (Home, Faith, Articles of Faith, Prayer, Zakat, Fasting, Hajj, the
+  hadith overview, Inheritance, About) is in `src/data/content/<page>/en.js`: sections of keyed text, following the
+  page's eyebrow headings, and `lists` (FAQs, cards, steps, tables). A page reads it through
+  `useContent(page, english)`: `c('section.key')` for a text, `list('name')` for a list. A translation is a file beside
+  the English one with the same sections and keys; it is loaded only when that language is read. A text or section it
+  lacks is shown in English, and a missing section carries a "Not yet translated" note beside its heading. A
+  translated list gives only the text it translates; Arabic, references, icons and links come from the English list.
+- **Data.** The text of the adhkar, adhkar categories, duas, dua situations, tasbih phrases, daily hadith and hadith
+  book details is translated by id in `src/data/translations/<set>/<code>.js`, laid over the items by
+  `useDataTranslations`. Arabic and references are never duplicated.
+- `test/content-pages.test.js` holds each content page's wording as it was before the move
+  (`test/fixtures/pages/`) and fails if a page reads differently. `test/content.test.js` fails if a content page keeps
+  writing in its template or a translation holds a section or key English lacks.
+- Still English: the changelog page, and reminders sent by the server.
+- **Languages in the registry.** Yoruba (`yo`, `/yo/`) and Hausa (`ha`, `/ha/`) are registered with empty message
+  files and `complete: false`, so neither is offered. `languageGaps` lists what a language lacks: untranslated messages; missing sections, keys or
+  list items of the five pillar pages (`REQUIRED_PAGES`); and pages with no reviewer. A translated content file records
+  its reviewer as `meta: { reviewer, reviewed }`. `test/languages.test.js` fails if a language is marked complete with
+  any gap, and `test/sitemap.test.js` fails if a complete language's pages are missing from the sitemap.
+- **Typefaces.** DM Sans cannot draw ẹ, ọ or ṣ, and none of the site's typefaces has Hausa's hooked letters. A
+  registry entry can name `fonts` (`sans`, `serif`, a stylesheet); `setLocale` applies them and loads the stylesheet
+  only while that language is read. Yoruba and Hausa use Noto Sans and Noto Serif, whose font files were checked to
+  hold every Yoruba letter and tone mark and Hausa's hooked letters (ɓ, ɗ, ƙ, ƴ). Search folds tone marks, under-dots
+  and hooked letters to plain letters (`foldText`).
+- **Right to left.** The document's direction follows the language (`dir` in the registry). Styles use logical
+  properties (`margin-inline-start`, `inset-inline-start`, `text-align: start`), so the layout mirrors in a
+  right-to-left language and is unchanged in a left-to-right one. What must not mirror keeps a physical side, each
+  listed with its reason in `test/rtl.test.js`: Arabic text, the Qibla compass, toggle knobs, centring offsets and the
+  symmetric ornaments. The compass, the tasbih ring and prayer times are always drawn left to right, references are
+  isolated inside right-to-left text, and `flip-rtl` mirrors an icon that points a direction. The test fails if a
+  physical left or right property is added outside the exceptions.
+- A registry entry can name the published Qur'an translation it uses (`quran`); the About page credits it once the
+  language is available.
+
+---
+
+## 6a. Installable and offline
+
+- `vite-plugin-pwa` builds a service worker (workbox, `generateSW`) served from `/service-worker.js`, and
+  `manifest.webmanifest` with 192px, 512px and maskable icons and shortcuts to Prayer, Adhkar, the prayer tracker and Tasbih.
+- Every built file is precached on the first visit, so every route opens offline; `index.html` answers any navigation.
+- Google Fonts files are kept `CacheFirst` once loaded. Because the first page loads before the worker controls it,
+  `usePwa.js` re-requests the font addresses the page has already loaded once the worker is ready.
+- Hadith requests (`/api/hadith/`) are `NetworkFirst` with a three-second limit,
+  so a book or chapter viewed online opens offline. One never viewed shows an "offline, not saved yet" message.
+- The Zakat store keeps the last fetched prices under `zakat-prices`. When a fetch fails they are used in preference to
+  the built-in reference prices, and the page marks them "saved" with their age in days.
+- Prayer times, Qibla, adhkar and tasbih need no server. Prayer times offline need a saved location.
+- A new deploy shows "Update available" with a Refresh button (`registerType: 'prompt'`); nothing reloads by itself.
+  `AppInstall.vue` also shows an Install button when the browser offers installation, and an "Add to Home Screen" note
+  in Safari on iPhone.
+- `public/sw-legacy.js` is loaded by the worker. If the old app's `islamichub-shell-v2` cache is on the device it takes
+  over at once, deletes that cache and reloads open pages. That name must never be reused.
+- `test/build.test.js` builds the site and fails if the home page's document, scripts and styles exceed 600 KB, if a
+  manifest icon is missing, or if any script or stylesheet is left out of the precache.
+- Every feature built from here on must work offline unless it says it needs a connection.
 
 ---
 
@@ -374,7 +731,7 @@ Rules:
 | `cdn.jsdelivr.net`              | Daily gold, silver and FX rates (currency-api dataset) | Tries the mirror, then reference prices; flagged |
 | `latest.currency-api.pages.dev` | Mirror of the same dataset       | Reference prices; flagged as not current    |
 | `nominatim.openstreetmap.org`   | Reverse geocoding a place name   | Shows "Your location"                       |
-| `hadithapi.com`                 | Books, chapters, hadiths         | Error state in the view                     |
+| `hadithapi.com` (server-side only, through `/api/hadith/`) | Books, chapters, hadiths | The proxy answers with an error within ten seconds; error state in the view |
 | `islamichub.goatcounter.com`    | Anonymous usage statistics       | Dropped silently; page works normally       |
 | Google Fonts                    | Amiri, Cormorant Garamond, DM Sans | System font fallbacks                     |
 
@@ -408,9 +765,13 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 
 ### SEO
 
-- Every route sets a title, description, Open Graph and Twitter tags, and a canonical URL matching its path. Static
-  routes do this through `useSeo`; dynamic routes (hadith book and chapter, adhkar category) use `useHead` with loaded
-  data.
+- Every route sets a title, description, Open Graph and Twitter tags, and a canonical URL through `useSeo`, the only
+  way a view sets its head (a lint rule forbids importing `@unhead/vue` in views and components). `useSeo` takes a key
+  into its `PAGE_META` table, or a title and description that may be values, refs or getters, so a title can arrive
+  after the page opens. A page that gives neither gets the site's defaults.
+- The canonical URL is the site address plus the route's path, with no query string. The 404 page is marked `noindex`.
+- `test/sitemap.test.js` fails if a fixed route is missing from `sitemap.xml` or the sitemap lists an address no route
+  serves.
 - `robots.txt` and `sitemap.xml` are served from `public/` and must be updated when routes are added.
 
 ### Accessibility
@@ -423,10 +784,16 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
 ### Privacy
 
 - No tracking of people: anonymous counts only, and currently no accounts.
-- Location is requested only on user action, used in memory, and sent only to Nominatim for a place name.
+- Location is requested only on user action and sent only to Nominatim for a place name. It is kept in memory unless
+  the user chooses to remember it, in which case it is saved on the device only (`prayer-settings`) and can be removed
+  with "Forget my location". It never reaches a server of ours.
 - Financial and family details entered into calculators do not leave the device.
 - Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
 - Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.
+- **The one thing a server stores about a user** is the push record, and only for a user who switches on "Also notify
+  me when the app is closed": the push subscription, coordinates rounded to two decimal places (about 1 km), timezone,
+  calculation method, Asr method and chosen reminders. No name, email or account. It is deleted when the user turns the
+  switch off, turns reminders off or forgets their location, and when the push service reports the subscription gone.
 - If a backend is added, anything it stores about a user must be opt-in, and the tools must keep working without
   signing in.
 
@@ -454,36 +821,10 @@ Places where the code does not yet meet this spec, or where supporting files are
 
 - **Zakat prices are daily, and the built-in reference prices age.** Prices come from one dataset maintained by one
   person. If it is unavailable the calculator falls back to reference prices dated 12 October 2026, and says so.
-- **Inheritance engine departs from the table in 5.9.**
-  - A sister is blocked outright by a brother and receives nothing, instead of sharing the residue 2:1.
-  - A granddaughter is blocked by a single daughter, so her 1/6 share is unreachable.
-  - Residuaries other than son + daughter split equally per head, with no priority order between classes.
-  - Radd happens implicitly through normalisation and includes the spouse: a wife and one daughter come out at 20% and
-    80%, while the share label still reads 1/8. Whether spouses take part in radd is a point of scholarly difference
-    and should be an explicit decision.
-  - Arithmetic is floating-point, not fractional.
-- **SEO is set two ways.** The hadith, adhkar, tasbih, and articles-of-faith views call `useHead` directly, so their
-  entries in `useSeo`'s `ROUTE_META` are unused. `useSeo` also builds canonical URLs from the route name, which is only
-  correct while name and path match; it would be wrong for `hadith-books` or `articles-of-faith` if they adopted it. The hadith, adhkar, and tasbih views set no canonical link
-  at all.
-- **Asr is Shafi'i only.** There is no Hanafi option, and the file header mentions Tehran and Jafari methods that do
-  not exist.
 
 ### Housekeeping
 
-- **There is no web manifest and no offline support.** The old manifest pointed to icons that did not exist and was
-  removed. `public/service-worker.js` exists only to retire the old app's worker in returning visitors' browsers: it
-  clears their caches, unregisters itself and caches nothing. It must stay until a real worker is served from the same
-  address.
-- **The hadith API key ships in the client bundle.** Keeping it secret needs a server-side proxy, which is the most immediate
-  reason to add a backend.
-- **In-progress adhkar counts are lost on reload.** They are held in memory only.
-- **The loading screen blocks every entry route** for at least 2 seconds on the price fetch, including pages that do
-  not use prices.
 - **Tests cover only part of the code.** `utils/prayer.js`, `utils/qibla.js`, `utils/hijri.js` and the adhkar and tasbih
-  stores are tested. The Zakat store, the inheritance engine, the composables and the views are not yet.
-- **A damaged entry inside a stored record is not handled.** A stored record of the wrong kind is read as empty, but
-  a valid record holding a bad entry (for example a day whose value is `null` under `adhkar-completion-log` or
-  `tasbih-totals`) would still throw.
+  stores are tested. The composables and most views are not yet.
 - **"Today" is not refreshed while a page stays open.** A page left open past local midnight shows the previous
   day's state until it is next re-read.

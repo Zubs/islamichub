@@ -9,10 +9,10 @@
         aria-describedby="stats-opt-out-desc"
       />
       <span class="switch-slider" aria-hidden="true"></span>
-      <span class="switch-text">Don't count my visits</span>
+      <span class="switch-text">{{ $t('statsOptOut.donTCountMyVisits') }}</span>
     </label>
     <p id="stats-opt-out-desc" class="opt-out-desc">
-      When on, IslamicHub sends no usage statistics for this device.
+      {{ $t('statsOptOut.whenOnIslamichubSendsNoUsage') }}
     </p>
   </div>
 </template>

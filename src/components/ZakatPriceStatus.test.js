@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ZakatPriceStatus from './ZakatPriceStatus.vue'
 
@@ -44,5 +44,50 @@ describe('ZakatPriceStatus', () => {
     const { note } = status({ metalsFetched: true, ratesFetched: true, date: null })
 
     expect(note).toBe('Gold and silver prices.')
+  })
+
+  it('says nothing about custom prices when none is typed', () => {
+    const wrapper = mount(ZakatPriceStatus, { props: { metalsFetched: true, ratesFetched: true } })
+
+    expect(wrapper.find('.price-status-custom').exists()).toBe(false)
+  })
+
+  it.each([
+    [['gold'], 'Your own gold price per gram'],
+    [['silver'], 'Your own silver price per gram'],
+    [['gold', 'silver'], 'Your own gold and silver price per gram'],
+  ])('says a typed price is in use for %j', (custom, text) => {
+    const wrapper = mount(ZakatPriceStatus, {
+      props: { metalsFetched: true, ratesFetched: true, custom },
+    })
+
+    expect(wrapper.find('.price-status-custom').text()).toContain(text)
+  })
+
+  describe('saved prices', () => {
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it.each([
+      [new Date(2026, 10, 8, 9), '5 days old'],
+      [new Date(2026, 10, 4, 0, 30), '1 day old'],
+      [new Date(2026, 10, 3, 23), 'fetched earlier today'],
+    ])('says how old they are on %s', (now, age) => {
+      vi.useFakeTimers()
+      vi.setSystemTime(now)
+
+      const { label, note } = status({ saved: true, date: '2026-11-03' })
+
+      expect(label).toBe('saved')
+      expect(note).toContain('Saved prices from 3 November 2026')
+      expect(note).toContain(age)
+    })
+
+    it('prefers fetched prices over saved ones', () => {
+      const { label } = status({ saved: true, metalsFetched: true, ratesFetched: true })
+
+      expect(label).toBe('current')
+    })
   })
 })

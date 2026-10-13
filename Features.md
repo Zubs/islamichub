@@ -15,35 +15,38 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 3. Contributor docs
 - [x] 4. Dead file cleanup
 - [x] 5. Zakat exchange rates
-- [ ] 6. Naira in the Zakat calculator
-- [ ] 7. Inheritance engine
-- [ ] 8. Asr method
-- [ ] 9. SEO through one path
-- [ ] 10. Loading screen
-- [ ] 11. Saved prayer settings
-- [ ] 12. Installable and offline
-- [ ] 13. Hadith proxy
-- [ ] 14. Single-hadith page
-- [ ] 15. Linked hadith citations
-- [ ] 16. Daily hadith
-- [ ] 17. Adhkar progress survives reload
-- [ ] 18. Duas
-- [ ] 19. Salah tracker
-- [ ] 20. Fasting tracker
-- [ ] 21. Worship dashboard
-- [ ] 22. Share to WhatsApp
-- [ ] 23. Prayer reminders
-- [ ] 24. Push notifications
-- [ ] 25. Interface translation
-- [ ] 26. Translatable content
+- [x] 6. Naira in the Zakat calculator
+- [x] 7. Inheritance engine
+- [x] 8. Asr method
+- [x] 9. SEO through one path
+- [x] 10. Loading screen
+- [x] 11. Saved prayer settings
+- [x] 12. Installable and offline
+- [x] 13. Hadith proxy
+- [x] 14. Single-hadith page
+- [x] 15. Linked hadith citations
+- [x] 16. Daily hadith
+- [x] 17. Adhkar progress survives reload
+- [x] 18. Duas
+- [x] 19. Salah tracker
+- [x] 20. Fasting tracker
+- [x] 21. Worship dashboard
+- [x] 22. Share to WhatsApp
+- [x] 23. Prayer reminders
+- [x] 24. Push notifications
+- [x] 25. Interface translation
+- [x] 26. Translatable content
 - [ ] 27. Yoruba
 - [ ] 28. Hausa
 - [ ] 29. Right-to-left layout
-- [ ] 30. Eid
-- [ ] 31. Qurbani
-- [ ] 32. Prophets
-- [ ] 33. Journeys of the prophets
-- [ ] 34. Usage statistics
+- [x] 30. Eid
+- [x] 31. Qurbani
+- [x] 32. Prophets
+- [x] 33. Journeys of the prophets
+- [x] 34. Usage statistics
+- [ ] 35. Final
+- [ ] 36. Complete prophets stories
+- [ ] 37. Accessibility and loading fixes
 
 ---
 
@@ -202,6 +205,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The naira's official rate and its street rate can differ. The calculator uses the official rate and says so.
 - For that reason the user can also type their own local price per gram for gold and for silver. A typed price replaces the fetched one for the calculation and the nisab, and the page shows that a custom price is in use.
 - A fallback naira rate is built in on the same dollar base as the others (feature 5).
+- A typed price can be entered in any currency, not only naira, and is cleared when the currency changes, since it was quoted in the previous one. It is never stored or sent.
 - Naira amounts are shown with the ₦ sign, thousands separators and two decimals.
 
 **Tests**
@@ -231,6 +235,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Radd goes to fixed-share heirs other than the spouse. This is the proposed default; see Decisions needed.
 - Each result line says which rule produced it, and the share label always matches the percentage.
 - Amounts are rounded to the penny, with any leftover penny added to the largest share so the total equals the estate.
+- Where the Spec 5.9 table was silent or at odds with Qur'an 4:11 and 4:176 and Sahih al-Bukhari 6736, the engine follows those sources and the table was corrected: parents take a sixth beside any child, a father beside daughters only takes a sixth plus the residue, a sister beside a daughter takes the residue, two grandmothers share one sixth, and beside a spouse and the father the mother takes a third of the remainder. Each is listed under Final for confirmation.
+- A spouse who is the only heir keeps the fixed share, and the rest is shown as a "Remainder" line.
 
 **Tests**
 - With no heirs chosen, the page asks for at least one heir and shows no result.
@@ -257,8 +263,8 @@ Tests are written in plain English and ordered the same way under every feature:
 **What it does:** Lets users choose between the two ways of timing Asr, since the Hanafi school starts it later.
 
 **How it works**
-- `getPrayerTimes` takes an Asr option: Standard (shadow equal to the object's length, the default) or Hanafi (twice the length).
-- The Prayer page has a selector beside the calculation method.
+- `calcPrayerTimes` takes an Asr option: Standard (shadow equal to the object's length, the default) or Hanafi (twice the length).
+- The Prayer page has a selector beside the calculation method. Changing it, or the method, recalculates times that are already shown.
 - The Fasting page is unaffected, as it uses only Fajr and Maghrib.
 - The file header in `utils/prayer.js` is corrected to list only the methods that exist.
 
@@ -281,7 +287,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - `useSeo` becomes the only way a view sets its head. It accepts fixed values or values that arrive later, such as a hadith chapter name.
 - The canonical URL is built from the route's path, not its name.
 - Views that call `useHead` directly are moved over, and unused entries in `ROUTE_META` are removed.
-- A test compares the router with `public/sitemap.xml`, so a route added later cannot be left out.
+- A test compares the router with `public/sitemap.xml`, so a route added later cannot be left out. The sitemap gains the pages it lacked: `/adhkar` and its six categories, `/tasbih` and `/faith/articles`.
+- A lint rule forbids importing `@unhead/vue` in views and components.
 
 **Tests**
 - A page given no values still gets the site's default title and description.
@@ -308,7 +315,7 @@ Tests are written in plain English and ordered the same way under every feature:
 
 **Tests**
 - Opening `/prayer` makes no request for metal prices or exchange rates.
-- Opening `/zakat` makes one request for each.
+- Opening `/zakat` makes one request, as metals and rates now come from one dataset (feature 5).
 - Leaving the Zakat page and returning does not fetch again.
 - On a fast connection the loading screen is gone in under half a second.
 - On a slow connection the Zakat form can be filled in while prices load.
@@ -363,6 +370,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The Zakat page uses the last prices it fetched and says how old they are.
 - When a new version is deployed, the user sees "Update available" with a refresh button.
 - An "Install" button shows where the browser supports it. On iPhone, a short note explains "Add to Home Screen".
+- Built, with every automated test passing. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked. Not yet done: the Lighthouse, slow-connection and "Update available" checks listed under Final.
 
 **Tests**
 - A first visit while offline shows the browser's own offline page, as nothing is stored yet.
@@ -396,6 +404,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Replies are cached for a day, as the collections do not change.
 - `useHadithApi` calls the proxy. hadithapi.com is removed from the site's allowed connections.
 - `netlify dev` runs the function locally, and the README says so.
+- Built, with every automated test passing. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked.
 
 **Tests**
 - With no key set on the server, the proxy returns a clear "not configured" reply and the library shows its existing "no API key" state.
@@ -422,6 +431,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Links to the previous and next hadith and back to the chapter.
 - Each hadith in a chapter list links to its own page.
 - The title and description come from the hadith, through `useSeo`.
+- Built, with every automated test passing against stand-in replies. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked.
 
 **Tests**
 - A hadith with no Arabic text still shows its English text.
@@ -448,6 +458,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - The site cites Arabic-edition numbers. Where hadithapi.com numbers a hadith differently, a mapping file in `data/` records the right one.
 - Every existing citation is converted: the pillar pages, Articles of Faith, Tasbih, Inheritance and `data/adhkar.js`.
 - Each converted link is checked by hand to confirm it opens the hadith actually quoted.
+- `HadithRef` takes the reference as text ("Sahih Bukhari 1904 · Sahih Muslim 1151") and finds the references in it, so content stays readable where it is written.
+- Sahih Muslim is cited by the 'Abd al-Baqi numbering while the library counts its narrations sequentially, so each Sahih Muslim reference has a mapping entry. The entries were found by matching texts in an open dataset that counts the same way, and are provisional.
+- The automated check against the library is `test/citations.live.test.js`, run with `CITATIONS_BASE` set to a running site.
+- Built, with every automated test passing. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked. Not yet done: the automated live citation check listed under Final.
 
 **Tests**
 - A block with no references shows its text and no empty source line.
@@ -471,6 +485,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The day's hadith is chosen from the local date (feature 2), so everyone sees the same one on the same date and it changes at local midnight.
 - The text is stored in the list, so the card needs no network request and works offline.
 - The card uses `HadithBlock`, so its reference links to the full hadith (features 14 and 15).
+- The list holds 67 hadiths, all from Sahih al-Bukhari, with texts copied from the open fawazahmed0/hadith-api dataset and checked against it by number. No Arabic text is stored, because the dataset's Arabic includes the full chain of narration; the link leads to the Arabic in the library.
 
 **Tests**
 - With an empty list, the home page shows no card and no gap.
@@ -524,6 +539,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - A search box filters by English, transliteration or situation name.
 - Each dua has its own anchor, so one dua can be linked to.
 - References use `HadithRef` (feature 15) or a Qur'an reference.
+- Built with 46 duas. Every Arabic text was cut from its source (the Qur'an text, or the Arabic of the cited hadith in an open dataset), not typed. Hadith sources are limited to Sahih al-Bukhari, Abu Dawud, al-Tirmidhi and Ibn Majah, whose cited numbering the library shares.
+- A dua with a count (said seven or a hundred times) keeps a counter; its progress is saved with the day's adhkar progress.
 
 **Tests**
 - A situation with no duas is not listed.
@@ -552,6 +569,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Nothing leaves the device. A "Clear my data" button removes the log.
 - A Tracker shortcut is added to the installed app (feature 12).
 - With a saved location (feature 11), each prayer shows its time, and prayers whose time has not arrived are marked "not yet".
+- While today is still in progress the streak shows the count up to yesterday, so it does not drop to zero each morning; a prayer marked missed today makes it zero.
+- A prayer marked "not yet" cannot be logged until its time arrives. Choosing the status a prayer already has clears it.
 
 **Tests**
 - With nothing logged, today shows five unlogged prayers and a streak of zero.
@@ -580,6 +599,9 @@ Tests are written in plain English and ordered the same way under every feature:
 - Whether a day falls in Ramadan comes from `utils/hijri.js`. As that can be a day out, the user can set the first day of Ramadan themselves.
 - "Still to make up" is the number of missed Ramadan days minus the number of made-up days, never below zero, and is kept per Ramadan year.
 - Voluntary fasts are counted separately.
+- A day inside Ramadan takes "fasted" or "missed"; a day outside it takes "made up" or "voluntary". A made-up fast is credited to the most recent Ramadan before it.
+- The date the user sets for the first day of Ramadan is kept under a second key, `ramadan-starts`.
+- Outside Ramadan the most recent Ramadan's grid is one tap away, so its days can still be corrected.
 - Nothing leaves the device.
 
 **Tests**
@@ -640,6 +662,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - Text too long for a card is shared as text and a link, with no image.
 - Links to hadith and dua pages show a proper preview when pasted into WhatsApp. The site is drawn in the browser, which WhatsApp does not run, so a small Netlify edge function adds the title, description and preview image to those addresses for link previews.
 - The card is drawn in whichever language the user is reading once translations exist (features 25 to 28).
+- The handling of the source tag built with feature 34 never ran, because it looked for the query string inside the path; it is corrected here, and a tagged visit is now counted under its tag.
+- Link previews cover hadith pages, dua situation pages and adhkar category pages. A dua or dhikr link carries its anchor, which opens the page at that item, but a preview cannot see an anchor, so it describes the page.
+- Each daily hadith now holds its Arabic saying, cut from the Arabic edition of the same hadith.
+- Built, with every automated test passing. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked.
 
 **Tests**
 - An item with no translation produces a card with the Arabic and the reference only.
@@ -668,6 +694,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Tapping a notification opens the tracker for a prayer, or the adhkar category for an adhkar reminder.
 - Choices are stored under `reminder-settings`. Requires a saved location (feature 11).
 - The settings state plainly that these reminders only arrive while the app is open, and point to feature 24 for the rest.
+- Adhkar reminders come 20 minutes after their prayer's time. Turning reminders on for the first time switches the five prayers on.
+- Built, with every automated test passing. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked.
 
 **Tests**
 - With reminders off, no permission is requested and nothing is scheduled.
@@ -697,6 +725,11 @@ Tests are written in plain English and ordered the same way under every feature:
 - While push is on, the in-page reminders from feature 23 stay silent, so the user is not notified twice.
 - On iPhone, push only works once the app is installed, and the settings say so.
 - The privacy text on the site and in Spec section 9 states exactly what is stored and how to delete it.
+- Records are kept in Netlify Blobs, keyed by a hash of the push subscription's address. The server rounds the coordinates itself, whatever the device sends.
+- A reminder is sent when it is 0 to 3 minutes past its time and has not been sent that local day.
+- Web Push signing and encryption are written against Node's built-in `crypto`; `@netlify/blobs` is the one package added.
+- The push switch is not offered until `VITE_VAPID_PUBLIC_KEY` is set.
+- Built, with every automated test passing. Checked by Zubair on the live site and on a phone on 13 October 2026, and ticked.
 
 **Tests**
 - With push off, no request is sent to the server and nothing is stored there.
@@ -731,6 +764,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - Each page tells search engines about its other language versions, and `<html lang>` is set to the current language.
 - Numbers, dates and currency use the current language's formatting.
 - Long-form page content is not covered here. That is feature 26.
+- Built for the shell, every shared component, the 404 page, the adhkar, duas, hadith library, tracker and tasbih views, and the calculators on the Prayer, Zakat, Fasting and Inheritance pages, with their results and error messages: about 440 messages in `src/locales/en.js`.
+- The long-form writing, the text in `data/`, and page titles and descriptions were moved with feature 26. Reminders sent by the server (feature 24) are in English, because the server does not know the reader's language; the changelog page is in English.
+- Sentences that had inline markup inside them were split into fragments by the script that moved the text. They read correctly in English; a translator may need some merged.
+- Links inside a second-language page are written without a prefix and kept in that language by the router.
 
 **Tests**
 - With only English available, the switcher is hidden and every address works as before.
@@ -757,6 +794,10 @@ Tests are written in plain English and ordered the same way under every feature:
 - Static data files (adhkar, duas, tasbih phrases, daily hadith) gain translations by language in the same way.
 - A section missing in a language is shown in English with a small "not yet translated" note.
 - Order of work: Faith first, as the pattern, then Prayer, Zakat, Fasting, Hajj, Articles of Faith, Hadith overview and About.
+- Built differently from the two bullets above that describe structured sections drawn by a small set of components: each existing page keeps its own layout and takes its words from its content file by section and key (`c('section.key')`, `list('name')`), because the ten pages' hand-built layouts could not be reproduced by generic section components without redesigning them. The result the feature asks for is met: a translation is one file and no component is edited. New pages (features 30 to 32) are written section by section.
+- Home and Inheritance are content pages too and were moved with the others.
+- Each page's wording is held in `test/fixtures/pages/` as it was before the move, and a test fails if a page reads differently.
+- Data translations live in `src/data/translations/<set>/<code>.js`, keyed by id.
 
 **Tests**
 - A page with an empty content file shows its header and no errors.
@@ -783,6 +824,9 @@ Tests are written in plain English and ordered the same way under every feature:
 - Every translated page of religious content is checked by a named reviewer before it goes live. The person building this feature asks Zubair for the reviewer's name and does not invent or assume one.
 - Yoruba appears in the switcher only when the interface and the five pillar pages are complete.
 - The sitemap lists the Yoruba pages.
+- Built so far, without the translation itself: Yoruba is registered at `/yo/` with an empty message file and is not offered; a test lists everything a language lacks and fails if one is marked complete early; a translated page records its reviewer in its content file; search ignores tone marks and under-dots; the About page credits a language's Qur'an translation; the sitemap must list a complete language's pages.
+- Typefaces were checked against the font files. DM Sans, the body typeface, has no ẹ, ọ or ṣ, so Yoruba uses Noto Sans and Noto Serif, loaded only when Yoruba is read.
+- Not built: the Yoruba translation of the interface and the pages. It needs a Yoruba speaker and the named reviewer; see Final. The feature stays unticked.
 
 **Tests**
 - Before the translation is complete, Yoruba is not in the switcher and `/yo/` addresses show the 404 page.
@@ -810,6 +854,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Every translated page of religious content is checked by a named reviewer before it goes live. The person building this feature asks Zubair for the reviewer's name and does not invent or assume one.
 - Hausa is added with files only. If a component has to change to make room for it, the gap is fixed in feature 25 or 26, not worked around here.
 - Hausa appears in the switcher only when the interface and the five pillar pages are complete.
+- Built so far, without the translation itself: Hausa is registered at `/ha/` with an empty message file and is not offered; it uses Noto Sans and Noto Serif, because none of the site's typefaces has ɓ, ɗ, ƙ or ƴ (checked against the font files); search folds hooked letters to plain ones. Everything else comes unchanged from feature 27, and no component was edited to add the language.
+- Not built: the Hausa translation of the interface and the pages. It needs a Hausa speaker and the named reviewer; see Final. The feature stays unticked.
 
 **Tests**
 - Before the translation is complete, Hausa is not in the switcher and `/ha/` addresses show the 404 page.
@@ -837,6 +883,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - The navigation, cards, accordions, pagination, tables and form fields all mirror.
 - Arabic verse and hadith blocks keep their existing right-to-left rendering in every language.
 - Numbers, the Qibla compass and the tasbih counter are not mirrored.
+- Built: every physical left or right property in the stylesheets, scoped styles and inline styles is now logical, apart from a listed few with reasons (Arabic text, the compass, toggle knobs, centring, symmetric ornaments), and a test keeps it so. Arrows written as text ("Next →") are part of each message, so a right-to-left translation writes its own; `flip-rtl` mirrors icons drawn as images.
+- Not checked: how the pages look in a right-to-left language. No such language is planned yet and no browser was available while building, so the feature stays unticked; see Final.
 
 **Tests**
 - In English, every page looks exactly as it did before this feature.
@@ -865,6 +913,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - A countdown to the next Eid from `utils/hijri.js`: 1 Shawwal for Eid al-Fitr and 10 Dhul Hijjah for Eid al-Adha, with a note that the date depends on moon sighting.
 - Where schools differ, such as the number of extra takbirs in the prayer, both positions are shown.
 - Links to the Fasting, Zakat and Qurbani pages. Added to the navigation and the sitemap.
+- Built: the page, its countdown and its tests. It is the first page written as sections (`data/eidSections.js` for the shared order, Arabic and references; `data/content/eid/en.js` for the words; `ContentSections.vue` to draw them). Every hadith and verse on it was checked against the text of its source. The calculated dates of the next four Eids fall within a day of a published calendar.
+- Ticked by Zubair on 13 October 2026 without a reviewer, who is still being sought. Still open: a scholar's review of the page, and a numbered source for the wording of the takbirat; see Final.
 
 **Tests**
 - On an ordinary day the countdown shows the days to whichever Eid is nearer.
@@ -891,6 +941,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - A shares helper: the user enters the number of people, and it shows the options. A sheep or goat counts for one person. A cow or camel holds up to seven shares.
 - The helper is a pure function in `utils/qurbani.js`. It states that it is a guide and not a ruling.
 - Linked from the Eid and Hajj pages. Added to the navigation and the sitemap.
+- Built: the page, the shares helper and their tests. Every hadith and verse on it was checked against the text of its source, and the helper's answers match a hand count for 1 to 21 people. The helper also offers full large animals plus small ones for the rest when the number is above seven.
+- Ticked by Zubair on 13 October 2026 without a reviewer, who is still being sought. Still open: a scholar's review of the page, and the three points the page says could not be checked; see Final.
 
 **Tests**
 - With no number entered, the helper shows nothing.
@@ -918,6 +970,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Stories draw on the Qur'an and authentic hadith only. Details from other sources are left out or clearly labelled as such.
 - Honorifics follow one convention across the section.
 - Added to the navigation, the home page and the sitemap.
+- Built: the list of 25 with their Qur'an references, the story page, and Ibrahim's story in 21 sections from the Qur'an and Sahih al-Bukhari only. Every reference was checked against its text, and the Arabic of each verse was taken from a Qur'an dataset. Honorifics: "peace be upon him" at first mention and عليه السلام in the header; ﷺ for the Prophet Muhammad.
+- Ticked by Zubair on 13 October 2026 without a reviewer, who is still being sought. The review of the list and of Ibrahim's story now belongs to feature 36, where every story is reviewed together.
 
 **Tests**
 - The list shows all 25 prophets in order.
@@ -945,6 +999,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - The stops are numbered and joined in order. Selecting a stop on the map or the timeline highlights it on the other.
 - The same list is readable as plain text below the map.
 - Journeys for Musa and Yusuf follow once their stories exist.
+- Built: the map, the list and Ibrahim's five stops, with tests. The outline of the region is one SVG path made from Natural Earth's public-domain data, so nothing is fetched. Only Makkah is marked as named in the Qur'an; Ur, Harran, Canaan and Egypt are marked as identified by historians, and each says what the sources do and do not name.
+- Checked by Zubair on a phone on 13 October 2026: the five stops on the map and in the list, and the map in flight mode. Ticked. The review of the five journey texts belongs to feature 36.
 
 **Tests**
 - A prophet with no journey shows no map and no gap.
@@ -959,6 +1015,62 @@ Tests are written in plain English and ordered the same way under every feature:
 - A user opens Ibrahim's page, steps through the stops in order and reads what happened at each.
 
 **Done when:** Ibrahim's journey can be followed stop by stop on a phone, each stop is sourced, and the map works offline.
+
+### 36. Complete prophets stories
+
+**What it does:** Writes the stories of the other 24 prophets, and then has every story, Ibrahim's included, verified by a scholar.
+
+**How it works**
+- Each remaining prophet in `data/prophets.js` gets a story written the way Ibrahim's is: a sections file for the order, the Arabic and the references, a content file for the words, an entry in `data/prophetStories.js`, and `story: true`. No component is edited to add a story.
+- Stories draw on the Qur'an and authentic hadith only. Where the sources are silent the story says so, and details from other sources are left out or clearly labelled.
+- The Arabic of each verse is taken from a Qur'an dataset, not typed. Every reference is checked against its text when it is written.
+- A prophet about whom the Qur'an says little has a short story. Nothing is added to fill it out.
+- Where two prophets share one account, as Musa and Harun do, each page tells its own part and links to the other.
+- "The people they were sent to" is filled in for the ten prophets who have none today, wherever a verse states it.
+- Honorifics follow the convention feature 32 set.
+- Each new story is added to the sitemap. A journey (feature 33) is added only where the sources name the places or historians identify them, and is labelled as Ibrahim's is.
+- Once all 25 are written, a reviewer named by Zubair reads every story, Ibrahim's and the five journey texts included. Their corrections are made, and their name and the date are recorded with each story.
+- This feature carries the review that features 32 and 33 were waiting for. The points left open for the reviewer on Ibrahim's story (the son in the dream, the order of events, whose translation of the verses is used, the stops of the journey) are settled here.
+
+**Tests**
+- All 25 prophets in the list link to a story, and none shows "Story not yet written".
+- Every prophet address opens a story, and an unknown one still shows the 404 page.
+- Every section of every story carries at least one Qur'an or hadith reference, and every Qur'an reference is a verse that exists.
+- Every verse block shows Arabic, translation and reference.
+- Every hadith reference links to a hadith the library holds.
+- Each story links to the previous and next prophet, with Adam having no previous and Muhammad no next.
+- Each story has its own title and description, and is in the sitemap.
+- A story is not marked as reviewed until it records a reviewer's name and a date.
+- A story with no translation is shown in English with the usual note, section by section.
+- A user opens the list, reads the stories of Nuh, Musa and 'Isa in turn, and follows a verse reference in each.
+
+**Done when:** All 25 stories are live and fully referenced, and each one records the name of the reviewer Zubair named and the date they verified it.
+
+### 37. Accessibility and loading fixes
+
+**What it does:** Fixes what a Lighthouse run on 13 October 2026 found in the site's own code, so that text is easier to read, screen readers are told the right things, and the first screen appears sooner.
+
+**How it works**
+- **Contrast.** Text that falls below a contrast ratio of 4.5 to 1 is brought up to it: the footer links, copyright line and disclaimer on the dark footer; the gold verse reference on cream; the gold tag on the pillar cards; and the paragraph in the green call-to-action strip. The fix is made in `tokens.css` or in the one rule that sets the colour, not page by page.
+- Changing these colours changes how the site looks, so the new values are proposed to Zubair and agreed before they are applied.
+- **Roles.** The pillar cards, tool cards and feature cards on the home page carry `role="listitem"` on links and articles, which is not allowed. Each group becomes a real list (`ul` and `li`) with the link or article inside, and looks the same as before.
+- **Headings.** The footer's column titles jump to `h4`. They become the next level down from the page's headings, or stop being headings, with their look unchanged.
+- **Links in text.** The two names in the footer credit cannot be told from the words around them. They are underlined.
+- **Fonts.** The Google Fonts stylesheet holds up the first paint. It is loaded without blocking, with text shown in the fallback typeface until the fonts arrive, and the unused `preconnect` hints are corrected. Self-hosting the fonts, which Final lists as an open decision for offline use, would settle both at once.
+- **`llms.txt`.** A request for `/llms.txt` is answered with the app's page. Either a real file is added, with a title and links to the main pages, or the address returns 404. Zubair decides which.
+- Not part of this feature: the performance score itself, which was distorted by browser extensions in that run, and the `noindex` on deploy previews, which Netlify adds and the live site does not have.
+
+**Tests**
+- Each colour pair named above meets 4.5 to 1, checked from the token values.
+- The home page holds no `role="listitem"` on a link or an article, and each card group is a list with the same number of items as before.
+- Heading levels on every page go down one step at a time, footer included.
+- The footer credit links are underlined.
+- The font stylesheet is not a render-blocking link in the built page, and the page's text is visible before the fonts load.
+- The pages read as they did: the page text fixtures still pass.
+- Arabic text still shows in the Arabic typeface once the fonts arrive, and offline after a first visit.
+- A user tabs through the home page with a screen reader and hears each group of cards announced as a list with its count.
+
+**Done when:** A Lighthouse run on the live site in a clean browser window reports no contrast, role, heading-order or link failures, and Zubair has approved the changed colours.
 
 ---
 
@@ -1001,6 +1113,114 @@ Tests are written in plain English and ordered the same way under every feature:
 
 ---
 
+## Final
+
+### 35. Final
+
+**What it does:** Collects every decision and real-world check that was left for Zubair while features 6 to 33 were built without him. Each feature was built to the safe default named here. Nothing in this list blocks the code from running; each item is either a default to confirm or reverse, or a check that needs a real phone, the live site or a named person.
+
+**How it works**
+- Zubair goes through the two lists below, confirms or changes each decision, and carries out each outstanding check.
+- A decision that is reversed is changed in the feature it belongs to, and that feature's tests are updated.
+- A feature left unticked in the progress list is ticked once its outstanding check is done.
+
+**Decisions to confirm**
+
+| # | Feature | Decision | Built as | To reverse it |
+|---|---|---|---|---|
+| 1 | 6 | Which naira rate does the calculator use? | The official rate from the price dataset, with a note saying so and a typed price per gram as the way round it | Would need a street-rate source; none is free and reliable |
+| 2 | 6 | Is a typed price offered only in naira, or in every currency? | Every currency | Hide the two fields unless naira is selected, in `ZakatView.vue` |
+| 3 | 7 | Do spouses take part in radd? | No. The remainder returns to the other fixed-share heirs only. A spouse who is the only heir takes their fixed share and the rest is shown as a "Remainder" line with no recipient | Set `SPOUSE_TAKES_RADD` to true in `utils/inheritance.js` and update its tests |
+| 4 | 7 | Does a grandfather exclude brothers and sisters? | Yes | Set `GRANDFATHER_EXCLUDES_SIBLINGS` to false; the grandfather-with-siblings sharing rules of the other schools would then need building |
+| 5 | 7 | The Spec 5.9 table gave the mother 1/6 only beside a son, grandson or two siblings. Qur'an 4:11 gives each parent a sixth beside any child | Mother takes 1/6 beside any child or son's child, daughters included. Spec table corrected | Restore the old row; not advised, as it contradicts 4:11 |
+| 6 | 7 | The table made the father a pure residuary beside daughters only | Father (or grandfather in his place) takes 1/6 plus the residue beside daughters or granddaughters only, so he keeps his sixth when shares are reduced | Remove the fixed sixth in `assignShares` |
+| 7 | 7 | The table gave a sister 1/2 or 2/3 even beside a daughter | Beside a daughter or granddaughter, sisters take the residue (Sahih al-Bukhari 6736, verified against the text) | Remove the `sisterWithDaughters` branch |
+| 8 | 7 | The table gave each grandmother 1/6 | Two grandmothers share one sixth between them. No reference is attached to this on the page beyond the existing "Hadith" label, because I could not verify a numbered source; a reviewer should supply one | Give each 1/6 in `assignShares` |
+| 9 | 7 | Husband or wife with both parents (not covered by the table) | The mother takes a third of what is left after the spouse, so the father takes twice her share. This is the position of the four schools; no numbered source is cited on the page | Remove the `motherTakesThirdOfRemainder` branch |
+| 10 | 7 | The whole inheritance engine | Built and tested against Spec 5.9, but not reviewed by a scholar. It should be before people rely on it | Name a reviewer **Deferred, 13 October 2026: Zubair is still looking for a reviewer.** |
+| 11 | 11 | May location be saved on the device? (Reverses "location is never persisted" in Spec section 6) | Yes, only when the user presses "Remember this location"; kept on the device under `prayer-settings`; removed by "Forget my location". Privacy text updated on the About page and in Spec 6 and 9 | Remove the offer and the store; features 12, 19, 21, 23 and 24 depend on a saved location |
+| 12 | 12 | How are fonts kept for offline use? | Google Fonts stay as they are; the worker keeps the font files a visitor has loaded. Self-hosting them would be more robust offline but adds files to maintain | Self-host the three typefaces and drop the Google Fonts links |
+| 13 | 12 | The content security policy had a mistyped address, `cdn.jsdelivr.ne3t`, which blocked the first Zakat price source on the live site (the mirror was covering for it) | Corrected to `cdn.jsdelivr.net` | None needed; noted so you know prices on the live site were coming from the mirror |
+| 14 | 15 | The Inheritance page quoted "Learn the Fara'id and teach them, for it is half of knowledge…" and attributed it to Sahih Bukhari 6732 and Abu Dawud 2886. Neither holds that text | The quote was replaced with the text of Sahih Bukhari 6732 ("Give the Fara'id to those who are entitled…"), and the second reference corrected to Abu Dawud 2898, which carries the same statement. Both checked against the open fawazahmed0 hadith dataset | Restore the old quote with its true source (it is reported in Ibn Majah, and its chain is disputed); a reviewer should decide |
+| 15 | 15 | Faith page: "equal to one-third of the Qur'an" was cited as Sahih Bukhari 6267, which is a different hadith | Changed to Sahih Bukhari 5013, whose text says exactly this | Reviewer to confirm |
+| 16 | 15 | Hajj page: Hajj on behalf of someone who died was cited as Sahih Bukhari 1513, which is about an elderly father still living | Changed to Sahih Bukhari 1852 (a woman whose mother died before performing Hajj) | Reviewer to confirm |
+| 17 | 15 | Two citations look imprecise and were left as they are: the Faith page quotes 'Uthman's narration (Sahih Muslim 26) and also cites Sahih Bukhari 128, which is a different narration on the same point; and the istighfar dhikr cites Sahih Bukhari 6307 ("more than seventy times a day") with a count of 100 | Left unchanged | A reviewer should decide whether to drop Bukhari 128 from that block and whether the count of 100 should cite Sahih Muslim 2702 instead |
+| 18 | 16 | Which hadiths, and which translation, for the daily hadith? | 67 short hadiths, all from Sahih al-Bukhari, chosen by me for being self-contained. English text copied from the open fawazahmed0/hadith-api dataset (edition eng-bukhari), with three typing errors corrected. The dataset does not state the translation's licence | Edit `src/data/dailyHadith.js`. A reviewer should read the list, and you should decide whether that translation may be republished or should be replaced |
+| 19 | 18 | Which duas, and in whose words? | 46 duas chosen by me: 16 from the Qur'an and 30 from Sahih al-Bukhari, Abu Dawud, al-Tirmidhi and Ibn Majah. The Arabic is copied from the sources. The transliterations, the English translations of the hadith duas, the titles and the "when to say it" lines are my own wording; Qur'an translations follow Saheeh International | Edit `src/data/duas.js`. A reviewer should read all 46, and in particular confirm the grading of the 19 that are not from the Qur'an or al-Bukhari, which I could not verify |
+| 20 | 19 | What does the streak show while today is unfinished? | The count up to yesterday, so it does not fall to zero every morning. It becomes zero only when a prayer today is marked missed | Change `salahStreak` in `utils/salah.js` |
+| 21 | 20 | Where is the user's own first day of Ramadan kept? `Features.md` names one key, `fasting-log` | In a second key, `ramadan-starts`, so the day-by-day log stays simple | Fold it into `fasting-log` with a migration |
+| 22 | 20 | Which Ramadan does a made-up fast count against? | The most recent Ramadan before the day it was fasted. Fasts owed from an older Ramadan and made up after a newer one are therefore credited to the newer | Let the user choose the year when logging a made-up fast |
+| 23 | 22 | What does the preview image for shared links look like? | The site's mark on its green, 1200×630, drawn by `scripts/make-icons.py` (`public/og-image.png`). It has no text, because the script draws shapes only | Replace `public/og-image.png` with a designed image of the same size |
+| 24 | 23 | How long after Fajr and Asr do the adhkar reminders come? | 20 minutes | Change `ADHKAR_DELAY_MINUTES` in `utils/reminders.js` |
+| 25 | 24 | May a server hold rounded coordinates for push? | Yes, at the proposed default: only for a user who switches push on; rounded to two decimal places by the server itself; with timezone, the two methods and the chosen reminders; deleted on switching off, on turning reminders off, on "Forget my location", and when the subscription expires. Stated on the About page | Do not set the VAPID keys: the switch is then never offered and nothing is ever stored. To remove the code, drop `netlify/functions/push*.js` |
+| 26 | 24 | A dependency was added without asking: `@netlify/blobs` (CLAUDE.md says to ask first) | Added, because feature 24 needs somewhere on the server to keep each device's record and Netlify Blobs is the storage that comes with Netlify Functions. No push library was added; signing and encryption use Node's built-in `crypto` | `npm uninstall @netlify/blobs` and choose another store for `netlify/functions/push.js` and `push-send.js` **Confirmed by Zubair, 13 October 2026: keep it.** |
+| 27 | 24 | Push encryption and signing were written by hand rather than with the `web-push` package, to avoid a second dependency | `netlify/functions/lib/webPush.js`, tested by decrypting what it encrypts and verifying its signature, but never run against a real push service | `npm install web-push` and replace `sendPush` with its `sendNotification` |
+| 28 | 25 | How far does "all interface text" go in feature 25? | The shell, shared components, tools and calculators are moved (about 440 messages), with a test that fails on hard-coded text in them. Long-form writing, text in `data/` and page titles were then moved with feature 26, so both are ticked. Sentences that had inline markup are split into fragments, which a translator may want merged | Merge a split sentence with vue-i18n's `<i18n-t>` where needed |
+| 29 | 25 | Reminders pushed by the server are in English, because the server does not know the reader's language | Left in English | Send the language with the push record (one more stored field) and translate on the server |
+| 30 | 26 | `Features.md` describes content as structured sections drawn by a small set of components. How were the existing pages done? | Each of the ten existing pages keeps its own layout and reads its words from its content file by section and key. Adding a translation is still one file with no component edited, and a test proves every page reads word for word as before. New pages (Eid, Qurbani, Prophets) are written section by section | Rebuild a page on `ContentPage` section components; its layout would have to be redesigned to fit |
+| 31 | 27 | Who translates the site into Yoruba, and who reviews it? | Nobody yet. I did not write a Yoruba translation: religious text needs a Yoruba speaker and the named reviewer the project requires. Everything else is in place, so the work left is filling `src/locales/yo.js` (about 460 messages) and a `yo.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer. If you want a machine-drafted starting point for them to correct, say so and I will produce one, clearly marked as a draft |
+| 32 | 27 | Which published Yoruba translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Shaykh Abu Rahimah Mikael Aykyuni's translation, as published by QuranEnc | Change `quran` in the Yoruba entry of `src/locales/index.js` |
+| 33 | 27 | Which typefaces does Yoruba use? | Noto Sans for text and Noto Serif for headings, because DM Sans has no ẹ, ọ or ṣ (checked against the font files). They load from Google Fonts only when Yoruba is read | Change `fonts` in the Yoruba entry; any replacement must hold ẹ ọ ṣ and the tone marks |
+| 34 | 28 | Who translates the site into Hausa, and who reviews it? | Nobody yet, for the same reason as Yoruba. The work left is filling `src/locales/ha.js` and a `ha.js` beside each page's content file, each with `meta.reviewer` | Name the translator and the reviewer; a machine-drafted starting point can be produced on request |
+| 35 | 28 | Which published Hausa translation of the Qur'an does the site use? | Proposed in the registry, not applied to any verse: Abubakar Mahmoud Gumi's translation, as published by Tanzil | Change `quran` in the Hausa entry of `src/locales/index.js` |
+| 36 | 29 | Which right-to-left language comes first, if any? `Features.md` names Arabic and Urdu as examples but plans neither | None registered. The layout is ready for one | Add the language to `src/locales/index.js` with `dir: 'rtl'` and its translation files |
+| 37 | 30 | Who reviews the Eid page? | Nobody yet. The page is built and every hadith and verse was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read the page **13 October 2026: ticked by Zubair without a reviewer; the review stays open here until one is named.** |
+| 38 | 30 | Which wording of the takbirat, and from what source? | "Allāhu akbar, Allāhu akbar, lā ilāha illa-llāh, wa-llāhu akbar, Allāhu akbar, wa lillāhi-l-ḥamd", typed by hand. It is reported from Ibn Mas'ud in the Musannaf of Ibn Abi Shaybah, which is not among the collections I could check, so the page says the source awaits confirmation | Have the reviewer confirm the Arabic and supply the reference, in `data/eidSections.js` and `data/content/eid/en.js` |
+| 39 | 30 | Which schools are named beside each number of extra takbirs? | Seven and five is given as the Maliki, Shafi'i and Hanbali view and three extra in each rak'ah as the Hanafi view. The hadiths are verified; which school holds which view is from general knowledge, not a checked source | Correct the two position texts in `data/content/eid/en.js` |
+| 40 | 30 | Does the Eid page link to Qurbani before that page is reviewed? | Yes, once feature 31 is built | Remove the link in `EidView.vue` |
+| 41 | 31 | Who reviews the Qurbani page? | Nobody yet. Every hadith and verse was checked against its text, but no scholar has read the page | Name the reviewer; the feature is ticked once they have read the page **13 October 2026: ticked by Zubair without a reviewer; the review stays open here until one is named.** |
+| 42 | 31 | Which schools hold which view on the ruling and on the days? | Obligatory: Hanafi (on a resident adult who owns the nisab). Confirmed sunnah: Maliki, Shafi'i, Hanbali. Three days: Hanafi, Maliki, Hanbali. Four days: Shafi'i. The hadiths are verified; the attribution to schools is from general knowledge | Correct `ruling` and `dayCount` in `data/content/qurbani/en.js` |
+| 43 | 31 | What are the minimum ages of the animals? | Camel five years, cow two, goat one, sheep from six months, with a sentence saying the schools differ slightly and that the ages are from the books of fiqh and await review. Only the hadith (Abu Dawud 2797) is verified | Have the reviewer correct `animals.i2` and remove the caveat |
+| 44 | 31 | What is the evidence for four days of sacrifice? | The page names the report in Musnad Ahmad that all the days of Tashriq are days of slaughter, without a number, and says it could not be checked | Have the reviewer supply the number in `dayCount.text2` |
+| 45 | 31 | How is the Muwatta report of Ibn Umar cited? | As "Muwatta Malik 1039", the number in the open dataset I checked the text against. Editions of the Muwatta number differently and the library does not hold it, so it is not a link | Confirm the Arabic-edition number in `data/qurbaniSections.js` |
+| 46 | 31 | Is Ibn Majah 3123 acceptable as evidence? | It is quoted as "reported from Abu Hurairah", since scholars differ on whether it goes back to the Prophet. Its grade was not checked | Reword or remove it in `who` and `ruling` |
+| 47 | 31 | Is the son in the story of Ibrahim named? | No. The page says "his son", as the verses do | Add the name in `origin` once the reviewer agrees the wording |
+| 48 | 31 | Is the recommendation to divide the meat in thirds stated? | Yes, as what many scholars recommend, with a sentence that the texts set no fixed portions. It has no numbered source | Remove the sentence in `meat.i2` |
+| 49 | 32 | Who reviews the story of Ibrahim and the list of prophets? | Nobody yet. Every verse and hadith was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read both pages **13 October 2026: ticked by Zubair; the review moves to feature 36, where all 25 stories are verified together.** |
+| 50 | 32 | In what order are the 25 prophets listed? | Adam, Idris, Nuh, Hud, Salih, Ibrahim, Lut, Isma'il, Ishaq, Ya'qub, Yusuf, Ayyub, Shu'ayb, Musa, Harun, Dhul-Kifl, Dawud, Sulayman, Ilyas, Al-Yasa', Yunus, Zakariyya, Yahya, 'Isa, Muhammad. This is the customary order; it is not from a numbered source | Reorder `data/prophets.js` (and the order in its test) |
+| 51 | 32 | What is shown for "the people they were sent to"? | Only what a verse states, with that verse, for 15 prophets. For the other ten (Idris, Ishaq, Ya'qub, Ayyub, Dhul-Kifl, Dawud, Sulayman, Al-Yasa', Zakariyya, Yahya) nothing is shown, since I found no verse naming a people | Add `people` and `peopleRefs` in `data/prophets.js` |
+| 52 | 32 | Which honorific convention? | "peace be upon him" written out at a prophet's first mention in a story, عليه السلام in the page header, and ﷺ for the Prophet Muhammad. The older Hajj page still writes "Ibrahim ﷺ" and was left as it is | Change the story text and `HONORIFIC` in `ProphetView.vue` |
+| 53 | 32 | Is the son in Ibrahim's dream named? | No. The story says the verses do not name him, and notes that the good news of Ishaq follows in the surah (Qur'an 37:112) | Add the name and its evidence in `sacrifice` in `data/content/ibrahim/en.js` |
+| 54 | 32 | Whose translation of the verses is used? | My own wording, written for the page with Saheeh International open beside it. No published translation is credited | Replace the `translation` texts in `data/content/ibrahim/en.js` with a credited translation |
+| 55 | 32 | Is Ibrahim's story in the order of events? | The Qur'an does not give one order, so the page says its order is for reading. The order used is the usual one: his people, the fire, emigration, Makkah, the sacrifice, the Ka'bah | Reorder `data/ibrahimSections.js` |
+| 56 | 33 | Where are the stops of Ibrahim's journey, and how is each known? | Ur (30.96, 46.10), Harran (36.86, 39.03), Canaan at Hebron (31.53, 35.10), Egypt at Memphis (29.84, 31.25), Makkah (21.42, 39.83). Only Makkah is marked as named in the Qur'an; the other four are marked "identified by historians". The identifications and coordinates are from general historical knowledge, not a cited work | Change `data/ibrahimJourney.js` and the `journey` texts in `data/content/ibrahim/en.js` |
+| 57 | 33 | Is Harran a stop at all? | Yes, because `Features.md` lists it. No verse or hadith I checked mentions it; its text says only that historians place a stage of the journey there | Remove the `harran` stop and its two texts |
+| 58 | 33 | In what order did Ibrahim travel? | Ur, Harran, Canaan, Egypt, Makkah, as `Features.md` lists them. The sources do not give the order of Canaan and Egypt | Reorder `data/ibrahimJourney.js` |
+| 59 | 33 | Does the journey need the reviewer of feature 32? | It adds five short texts about Ibrahim, so I have treated it as needing the same reviewer | Tick it without review if you judge the texts need none **13 October 2026: the review of the journey texts moves to feature 36.** |
+
+**Checks only Zubair can do**
+
+| # | Feature | Check |
+|---|---|---|
+| 1 | 12 | On a real Android phone and a real iPhone: install the app, turn on flight mode, open it from the home screen and read the morning adhkar; confirm prayer times (with a saved location) and tasbih also work. Then tick feature 12 **Done, 13 October 2026.** |
+| 2 | 12 | Run Lighthouse on the live site and confirm it reports the site as installable with no manifest or icon warnings **Run by Zubair on a deploy preview, 13 October 2026 (Lighthouse 13.4.1, phone profile). The manifest loaded and no manifest or icon problem was reported; this version of Lighthouse has no "installable" check, and installing was confirmed on phones (row 1). Scores: accessibility 92, best practices 92, performance 49 and SEO 69. The run warned that Chrome extensions slowed the page, and the SEO score reflects the `noindex` Netlify puts on previews, so both want a clean run on the live site.** |
+| 3 | 12 | On a throttled "Slow 3G" connection, confirm a first visit to the home page is usable within five seconds, and that the Arabic and heading fonts still show after going offline on a second visit |
+| 4 | 12 | After the next deploy, with a tab already open, confirm "Update available" appears and Refresh loads the new version |
+| 5 | 13 | In Netlify, add `HADITH_API_KEY` (scoped to Functions) and delete `VITE_HADITH_API_KEY`. The old key was readable in the site's JavaScript, so get a fresh key from hadithapi.com and retire the old one **Done, 13 October 2026.** |
+| 6 | 13 | On production (or a deploy preview), browse from the book list to a chapter and confirm in the network panel that every request goes to `/api/hadith/` and no key appears. Also confirm a repeated request is served from the cache. Then tick feature 13 **Done, 13 October 2026.** |
+| 7 | 13 | Run `npx netlify-cli dev` once locally to confirm the function is picked up and the rewrite in `netlify.toml` reaches it. I could not run the Netlify CLI in this session |
+| 8 | 14 | The key in the local `.env` (`VITE_HADITH_API_KEY`) is rejected by hadithapi.com as invalid, so nothing hadith-related could be checked against live data. Put a working key in `.env` as `HADITH_API_KEY` |
+| 9 | 14 | With a working key, open a hadith from each of the nine collections at `/hadith/books/<book>/hadith/<number>`, paste the address into a new browser and confirm the same hadith shows. Confirm the last hadith of a book has no "next" link (it relies on `hadithCount` in `BOOKS_META`, where Sahih Muslim's count looks copied from Bukhari's). Then tick feature 14 **Done, 13 October 2026.** |
+| 10 | 15 | With a working key and `npx netlify-cli dev` running, run `CITATIONS_BASE=http://localhost:8888 npx vitest run test/citations.live.test.js`. It requests every hadith the site cites and fails on any the library does not have |
+| 11 | 15 | Open each cited hadith link (about 40) and confirm it shows the hadith quoted. Pay most attention to the 13 Sahih Muslim links: the library numbers that book differently, and their mapping in `src/data/hadithNumbering.js` was worked out from an open dataset, not from the library itself. Then tick feature 15 **Done, 13 October 2026.** |
+| 12 | 22 | On a real Android phone and a real iPhone: share the daily hadith and a dua to a WhatsApp chat. Confirm the card is readable, the Arabic is right to left with its letters joined and its marks in place, and the person receiving it can open the link to the same item. Then tick feature 22 **Done, 13 October 2026.** |
+| 13 | 22 | After deploying, paste a hadith link, a dua link and a link to an unknown hadith into WhatsApp and confirm the previews (reference as title with the site image; the default preview for the unknown one). The edge function could not be run here **Done, 13 October 2026.** |
+| 14 | 22 | Open a shared link on the live site and confirm in GoatCounter that the visit is counted with `whatsapp` as its source and the tag leaves the address bar |
+| 15 | 23 | On a real phone with a saved location: turn on the Asr reminder, leave the app open in the background and confirm a notification arrives within a minute of Asr and opens the tracker when tapped. Then tick feature 23 **Done, 13 October 2026.** |
+| 16 | 24 | Run `node scripts/make-vapid-keys.js` and set `VITE_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT` in Netlify. Confirm the scheduled function `push-send` shows as running every minute and that Netlify Blobs is available on your plan **Done, 13 October 2026.** |
+| 17 | 24 | On a real Android phone and an installed iPhone app, with the app fully closed, confirm a reminder arrives within two minutes of Maghrib and opens the tracker. Then switch push off and confirm the record is gone from the `push-subscriptions` store. Then tick feature 24 **Done, 13 October 2026.** |
+| 18 | 27 | Once Yoruba text exists: on a real Android phone and a real iPhone, confirm letters with tone marks and under-dots (for example ẹ̀, ọ́, ṣ) display as single, correctly formed letters in headings, body text and buttons |
+| 19 | 28 | Once Hausa text exists: on a real Android phone and a real iPhone, confirm the hooked letters ɓ, ɗ, ƙ and ƴ display as single, correctly formed letters in headings, body text and buttons |
+| 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 |
+| 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) **Page read on a phone, 13 October 2026; the dates are still to confirm as each Eid approaches.** |
+| 22 | 31 | Read the Qurbani page on a phone at 360px wide and try the shares helper with the on-screen keyboard **Done, 13 October 2026.** |
+| 23 | 32 | Read the list of prophets and the story of Ibrahim on a phone at 360px wide **Done, 13 October 2026.** |
+| 24 | 33 | On a phone, open Ibrahim's page, step through the five stops on the map and in the list, then turn the network off on the installed app and confirm the map still shows **Done, 13 October 2026: the stops were stepped through on a phone and the map showed in flight mode.** |
+
+**Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
+
+---
+
 ## Decisions needed
 
 Each of these blocks the feature named. A proposed default is given where there is one; the feature is written to that default.
@@ -1015,4 +1235,4 @@ Each of these blocks the feature named. A proposed default is given where there 
 | May the site count visits at all? | 34 | **Decided:** Yes, as anonymous counts only. Reverses the "no analytics" rule in `Spec.md`, `CLAUDE.md`, `CONTRIBUTING.md` and the About page |
 | Which statistics service? | 34 | **Decided:** GoatCounter: open source, no cookies, counts named actions, free for non-commercial sites |
 | Are visitors asked first? | 34 | **Decided:** No banner. Nothing identifying is collected; Do Not Track is honoured and an opt-out switch is offered |
-| Who reviews translations and new religious content? | 27, 28, 30 to 32 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer |
+| Who reviews translations and new religious content? | 27, 28, 36 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer. **13 October 2026:** Zubair ticked 30 to 32 while still looking for a reviewer; the prophets' stories are verified under feature 36, and the Eid and Qurbani reviews stay open under Final |

@@ -125,6 +125,96 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'The journey of Ibrahim',
+            scope: 'Prophets',
+            desc: "Ibrahim's page now has a map of his journey, from his homeland to Makkah, with five numbered stops joined in order and the same journey as a list below. Each stop says what happened there, gives its source, and is marked either as named in the Qur'an or hadith or as a place identified by historians. The map is drawn inside the site, so it works offline and sends nothing anywhere.",
+          },
+          {
+            title: 'The prophets',
+            scope: 'Prophets',
+            desc: "A new section lists the 25 prophets named in the Qur'an, each with his Arabic name and verses that name him. The story of Ibrahim is told in full from the Qur'an and authentic hadith: the idols, the fire, his emigration, Hajar and Isma'il in Makkah, the sacrifice and the building of the Ka'bah, with every verse shown in Arabic and translation and every hadith linked to its source. More stories will follow. The story awaits scholarly review.",
+          },
+          {
+            title: 'Qurbani guide',
+            scope: 'Qurbani',
+            desc: 'A new page explains the Eid al-Adha sacrifice: its origin in the story of Ibrahim, who it is due on, which animals qualify, when it can be done, how the meat is shared and how it is carried out. Where the schools differ, on whether it is obligatory and on three or four days, both positions are shown with their evidence. A helper works out the ways a group can sacrifice: enter the number of people and it lists sheep or goats, shares of a cow or camel, or a mix. The page awaits scholarly review.',
+          },
+          {
+            title: 'Eid guide',
+            scope: 'Eid',
+            desc: 'A new page explains Eid al-Fitr and Eid al-Adha: what they are, the sunnahs of the day, how the Eid prayer is performed, the takbirat in Arabic with transliteration and translation, and Zakat al-Fitr. Where the schools differ on the extra takbirs, both positions are shown with their evidence. A countdown shows the days to the next Eid, with a reminder that the day itself depends on the sighting of the moon. The page awaits scholarly review.',
+          },
+          {
+            title: 'Reminders when the app is closed',
+            scope: 'Prayer page',
+            desc: 'A new switch, "Also notify me when the app is closed", delivers prayer reminders even when IslamicHub is not open. It is off unless you turn it on. To send a reminder at the right minute a server keeps your location rounded to about 1 km, your timezone, your calculation methods and the reminders you chose, and nothing else: no name, no email, no account. Turning the switch off, or "Forget my location", deletes it. On iPhone it works once the app is installed.',
+          },
+          {
+            title: 'Prayer reminders',
+            scope: 'Prayer page',
+            desc: 'With a remembered location you can now turn on reminders for each of the five prayers and for the morning and evening adhkar. A reminder opens the prayer tracker, or the adhkar, when tapped. They are off until you turn them on, and they arrive only while IslamicHub is open or running in the background.',
+          },
+          {
+            title: 'Share to WhatsApp',
+            scope: 'Hadith, duas and adhkar',
+            desc: "Every hadith, dua and dhikr now has a Share button. It makes an image card on your own device, with the Arabic, the translation, the source and the site's address, and opens your phone's share sheet so WhatsApp is one tap away. Where a browser cannot share images you can save the card or send the text. Nothing is uploaded. Shared links now show a proper title and picture when pasted into a chat.",
+          },
+          {
+            title: 'Your day on the home page',
+            scope: 'Home page',
+            desc: 'The home page now opens with a "Today" panel: the next prayer and how long until it, today\'s five prayers, the adhkar you have completed, your tasbih count, the hadith of the day, and in Ramadan today\'s fast. Each part is one tap from its page. It is built from what is already kept on your device and sends nothing anywhere.',
+          },
+          {
+            title: 'Fasting tracker',
+            scope: 'Fasting page',
+            desc: 'The Fasting page can now record your fasts: fasted or missed for each day of Ramadan, and made-up or voluntary fasts for the rest of the year. It shows how many missed fasts are still to be made up, for each Ramadan separately, and lets you set the day Ramadan began where you are. Everything stays on your device.',
+          },
+          {
+            title: 'Prayer tracker',
+            scope: 'Tracker',
+            desc: 'A new tracker lets you mark each of the five daily prayers as on time, late or missed, see the last seven days and the month at a glance, correct past days, and keep a streak. With a remembered location it shows each prayer\'s time. Everything stays on your device, and "Clear my data" removes it.',
+          },
+          {
+            title: 'Duas for everyday situations',
+            scope: 'Duas',
+            desc: "A new Duas section holds 46 supplications from the Qur'an and the Sunnah for travel, eating, home, the mosque, clothing, weather, distress, illness, forgiveness, and parents and family. Each has its Arabic text, transliteration, translation and source, with hadith sources linked to the library. You can search them in English or by transliteration, and link straight to any one of them.",
+          },
+          {
+            title: 'Hadith of the day',
+            scope: 'Home page',
+            desc: 'The home page now shows one short hadith from Sahih al-Bukhari each day, with its narrator and a link to the full hadith. It changes at your own midnight and works with no connection.',
+          },
+          {
+            title: 'Hadith references are now links',
+            scope: 'Whole site',
+            desc: 'Every hadith reference on the site, on the pillar pages, the Articles of Faith, the adhkar, the Tasbih and Inheritance pages, now links to that hadith in the library, so a claim can be checked in one tap.',
+          },
+          {
+            title: 'Every hadith has its own page',
+            scope: 'Hadith library',
+            desc: 'Each hadith can now be opened at its own address, with its Arabic text, translation, narrator, grade, book and chapter, and links to the previous and next hadith. It can be copied or shared, and every hadith in a chapter list links to its page.',
+          },
+          {
+            title: 'Install IslamicHub and use it offline',
+            scope: 'Whole site',
+            desc: 'IslamicHub can now be installed on a phone from the browser, and after one visit every page opens with no connection. Prayer times (with a remembered location), the Qibla, adhkar and the tasbih counter work fully offline. Hadith books and chapters you have already opened are kept; the Zakat page uses the last prices it fetched and says how old they are. When a new version is released, an open page offers "Update available" instead of changing under you.',
+          },
+          {
+            title: 'Remember my location',
+            scope: 'Prayer and Fasting pages',
+            desc: 'Once prayer times are shown you can choose to remember the location, calculation method and Asr method. Later visits to the Prayer and Fasting pages then show today\'s times straight away. It is saved on your device only, never sent anywhere, and "Forget my location" removes it. Coordinates outside the valid range are now refused.',
+          },
+          {
+            title: 'Hanafi Asr time',
+            scope: 'Prayer page',
+            desc: "A new selector beside the calculation method chooses how Asr is timed: Standard (when an object's shadow equals its length, followed by the Shafi'i, Maliki and Hanbali schools) or Hanafi (twice its length). Standard remains the default. Changing it, or the calculation method, now updates the times and the countdown straight away.",
+          },
+          {
+            title: 'Naira in the Zakat calculator',
+            scope: 'Zakat page',
+            desc: "Zakat can now be worked out in Nigerian naira (₦), at the official exchange rate. Because a local dealer's price can differ, you can also type your own price per gram for gold and silver, in any currency, and the calculator and the nisab both use it.",
+          },
+          {
             title: 'Vue 3 + Vite + Pinia',
             scope: 'Architecture',
             desc: 'Full rewrite from vanilla ES modules to Vue 3 Composition API with Vite bundling and Pinia state management. All utility functions (prayer, qibla, hijri, inheritance) moved unchanged to src/utils/.',
@@ -162,6 +252,36 @@ const releases = [
         dotColor: 'var(--gold)',
         entries: [
           {
+            title: 'Ready for right-to-left languages',
+            scope: 'Layout',
+            desc: 'The site\'s styles no longer say "left" and "right" but "start" and "end", so the whole layout will mirror by itself for a right-to-left language such as Arabic or Urdu. Arabic verses, the Qibla compass and the tasbih counter stay as they are. Nothing changes in English.',
+          },
+          {
+            title: 'Groundwork for Hausa',
+            scope: 'Languages',
+            desc: 'Hausa is now a registered language of the site, waiting for its translation, and stays hidden until it is translated and reviewed. Search will find Hausa words whether or not the hooked letters are typed.',
+          },
+          {
+            title: 'Groundwork for Yoruba',
+            scope: 'Languages',
+            desc: "Yoruba is now a registered language of the site, waiting for its translation. It stays hidden until every part is translated and reviewed. The site's body typeface cannot draw Yoruba's under-dotted letters, so Yoruba will be shown in typefaces that can.",
+          },
+          {
+            title: "Every page's writing can now be translated",
+            scope: 'Whole site',
+            desc: 'The writing on the Faith, Prayer, Zakat, Fasting, Hajj, Articles of Faith, hadith, Inheritance, About and home pages, and the text of the adhkar, duas and daily hadith, now lives in content files, one per page and language. A page can be translated by adding a file. Where a translation is missing, the section is shown in English with a small note. Nothing changes for English readers.',
+          },
+          {
+            title: 'The site is ready to be translated',
+            scope: 'Whole site',
+            desc: 'The text of the navigation, the tools and the calculators now lives in one message file per language instead of inside the pages, and the site can serve each language at its own address, with a language switcher that appears once a second language is ready. Nothing changes for English readers yet.',
+          },
+          {
+            title: "The hadith library's key is no longer public",
+            scope: 'Hadith library',
+            desc: "The hadith library now asks the site's own server for books, chapters and hadiths, and the server adds the API key. The key used to be readable in the site's code. Replies are cached for a day, so pages you have opened load faster.",
+          },
+          {
             title: 'Lint and format pass across the project',
             scope: 'Code quality',
             desc: 'Fixed the seven existing lint errors (unused variables and parameters) and formatted every source file with Prettier. No change to any calculation.',
@@ -183,6 +303,41 @@ const releases = [
         icon: '🐛',
         dotColor: '#c0392b',
         entries: [
+          {
+            title: 'Deploys no longer fail on the link preview',
+            scope: 'Build',
+            desc: 'The function that gives shared links their title and picture was reaching a file Netlify could not bundle, which stopped the site from deploying. The list of hadith collections it needs now lives in a file of its own, and a test stops this from happening again.',
+          },
+          {
+            title: 'Visits from shared links are counted as such',
+            scope: 'Usage statistics',
+            desc: 'A link shared from the site carries a short tag so the visit can be counted as coming from WhatsApp. The code that read the tag never ran; it does now, and the tag is removed from the address bar after it is counted.',
+          },
+          {
+            title: 'Adhkar counts are kept if you reload',
+            scope: 'Adhkar',
+            desc: 'Counts on adhkar cards used to vanish if the page was reloaded or closed part-way through. They are now kept on your device for the day, so you can leave and carry on where you stopped, and each new day starts clean. Completing a category also now clears the counts of its multi-part adhkar.',
+          },
+          {
+            title: 'Three hadith citations corrected',
+            scope: 'Faith, Hajj and Inheritance pages',
+            desc: "While linking every citation, each was compared with its source. The hadith on Surah al-Ikhlas being a third of the Qur'an is now cited as Sahih Bukhari 5013, and Hajj on behalf of someone who has died as Sahih Bukhari 1852. The Inheritance page quoted a narration that is not in the two collections it named; it now quotes Sahih Bukhari 6732, also found in Abu Dawud 2898.",
+          },
+          {
+            title: 'No more two-second wait on every page',
+            scope: 'Whole site',
+            desc: 'Every visit used to sit behind the loading screen for at least two seconds while gold prices were fetched, even on pages that never use them. The loading screen now clears as soon as the page is ready, and prices are fetched only when the Zakat page is opened, once per visit.',
+          },
+          {
+            title: 'Every page now has a correct canonical link',
+            scope: 'Search engines',
+            desc: 'Titles, descriptions and canonical links are now set one way on every page. The hadith, adhkar, tasbih and Articles of Faith pages had no canonical link, and the sitemap was missing the adhkar, tasbih and Articles of Faith pages; both are corrected, and a test keeps the sitemap in step with the pages that exist.',
+          },
+          {
+            title: 'Inheritance shares corrected',
+            scope: 'Inheritance calculator',
+            desc: 'The calculator was rebuilt and several results have changed. A sister now shares with a brother, two parts to one. A granddaughter beside one daughter receives her sixth. A remainder with no residuary heir returns to the fixed-share heirs other than the spouse, so a wife beside one daughter takes 12.5%, not 20%. Every line names the rule behind it and amounts always add up to the estate. The result remains a guide, not a ruling.',
+          },
           {
             title: '"No chapters match" never showed',
             scope: 'Hadith book page',

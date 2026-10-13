@@ -1,8 +1,10 @@
+import { parseStoredObject } from '@/utils/storage.js'
+
 export const TROY_OUNCE_GRAMS = 31.1035
 export const GOLD_NISAB_GRAMS = 85
 export const SILVER_NISAB_GRAMS = 595
 export const ZAKAT_RATE = 0.025
-export const CURRENCIES = ['USD', 'GBP', 'EUR', 'SAR']
+export const CURRENCIES = ['USD', 'GBP', 'EUR', 'SAR', 'NGN']
 
 function isPrice(value) {
   return typeof value === 'number' && Number.isFinite(value) && value > 0
@@ -14,6 +16,15 @@ function toPence(amount) {
 
 function sum(...amounts) {
   return amounts.reduce((total, amount) => total + (Number(amount) || 0), 0)
+}
+
+export function parseCustomPrice(text) {
+  if (text === '' || text === null || text === undefined) {
+    return null
+  }
+
+  const price = Number(text)
+  return isPrice(price) ? price : undefined
 }
 
 export function perGram(usdPerOunce, rate) {
@@ -39,6 +50,27 @@ export function parsePrices(reply) {
   const rates = Object.values(fetchedRates).every(isPrice) ? fetchedRates : null
 
   return { usdPerOunce, rates, date: typeof reply.date === 'string' ? reply.date : null }
+}
+
+export function parseSavedPrices(text) {
+  const saved = parseStoredObject(text)
+  const metals = saved.usdPerOunce
+  if (
+    !isPrice(metals?.gold) ||
+    !isPrice(metals?.silver) ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(saved.date)
+  ) {
+    return null
+  }
+
+  const ratesValid = CURRENCIES.every((code) => isPrice(saved.rates?.[code]))
+  return {
+    usdPerOunce: { gold: metals.gold, silver: metals.silver },
+    rates: ratesValid
+      ? Object.fromEntries(CURRENCIES.map((code) => [code, saved.rates[code]]))
+      : null,
+    date: saved.date,
+  }
 }
 
 export function calculateZakat(amounts, prices, nisabMethod) {
