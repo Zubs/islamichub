@@ -42,10 +42,11 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 30. Eid
 - [x] 31. Qurbani
 - [x] 32. Prophets
-- [ ] 33. Journeys of the prophets
+- [x] 33. Journeys of the prophets
 - [x] 34. Usage statistics
 - [ ] 35. Final
 - [ ] 36. Complete prophets stories
+- [ ] 37. Accessibility and loading fixes
 
 ---
 
@@ -999,7 +1000,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - The same list is readable as plain text below the map.
 - Journeys for Musa and Yusuf follow once their stories exist.
 - Built: the map, the list and Ibrahim's five stops, with tests. The outline of the region is one SVG path made from Natural Earth's public-domain data, so nothing is fetched. Only Makkah is marked as named in the Qur'an; Ur, Harran, Canaan and Egypt are marked as identified by historians, and each says what the sources do and do not name.
-- Checked by Zubair on a phone on 13 October 2026: the five stops on the map and in the list. Not yet done: the map with the network off, and a reviewer for its five texts, so the feature stays unticked; see Final.
+- Checked by Zubair on a phone on 13 October 2026: the five stops on the map and in the list, and the map in flight mode. Ticked. The review of the five journey texts belongs to feature 36.
 
 **Tests**
 - A prophet with no journey shows no map and no gap.
@@ -1044,6 +1045,32 @@ Tests are written in plain English and ordered the same way under every feature:
 - A user opens the list, reads the stories of Nuh, Musa and 'Isa in turn, and follows a verse reference in each.
 
 **Done when:** All 25 stories are live and fully referenced, and each one records the name of the reviewer Zubair named and the date they verified it.
+
+### 37. Accessibility and loading fixes
+
+**What it does:** Fixes what a Lighthouse run on 13 October 2026 found in the site's own code, so that text is easier to read, screen readers are told the right things, and the first screen appears sooner.
+
+**How it works**
+- **Contrast.** Text that falls below a contrast ratio of 4.5 to 1 is brought up to it: the footer links, copyright line and disclaimer on the dark footer; the gold verse reference on cream; the gold tag on the pillar cards; and the paragraph in the green call-to-action strip. The fix is made in `tokens.css` or in the one rule that sets the colour, not page by page.
+- Changing these colours changes how the site looks, so the new values are proposed to Zubair and agreed before they are applied.
+- **Roles.** The pillar cards, tool cards and feature cards on the home page carry `role="listitem"` on links and articles, which is not allowed. Each group becomes a real list (`ul` and `li`) with the link or article inside, and looks the same as before.
+- **Headings.** The footer's column titles jump to `h4`. They become the next level down from the page's headings, or stop being headings, with their look unchanged.
+- **Links in text.** The two names in the footer credit cannot be told from the words around them. They are underlined.
+- **Fonts.** The Google Fonts stylesheet holds up the first paint. It is loaded without blocking, with text shown in the fallback typeface until the fonts arrive, and the unused `preconnect` hints are corrected. Self-hosting the fonts, which Final lists as an open decision for offline use, would settle both at once.
+- **`llms.txt`.** A request for `/llms.txt` is answered with the app's page. Either a real file is added, with a title and links to the main pages, or the address returns 404. Zubair decides which.
+- Not part of this feature: the performance score itself, which was distorted by browser extensions in that run, and the `noindex` on deploy previews, which Netlify adds and the live site does not have.
+
+**Tests**
+- Each colour pair named above meets 4.5 to 1, checked from the token values.
+- The home page holds no `role="listitem"` on a link or an article, and each card group is a list with the same number of items as before.
+- Heading levels on every page go down one step at a time, footer included.
+- The footer credit links are underlined.
+- The font stylesheet is not a render-blocking link in the built page, and the page's text is visible before the fonts load.
+- The pages read as they did: the page text fixtures still pass.
+- Arabic text still shows in the Arabic typeface once the fonts arrive, and offline after a first visit.
+- A user tabs through the home page with a screen reader and hears each group of cards announced as a list with its count.
+
+**Done when:** A Lighthouse run on the live site in a clean browser window reports no contrast, role, heading-order or link failures, and Zubair has approved the changed colours.
 
 ---
 
@@ -1188,7 +1215,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) **Page read on a phone, 13 October 2026; the dates are still to confirm as each Eid approaches.** |
 | 22 | 31 | Read the Qurbani page on a phone at 360px wide and try the shares helper with the on-screen keyboard **Done, 13 October 2026.** |
 | 23 | 32 | Read the list of prophets and the story of Ibrahim on a phone at 360px wide **Done, 13 October 2026.** |
-| 24 | 33 | On a phone, open Ibrahim's page, step through the five stops on the map and in the list, then turn the network off on the installed app and confirm the map still shows **Stops checked on a phone, 13 October 2026; the offline part is still to do.** |
+| 24 | 33 | On a phone, open Ibrahim's page, step through the five stops on the map and in the list, then turn the network off on the installed app and confirm the map still shows **Done, 13 October 2026: the stops were stepped through on a phone and the map showed in flight mode.** |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 
