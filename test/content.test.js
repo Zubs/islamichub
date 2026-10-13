@@ -41,6 +41,8 @@ const CONTENT_VIEWS = {
   eid: 'src/views/EidView.vue',
   qurbani: 'src/views/QurbaniView.vue',
 }
+const STORY_PAGES = ['ibrahim']
+const STORY_VIEWS = ['src/views/prophets/ProphetView.vue', 'src/views/prophets/ProphetsHomeView.vue']
 
 async function open(path) {
   const mounted = await mountPage(App, { path })
@@ -109,7 +111,7 @@ describe('content files', () => {
   const pages = readdirSync(resolve(ROOT, 'src/data/content'))
 
   it('exist for every content page', () => {
-    expect(pages.sort()).toEqual(Object.keys(CONTENT_VIEWS).sort())
+    expect(pages.sort()).toEqual([...Object.keys(CONTENT_VIEWS), ...STORY_PAGES].sort())
     for (const page of pages) {
       expect(existsSync(resolve(ROOT, 'src/data/content', page, 'en.js'))).toBe(true)
     }
@@ -138,6 +140,10 @@ describe('content files', () => {
       expect(source).toContain(`useContent('${page}', content)`)
     },
   )
+
+  it.each(STORY_VIEWS)('%s keeps no long-form English in its template', (view) => {
+    expect(hardCodedText(readFileSync(resolve(ROOT, view), 'utf8'))).toEqual([])
+  })
 })
 
 describe('a page in a second language', () => {

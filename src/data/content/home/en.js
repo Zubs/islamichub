@@ -168,6 +168,13 @@ export default {
         aria: 'Duas for everyday situations',
       },
       {
+        to: '/prophets',
+        icon: '📜',
+        name: 'Prophets',
+        desc: 'The 25 prophets named in the Qur’an · the story of Ibrahim, verse by verse · every part sourced',
+        aria: 'The prophets named in the Qur’an',
+      },
+      {
         to: '/tasbih',
         icon: '🔢',
         name: 'Tasbih Counter',

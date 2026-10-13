@@ -124,6 +124,7 @@ export default {
     onGithub: 'IslamicHub on GitHub',
     eid: 'The Two Eids',
     qurbani: 'Qurbani',
+    prophets: 'Prophets',
   },
   siteNav: {
     islamichubHome: 'IslamicHub home',
@@ -185,6 +186,7 @@ export default {
       changelog: 'Changelog',
       eid: 'The Two Eids',
       qurbani: 'Qurbani',
+      prophets: 'Prophets',
     },
   },
   statsOptOut: {
@@ -857,6 +859,11 @@ export default {
       description:
         'A sourced guide to Qurbani: who it is due on, which animals qualify, the days of sacrifice, how the meat is shared, and a helper for working out shares of a cow or camel.',
     },
+    prophets: {
+      title: "The Prophets Named in the Qur'an — Their Stories and Verses {'|'} IslamicHub",
+      description:
+        "The 25 prophets named in the Qur'an, each with the verses that name him, and their stories told from the Qur'an and authentic hadith, beginning with Ibrahim.",
+    },
   },
   about: {
     quranTranslations: "Qur'an translations used:",
@@ -884,5 +891,22 @@ export default {
     spare:
       '{animals}, with {n} shares spare | {animals}, with {n} share spare | {animals}, with {n} shares spare',
     exact: 'every share filled',
+  },
+  prophets: {
+    badge: 'The Prophets',
+    title: "The prophets named in the Qur'an",
+    lead: "The Qur'an names twenty-five prophets, peace be upon them all. Each is listed here with verses that name him. Their stories are being written one at a time, from the Qur'an and authentic hadith only.",
+    namedIn: 'Named in',
+    readStory: 'Read the story of {name}',
+    storyComing: 'Story not yet written',
+    storyTitle: "The Story of the Prophet {name} — From the Qur'an and Hadith {'|'} IslamicHub",
+    breadcrumb: 'Breadcrumb',
+    all: '← All prophets',
+    allProphets: 'All prophets',
+    stories: 'Stories of the prophets',
+    previous: '← {name}',
+    next: '{name} →',
+    sources:
+      "This story is told from the Qur'an and authentic hadith only. Where they are silent, it says so.",
   },
 }

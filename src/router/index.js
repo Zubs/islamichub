@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, START_LOCATION } from 'vue-router'
 import { countPage, sourceTag } from '@/composables/useStats.js'
 import { getSituation } from '@/data/duas.js'
+import { getProphet } from '@/data/prophets.js'
 import { localeCodes, isAvailable, setLocale, rememberedLocale, rememberLocale } from '@/i18n.js'
 import {
   SOURCE_LOCALE,
@@ -67,6 +68,17 @@ export const routes = [
     name: 'duas-situation',
     component: () => import('@/views/duas/DuasSituationView.vue'),
     beforeEnter: (to) => (getSituation(to.params.situationSlug) ? true : notFound(to)),
+  },
+  {
+    path: '/prophets',
+    name: 'prophets',
+    component: () => import('@/views/prophets/ProphetsHomeView.vue'),
+  },
+  {
+    path: '/prophets/:slug',
+    name: 'prophet',
+    component: () => import('@/views/prophets/ProphetView.vue'),
+    beforeEnter: (to) => (getProphet(to.params.slug)?.story ? true : notFound(to)),
   },
   {
     path: '/qurbani',

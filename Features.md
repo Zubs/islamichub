@@ -968,6 +968,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Stories draw on the Qur'an and authentic hadith only. Details from other sources are left out or clearly labelled as such.
 - Honorifics follow one convention across the section.
 - Added to the navigation, the home page and the sitemap.
+- Built: the list of 25 with their Qur'an references, the story page, and Ibrahim's story in 21 sections from the Qur'an and Sahih al-Bukhari only. Every reference was checked against its text, and the Arabic of each verse was taken from a Qur'an dataset. Honorifics: "peace be upon him" at first mention and عليه السلام in the header; ﷺ for the Prophet Muhammad.
+- Not done: no reviewer has been named and the page is not live, so the feature stays unticked; see Final.
 
 **Tests**
 - The list shows all 25 prophets in order.
@@ -1114,6 +1116,13 @@ Tests are written in plain English and ordered the same way under every feature:
 | 46 | 31 | Is Ibn Majah 3123 acceptable as evidence? | It is quoted as "reported from Abu Hurairah", since scholars differ on whether it goes back to the Prophet. Its grade was not checked | Reword or remove it in `who` and `ruling` |
 | 47 | 31 | Is the son in the story of Ibrahim named? | No. The page says "his son", as the verses do | Add the name in `origin` once the reviewer agrees the wording |
 | 48 | 31 | Is the recommendation to divide the meat in thirds stated? | Yes, as what many scholars recommend, with a sentence that the texts set no fixed portions. It has no numbered source | Remove the sentence in `meat.i2` |
+| 49 | 32 | Who reviews the story of Ibrahim and the list of prophets? | Nobody yet. Every verse and hadith was checked against its text, but no scholar has read it | Name the reviewer; the feature is ticked once they have read both pages |
+| 50 | 32 | In what order are the 25 prophets listed? | Adam, Idris, Nuh, Hud, Salih, Ibrahim, Lut, Isma'il, Ishaq, Ya'qub, Yusuf, Ayyub, Shu'ayb, Musa, Harun, Dhul-Kifl, Dawud, Sulayman, Ilyas, Al-Yasa', Yunus, Zakariyya, Yahya, 'Isa, Muhammad. This is the customary order; it is not from a numbered source | Reorder `data/prophets.js` (and the order in its test) |
+| 51 | 32 | What is shown for "the people they were sent to"? | Only what a verse states, with that verse, for 15 prophets. For the other ten (Idris, Ishaq, Ya'qub, Ayyub, Dhul-Kifl, Dawud, Sulayman, Al-Yasa', Zakariyya, Yahya) nothing is shown, since I found no verse naming a people | Add `people` and `peopleRefs` in `data/prophets.js` |
+| 52 | 32 | Which honorific convention? | "peace be upon him" written out at a prophet's first mention in a story, عليه السلام in the page header, and ﷺ for the Prophet Muhammad. The older Hajj page still writes "Ibrahim ﷺ" and was left as it is | Change the story text and `HONORIFIC` in `ProphetView.vue` |
+| 53 | 32 | Is the son in Ibrahim's dream named? | No. The story says the verses do not name him, and notes that the good news of Ishaq follows in the surah (Qur'an 37:112) | Add the name and its evidence in `sacrifice` in `data/content/ibrahim/en.js` |
+| 54 | 32 | Whose translation of the verses is used? | My own wording, written for the page with Saheeh International open beside it. No published translation is credited | Replace the `translation` texts in `data/content/ibrahim/en.js` with a credited translation |
+| 55 | 32 | Is Ibrahim's story in the order of events? | The Qur'an does not give one order, so the page says its order is for reading. The order used is the usual one: his people, the fire, emigration, Makkah, the sacrifice, the Ka'bah | Reorder `data/ibrahimSections.js` |
 
 **Checks only Zubair can do**
 
@@ -1141,6 +1150,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 |
 | 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) |
 | 22 | 31 | Read the Qurbani page on a phone at 360px wide and try the shares helper with the on-screen keyboard |
+| 23 | 32 | Read the list of prophets and the story of Ibrahim on a phone at 360px wide |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

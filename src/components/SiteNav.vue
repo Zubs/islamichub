@@ -217,6 +217,11 @@ const allLinks = [
     icon: '🐑',
   },
   {
+    to: '/prophets',
+    key: 'prophets',
+    icon: '📜',
+  },
+  {
     to: '/tracker',
     key: 'tracker',
     icon: '✅',

@@ -159,6 +159,8 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/duas`                                   | `duas`              | DuasHomeView          |
 | `/duas/:situationSlug`                    | `duas-situation`    | DuasSituationView     |
 | `/eid`                                    | `eid`               | EidView               |
+| `/prophets`                               | `prophets`          | ProphetsHomeView      |
+| `/prophets/:slug`                         | `prophet`           | ProphetView           |
 | `/qurbani`                                | `qurbani`           | QurbaniView           |
 | `/tracker`                                | `tracker`           | TrackerView           |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
@@ -442,6 +444,31 @@ A guide to the Eid al-Adha sacrifice, awaiting scholarly review. It is written a
   animals only, with the spare shares. The helper says it is a guide, not a ruling. Nothing typed leaves the device or
   is stored.
 - Linked from the Eid and Hajj pages, the menu and the footer.
+
+### 5.7e Prophets (`/prophets`, `/prophets/:slug`)
+
+The prophets named in the Qur'an and their stories, awaiting scholarly review.
+
+- `data/prophets.js` lists the 25 prophets in order, each with a slug, name, Arabic name, `mentions` (verses that name
+  him) and, where the Qur'an states it, `people` (what it says of those he was sent to) with `peopleRefs`. `story: true`
+  marks a prophet whose story is written. Every reference was checked against the text of the Qur'an.
+- `/prophets` shows all 25. A prophet with a story links to it; one without is shown with his references, "Story not
+  yet written" and no link. `/prophets/:slug` is guarded: an unknown prophet, or one without a story, shows the 404 page.
+- A story is written as sections, like the Eid page. `data/prophetStories.js` maps a slug to its structure and English
+  words; Ibrahim's are `data/ibrahimSections.js` and `data/content/ibrahim/en.js`. `ProphetView` draws them with
+  `ContentSections`, with the page's own title and description, a breadcrumb, and links to the previous and next
+  prophet that has a story (`storyNeighbours` in `utils/prophets.js`).
+- Ibrahim's story has 21 sections: who he was, the star, moon and sun, his father, the idols, the fire, the king, his
+  emigration, the four birds, the guests, Hajar and Isma'il in Makkah, the sacrifice, the building of the Ka'bah, his
+  supplications and his legacy, with seven verse blocks. It draws on the Qur'an and Sahih al-Bukhari only, and says
+  where they are silent: the king, the land of the tyrant and the son in the dream are not named, and the order of
+  events is for reading.
+- The Arabic of each verse was taken from an open Qur'an dataset, not typed. A test checks that every Qur'an reference
+  in the list and in each story is a verse that exists (`test/fixtures/ayahCounts.json`), that every section carries a
+  reference and that every verse block has Arabic, translation and reference.
+- **Honorifics:** a prophet is followed by "peace be upon him" at first mention in a story, and عليه السلام is shown
+  in the page header; the Prophet Muhammad is followed by ﷺ.
+- Names and what is said of each prophet's people translate through `useDataTranslations('prophets')`.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 

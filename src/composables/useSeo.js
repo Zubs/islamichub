@@ -10,6 +10,7 @@ export const SITE_URL = 'https://islamichub.xyz'
 const PAGE_KEYS = [
   'eid',
   'qurbani',
+  'prophets',
   'hadith',
   'hadith-books',
   'adhkar',
