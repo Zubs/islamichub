@@ -25,6 +25,8 @@
 
       <ContentSections :sections="story.sections" :c="c" :untranslated="untranslated" />
 
+      <JourneyMap :stops="stops" :title="c('journey.title')" :intro="c('journey.intro')" />
+
       <nav class="prophet-nav" :aria-label="$t('prophets.stories')">
         <RouterLink
           v-if="neighbours.previous"
@@ -56,6 +58,7 @@ import { useContent, useDataTranslations } from '@/composables/useContent.js'
 import { useScrollReveal } from '@/composables/useScrollReveal.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import ContentSections from '@/components/ContentSections.vue'
+import JourneyMap from '@/components/JourneyMap.vue'
 import { PROPHETS, getProphet } from '@/data/prophets.js'
 import { PROPHET_STORIES } from '@/data/prophetStories.js'
 import { storyNeighbours } from '@/utils/prophets.js'
@@ -68,6 +71,13 @@ const story = PROPHET_STORIES[slug]
 const { c, untranslated } = useContent(slug, story.content)
 const { localized } = useDataTranslations('prophets')
 
+const stops = computed(() =>
+  (story.journey ?? []).map((stop) => ({
+    ...stop,
+    name: c(`journey.${stop.id}Name`),
+    text: c(`journey.${stop.id}Text`),
+  })),
+)
 const prophet = computed(() => localized(getProphet(slug)))
 const neighbours = computed(() => {
   const { previous, next } = storyNeighbours(slug, PROPHETS)

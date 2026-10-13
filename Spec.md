@@ -469,6 +469,16 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
 - **Honorifics:** a prophet is followed by "peace be upon him" at first mention in a story, and عليه السلام is shown
   in the page header; the Prophet Muhammad is followed by ﷺ.
 - Names and what is said of each prophet's people translate through `useDataTranslations('prophets')`.
+- **Journey:** a story can carry a journey (`journey` in `data/prophetStories.js`): stops with an id, coordinates, a
+  reference and `known`, which is `scripture` when the Qur'an or a hadith names the place and `historians` when the
+  sources tell what happened and historians identify where. Each stop's name and text are in the story's content file
+  under `journey`. `JourneyMap.vue` draws the stops, numbered and joined in order, on an SVG of the region
+  (`data/regionMap.js`, one path made from Natural Earth's public-domain outline; `utils/journey.js` holds the
+  projection), and lists them below with name, label, text and reference. Choosing a stop on the map highlights it in
+  the list and the other way round; markers are keyboard buttons with a 44px touch target at 360px wide. Nothing is
+  requested from any map service, so it works offline. A prophet with no journey shows nothing.
+- Ibrahim's journey is Ur, Harran, Canaan, Egypt and Makkah. Only Makkah is marked as named in the Qur'an; the other
+  four are marked as identified by historians, and each text says what the sources do and do not name.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 

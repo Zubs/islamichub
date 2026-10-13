@@ -997,6 +997,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - The stops are numbered and joined in order. Selecting a stop on the map or the timeline highlights it on the other.
 - The same list is readable as plain text below the map.
 - Journeys for Musa and Yusuf follow once their stories exist.
+- Built: the map, the list and Ibrahim's five stops, with tests. The outline of the region is one SVG path made from Natural Earth's public-domain data, so nothing is fetched. Only Makkah is marked as named in the Qur'an; Ur, Harran, Canaan and Egypt are marked as identified by historians, and each says what the sources do and do not name.
+- Not checked: the journey on a real phone, and the map with the network off on an installed copy, so the feature stays unticked; see Final.
 
 **Tests**
 - A prophet with no journey shows no map and no gap.
@@ -1123,6 +1125,10 @@ Tests are written in plain English and ordered the same way under every feature:
 | 53 | 32 | Is the son in Ibrahim's dream named? | No. The story says the verses do not name him, and notes that the good news of Ishaq follows in the surah (Qur'an 37:112) | Add the name and its evidence in `sacrifice` in `data/content/ibrahim/en.js` |
 | 54 | 32 | Whose translation of the verses is used? | My own wording, written for the page with Saheeh International open beside it. No published translation is credited | Replace the `translation` texts in `data/content/ibrahim/en.js` with a credited translation |
 | 55 | 32 | Is Ibrahim's story in the order of events? | The Qur'an does not give one order, so the page says its order is for reading. The order used is the usual one: his people, the fire, emigration, Makkah, the sacrifice, the Ka'bah | Reorder `data/ibrahimSections.js` |
+| 56 | 33 | Where are the stops of Ibrahim's journey, and how is each known? | Ur (30.96, 46.10), Harran (36.86, 39.03), Canaan at Hebron (31.53, 35.10), Egypt at Memphis (29.84, 31.25), Makkah (21.42, 39.83). Only Makkah is marked as named in the Qur'an; the other four are marked "identified by historians". The identifications and coordinates are from general historical knowledge, not a cited work | Change `data/ibrahimJourney.js` and the `journey` texts in `data/content/ibrahim/en.js` |
+| 57 | 33 | Is Harran a stop at all? | Yes, because `Features.md` lists it. No verse or hadith I checked mentions it; its text says only that historians place a stage of the journey there | Remove the `harran` stop and its two texts |
+| 58 | 33 | In what order did Ibrahim travel? | Ur, Harran, Canaan, Egypt, Makkah, as `Features.md` lists them. The sources do not give the order of Canaan and Egypt | Reorder `data/ibrahimJourney.js` |
+| 59 | 33 | Does the journey need the reviewer of feature 32? | It adds five short texts about Ibrahim, so I have treated it as needing the same reviewer | Tick it without review if you judge the texts need none |
 
 **Checks only Zubair can do**
 
@@ -1151,6 +1157,7 @@ Tests are written in plain English and ordered the same way under every feature:
 | 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) |
 | 22 | 31 | Read the Qurbani page on a phone at 360px wide and try the shares helper with the on-screen keyboard |
 | 23 | 32 | Read the list of prophets and the story of Ibrahim on a phone at 360px wide |
+| 24 | 33 | On a phone, open Ibrahim's page, step through the five stops on the map and in the list, then turn the network off on the installed app and confirm the map still shows |
 
 **Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
 

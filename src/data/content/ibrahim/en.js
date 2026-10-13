@@ -123,4 +123,24 @@ export default {
   legacyVerse: {
     translation: 'Peace be upon Ibrahim.',
   },
+  journey: {
+    title: 'The journey of Ibrahim',
+    intro:
+      'The Qur’an and the hadith tell what happened on his journey and name only its end, the valley of the Sacred House. Where the other places were is the work of historians, and each such place is marked.',
+    urName: 'Ur',
+    urText:
+      'Among his own people Ibrahim called his father and his people away from their idols, broke the idols, and was saved from the fire (Qur’an 21:52, Qur’an 21:69). The Qur’an does not name the city; historians identify it with Ur, in the south of Iraq.',
+    harranName: 'Harran',
+    harranText:
+      'Ibrahim left his people, saying, "I am emigrating to my Lord" (Qur’an 29:26). The Qur’an does not name the places on his way; historians place a stage of the journey at Harran, north of his homeland.',
+    canaanName: 'Canaan',
+    canaanText:
+      'Allah delivered Ibrahim and Lut to the land He had blessed for all people (Qur’an 21:71). The Qur’an does not name it further; historians identify it with Canaan.',
+    egyptName: 'Egypt',
+    egyptText:
+      'Ibrahim and Sarah came to the land of a tyrant, whom Allah kept from her, and who gave her Hajar (Sahih Bukhari 2217). The hadith does not name the land; historians identify it with Egypt.',
+    makkahName: 'Makkah',
+    makkahText:
+      'Ibrahim settled Hajar and Isma’il in the valley without cultivation beside the Sacred House (Qur’an 14:37), and later raised the foundations of the House with Isma’il (Qur’an 2:127). The Qur’an names the place of the House (Qur’an 3:96).',
+  },
 }

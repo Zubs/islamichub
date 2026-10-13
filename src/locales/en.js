@@ -909,4 +909,12 @@ export default {
     sources:
       "This story is told from the Qur'an and authentic hadith only. Where they are silent, it says so.",
   },
+  journey: {
+    map: 'Map of the journey, {n} stops | Map of the journey, {n} stop | Map of the journey, {n} stops',
+    stop: 'Stop {n}: {name}',
+    known: {
+      scripture: "Named in the Qur'an or hadith",
+      historians: 'Place identified by historians',
+    },
+  },
 }

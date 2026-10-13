@@ -125,6 +125,11 @@ const releases = [
         dotColor: 'var(--green)',
         entries: [
           {
+            title: 'The journey of Ibrahim',
+            scope: 'Prophets',
+            desc: "Ibrahim's page now has a map of his journey, from his homeland to Makkah, with five numbered stops joined in order and the same journey as a list below. Each stop says what happened there, gives its source, and is marked either as named in the Qur'an or hadith or as a place identified by historians. The map is drawn inside the site, so it works offline and sends nothing anywhere.",
+          },
+          {
             title: 'The prophets',
             scope: 'Prophets',
             desc: "A new section lists the 25 prophets named in the Qur'an, each with his Arabic name and verses that name him. The story of Ibrahim is told in full from the Qur'an and authentic hadith: the idols, the fire, his emigration, Hajar and Isma'il in Makkah, the sacrifice and the building of the Ka'bah, with every verse shown in Arabic and translation and every hadith linked to its source. More stories will follow. The story awaits scholarly review.",
