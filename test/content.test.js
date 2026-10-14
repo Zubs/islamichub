@@ -52,6 +52,9 @@ const STORY_PAGES = [
   'ismail',
   'ishaq',
   'yaqub',
+  'yusuf',
+  'ayyub',
+  'shuayb',
 ]
 const STORY_VIEWS = ['src/views/prophets/ProphetView.vue', 'src/views/prophets/ProphetsHomeView.vue']
 

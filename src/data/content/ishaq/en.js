@@ -43,4 +43,3 @@ export default {
     p2: 'When asked who was the most honorable of all people, the Prophet ﷺ reiterated that Yusuf, Allah’s prophet and son of Allah’s prophet, the grandson of Allah’s prophet Ishaq, and the great-grandson of Allah’s intimate friend Ibrahim, represented the epitome of noble heritage (Sahih Bukhari 3374).',
   },
 }
-

@@ -50,4 +50,3 @@ export default {
     p2: 'His legacy of unwavering hope, devotion, and patience in adversity remains a timeless example for all believers (Sahih Bukhari 4689).',
   },
 }
-

@@ -50,4 +50,3 @@ export default {
     p2: 'Allah praised Isma’il alongside the elite of mankind: "And Isma’il, and Al-Yasa‘, and Yunus, and Lut; and each one We preferred over the worlds" (Qur’an 6:86, Qur’an 38:48). From his blessed seed descended the final messenger, Muhammad ﷺ.',
   },
 }
-

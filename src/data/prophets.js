@@ -94,12 +94,14 @@ export const PROPHETS = [
     people: 'Established in the land of Egypt, where he came with clear proofs',
     peopleRefs: ["Qur'an 12:21", "Qur'an 40:34"],
     mentions: ["Qur'an 12:4", "Qur'an 12:56", "Qur'an 40:34"],
+    story: true,
   },
   {
     slug: 'ayyub',
     name: 'Ayyub',
     arabic: 'أيوب',
     mentions: ["Qur'an 21:83", "Qur'an 38:41"],
+    story: true,
   },
   {
     slug: 'shuayb',
@@ -108,6 +110,7 @@ export const PROPHETS = [
     people: 'Sent to Madyan',
     peopleRefs: ["Qur'an 7:85"],
     mentions: ["Qur'an 7:85", "Qur'an 11:84", "Qur'an 26:177"],
+    story: true,
   },
   {
     slug: 'musa',

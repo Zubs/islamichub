@@ -19,6 +19,12 @@ import ishaqSections from '@/data/ishaqSections.js'
 import ishaq from '@/data/content/ishaq/en.js'
 import yaqubSections from '@/data/yaqubSections.js'
 import yaqub from '@/data/content/yaqub/en.js'
+import yusufSections from '@/data/yusufSections.js'
+import yusuf from '@/data/content/yusuf/en.js'
+import ayyubSections from '@/data/ayyubSections.js'
+import ayyub from '@/data/content/ayyub/en.js'
+import shuaybSections from '@/data/shuaybSections.js'
+import shuayb from '@/data/content/shuayb/en.js'
 
 // The written stories, by prophet slug: the shared structure, the English words and, where one
 // has been drawn, the stops of the prophet's journey.
@@ -33,4 +39,7 @@ export const PROPHET_STORIES = {
   ismail: { sections: ismailSections, content: ismail },
   ishaq: { sections: ishaqSections, content: ishaq },
   yaqub: { sections: yaqubSections, content: yaqub },
+  yusuf: { sections: yusufSections, content: yusuf },
+  ayyub: { sections: ayyubSections, content: ayyub },
+  shuayb: { sections: shuaybSections, content: shuayb },
 }
