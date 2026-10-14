@@ -152,7 +152,7 @@
           >
             {{ t.icon }}
           </div>
-          <h4
+          <h3
             style="
               font-family: var(--serif);
               font-size: 0.95rem;
@@ -161,7 +161,7 @@
             "
           >
             {{ t.title }}
-          </h4>
+          </h3>
           <div style="font-size: 12px; color: var(--gold); font-weight: 500; margin-bottom: 0.3rem">
             {{ t.arabic }}
           </div>
@@ -333,7 +333,7 @@
           >
             {{ sci.arabic }}
           </div>
-          <h4
+          <h3
             style="
               font-family: var(--serif);
               font-size: 0.95rem;
@@ -342,7 +342,7 @@
             "
           >
             {{ sci.title }}
-          </h4>
+          </h3>
           <p style="font-size: 13px; color: var(--muted); line-height: 1.55">
             <HadithRef :text="sci.desc" />
           </p>

@@ -610,7 +610,7 @@
           style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))"
         >
           <div v-for="r in recipients" :key="r.title" class="card">
-            <h4
+            <h3
               style="
                 font-family: var(--serif);
                 font-size: 0.9rem;
@@ -619,7 +619,7 @@
               "
             >
               {{ r.title }}
-            </h4>
+            </h3>
             <p style="font-size: 12.5px; color: var(--muted)"><HadithRef :text="r.desc" /></p>
           </div>
         </div>

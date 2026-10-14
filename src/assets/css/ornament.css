@@ -147,6 +147,10 @@
   line-height: 1.7;
 }
 
+.frame-calligraphy .quran-ref {
+  color: var(--gold-dark);
+}
+
 /* ── 4. Background Kufic Grid ────────────────────────────────────── */
 /* Subtle geometric tile repeating for empty spaces / footers */
 .bg-kufic-grid {

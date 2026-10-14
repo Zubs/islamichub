@@ -1,0 +1,24 @@
+# IslamicHub
+
+> Free, open-source Islamic education and utility platform combining authentic guides to the Five Pillars with practical tools (prayer times, Qibla finder, Zakat calculator, inheritance engine, daily adhkar, tasbih) and a hadith library.
+
+## Main Pages
+
+- [Home](https://islamichub.xyz/): Overview, today panel, prayer times preview, pillars, and tools
+- [Faith (Shahada)](https://islamichub.xyz/faith): Shahada guide, conditions of validity, Tawhid dimensions, Risala
+- [Six Articles of Faith](https://islamichub.xyz/faith/articles): Belief in Allah, angels, books, messengers, the Last Day, and divine decree
+- [Prayer (Salah)](https://islamichub.xyz/prayer): Daily prayer times, Qibla finder, prayer conditions, and rak'ah guide
+- [Zakat](https://islamichub.xyz/zakat): Zakat calculator with gold/silver Nisab and currency exchange, conditions, and recipients
+- [Fasting (Sawm)](https://islamichub.xyz/fasting): Ramadan tracker, fasting conditions, exemptions, and virtues
+- [Hajj](https://islamichub.xyz/hajj): Five-day Hajj rites, Umrah guide, conditions of obligation, and types of Hajj
+- [Hadith Library](https://islamichub.xyz/hadith/books): Nine canonical hadith collections with Arabic, English, and grade ratings
+- [Inheritance Calculator](https://islamichub.xyz/inheritance): Fara'id inheritance calculator computing Quranic fixed shares and residuary distribution
+- [Adhkar](https://islamichub.xyz/adhkar): Morning, evening, after prayer, and sleep adhkar with Arabic text, translation, and counters
+- [Duas](https://islamichub.xyz/duas): Supplications from the Quran and Sunnah organised by situation
+- [Prayer Tracker](https://islamichub.xyz/tracker): Daily, weekly, and monthly prayer tracking on-device
+- [Tasbih](https://islamichub.xyz/tasbih): Digital tasbih counter with vibration feedback and daily totals
+- [Prophets](https://islamichub.xyz/prophets): The 25 prophets named in the Quran, Ibrahim's story, and interactive journey map
+- [Eid](https://islamichub.xyz/eid): Guide to Eid al-Fitr and Eid al-Adha with next-Eid countdown
+- [Qurbani](https://islamichub.xyz/qurbani): Eid al-Adha sacrifice guide with shares helper
+- [About](https://islamichub.xyz/about): Project mission, methodology, open source info, and privacy settings
+

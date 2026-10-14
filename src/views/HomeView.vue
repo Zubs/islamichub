@@ -116,23 +116,22 @@
           <em>{{ c('theFivePillarsOf.and') }}</em>
           {{ c('theFivePillarsOf.aPracticalToolLearnTheRuling') }}
         </p>
-        <div class="pillars-hub" style="margin-top: var(--space-8)" role="list">
-          <RouterLink
-            v-for="p in pillars"
-            :key="p.to"
-            :to="p.to"
-            class="pillar-hub-card"
-            :class="p.cardClass"
-            :data-num="p.num"
-            role="listitem"
-            :aria-label="p.ariaLabel"
-          >
-            <div class="phc-icon" aria-hidden="true">{{ p.icon }}</div>
-            <div class="phc-name">{{ p.name }}</div>
-            <div class="phc-sub">{{ p.sub }}</div>
-            <span class="phc-tag">{{ p.tag }}</span>
-          </RouterLink>
-        </div>
+        <ul class="pillars-hub" style="margin-top: var(--space-8)">
+          <li v-for="p in pillars" :key="p.to">
+            <RouterLink
+              :to="p.to"
+              class="pillar-hub-card"
+              :class="p.cardClass"
+              :data-num="p.num"
+              :aria-label="p.ariaLabel"
+            >
+              <div class="phc-icon" aria-hidden="true">{{ p.icon }}</div>
+              <div class="phc-name">{{ p.name }}</div>
+              <div class="phc-sub">{{ p.sub }}</div>
+              <span class="phc-tag">{{ p.tag }}</span>
+            </RouterLink>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -147,22 +146,17 @@
         <p class="section-sub">
           {{ c('islamicTools.accurateFreeAndPrivateEveryTool') }}
         </p>
-        <div class="tools-strip" style="margin-top: var(--space-8)" role="list">
-          <RouterLink
-            v-for="t in tools"
-            :key="t.to"
-            :to="t.to"
-            class="tool-card"
-            role="listitem"
-            :aria-label="t.aria"
-          >
-            <span class="tc-icon" aria-hidden="true">{{ t.icon }}</span>
-            <div>
-              <div class="tc-name">{{ t.name }}</div>
-              <div class="tc-desc"><HadithRef :text="t.desc" /></div>
-            </div>
-          </RouterLink>
-        </div>
+        <ul class="tools-strip" style="margin-top: var(--space-8)">
+          <li v-for="t in tools" :key="t.to">
+            <RouterLink :to="t.to" class="tool-card" :aria-label="t.aria">
+              <span class="tc-icon" aria-hidden="true">{{ t.icon }}</span>
+              <div>
+                <div class="tc-name">{{ t.name }}</div>
+                <div class="tc-desc"><HadithRef :text="t.desc" /></div>
+              </div>
+            </RouterLink>
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -248,50 +242,46 @@
         >
           {{ c('whatSInside.everythingAMuslimNeedsInOne') }}
         </h2>
-        <div class="card-grid card-grid-3" role="list">
-          <article
-            v-for="f in darkFeatures"
-            :key="f.title"
-            class="card card-dark"
-            style="border: 1px solid rgba(255, 255, 255, 0.08)"
-            role="listitem"
-          >
-            <div style="font-size: 26px; margin-bottom: 0.75rem" aria-hidden="true">
-              {{ f.icon }}
-            </div>
-            <h3
-              style="
-                font-family: var(--serif);
-                font-size: 1.05rem;
-                color: #fff;
-                margin-bottom: 0.5rem;
-              "
-            >
-              {{ f.title }}
-            </h3>
-            <p
-              style="
-                font-size: 13.5px;
-                color: rgba(255, 255, 255, 0.5);
-                line-height: 1.65;
-                margin-bottom: 1rem;
-              "
-            >
-              <HadithRef :text="f.desc" />
-            </p>
-            <RouterLink
-              :to="f.to"
-              class="btn btn-sm"
-              style="
-                background: rgba(255, 255, 255, 0.08);
-                color: rgba(255, 255, 255, 0.7);
-                border: none;
-              "
-            >
-              {{ f.cta }} →
-            </RouterLink>
-          </article>
-        </div>
+        <ul class="card-grid card-grid-3">
+          <li v-for="f in darkFeatures" :key="f.title">
+            <article class="card card-dark" style="border: 1px solid rgba(255, 255, 255, 0.08)">
+              <div style="font-size: 26px; margin-bottom: 0.75rem" aria-hidden="true">
+                {{ f.icon }}
+              </div>
+              <h3
+                style="
+                  font-family: var(--serif);
+                  font-size: 1.05rem;
+                  color: #fff;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                {{ f.title }}
+              </h3>
+              <p
+                style="
+                  font-size: 13.5px;
+                  color: rgba(255, 255, 255, 0.7);
+                  line-height: 1.65;
+                  margin-bottom: 1rem;
+                "
+              >
+                <HadithRef :text="f.desc" />
+              </p>
+              <RouterLink
+                :to="f.to"
+                class="btn btn-sm"
+                style="
+                  background: rgba(255, 255, 255, 0.08);
+                  color: rgba(255, 255, 255, 0.7);
+                  border: none;
+                "
+              >
+                {{ f.cta }} →
+              </RouterLink>
+            </article>
+          </li>
+        </ul>
       </div>
     </section>
 

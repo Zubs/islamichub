@@ -1058,6 +1058,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - **Links in text.** The two names in the footer credit cannot be told from the words around them. They are underlined.
 - **Fonts.** The Google Fonts stylesheet holds up the first paint. It is loaded without blocking, with text shown in the fallback typeface until the fonts arrive, and the unused `preconnect` hints are corrected. Self-hosting the fonts, which Final lists as an open decision for offline use, would settle both at once.
 - **`llms.txt`.** A request for `/llms.txt` is answered with the app's page. Either a real file is added, with a title and links to the main pages, or the address returns 404. Zubair decides which.
+- Built: all contrast fixes, semantic lists, heading level adjustments, underlined footer links, non-blocking fonts, `/llms.txt`, and automated tests in `test/accessibility.test.js`. Outstanding: live site Lighthouse run and Zubair's approval of the changed colours.
 - Not part of this feature: the performance score itself, which was distorted by browser extensions in that run, and the `noindex` on deploy previews, which Netlify adds and the live site does not have.
 
 **Tests**
