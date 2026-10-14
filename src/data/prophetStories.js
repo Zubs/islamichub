@@ -13,6 +13,12 @@ import ibrahimJourney from '@/data/ibrahimJourney.js'
 import ibrahim from '@/data/content/ibrahim/en.js'
 import lutSections from '@/data/lutSections.js'
 import lut from '@/data/content/lut/en.js'
+import ismailSections from '@/data/ismailSections.js'
+import ismail from '@/data/content/ismail/en.js'
+import ishaqSections from '@/data/ishaqSections.js'
+import ishaq from '@/data/content/ishaq/en.js'
+import yaqubSections from '@/data/yaqubSections.js'
+import yaqub from '@/data/content/yaqub/en.js'
 
 // The written stories, by prophet slug: the shared structure, the English words and, where one
 // has been drawn, the stops of the prophet's journey.
@@ -24,4 +30,7 @@ export const PROPHET_STORIES = {
   salih: { sections: salihSections, content: salih },
   ibrahim: { sections: ibrahimSections, content: ibrahim, journey: ibrahimJourney },
   lut: { sections: lutSections, content: lut },
+  ismail: { sections: ismailSections, content: ismail },
+  ishaq: { sections: ishaqSections, content: ishaq },
+  yaqub: { sections: yaqubSections, content: yaqub },
 }

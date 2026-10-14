@@ -66,4 +66,3 @@ export default {
     p2: 'Allah admitted Lut into His special mercy and praise: "And We admitted him into Our mercy. Indeed, he was of the righteous" (Qur’an 21:74, Qur’an 21:75).',
   },
 }
-

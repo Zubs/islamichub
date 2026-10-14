@@ -71,18 +71,21 @@ export const PROPHETS = [
     people: 'A messenger and a prophet who enjoined prayer and zakah on his people',
     peopleRefs: ["Qur'an 19:54", "Qur'an 19:55"],
     mentions: ["Qur'an 2:125", "Qur'an 19:54", "Qur'an 21:85"],
+    story: true,
   },
   {
     slug: 'ishaq',
     name: 'Ishaq',
     arabic: 'إسحاق',
     mentions: ["Qur'an 11:71", "Qur'an 19:49", "Qur'an 37:112"],
+    story: true,
   },
   {
     slug: 'yaqub',
     name: 'Ya’qub',
     arabic: 'يعقوب',
     mentions: ["Qur'an 2:132", "Qur'an 12:68", "Qur'an 19:49"],
+    story: true,
   },
   {
     slug: 'yusuf',

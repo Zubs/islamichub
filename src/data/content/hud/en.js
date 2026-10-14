@@ -59,4 +59,3 @@ export default {
       'And when Our command came, We saved Hud and those who believed with him by mercy from Us, and We saved them from a harsh punishment.',
   },
 }
-

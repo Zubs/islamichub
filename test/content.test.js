@@ -41,7 +41,18 @@ const CONTENT_VIEWS = {
   eid: 'src/views/EidView.vue',
   qurbani: 'src/views/QurbaniView.vue',
 }
-const STORY_PAGES = ['adam', 'idris', 'nuh', 'hud', 'salih', 'ibrahim', 'lut']
+const STORY_PAGES = [
+  'adam',
+  'idris',
+  'nuh',
+  'hud',
+  'salih',
+  'ibrahim',
+  'lut',
+  'ismail',
+  'ishaq',
+  'yaqub',
+]
 const STORY_VIEWS = ['src/views/prophets/ProphetView.vue', 'src/views/prophets/ProphetsHomeView.vue']
 
 async function open(path) {

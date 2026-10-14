@@ -65,4 +65,3 @@ export default [
     reference: "Qur'an 91:14",
   },
 ]
-

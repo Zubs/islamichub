@@ -60,4 +60,3 @@ export default {
       'And they denied him and hamstrung her. So their Lord crushed them for their crime and leveled them.',
   },
 }
-
