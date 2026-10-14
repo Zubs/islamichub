@@ -58,6 +58,15 @@ const STORY_PAGES = [
   'musa',
   'harun',
   'dhul-kifl',
+  'dawud',
+  'sulayman',
+  'ilyas',
+  'al-yasa',
+  'yunus',
+  'zakariyya',
+  'yahya',
+  'isa',
+  'muhammad',
 ]
 const STORY_VIEWS = ['src/views/prophets/ProphetView.vue', 'src/views/prophets/ProphetsHomeView.vue']
 

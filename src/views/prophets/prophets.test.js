@@ -188,19 +188,18 @@ describe('prophets list', () => {
     expect(cards[1].find('.prophet-people').exists()).toBe(false)
   })
 
-  it('links a prophet with a story and shows one without a story with no link', async () => {
+  it('links every prophet card to their written story', async () => {
     const { wrapper } = await mountPage(ProphetsHomeView, { path: '/prophets' })
     const cards = wrapper.findAll('.prophet-card')
-    const ibrahim = cards[ORDER.indexOf('Ibrahim')]
-    const dawud = cards[ORDER.indexOf('Dawud')]
 
-    expect(ibrahim.findAll('a').map((link) => link.attributes('href'))).toEqual([
-      '/prophets/ibrahim',
-      '/prophets/ibrahim',
-    ])
-    expect(dawud.find('a').exists()).toBe(false)
-    expect(dawud.text()).toContain('Story not yet written')
-    expect(dawud.text()).toContain("Qur'an 2:251")
+    expect(cards).toHaveLength(25)
+    for (const [index, card] of cards.entries()) {
+      const slug = PROPHETS[index].slug
+      expect(card.findAll('a').map((link) => link.attributes('href'))).toEqual([
+        `/prophets/${slug}`,
+        `/prophets/${slug}`,
+      ])
+    }
   })
 
   it('has a title, description and canonical link', async () => {
@@ -263,7 +262,7 @@ describe('prophet pages in the app', () => {
     ])
   })
 
-  it.each(['/prophets/dawud', '/prophets/nobody'])('shows the 404 page at %s', async (path) => {
+  it.each(['/prophets/unknown', '/prophets/nobody'])('shows the 404 page at %s', async (path) => {
     const { wrapper, router } = await openApp(path)
 
     expect(router.currentRoute.value.name).toBe('not-found')

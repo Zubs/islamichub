@@ -7,6 +7,7 @@ All notable changes to IslamicHub are documented here.
 ## Unreleased
 
 ### Added
+- **Stories of Dawud, Sulayman, Ilyas, Al-Yasa’, Yunus, Zakariyya, Yahya, ‘Isa, and Muhammad** *(Prophets)* — Added the full stories of the remaining nine prophets to complete all 25 prophets in the prophets section, told from the Qur'an and authentic hadith in Sahih al-Bukhari with every verse shown in Arabic and translation and every hadith reference linked to its source.
 - **Stories of Musa, Harun, and Dhul-Kifl** *(Prophets)* — Added the full stories of Musa, Harun, and Dhul-Kifl to the prophets section, told from the Qur'an and authentic hadith in Sahih al-Bukhari with every verse shown in Arabic and translation and every hadith reference linked to its source.
 - **Stories of Yusuf, Ayyub, and Shu’ayb** *(Prophets)* — Added the full stories of Yusuf, Ayyub, and Shu’ayb to the prophets section, told from the Qur'an and authentic hadith in Sahih al-Bukhari with every verse shown in Arabic and translation and every hadith reference linked to its source.
 - **Stories of Isma’il, Ishaq, and Ya’qub** *(Prophets)* — Added the full stories of Isma’il, Ishaq, and Ya’qub to the prophets section, told from the Qur'an and authentic hadith in Sahih al-Bukhari with every verse shown in Arabic and translation and every hadith reference linked to its source.

@@ -142,12 +142,14 @@ export const PROPHETS = [
     name: 'Dawud',
     arabic: 'داود',
     mentions: ["Qur'an 2:251", "Qur'an 4:163", "Qur'an 38:17"],
+    story: true,
   },
   {
     slug: 'sulayman',
     name: 'Sulayman',
     arabic: 'سليمان',
     mentions: ["Qur'an 21:81", "Qur'an 27:16", "Qur'an 38:30"],
+    story: true,
   },
   {
     slug: 'ilyas',
@@ -156,12 +158,14 @@ export const PROPHETS = [
     people: 'Called his people away from the worship of Ba‘l',
     peopleRefs: ["Qur'an 37:124", "Qur'an 37:125"],
     mentions: ["Qur'an 6:85", "Qur'an 37:123"],
+    story: true,
   },
   {
     slug: 'al-yasa',
     name: 'Al-Yasa’',
     arabic: 'اليسع',
     mentions: ["Qur'an 6:86", "Qur'an 38:48"],
+    story: true,
   },
   {
     slug: 'yunus',
@@ -170,18 +174,21 @@ export const PROPHETS = [
     people: 'Sent to a hundred thousand people or more',
     peopleRefs: ["Qur'an 37:147"],
     mentions: ["Qur'an 6:86", "Qur'an 10:98", "Qur'an 37:139"],
+    story: true,
   },
   {
     slug: 'zakariyya',
     name: 'Zakariyya',
     arabic: 'زكريا',
     mentions: ["Qur'an 3:37", "Qur'an 19:2", "Qur'an 21:89"],
+    story: true,
   },
   {
     slug: 'yahya',
     name: 'Yahya',
     arabic: 'يحيى',
     mentions: ["Qur'an 3:39", "Qur'an 19:7", "Qur'an 19:12"],
+    story: true,
   },
   {
     slug: 'isa',
@@ -190,6 +197,7 @@ export const PROPHETS = [
     people: 'A messenger to the Children of Israel',
     peopleRefs: ["Qur'an 3:49"],
     mentions: ["Qur'an 3:45", "Qur'an 19:34", "Qur'an 61:6"],
+    story: true,
   },
   {
     slug: 'muhammad',
@@ -198,6 +206,7 @@ export const PROPHETS = [
     people: 'Sent to all mankind; the seal of the prophets',
     peopleRefs: ["Qur'an 34:28", "Qur'an 33:40"],
     mentions: ["Qur'an 3:144", "Qur'an 33:40", "Qur'an 47:2", "Qur'an 48:29"],
+    story: true,
   },
 ]
 

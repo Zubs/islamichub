@@ -55,4 +55,3 @@ export default {
     p2: 'The Prophet Muhammad ﷺ remembered Musa with highest praise, lauding his patience under persecution: "May Allah have mercy on Musa, he was hurt with more than this yet he was patient" (Sahih Bukhari 3405), extolling his profound modesty (Sahih Bukhari 3404), and forbidding anyone to place one prophet above Musa in boasting (Sahih Bukhari 3398).',
   },
 }
-

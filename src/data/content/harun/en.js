@@ -42,4 +42,3 @@ export default {
     translation: 'Peace upon Musa and Harun.',
   },
 }
-
