@@ -48,4 +48,3 @@ export default {
       'So the earthquake seized them, and they became within their home [corpses] fallen prone.',
   },
 }
-

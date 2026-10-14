@@ -44,4 +44,3 @@ export default {
     p2: 'Ayyub’s enduring story demonstrates that afflictions are not signs of divine displeasure, but purifying trials for the righteous that expiate sins and elevate ranks in the Hereafter (Sahih Bukhari 5641).',
   },
 }
-

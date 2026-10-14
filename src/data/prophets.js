@@ -119,6 +119,7 @@ export const PROPHETS = [
     people: 'Sent to Pharaoh and his chiefs',
     peopleRefs: ["Qur'an 7:103"],
     mentions: ["Qur'an 7:103", "Qur'an 20:9", "Qur'an 28:7", "Qur'an 61:5"],
+    story: true,
   },
   {
     slug: 'harun',
@@ -127,12 +128,14 @@ export const PROPHETS = [
     people: 'Sent with his brother Musa to Pharaoh and his chiefs',
     peopleRefs: ["Qur'an 23:45", "Qur'an 23:46"],
     mentions: ["Qur'an 19:53", "Qur'an 20:30", "Qur'an 23:45"],
+    story: true,
   },
   {
     slug: 'dhul-kifl',
     name: 'Dhul-Kifl',
     arabic: 'ذو الكفل',
     mentions: ["Qur'an 21:85", "Qur'an 38:48"],
+    story: true,
   },
   {
     slug: 'dawud',

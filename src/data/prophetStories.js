@@ -25,6 +25,12 @@ import ayyubSections from '@/data/ayyubSections.js'
 import ayyub from '@/data/content/ayyub/en.js'
 import shuaybSections from '@/data/shuaybSections.js'
 import shuayb from '@/data/content/shuayb/en.js'
+import musaSections from '@/data/musaSections.js'
+import musa from '@/data/content/musa/en.js'
+import harunSections from '@/data/harunSections.js'
+import harun from '@/data/content/harun/en.js'
+import dhulKiflSections from '@/data/dhul-kiflSections.js'
+import dhulKifl from '@/data/content/dhul-kifl/en.js'
 
 // The written stories, by prophet slug: the shared structure, the English words and, where one
 // has been drawn, the stops of the prophet's journey.
@@ -42,4 +48,7 @@ export const PROPHET_STORIES = {
   yusuf: { sections: yusufSections, content: yusuf },
   ayyub: { sections: ayyubSections, content: ayyub },
   shuayb: { sections: shuaybSections, content: shuayb },
+  musa: { sections: musaSections, content: musa },
+  harun: { sections: harunSections, content: harun },
+  'dhul-kifl': { sections: dhulKiflSections, content: dhulKifl },
 }

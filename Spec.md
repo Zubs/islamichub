@@ -463,10 +463,11 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
   `data/content/ibrahim/en.js`), Lut (`data/lutSections.js`, `data/content/lut/en.js`), Isma’il (`data/ismailSections.js`,
   `data/content/ismail/en.js`), Ishaq (`data/ishaqSections.js`, `data/content/ishaq/en.js`), Ya’qub
   (`data/yaqubSections.js`, `data/content/yaqub/en.js`), Yusuf (`data/yusufSections.js`, `data/content/yusuf/en.js`),
-  Ayyub (`data/ayyubSections.js`, `data/content/ayyub/en.js`), and Shu’ayb (`data/shuaybSections.js`,
-  `data/content/shuayb/en.js`). `ProphetView` draws them with
-  `ContentSections`, with the page's own title and description, a breadcrumb, and links to the previous and next prophet
-  that has a story (`storyNeighbours` in `utils/prophets.js`).
+  Ayyub (`data/ayyubSections.js`, `data/content/ayyub/en.js`), Shu’ayb (`data/shuaybSections.js`,
+  `data/content/shuayb/en.js`), Musa (`data/musaSections.js`, `data/content/musa/en.js`), Harun (`data/harunSections.js`,
+  `data/content/harun/en.js`), and Dhul-Kifl (`data/dhul-kiflSections.js`, `data/content/dhul-kifl/en.js`).
+  `ProphetView` draws them with `ContentSections`, with the page's own title and description, a breadcrumb, and links to
+  the previous and next prophet that has a story (`storyNeighbours` in `utils/prophets.js`).
 - Stories draw on the Qur'an and authentic hadith in Sahih al-Bukhari only, and say where they are silent.
 - The Arabic of each verse was taken from an open Qur'an dataset, not typed. A test checks that every Qur'an reference
   in the list and in each story is a verse that exists (`test/fixtures/ayahCounts.json`), that every section carries a

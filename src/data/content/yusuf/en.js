@@ -56,4 +56,3 @@ export default {
     p2: 'The Prophet Muhammad ﷺ extolled Yusuf’s unmatched lineage: "The noble, son of the noble, son of the noble, son of the noble: Yusuf, son of Ya‘qub, son of Ishaq, son of Ibrahim" (Sahih Bukhari 3374, Sahih Bukhari 3390).',
   },
 }
-
