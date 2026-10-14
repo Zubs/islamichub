@@ -13,6 +13,42 @@ import ibrahimJourney from '@/data/ibrahimJourney.js'
 import ibrahim from '@/data/content/ibrahim/en.js'
 import lutSections from '@/data/lutSections.js'
 import lut from '@/data/content/lut/en.js'
+import ismailSections from '@/data/ismailSections.js'
+import ismail from '@/data/content/ismail/en.js'
+import ishaqSections from '@/data/ishaqSections.js'
+import ishaq from '@/data/content/ishaq/en.js'
+import yaqubSections from '@/data/yaqubSections.js'
+import yaqub from '@/data/content/yaqub/en.js'
+import yusufSections from '@/data/yusufSections.js'
+import yusuf from '@/data/content/yusuf/en.js'
+import ayyubSections from '@/data/ayyubSections.js'
+import ayyub from '@/data/content/ayyub/en.js'
+import shuaybSections from '@/data/shuaybSections.js'
+import shuayb from '@/data/content/shuayb/en.js'
+import musaSections from '@/data/musaSections.js'
+import musa from '@/data/content/musa/en.js'
+import harunSections from '@/data/harunSections.js'
+import harun from '@/data/content/harun/en.js'
+import dhulKiflSections from '@/data/dhul-kiflSections.js'
+import dhulKifl from '@/data/content/dhul-kifl/en.js'
+import dawudSections from '@/data/dawudSections.js'
+import dawud from '@/data/content/dawud/en.js'
+import sulaymanSections from '@/data/sulaymanSections.js'
+import sulayman from '@/data/content/sulayman/en.js'
+import ilyasSections from '@/data/ilyasSections.js'
+import ilyas from '@/data/content/ilyas/en.js'
+import alYasaSections from '@/data/al-yasaSections.js'
+import alYasa from '@/data/content/al-yasa/en.js'
+import yunusSections from '@/data/yunusSections.js'
+import yunus from '@/data/content/yunus/en.js'
+import zakariyyaSections from '@/data/zakariyyaSections.js'
+import zakariyya from '@/data/content/zakariyya/en.js'
+import yahyaSections from '@/data/yahyaSections.js'
+import yahya from '@/data/content/yahya/en.js'
+import isaSections from '@/data/isaSections.js'
+import isa from '@/data/content/isa/en.js'
+import muhammadSections from '@/data/muhammadSections.js'
+import muhammad from '@/data/content/muhammad/en.js'
 
 // The written stories, by prophet slug: the shared structure, the English words and, where one
 // has been drawn, the stops of the prophet's journey.
@@ -24,4 +60,22 @@ export const PROPHET_STORIES = {
   salih: { sections: salihSections, content: salih },
   ibrahim: { sections: ibrahimSections, content: ibrahim, journey: ibrahimJourney },
   lut: { sections: lutSections, content: lut },
+  ismail: { sections: ismailSections, content: ismail },
+  ishaq: { sections: ishaqSections, content: ishaq },
+  yaqub: { sections: yaqubSections, content: yaqub },
+  yusuf: { sections: yusufSections, content: yusuf },
+  ayyub: { sections: ayyubSections, content: ayyub },
+  shuayb: { sections: shuaybSections, content: shuayb },
+  musa: { sections: musaSections, content: musa },
+  harun: { sections: harunSections, content: harun },
+  'dhul-kifl': { sections: dhulKiflSections, content: dhulKifl },
+  dawud: { sections: dawudSections, content: dawud },
+  sulayman: { sections: sulaymanSections, content: sulayman },
+  ilyas: { sections: ilyasSections, content: ilyas },
+  'al-yasa': { sections: alYasaSections, content: alYasa },
+  yunus: { sections: yunusSections, content: yunus },
+  zakariyya: { sections: zakariyyaSections, content: zakariyya },
+  yahya: { sections: yahyaSections, content: yahya },
+  isa: { sections: isaSections, content: isa },
+  muhammad: { sections: muhammadSections, content: muhammad },
 }

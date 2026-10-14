@@ -1,0 +1,110 @@
+// What every language shares in the story of Musa: the order and kind of its sections, the Arabic
+// of each verse and the references. The words are in content/musa/en.js (and in each
+// translation) under the same ids. Every reference here was checked against its source.
+export default [
+  {
+    id: 'infancy',
+    type: 'prose',
+    paragraphs: 2,
+    references: ["Qur'an 28:4", "Qur'an 28:7", "Qur'an 28:9", "Qur'an 28:12", "Qur'an 28:13"],
+  },
+  {
+    id: 'infancyVerse',
+    type: 'verse',
+    arabic:
+      'وَأَوْحَيْنَا إِلَىٰ أُمِّ مُوسَىٰ أَنْ أَرْضِعِيهِ ۖ فَإِذَا خِفْتِ عَلَيْهِ فَأَلْقِيهِ فِي الْيَمِّ وَلَا تَخَافِي وَلَا تَحْزَنِي ۖ إِنَّا رَادُّوهُ إِلَيْكِ وَجَاعِلُوهُ مِنَ الْمُرْسَلِينَ',
+    reference: "Qur'an 28:7",
+  },
+  {
+    id: 'madyan',
+    type: 'prose',
+    paragraphs: 2,
+    references: [
+      "Qur'an 28:15",
+      "Qur'an 28:16",
+      "Qur'an 28:21",
+      "Qur'an 28:22",
+      "Qur'an 28:24",
+      "Qur'an 28:27",
+      "Qur'an 28:28",
+      'Sahih Bukhari 2684',
+    ],
+  },
+  {
+    id: 'call',
+    type: 'prose',
+    paragraphs: 2,
+    references: [
+      "Qur'an 20:9",
+      "Qur'an 20:10",
+      "Qur'an 20:12",
+      "Qur'an 20:14",
+      "Qur'an 20:20",
+      "Qur'an 20:22",
+      "Qur'an 20:29",
+      "Qur'an 20:30",
+      "Qur'an 20:36",
+      "Qur'an 28:29",
+    ],
+  },
+  {
+    id: 'callVerse',
+    type: 'verse',
+    arabic:
+      'إِنَّنِي أَنَا اللَّهُ لَا إِلَٰهَ إِلَّا أَنَا فَاعْبُدْنِي وَأَقِمِ الصَّلَاةَ لِذِكْرِي',
+    reference: "Qur'an 20:14",
+  },
+  {
+    id: 'pharaoh',
+    type: 'prose',
+    paragraphs: 2,
+    references: [
+      "Qur'an 7:104",
+      "Qur'an 7:117",
+      "Qur'an 7:120",
+      "Qur'an 20:44",
+      "Qur'an 20:47",
+      "Qur'an 20:58",
+      "Qur'an 20:59",
+      "Qur'an 20:69",
+      "Qur'an 20:70",
+    ],
+  },
+  {
+    id: 'sea',
+    type: 'prose',
+    paragraphs: 2,
+    references: [
+      "Qur'an 20:77",
+      "Qur'an 20:78",
+      "Qur'an 26:52",
+      "Qur'an 26:61",
+      "Qur'an 26:62",
+      "Qur'an 26:63",
+      "Qur'an 26:66",
+      'Sahih Bukhari 3397',
+    ],
+  },
+  {
+    id: 'seaVerse',
+    type: 'verse',
+    arabic: 'قَالَ كَلَّا ۖ إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ',
+    reference: "Qur'an 26:62",
+  },
+  {
+    id: 'legacy',
+    type: 'prose',
+    paragraphs: 2,
+    references: [
+      "Qur'an 2:55",
+      "Qur'an 7:142",
+      "Qur'an 7:144",
+      "Qur'an 7:145",
+      "Qur'an 7:148",
+      "Qur'an 61:5",
+      'Sahih Bukhari 3404',
+      'Sahih Bukhari 3405',
+      'Sahih Bukhari 3398',
+    ],
+  },
+]
