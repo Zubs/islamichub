@@ -256,8 +256,29 @@
     </url>
 
     <url>
+        <loc>https://islamichub.xyz/prophets/hud</loc>
+        <lastmod>2026-10-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://islamichub.xyz/prophets/salih</loc>
+        <lastmod>2026-10-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
         <loc>https://islamichub.xyz/prophets/ibrahim</loc>
         <lastmod>2026-10-13</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://islamichub.xyz/prophets/lut</loc>
+        <lastmod>2026-10-14</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>

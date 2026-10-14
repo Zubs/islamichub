@@ -458,10 +458,11 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
   yet written" and no link. `/prophets/:slug` is guarded: an unknown prophet, or one without a story, shows the 404 page.
 - A story is written as sections, like the Eid page. `data/prophetStories.js` maps a slug to its structure and English
   words; written stories include Adam (`data/adamSections.js`, `data/content/adam/en.js`), Idris (`data/idrisSections.js`,
-  `data/content/idris/en.js`), Nuh (`data/nuhSections.js`, `data/content/nuh/en.js`), and Ibrahim (`data/ibrahimSections.js`,
-  `data/content/ibrahim/en.js`). `ProphetView` draws them with `ContentSections`, with the page's own title and
-  description, a breadcrumb, and links to the previous and next prophet that has a story (`storyNeighbours` in
-  `utils/prophets.js`).
+  `data/content/idris/en.js`), Nuh (`data/nuhSections.js`, `data/content/nuh/en.js`), Hud (`data/hudSections.js`,
+  `data/content/hud/en.js`), Salih (`data/salihSections.js`, `data/content/salih/en.js`), Ibrahim (`data/ibrahimSections.js`,
+  `data/content/ibrahim/en.js`), and Lut (`data/lutSections.js`, `data/content/lut/en.js`). `ProphetView` draws them with
+  `ContentSections`, with the page's own title and description, a breadcrumb, and links to the previous and next prophet
+  that has a story (`storyNeighbours` in `utils/prophets.js`).
 - Stories draw on the Qur'an and authentic hadith in Sahih al-Bukhari only, and say where they are silent.
 - The Arabic of each verse was taken from an open Qur'an dataset, not typed. A test checks that every Qur'an reference
   in the list and in each story is a verse that exists (`test/fixtures/ayahCounts.json`), that every section carries a

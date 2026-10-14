@@ -192,15 +192,15 @@ describe('prophets list', () => {
     const { wrapper } = await mountPage(ProphetsHomeView, { path: '/prophets' })
     const cards = wrapper.findAll('.prophet-card')
     const ibrahim = cards[ORDER.indexOf('Ibrahim')]
-    const hud = cards[ORDER.indexOf('Hud')]
+    const ismail = cards[ORDER.indexOf('Isma’il')]
 
     expect(ibrahim.findAll('a').map((link) => link.attributes('href'))).toEqual([
       '/prophets/ibrahim',
       '/prophets/ibrahim',
     ])
-    expect(hud.find('a').exists()).toBe(false)
-    expect(hud.text()).toContain('Story not yet written')
-    expect(hud.text()).toContain("Qur'an 7:65")
+    expect(ismail.find('a').exists()).toBe(false)
+    expect(ismail.text()).toContain('Story not yet written')
+    expect(ismail.text()).toContain("Qur'an 19:54")
   })
 
   it('has a title, description and canonical link', async () => {
@@ -256,10 +256,14 @@ describe('prophet pages in the app', () => {
     const { wrapper } = await openApp('/prophets/ibrahim')
     const links = wrapper.findAll('.prophet-nav a')
 
-    expect(links.map((link) => link.attributes('href'))).toEqual(['/prophets/nuh', '/prophets'])
+    expect(links.map((link) => link.attributes('href'))).toEqual([
+      '/prophets/salih',
+      '/prophets',
+      '/prophets/lut',
+    ])
   })
 
-  it.each(['/prophets/hud', '/prophets/nobody'])('shows the 404 page at %s', async (path) => {
+  it.each(['/prophets/ismail', '/prophets/nobody'])('shows the 404 page at %s', async (path) => {
     const { wrapper, router } = await openApp(path)
 
     expect(router.currentRoute.value.name).toBe('not-found')
