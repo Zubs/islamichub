@@ -35,6 +35,7 @@ export const PROPHETS = [
     people: 'Sent to ‘Ad',
     peopleRefs: ["Qur'an 7:65"],
     mentions: ["Qur'an 7:65", "Qur'an 11:50", "Qur'an 26:124"],
+    story: true,
   },
   {
     slug: 'salih',
@@ -43,6 +44,7 @@ export const PROPHETS = [
     people: 'Sent to Thamud',
     peopleRefs: ["Qur'an 7:73"],
     mentions: ["Qur'an 7:73", "Qur'an 11:61", "Qur'an 26:142"],
+    story: true,
   },
   {
     slug: 'ibrahim',
@@ -60,6 +62,7 @@ export const PROPHETS = [
     people: 'Warned his people',
     peopleRefs: ["Qur'an 7:80"],
     mentions: ["Qur'an 7:80", "Qur'an 26:160", "Qur'an 29:28"],
+    story: true,
   },
   {
     slug: 'ismail',

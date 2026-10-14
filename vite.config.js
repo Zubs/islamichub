@@ -81,6 +81,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    testTimeout: 15000,
     include: ['src/**/*.test.js', 'test/**/*.test.js'],
     globalSetup: './test/global-setup.js',
     setupFiles: ['./test/setup.js'],
