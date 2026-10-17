@@ -39,3 +39,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Source datasets downloaded by scripts/check-sources.mjs
+.cache

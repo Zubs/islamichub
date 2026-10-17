@@ -252,6 +252,22 @@ describe('useStats composable', () => {
       expect(sendBeaconSpy).not.toHaveBeenCalled()
     })
 
+    it.each(['who am i finished', 'kalimah finished', 'quiz finished'])(
+      'sends "%s" with its name and nothing a player entered',
+      async (action) => {
+        setLocation(LIVE_HOST)
+        vi.stubEnv('VITE_STATS_ENDPOINT', 'https://islamichub.goatcounter.com/count')
+        const { track } = await loadUseStats()
+
+        track(action)
+
+        const params = new URLSearchParams(sendBeaconSpy.mock.calls[0][0].split('?')[1])
+        expect([...params.keys()].sort()).toEqual(['b', 'e', 'p', 'rnd', 's', 't'])
+        expect(params.get('p')).toBe(action)
+        expect(params.get('t')).toBe(action)
+      },
+    )
+
     it('does not send entered data values', async () => {
       setLocation(LIVE_HOST)
       vi.stubEnv('VITE_STATS_ENDPOINT', 'https://islamichub.goatcounter.com/count')

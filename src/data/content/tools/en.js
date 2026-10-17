@@ -23,6 +23,10 @@ export default {
     eyebrow: 'Fasting and study',
     title: 'For Ramadan and learning',
   },
+  games: {
+    eyebrow: 'Games',
+    title: 'For learning while you play',
+  },
   lists: {
     prayer: [
       {
@@ -96,6 +100,14 @@ export default {
         icon: '📚',
         name: 'Hadith library',
         text: 'Browse nine collections of hadith book by book and chapter by chapter.',
+      },
+    ],
+    games: [
+      {
+        to: '/games',
+        icon: '🎲',
+        name: 'Games',
+        text: 'A prophets quiz, Who am I?, and Kalimah, a daily word from the Qur’an, each answer with its evidence.',
       },
     ],
   },

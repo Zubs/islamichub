@@ -116,6 +116,26 @@ export const routes = [
     component: () => import('@/views/PillarsView.vue'),
   },
   {
+    path: '/games',
+    name: 'games',
+    component: () => import('@/views/games/GamesView.vue'),
+  },
+  {
+    path: '/games/quiz',
+    name: 'quiz',
+    component: () => import('@/views/games/QuizView.vue'),
+  },
+  {
+    path: '/games/kalimah',
+    name: 'kalimah',
+    component: () => import('@/views/games/KalimahView.vue'),
+  },
+  {
+    path: '/games/who-am-i',
+    name: 'who-am-i',
+    component: () => import('@/views/games/WhoAmIView.vue'),
+  },
+  {
     path: '/tools',
     name: 'tools',
     component: () => import('@/views/tools/ToolsView.vue'),

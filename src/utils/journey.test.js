@@ -1,7 +1,18 @@
 import { describe, it, expect } from 'vitest'
-import { MAP_BOUNDS, MAP_WIDTH, MAP_HEIGHT, MARKER_REACH, project, routePath } from './journey.js'
+import {
+  MAP_BOUNDS,
+  MAP_WIDTH,
+  MAP_HEIGHT,
+  MARKER_REACH,
+  project,
+  routePath,
+  viewFor,
+} from './journey.js'
 import { PROPHET_STORIES } from '@/data/prophetStories.js'
 import { REGION_LAND } from '@/data/regionMap.js'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
 
 const PHONE_MAP_WIDTH = 360 - 2 * 16
 
@@ -35,9 +46,43 @@ describe('routePath', () => {
       routePath([
         { lat: 40, lon: 26 },
         { lat: 30, lon: 26 },
-        { lat: 16, lon: 50 },
+        { lat: MAP_BOUNDS.south, lon: MAP_BOUNDS.east },
       ]),
     ).toBe(`M0 0L0 100L${MAP_WIDTH} ${MAP_HEIGHT}`)
+  })
+})
+
+describe('viewFor', () => {
+  it('shows the whole map when there are no places', () => {
+    expect(viewFor([])).toEqual({ x: 0, y: 0, width: MAP_WIDTH, height: MAP_HEIGHT, scale: 1 })
+  })
+
+  it('zooms to close places, never narrower than its smallest view, in the map’s proportions', () => {
+    const view = viewFor([
+      { lat: 28.5, lon: 34 },
+      { lat: 28.5, lon: 35 },
+    ])
+
+    expect(view.width).toBeGreaterThanOrEqual(56)
+    expect(view.width).toBeLessThan(MAP_WIDTH / 2)
+    expect(view.width / view.height).toBeCloseTo(MAP_WIDTH / MAP_HEIGHT, 1)
+  })
+
+  it('shows a single place with more of the region around it than two close places', () => {
+    const single = viewFor([{ lat: 20, lon: 40 }])
+    const pair = viewFor([
+      { lat: 20, lon: 40 },
+      { lat: 20.5, lon: 40.5 },
+    ])
+
+    expect(single.width).toBeGreaterThan(pair.width * 2)
+  })
+
+  it('keeps the view inside the map at its edges', () => {
+    const view = viewFor([{ lat: MAP_BOUNDS.south + 0.5, lon: MAP_BOUNDS.east - 0.5 }])
+
+    expect(view.x + view.width).toBeLessThanOrEqual(MAP_WIDTH + 0.1)
+    expect(view.y + view.height).toBeLessThanOrEqual(MAP_HEIGHT + 0.1)
   })
 })
 
@@ -54,38 +99,67 @@ describe('the land outline', () => {
   })
 })
 
-describe.each(Object.entries(PROPHET_STORIES).filter(([, story]) => story.journey))(
-  'the journey of %s',
-  (slug, { journey, content }) => {
-    it('has every stop inside the map, with a reference, how it is known, and its words', () => {
-      for (const stop of journey) {
+describe.each(Object.entries(PROPHET_STORIES).filter(([, story]) => story.places))(
+  'the places of %s',
+  (slug, { places, content }) => {
+    const located = places.filter((place) => place.lat !== undefined)
+
+    it('has every located place inside the map', () => {
+      for (const stop of located) {
         const { x, y } = project(stop)
-        expect(x).toBeGreaterThan(MARKER_REACH / 2)
-        expect(x).toBeLessThan(MAP_WIDTH - MARKER_REACH / 2)
-        expect(y).toBeGreaterThan(MARKER_REACH / 2)
-        expect(y).toBeLessThan(MAP_HEIGHT - MARKER_REACH / 2)
-        expect(stop.reference).toMatch(/Qur'an \d+:\d+|Sahih Bukhari \d+/)
+        expect(x, stop.id).toBeGreaterThan(MARKER_REACH / 2)
+        expect(x, stop.id).toBeLessThan(MAP_WIDTH - MARKER_REACH / 2)
+        expect(y, stop.id).toBeGreaterThan(MARKER_REACH / 2)
+        expect(y, stop.id).toBeLessThan(MAP_HEIGHT - MARKER_REACH / 2)
+      }
+    })
+
+    it('gives every place a kind, a reference, how it is known, and its words', () => {
+      for (const stop of places) {
+        expect(['born', 'lived', 'sent', 'travelled', 'died']).toContain(stop.kind)
+        expect(stop.reference).toMatch(
+          /Qur'an \d+:\d+|(Sahih Bukhari|Sahih Muslim|Abu Dawud|Al-Tirmidhi|Ibn Majah) \d+/,
+        )
         expect(['scripture', 'historians']).toContain(stop.known)
-        expect(content.journey[`${stop.id}Name`]).toBeTruthy()
-        expect(content.journey[`${stop.id}Text`]).toBeTruthy()
+        expect(content.places[`${stop.id}Name`]).toBeTruthy()
+        expect(content.places[`${stop.id}Text`]).toBeTruthy()
+      }
+    })
+
+    it('lists every place identified by historians in Final for the reviewer', () => {
+      const features = readFileSync(resolve(process.cwd(), 'Features.md'), 'utf8')
+      const final = features.slice(
+        features.indexOf('### 35. Final'),
+        features.indexOf('## Decisions needed'),
+      )
+      const rows = final.split('\n').filter((row) => row.includes(`data/${slug}Places.js`))
+
+      for (const stop of places.filter((entry) => entry.known === 'historians')) {
+        const name = content.places[`${stop.id}Name`]
+        expect(
+          rows.some((row) => row.includes(name)),
+          `${slug}: ${name}`,
+        ).toBe(true)
       }
     })
 
     it('says in the words of a stop identified by historians that it is their identification', () => {
-      for (const stop of journey.filter((entry) => entry.known === 'historians')) {
-        expect(content.journey[`${stop.id}Text`]).toMatch(/historians/)
+      for (const stop of places.filter((entry) => entry.known === 'historians')) {
+        expect(content.places[`${stop.id}Text`]).toMatch(/historians/)
       }
     })
 
     it('keeps every two stops far enough apart to be touched separately at 360px wide', () => {
-      const points = journey.map(project)
-      const pixelsPerUnit = PHONE_MAP_WIDTH / MAP_WIDTH
+      const points = located.map(project)
+      const view = viewFor(located)
+      const pixelsPerUnit = PHONE_MAP_WIDTH / view.width
+      const reach = MARKER_REACH * view.scale
 
-      expect(2 * MARKER_REACH * pixelsPerUnit).toBeGreaterThanOrEqual(44)
+      expect(2 * reach * pixelsPerUnit).toBeGreaterThanOrEqual(44)
       for (let a = 0; a < points.length; a += 1) {
         for (let b = a + 1; b < points.length; b += 1) {
           const apart = Math.hypot(points[a].x - points[b].x, points[a].y - points[b].y)
-          expect(apart, `${journey[a].id} and ${journey[b].id}`).toBeGreaterThan(2 * MARKER_REACH)
+          expect(apart, `${located[a].id} and ${located[b].id}`).toBeGreaterThan(2 * reach)
         }
       }
     })

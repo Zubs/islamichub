@@ -5,4 +5,5 @@ export default [
   { id: 'remembrance', type: 'slot' },
   { id: 'money', type: 'slot' },
   { id: 'fasting', type: 'slot' },
+  { id: 'games', type: 'slot' },
 ]

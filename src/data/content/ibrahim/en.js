@@ -123,7 +123,7 @@ export default {
   legacyVerse: {
     translation: 'Peace be upon Ibrahim.',
   },
-  journey: {
+  places: {
     title: 'The journey of Ibrahim',
     intro:
       'The Qur’an and the hadith tell what happened on his journey and name only its end, the valley of the Sacred House. Where the other places were is the work of historians, and each such place is marked.',

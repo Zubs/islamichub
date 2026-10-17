@@ -25,7 +25,17 @@
 
       <ContentSections :sections="story.sections" :c="c" :untranslated="untranslated" />
 
-      <JourneyMap :stops="stops" :title="c('journey.title')" :intro="c('journey.intro')" />
+      <JourneyMap
+        v-if="stops.length"
+        :stops="stops"
+        :joined="story.journey === true"
+        :title="c('places.title') || $t('prophets.placesTitle')"
+        :intro="c('places.intro')"
+      />
+      <section v-else class="prophet-places-unknown" aria-labelledby="places-title">
+        <h2 id="places-title" class="section-title">{{ $t('prophets.placesTitle') }}</h2>
+        <p class="prose">{{ $t('prophets.placesUnknown') }}</p>
+      </section>
 
       <nav class="prophet-nav" :aria-label="$t('prophets.stories')">
         <RouterLink
@@ -72,10 +82,10 @@ const { c, untranslated } = useContent(slug, story.content)
 const { localized } = useDataTranslations('prophets')
 
 const stops = computed(() =>
-  (story.journey ?? []).map((stop) => ({
+  (story.places ?? []).map((stop) => ({
     ...stop,
-    name: c(`journey.${stop.id}Name`),
-    text: c(`journey.${stop.id}Text`),
+    name: c(`places.${stop.id}Name`),
+    text: c(`places.${stop.id}Text`),
   })),
 )
 const prophet = computed(() => localized(getProphet(slug)))
@@ -92,6 +102,15 @@ useScrollReveal()
 </script>
 
 <style scoped>
+.prophet-places-unknown {
+  margin-top: var(--space-10);
+}
+
+.prophet-places-unknown h2 {
+  font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+  margin-bottom: var(--space-3);
+}
+
 .prophet-breadcrumb {
   display: flex;
   align-items: center;

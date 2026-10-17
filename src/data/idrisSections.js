@@ -1,41 +1,34 @@
 // What every language shares in the story of Idris: the order and kind of its sections, the Arabic
 // of each verse and the references. The words are in content/idris/en.js (and in each
-// translation) under the same ids. Every reference here was checked against its source.
+// translation) under the same ids. Every reference here was checked against its source, and the
+// Arabic is from an open Qur'an dataset. The sources say little of him, and nothing is added.
+
+// The passages of the Qur'an that tell of Idris; the story cites every one of them.
+export const passages = ["Qur'an 19:56-57", "Qur'an 21:85-86"]
+
 export default [
   {
-    id: 'mention',
+    id: 'who',
     type: 'prose',
     paragraphs: 2,
-    references: ["Qur'an 19:56", "Qur'an 19:57"],
+    references: ["Qur'an 19:56", "Qur'an 19:57", "Qur'an 21:85", "Qur'an 21:86"],
   },
   {
-    id: 'mentionVerse',
+    id: 'whoVerse',
     type: 'verse',
-    arabic: 'وَاذْكُرْ فِي الْكِتَابِ إِدْرِيسَ ۚ إِنَّهُ كَانَ صِدِّيقًا نَبِيًّا',
+    arabic: 'وَاذْكُرْ فِي الْكِتَابِ إِدْرِيسَ ۚ إِنَّهُ كَانَ صِدِّيقًا نَبِيًّا',
     reference: "Qur'an 19:56",
   },
   {
-    id: 'patience',
+    id: 'heaven',
     type: 'prose',
-    paragraphs: 2,
-    references: ["Qur'an 21:85", "Qur'an 21:86", "Qur'an 6:85"],
+    paragraphs: 1,
+    references: ['Sahih Bukhari 3207', 'Sahih Bukhari 3342'],
   },
   {
-    id: 'patienceVerse',
-    type: 'verse',
-    arabic: 'وَإِسْمَاعِيلَ وَإِدْرِيسَ وَذَا الْكِفْلِ ۖ كُلٌّ مِنَ الصَّابِرِينَ',
-    reference: "Qur'an 21:85",
-  },
-  {
-    id: 'miraj',
+    id: 'silent',
     type: 'prose',
-    paragraphs: 2,
-    references: ['Sahih Bukhari 3342', 'Sahih Bukhari 349'],
-  },
-  {
-    id: 'mirajVerse',
-    type: 'verse',
-    arabic: 'وَرَفَعْنَاهُ مَكَانًا عَلِيًّا',
-    reference: "Qur'an 19:57",
+    paragraphs: 1,
+    references: ["Qur'an 19:56"],
   },
 ]

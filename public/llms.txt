@@ -7,6 +7,10 @@
 - [Home](https://islamichub.xyz/): Overview, today panel, prayer times preview, pillars, and tools
 - [The Five Pillars](https://islamichub.xyz/pillars): What the five pillars of Islam are, with a guide to each
 - [Tools](https://islamichub.xyz/tools): Every calculator, tracker and counter on the site in one place
+- [Games](https://islamichub.xyz/games): A prophets quiz, a guessing game on the prophets, and a daily Qur'anic word puzzle, each answer with its evidence
+- [Prophets Quiz](https://islamichub.xyz/games/quiz): Ten random questions on the lives of the prophets from a bank of 300, each with its evidence
+- [Kalimah](https://islamichub.xyz/games/kalimah): A daily word from the Qur’an to guess in Arabic letters or transliteration, shown in its verse afterwards
+- [Who Am I?](https://islamichub.xyz/games/who-am-i): Guess the prophet from clues drawn from his story, each with its evidence
 - [Faith (Shahada)](https://islamichub.xyz/faith): Shahada guide, conditions of validity, Tawhid dimensions, Risala
 - [Six Articles of Faith](https://islamichub.xyz/faith/articles): Belief in Allah, angels, books, messengers, the Last Day, and divine decree
 - [Prayer (Salah)](https://islamichub.xyz/prayer): Daily prayer times, Qibla finder, guides to the prayer, conditions, and rak'ah guide

@@ -244,7 +244,7 @@ describe('hub pages', () => {
   it('shows the tools page with every tool grouped under a heading', async () => {
     const { wrapper } = await open('/tools')
 
-    expect(wrapper.findAll('h2')).toHaveLength(4)
+    expect(wrapper.findAll('h2')).toHaveLength(5)
     expect(wrapper.findAll('.tools-grid > li')).toHaveLength(
       Object.values(toolsContent.lists).flat().length,
     )

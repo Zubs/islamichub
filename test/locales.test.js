@@ -387,6 +387,9 @@ describe('interface components', () => {
     'src/views/hadith/HadithView.vue',
     'src/views/tools/TrackerView.vue',
     'src/views/tools/TasbihView.vue',
+    ...readdirSync(resolve(ROOT, 'src/views/games'))
+      .filter((file) => file.endsWith('.vue'))
+      .map((file) => join('src/views/games', file)),
   ]
   it.each(FILES)('%s holds no hard-coded text', (file) => {
     expect(hardCodedText(readFileSync(resolve(ROOT, file), 'utf8'))).toEqual([])

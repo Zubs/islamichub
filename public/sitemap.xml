@@ -39,6 +39,34 @@
     </url>
 
     <url>
+        <loc>https://islamichub.xyz/games</loc>
+        <lastmod>2026-10-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://islamichub.xyz/games/quiz</loc>
+        <lastmod>2026-10-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://islamichub.xyz/games/who-am-i</loc>
+        <lastmod>2026-10-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://islamichub.xyz/games/kalimah</loc>
+        <lastmod>2026-10-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
         <loc>https://islamichub.xyz/tools</loc>
         <lastmod>2026-10-17</lastmod>
         <changefreq>monthly</changefreq>

@@ -45,7 +45,7 @@ async function makeCard(item) {
 export async function shareItem(item) {
   const address = shareAddress(item.path)
   const text = shareText(item)
-  const image = await makeCard(item).catch(() => null)
+  const image = item.textOnly ? null : await makeCard(item).catch(() => null)
   const title = item.reference ?? 'IslamicHub'
 
   try {

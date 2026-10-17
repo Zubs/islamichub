@@ -1,37 +1,30 @@
-// The story of Idris in English. Sections and keys follow data/idrisSections.js: `p1`, `p2`
-// are a section's paragraphs. It draws on the Qur'an and on hadith in Sahih al-Bukhari only.
+// The story of Idris in English. Sections and keys follow data/idrisSections.js: `p1`, `p2` are a
+// section's paragraphs. The Qur'an and the authentic hadith say little of him, and nothing is
+// added. Quotations of the Qur'an follow Saheeh International.
 export default {
   header: {
     title: 'Idris',
-    lead: 'A man of truth and a prophet, steadfast in patience, whom Allah raised to a high station.',
+    lead: 'A man of truth and a prophet, whom Allah raised to a high station, one of the patient and the righteous.',
     description:
-      'The story of the Prophet Idris from the Qur’an and authentic hadith: his truthfulness, patience, and high station, with every verse referenced.',
+      'The story of the Prophet Idris from the Qur’an and Sahih al-Bukhari: what the Qur’an says of him, his meeting with the Prophet ﷺ on the Night Journey, and what the sources do not say, with every reference given.',
   },
-  mention: {
-    eyebrow: 'In scripture',
+  who: {
+    eyebrow: 'Who he was',
     title: 'A man of truth and a prophet',
-    p1: 'Idris, peace be upon him, is mentioned in Surah Maryam: "And mention in the Book, Idris. Indeed, he was a man of truth and a prophet" (Qur’an 19:56).',
-    p2: 'Allah said of him: "And We raised him to a high station" (Qur’an 19:57). The Qur’an does not recount details of his lineage, where he lived, or the people to whom he was sent; authentic tradition limits its mention to what the revelation affirms.',
+    p1: '"And mention in the Book, Idris. Indeed, he was a man of truth and a prophet. And We raised him to a high station" (Qur’an 19:56, Qur’an 19:57).',
+    p2: '"And [mention] Isma‘il and Idris and Dhul-Kifl; all were of the patient. And We admitted them into Our mercy. Indeed, they were of the righteous" (Qur’an 21:85, Qur’an 21:86).',
   },
-  mentionVerse: {
-    translation: 'And mention in the Book, Idris. Indeed, he was a man of truth and a prophet.',
+  whoVerse: {
+    translation: 'And mention in the Book, Idrees. Indeed, he was a man of truth and a prophet.',
   },
-  patience: {
-    eyebrow: 'Virtues',
-    title: 'Among the patient and righteous',
-    p1: 'In Surah al-Anbiya’, Allah mentions him alongside Isma’il and Dhul-Kifl: "And Isma’il and Idris and Dhul-Kifl; all were of the patient" (Qur’an 21:85).',
-    p2: 'Allah added: "And We admitted them into Our mercy. Indeed, they were of the righteous" (Qur’an 21:86). Along with other prophets mentioned in Surah al-An‘am, he was of the righteous whom Allah guided (Qur’an 6:85).',
+  heaven: {
+    eyebrow: 'The Night Journey',
+    title: 'In the fourth heaven',
+    p1: 'On the Night Journey the Prophet ﷺ met Idris in the fourth heaven, who greeted him, "You are welcomed, O brother and Prophet" (Sahih Bukhari 3207, Sahih Bukhari 3342).',
   },
-  patienceVerse: {
-    translation: 'And Isma’il and Idris and Dhul-Kifl; all were of the patient.',
-  },
-  miraj: {
-    eyebrow: 'The heavens',
-    title: 'Meeting during the Night Journey',
-    p1: 'During the Night Journey (al-Isra’ wal-Mi‘raj), the Prophet Muhammad ﷺ ascended through the heavens accompanied by Jibril and met earlier prophets. When they passed Idris, he welcomed the Prophet ﷺ with words of greeting and peace, calling him a righteous brother and a righteous prophet (Sahih Bukhari 3342).',
-    p2: 'Abu Dharr narrated that the Prophet ﷺ met Adam, Idris, Musa, ‘Isa, and Ibrahim over the heavens (Sahih Bukhari 349).',
-  },
-  mirajVerse: {
-    translation: 'And We raised him to a high station.',
+  silent: {
+    eyebrow: 'What the sources do not say',
+    title: 'Little is told',
+    p1: 'The Qur’an and the authentic hadith do not say when Idris lived, to whom he was sent, or where. This story says no more than they do (Qur’an 19:56).',
   },
 }

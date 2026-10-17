@@ -141,6 +141,8 @@ export const PROPHETS = [
     slug: 'dawud',
     name: 'Dawud',
     arabic: 'داود',
+    people: 'Among the Children of Israel, whose disbelievers were cursed by his tongue',
+    peopleRefs: ["Qur'an 5:78"],
     mentions: ["Qur'an 2:251", "Qur'an 4:163", "Qur'an 38:17"],
     story: true,
   },
