@@ -39,4 +39,3 @@ export default {
     p2: 'To safeguard against belittling Yunus for his trial, the Prophet Muhammad ﷺ explicitly cautioned his followers: "No one should say that I am better than Yunus bin Matta" (Sahih Bukhari 3416, Sahih Bukhari 4604).',
   },
 }
-

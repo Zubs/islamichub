@@ -129,7 +129,7 @@ describe('useStats composable', () => {
       expect(url).toContain('https://islamichub.goatcounter.com/count')
       expect(url).toContain('p=%2Fprayer')
       expect(url).toContain('t=Prayer+Times')
-      expect(url).toContain('e=0')
+      expect(url).toContain('e=false')
     })
 
     it('sends nothing when Do Not Track is "1"', async () => {
@@ -224,7 +224,8 @@ describe('useStats composable', () => {
         track(action)
         expect(sendBeaconSpy).toHaveBeenCalledTimes(1)
         const url = sendBeaconSpy.mock.calls[0][0]
-        expect(url).toContain('e=1')
+        expect(url).toContain('e=true')
+        expect(new URLSearchParams(url.split('?')[1]).get('p')).toBe(action)
       }
     })
 

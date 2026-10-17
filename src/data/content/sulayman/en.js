@@ -50,4 +50,3 @@ export default {
       'And to Dawud We gave Sulayman. An excellent servant; indeed, he was one who repeatedly turned back [to Allah].',
   },
 }
-

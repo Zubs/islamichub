@@ -40,6 +40,10 @@ const CONTENT_VIEWS = {
   about: 'src/views/AboutView.vue',
   eid: 'src/views/EidView.vue',
   qurbani: 'src/views/QurbaniView.vue',
+  pillars: 'src/views/PillarsView.vue',
+  tools: 'src/views/tools/ToolsView.vue',
+  adhan: 'src/views/pillar/AdhanView.vue',
+  salahSteps: 'src/views/pillar/SalahStepsView.vue',
 }
 const STORY_PAGES = [
   'adam',

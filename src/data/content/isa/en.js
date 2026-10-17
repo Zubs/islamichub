@@ -44,4 +44,3 @@ export default {
       'And [for] their saying: "Indeed, we have killed the Messiah, ‘Isa, the son of Maryam, the messenger of Allah." And they did not kill him, nor did they crucify him; but [another] was made to resemble him to them.',
   },
 }
-

@@ -5,9 +5,13 @@
 ## Main Pages
 
 - [Home](https://islamichub.xyz/): Overview, today panel, prayer times preview, pillars, and tools
+- [The Five Pillars](https://islamichub.xyz/pillars): What the five pillars of Islam are, with a guide to each
+- [Tools](https://islamichub.xyz/tools): Every calculator, tracker and counter on the site in one place
 - [Faith (Shahada)](https://islamichub.xyz/faith): Shahada guide, conditions of validity, Tawhid dimensions, Risala
 - [Six Articles of Faith](https://islamichub.xyz/faith/articles): Belief in Allah, angels, books, messengers, the Last Day, and divine decree
-- [Prayer (Salah)](https://islamichub.xyz/prayer): Daily prayer times, Qibla finder, prayer conditions, and rak'ah guide
+- [Prayer (Salah)](https://islamichub.xyz/prayer): Daily prayer times, Qibla finder, guides to the prayer, conditions, and rak'ah guide
+- [How to Pray](https://islamichub.xyz/prayer/how-to-pray): Each position of the prayer illustrated, with what to recite in Arabic, transliteration and translation
+- [The Adhan](https://islamichub.xyz/prayer/adhan): The call to prayer and the iqamah with meanings, how the first adhan began, and what to say when hearing it
 - [Zakat](https://islamichub.xyz/zakat): Zakat calculator with gold/silver Nisab and currency exchange, conditions, and recipients
 - [Fasting (Sawm)](https://islamichub.xyz/fasting): Ramadan tracker, fasting conditions, exemptions, and virtues
 - [Hajj](https://islamichub.xyz/hajj): Five-day Hajj rites, Umrah guide, conditions of obligation, and types of Hajj
@@ -17,7 +21,7 @@
 - [Duas](https://islamichub.xyz/duas): Supplications from the Quran and Sunnah organised by situation
 - [Prayer Tracker](https://islamichub.xyz/tracker): Daily, weekly, and monthly prayer tracking on-device
 - [Tasbih](https://islamichub.xyz/tasbih): Digital tasbih counter with vibration feedback and daily totals
-- [Prophets](https://islamichub.xyz/prophets): The 25 prophets named in the Quran, Ibrahim's story, and interactive journey map
+- [Prophets](https://islamichub.xyz/prophets): The 25 prophets named in the Quran with their stories, and Ibrahim's journey map
 - [Eid](https://islamichub.xyz/eid): Guide to Eid al-Fitr and Eid al-Adha with next-Eid countdown
 - [Qurbani](https://islamichub.xyz/qurbani): Eid al-Adha sacrifice guide with shares helper
 - [About](https://islamichub.xyz/about): Project mission, methodology, open source info, and privacy settings

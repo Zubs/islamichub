@@ -121,10 +121,7 @@ export function track(name) {
     return
   }
 
-  const hit = buildHit(
-    { path: location.pathname, meta: { title: document.title } },
-    { action: true },
-  )
+  const hit = buildHit({ path: name, meta: { title: name } }, { action: true })
   sendHit(endpoint, hit)
 }
 

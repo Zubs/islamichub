@@ -34,4 +34,3 @@ export default {
     p2: 'As a divine sign, Zakariyya was unable to speak to people for three consecutive days and nights except through gestures, devoting those days to continuous praise and remembrance (Qur’an 3:41, Qur’an 19:10, Qur’an 19:11). The Prophet Muhammad ﷺ praised the noble family of ‘Imran and the prophets of this sacred household (Sahih Bukhari 3430, Sahih Bukhari 3431).',
   },
 }
-

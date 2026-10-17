@@ -48,4 +48,3 @@ export default [
     reference: "Qur'an 37:130",
   },
 ]
-

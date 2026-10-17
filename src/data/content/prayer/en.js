@@ -12,6 +12,32 @@ export default {
     prayerHasSpecificDivinelyOrdainedTimes:
       'Prayer has specific, divinely-ordained times; it is not flexible or approximate.',
   },
+  onThisPage: {
+    label: 'On this page',
+    times: 'Prayer times',
+    qibla: 'Qibla',
+    guides: 'Learn to pray',
+    importance: 'Why it matters',
+    prayers: 'The five prayers',
+    conditions: 'Conditions',
+    questions: 'Questions',
+  },
+  guides: {
+    eyebrow: 'Learn to pray',
+    title: 'Guides to the prayer',
+    intro: 'Step-by-step guides to the prayer and the call to it, and the tools that go with them.',
+  },
+  importance: {
+    eyebrow: 'Its place in Islam',
+    title: 'Why the prayer matters',
+    recite:
+      'Recite what has been revealed to you of the Book and establish prayer. Indeed, prayer prohibits immorality and wrongdoing, and the remembrance of Allah is greater. And Allah knows that which you do.',
+    reciteNote: 'Translation: Saheeh International.',
+    i1: 'Allah commands it to be kept with care: “Maintain with care the [obligatory] prayers and [in particular] the middle prayer and stand before Allah, devoutly obedient” (Qur’an 2:238).',
+    i2: 'It is for His remembrance: “Indeed, I am Allah. There is no deity except Me, so worship Me and establish prayer for My remembrance” (Qur’an 20:14).',
+    i3: 'Asked which deed is dearest to Allah, the Prophet ﷺ answered: “To offer the prayers at their early stated fixed times” (Sahih Bukhari 527).',
+    i4: 'He compared the five prayers to a river at a person’s door in which they bathe five times a day: “That is the example of the five prayers with which Allah blots out evil deeds” (Sahih Bukhari 528).',
+  },
   understandingSalah: {
     understandingSalah: 'Understanding Salah',
     theFiveDailyPrayers: 'The five daily prayers',
@@ -29,6 +55,44 @@ export default {
     exploreZakat: 'Explore Zakat →',
   },
   lists: {
+    guides: [
+      {
+        to: '/prayer/how-to-pray',
+        icon: '🕌',
+        name: 'How to pray, step by step',
+        text: 'Every position illustrated, with what to recite in Arabic, transliteration and translation, from the takbir to the salam.',
+      },
+      {
+        to: '/prayer/adhan',
+        icon: '📣',
+        name: 'The adhan',
+        text: 'The words of the call to prayer and the iqamah, how the first adhan began, and what to say when you hear it.',
+      },
+      {
+        to: '/tracker',
+        icon: '✅',
+        name: 'Prayer tracker',
+        text: 'Mark each prayer as you pray it and keep a streak on your device.',
+      },
+      {
+        to: '/adhkar/after-salah',
+        icon: '📿',
+        name: 'Remembrance after the prayer',
+        text: 'The adhkar said after the salam, with a counter for each.',
+      },
+      {
+        to: '/eid',
+        icon: '🌙',
+        name: 'The Eid prayer',
+        text: 'How the two Eid prayers are performed, with their extra takbirs and sermon.',
+      },
+      {
+        to: '/duas',
+        icon: '🤲',
+        name: 'Duas',
+        text: 'Supplications for everyday situations, each with its source.',
+      },
+    ],
     prayerInfo: [
       {
         en: 'Fajr',
