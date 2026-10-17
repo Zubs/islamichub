@@ -26,7 +26,8 @@
           :key="link.to"
           :to="link.to"
           class="nav-pill"
-          active-class="active"
+          :class="{ active: link.key === section }"
+          :aria-current="link.key === section ? 'page' : undefined"
         >
           <span class="nav-pill-icon" aria-hidden="true">{{ link.icon }}</span>
           <span class="nav-pill-label">{{ $t('siteNav.links.' + link.key) }}</span>
@@ -78,6 +79,8 @@
         :key="item.to"
         :to="item.to"
         class="nav-mobile-item"
+        :class="{ active: item.key === section }"
+        :aria-current="item.key === section ? 'page' : undefined"
         @click="menuOpen = false"
       >
         <span class="icon" aria-hidden="true">{{ item.icon }}</span>
@@ -109,11 +112,16 @@
 
 <script setup>
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import { localeCodes } from '@/i18n.js'
+import { splitLocale } from '@/utils/locale.js'
+import { navSection } from '@/utils/navigation.js'
 
 const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 const menuOpen = ref(false)
+const route = useRoute()
+const section = computed(() => navSection(splitLocale(route.path, localeCodes()).path))
 
 const mainLinks = [
   { to: '/pillars', key: 'pillars', icon: '🕋' },

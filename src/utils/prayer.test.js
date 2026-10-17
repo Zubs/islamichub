@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { calcPrayerTimes, getNextPrayer } from './prayer.js'
+import { calcPrayerTimes, getNextPrayer, getCurrentPrayer } from './prayer.js'
 import { LONDON_EQUINOX_2026, ASR_BY_SCHOOL_2026 } from './prayer.fixture.js'
 
 const TOLERANCE_MINUTES = 2
@@ -66,6 +66,27 @@ describe('getNextPrayer', () => {
     vi.setSystemTime(new Date(2026, 2, 20, 21, 0))
 
     expect(getNextPrayer(times)).toMatchObject({ key: 'fajr', minsRemaining: 430 })
+  })
+})
+
+describe('prayer at a given moment', () => {
+  const times = {
+    fajr: '04:10',
+    sunrise: '06:04',
+    dhuhr: '12:08',
+    asr: '15:25',
+    maghrib: '18:12',
+    isha: '19:59',
+  }
+
+  it.each([
+    ['before Asr', new Date(2026, 2, 20, 15, 24), 'dhuhr', 'asr', 1],
+    ['as Asr begins', new Date(2026, 2, 20, 15, 25), 'asr', 'maghrib', 167],
+    ['after Isha', new Date(2026, 2, 20, 21, 0), 'isha', 'fajr', 430],
+    ['after midnight, before Fajr', new Date(2026, 2, 21, 1, 0), 'isha', 'fajr', 190],
+  ])('%s', (_, now, current, next, minutes) => {
+    expect(getCurrentPrayer(times, now)).toBe(current)
+    expect(getNextPrayer(times, now)).toMatchObject({ key: next, minsRemaining: minutes })
   })
 })
 

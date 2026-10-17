@@ -10,6 +10,7 @@ import pillarsContent from '@/data/content/pillars/en.js'
 import toolsContent from '@/data/content/tools/en.js'
 import { hadithRefsIn } from '@/utils/hadithRefs.js'
 import { HADITH_NUMBER_MAP } from '@/data/hadithNumbering.js'
+import { addLocale, removeLocale, setLocale } from '@/i18n.js'
 import { mountPage } from '../../../test/mountPage.js'
 import ayahCounts from '../../../test/fixtures/ayahCounts.json'
 
@@ -262,6 +263,51 @@ describe('navigation', () => {
     ])
     expect(wrapper.findAll('.nav-right a')).toHaveLength(2)
     expect(wrapper.findAll('.nav-mobile-menu a')).toHaveLength(7)
+  })
+
+  it.each([
+    ['/zakat', 'Pillars'],
+    ['/prayer/how-to-pray', 'Pillars'],
+    ['/adhkar/morning', 'Tools'],
+    ['/hadith/books', 'Hadith'],
+  ])('highlights only the section of %s', async (path, label) => {
+    const { wrapper } = await open(path)
+    const active = wrapper.findAll('.nav-pillars a.active')
+
+    expect(active).toHaveLength(1)
+    expect(active[0].text()).toContain(label)
+    expect(active[0].attributes('aria-current')).toBe('page')
+    expect(wrapper.findAll('.nav-mobile-menu a.active')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('highlights no section on the home page', async () => {
+    const { wrapper } = await open('/')
+
+    expect(wrapper.findAll('.nav-pillars a.active')).toHaveLength(0)
+    wrapper.unmount()
+  })
+
+  it('highlights Pillars on a pillar page under a language prefix', async () => {
+    addLocale({
+      code: 'xx',
+      name: 'Testish',
+      intl: 'en-GB',
+      dir: 'ltr',
+      complete: true,
+      messages: {},
+    })
+    try {
+      const { wrapper } = await open('/xx/zakat')
+
+      const active = wrapper.findAll('.nav-pillars a.active')
+      expect(active).toHaveLength(1)
+      expect(active[0].attributes('href')).toBe('/pillars')
+      wrapper.unmount()
+    } finally {
+      removeLocale('xx')
+      setLocale('en')
+    }
   })
 
   it('keeps the footer to a short list of links', async () => {

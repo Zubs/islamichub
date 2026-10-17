@@ -56,6 +56,11 @@ All notable changes to IslamicHub are documented here.
 - **Leftovers from the old app** — The broken web manifest (its icons did not exist), the stale copy of this changelog published at `/CHANGELOG.md`, a console line that logged the length of the hadith API key, an undeployed redirects file, and three unused development dependencies. A proper manifest returns with offline support.
 
 ### Fixed
+- **Prayer times say which clock they are in** *(Prayer)* — Times are worked out in your device's time, so times for a city in another time zone were shown in your own clock with nothing saying so. The page now says the times are in this device's time.
+- **The prayer page stays up to date while open** *(Prayer)* — The highlighted prayer now moves on when the next prayer begins, and after midnight the page shows the new day's times instead of yesterday's.
+- **One Ramadan countdown** *(Home, Fasting)* — The home and Fasting pages now count the days to Ramadan from the same calendar as the Eid page, so they no longer disagree by a day near the start of Ramadan.
+- **The home page follows your language and the day** *(Home)* — The date, the Hijri month name and the Qibla distance now follow the chosen language's wording and format, and the date and countdown move on at midnight if the page is left open.
+- **The menu shows where you are** *(Navigation)* — Pillars is highlighted on every pillar page and the guides beneath them, and Tools on each tool page, in the bar and the phone menu.
 - **The Hajj day tabs work again** *(Hajj)* — Pressing Day 9, Day 10 or Days 11–13 broke the rites timeline instead of showing that day's rites. Each tab now shows its own day, and Day 8 is read from the page's content file like the others, so it can be translated.
 - **Clearer figures on the home page** *(Home)* — The count to Ramadan reads "303 days" instead of "303d", and the Hijri month is written in full, such as "Jumādā al-Ākhirah" rather than "Jumādā".
 - **Usage statistics were never recorded** *(Usage statistics)* — Every count sent to GoatCounter put its cache-busting random value where GoatCounter reads its bot score, so no visit was ever recorded as a person. Counts now mark themselves as from a person and carry the random value separately, and tool actions are counted under their own names instead of the page address.

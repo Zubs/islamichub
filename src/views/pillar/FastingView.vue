@@ -74,7 +74,7 @@
               <div
                 style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: #fff"
               >
-                {{ hijri.day }} {{ hijri.monthName }}
+                {{ hijri.day }} {{ $t('hijri.months.' + hijri.month) }}
               </div>
               <div style="font-size: 13px; color: rgba(255, 255, 255, 0.5)">
                 {{ $t('fasting.ah', { a: hijri.year }) }}
@@ -453,7 +453,7 @@ useScrollReveal()
 const store = useZakatStore()
 const hijri = toHijri()
 const inRamadan = isRamadan()
-const daysLeft = Math.round(daysToRamadan())
+const daysLeft = daysToRamadan()
 const settings = usePrayerSettingsStore()
 const lat = ref(settings.saved?.lat ?? store.location?.lat ?? '')
 const lng = ref(settings.saved?.lng ?? store.location?.lng ?? '')

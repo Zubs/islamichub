@@ -28,7 +28,7 @@
               <div class="stat-lbl">{{ c('header.pillarsCovered') }}</div>
             </div>
             <div>
-              <div class="stat-num">{{ hijri.monthName }}</div>
+              <div class="stat-num">{{ $t('hijri.months.' + hijri.month) }}</div>
               <div class="stat-lbl">{{ c('header.ahToday', { a: hijri.year }) }}</div>
             </div>
             <div>
@@ -68,7 +68,15 @@
             >
               {{ today }}
             </div>
-            <div style="font-size: 13.5px; color: var(--muted)">{{ hijri.formatted }}</div>
+            <div style="font-size: 13.5px; color: var(--muted)">
+              {{
+                $t('hijri.date', {
+                  day: hijri.day,
+                  month: $t('hijri.months.' + hijri.month),
+                  year: hijri.year,
+                })
+              }}
+            </div>
             <div
               v-if="inRamadan"
               style="
@@ -366,7 +374,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useContent } from '@/composables/useContent.js'
 import UntranslatedNote from '@/components/UntranslatedNote.vue'
 import content from '@/data/content/home/en.js'
@@ -377,20 +385,38 @@ import QuranBlock from '@/components/QuranBlock.vue'
 import GeoPattern from '@/components/GeoPattern.vue'
 import TodayPanel from '@/components/TodayPanel.vue'
 import HadithRef from '@/components/HadithRef.vue'
-import { toHijri, daysToRamadan, isRamadan } from '@/utils/hijri.js'
+import { toHijri, daysToRamadan } from '@/utils/hijri.js'
+import { dayKey } from '@/utils/day.js'
+import { formatDate } from '@/i18n.js'
 
 const { c, list, untranslated } = useContent('home', content)
 
 useSeo('home')
 useScrollReveal()
 
-const hijri = toHijri()
-const inRamadan = isRamadan()
-const daysLeft = Math.round(daysToRamadan())
-const today = new Date().toLocaleDateString('en-GB', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
+const MINUTE_MS = 60000
+const RAMADAN = 9
+
+const now = ref(new Date())
+const hijri = computed(() => toHijri(now.value))
+const inRamadan = computed(() => hijri.value.month === RAMADAN)
+const daysLeft = computed(() => daysToRamadan(dayKey(now.value)))
+const today = computed(() =>
+  formatDate(now.value, { weekday: 'long', day: 'numeric', month: 'long' }),
+)
+
+function tick() {
+  now.value = new Date()
+}
+
+let timer = null
+onMounted(() => {
+  timer = setInterval(tick, MINUTE_MS)
+  document.addEventListener('visibilitychange', tick)
+})
+onUnmounted(() => {
+  clearInterval(timer)
+  document.removeEventListener('visibilitychange', tick)
 })
 
 const pillars = computed(() => list('pillars'))

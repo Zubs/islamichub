@@ -150,8 +150,7 @@ export function calcPrayerTimes(lat, lng, date, timezone, method = 'MWL', asrMet
 }
 
 /** Get current prayer name based on times */
-export function getCurrentPrayer(times) {
-  const now = new Date()
+export function getCurrentPrayer(times, now = new Date()) {
   const mins = now.getHours() * 60 + now.getMinutes()
   const t2m = (t) => parseInt(t.split(':')[0]) * 60 + parseInt(t.split(':')[1])
 
@@ -174,8 +173,7 @@ export function getCurrentPrayer(times) {
 }
 
 /** Get next prayer and time remaining */
-export function getNextPrayer(times) {
-  const now = new Date()
+export function getNextPrayer(times, now = new Date()) {
   const mins = now.getHours() * 60 + now.getMinutes()
   const t2m = (t) => parseInt(t.split(':')[0]) * 60 + parseInt(t.split(':')[1])
   const order = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']

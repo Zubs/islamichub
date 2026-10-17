@@ -4,7 +4,7 @@ This document lists every feature still to be built, in the order they should be
 
 A feature is either done or not done. Tick it in the list below only when everything under **How it works** is built, all its **Tests** pass, its **Done when** check has been carried out, and `Spec.md`, `CHANGELOG.md` and `public/sitemap.xml` are updated where the feature changes them.
 
-Some features need a named reviewer for religious content (27, 28, 30, 31 and 32). Whoever builds one of these asks Zubair for the reviewer's name when the feature is reached, and never assumes one.
+Some features need a named reviewer for religious content (27, 28, 30, 31, 32, 36, 39, 40, 41 and 42). Whoever builds one of these asks Zubair for the reviewer's name when the feature is reached, and never assumes one.
 
 Tests are written in plain English and ordered the same way under every feature: nothing, one, many, limits, how it connects to other parts, what goes wrong, then one full journey.
 
@@ -38,7 +38,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 26. Translatable content
 - [ ] 27. Yoruba
 - [ ] 28. Hausa
-- [ ] 29. Right-to-left layout
+- [ ] 29. Right-to-left layout *(parked)*
 - [x] 30. Eid
 - [x] 31. Qurbani
 - [x] 32. Prophets
@@ -46,7 +46,12 @@ Tests are written in plain English and ordered the same way under every feature:
 - [x] 34. Usage statistics
 - [ ] 35. Final
 - [ ] 36. Complete prophets stories
-- [ ] 37. Accessibility and loading fixes
+- [x] 37. Accessibility and loading fixes
+- [x] 38. Bugs
+- [ ] 39. Wudu and ghusl
+- [ ] 40. Hijri calendar and Islamic days
+- [ ] 41. Jumu'ah companion
+- [ ] 42. Games
 
 ---
 
@@ -885,6 +890,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Numbers, the Qibla compass and the tasbih counter are not mirrored.
 - Built: every physical left or right property in the stylesheets, scoped styles and inline styles is now logical, apart from a listed few with reasons (Arabic text, the compass, toggle knobs, centring, symmetric ornaments), and a test keeps it so. Arrows written as text ("Next →") are part of each message, so a right-to-left translation writes its own; `flip-rtl` mirrors icons drawn as images.
 - Not checked: how the pages look in a right-to-left language. No such language is planned yet and no browser was available while building, so the feature stays unticked; see Final.
+- **Parked, 17 October 2026, by Zubair.** The site's planned languages, Yoruba and Hausa, are both written left to right, so the visual check is deferred until a right-to-left language is planned. `test/rtl.test.js` keeps the styles logical in the meantime. When a right-to-left language is added, this check (Final, check row 20) is carried out before that language is offered.
 
 **Tests**
 - In English, every page looks exactly as it did before this feature.
@@ -1059,7 +1065,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - **Links in text.** The two names in the footer credit cannot be told from the words around them. They are underlined.
 - **Fonts.** The Google Fonts stylesheet holds up the first paint. It is loaded without blocking, with text shown in the fallback typeface until the fonts arrive, and the unused `preconnect` hints are corrected. Self-hosting the fonts, which Final lists as an open decision for offline use, would settle both at once.
 - **`llms.txt`.** A request for `/llms.txt` is answered with the app's page. Either a real file is added, with a title and links to the main pages, or the address returns 404. Zubair decides which.
-- Built: all contrast fixes, semantic lists, heading level adjustments, underlined footer links, non-blocking fonts, `/llms.txt`, and automated tests in `test/accessibility.test.js`. Outstanding: live site Lighthouse run and Zubair's approval of the changed colours.
+- Built: all contrast fixes, semantic lists, heading level adjustments, underlined footer links, non-blocking fonts, `/llms.txt`, and automated tests in `test/accessibility.test.js`. The live site Lighthouse run and Zubair's approval of the changed colours were done by Yusuf and confirmed by Zubair, 17 October 2026.
 - Not part of this feature: the performance score itself, which was distorted by browser extensions in that run, and the `noindex` on deploy previews, which Netlify adds and the live site does not have.
 
 **Tests**
@@ -1075,6 +1081,151 @@ Tests are written in plain English and ordered the same way under every feature:
 **Done when:** A Lighthouse run on the live site in a clean browser window reports no contrast, role, heading-order or link failures, and Zubair has approved the changed colours.
 
 ---
+
+## Bugs
+
+### 38. Bugs
+
+**What it does:** Fixes five bugs found in a review of the site on 17 October 2026, after the navigation and prayer guides changed.
+
+**How it works**
+- **Prayer times in the wrong clock.** `getTimezoneOffset()` in `utils/prayer.js` always uses the device's timezone, whatever coordinates are entered, so times for another city are shown in the reader's own clock with nothing saying so (Makkah's Dhuhr shows as 10:06 on a phone set to Lagos time, not 12:06). The page states plainly which clock the times are in. Showing the place's own time needs the place's timezone; how to get it is a decision for Zubair (see Decisions needed), and no outside service is added without it.
+- **The prayer page goes stale while open.** In `PrayerView.vue` the highlighted current prayer is set once and never updated by the minute tick, and the times are never worked out again after midnight. The tick updates the current prayer, and the times are worked out afresh when the day changes, as the Today panel already does.
+- **Two Ramadan countdowns that disagree.** `daysToRamadan()` in `utils/hijri.js` adds rough month lengths, while the Eid page uses `firstDayOfHijriMonth`. They differ by a day in places, including the last days of Sha'ban (8 days against 9 on 30 January 2027). The countdown is worked out from `firstDayOfHijriMonth`, so both pages always agree.
+- **The home page ignores the reader's language.** The date in the home page header is formatted with a fixed `en-GB`, the Hijri month names in `utils/hijri.js` are English only, and the Qibla distance appends a fixed " km". All three go through the message files and the language's own formats. The header's date, Hijri date and countdown are also worked out once, so they go stale if the app is left open overnight; they follow the local day.
+- **"Pillars" is never highlighted on a pillar page.** The navigation highlights Pillars only on `/pillars`, so on `/faith`, `/prayer`, `/prayer/how-to-pray`, `/zakat`, `/fasting` and `/hajj` no item is highlighted. Pillars is highlighted on those pages and the pages beneath them.
+- Built, 17 October 2026 (OpenSpec change `fix-launch-bugs`): all five fixes, each with a test that fails without it. Ticked by Zubair, 17 October 2026.
+
+**Tests**
+- With no location, the prayer page shows no times and no clock note.
+- With coordinates entered, the page says which clock the times are shown in.
+- With the clock moved past Asr while the page is open, the Asr card is highlighted within a minute.
+- With the clock moved past midnight while the page is open, the times shown are the new day's.
+- For every day of a full Hijri year, the home page countdown and the day Ramadan begins on the calendar used by the Eid page agree.
+- On the last day of Sha'ban, the countdown is one day; during Ramadan it says Ramadan has begun.
+- In a test language with its own date format, the home page header date, Hijri month and Qibla distance are shown in that language and format, with no English left.
+- On `/faith`, `/prayer`, `/prayer/adhan`, `/zakat`, `/fasting` and `/hajj`, Pillars is highlighted; on `/tools` and `/hadith` it is not.
+- A user leaves the installed app open on the home page overnight and in the morning sees the new date, the new Hijri date and a countdown one day shorter.
+
+**Done when:** All five bugs are fixed with a test each that fails without the fix, and the clock note has been read on a real phone with a saved location.
+
+## Worship guides
+
+### 39. Wudu and ghusl
+
+**What it does:** Teaches wudu and ghusl step by step, the way the prayer guide teaches the prayer, with a drawing of each step and the words said.
+
+**How it works**
+- Two pages, `/prayer/wudu` and `/prayer/ghusl`, linked from the prayer page's guides, from the conditions of prayer and from step one of the prayer guide.
+- Each is built from a sections file and a content file using the `step` section kind from the prayer guide. No component is edited to add a page.
+- Each step has a drawing in the style of `PrayerFigure`: faceless, simple and drawn inside the page so it works offline. Wudu needs new drawings (hands, mouth, nose, face, arms, head, ears, feet); they may show hands and limbs rather than a whole figure.
+- Wudu follows Qur'an 5:6 and the descriptions of the Prophet's wudu in the hadith. Every step carries a reference checked against its text, and the Arabic of any supplication is copied from its source.
+- What is obligatory and what is sunnah is marked step by step. Where the schools differ (for example on what is obligatory, the order of the steps, or wiping the head), both positions are shown.
+- What breaks wudu, and when ghusl is required, are each set out with their references. The two questions about wudu already in the prayer page's FAQ move here and the FAQ links to them.
+- Tayammum, for when there is no water or it cannot be used, is a short section on the wudu page, with Qur'an 5:6.
+- Both pages say they await review until the reviewer Zubair names has read them.
+
+**Tests**
+- Every section and every step carries a reference, and every Qur'an reference is a verse that exists.
+- Every step shows a drawing with a description for screen readers, and every Arabic text is marked as right-to-left Arabic.
+- Steps are numbered in order, and each is marked obligatory or sunnah.
+- Every point where the schools differ shows at least two positions with their evidence.
+- The prayer page links to both guides, and the prayer guide's first step links to wudu.
+- Every cited Sahih Muslim hadith has a library number, and every hadith reference links.
+- Each page has its own title and description and is in the sitemap.
+- The pages read in a second language with the same Arabic and references.
+- A user opens the prayer page, follows the link to wudu, reads it to the end and continues to the prayer guide.
+
+**Done when:** Both pages are live, every reference has been checked against its source, and the reviewer Zubair named has read both and their name and the date are recorded.
+
+## Calendar
+
+### 40. Hijri calendar and Islamic days
+
+**What it does:** Shows the Hijri calendar month by month beside the Gregorian one, marks the days of the Islamic year that carry a sunnah, and offers reminders for them.
+
+**How it works**
+- A page, `/calendar`, shows the current Hijri month as a grid with the Gregorian date in each day, and moves month by month. It uses `toHijri` and `firstDayOfHijriMonth` from `utils/hijri.js`, and states on the page that dates can differ by a day with the sighting of the moon, as the Eid page does.
+- The days marked are those with a sunnah in authentic sources: for example the day of 'Arafah, 'Ashura (with the day before it), the first ten days of Dhul Hijjah, the white days (the 13th, 14th and 15th of each month), Mondays and Thursdays, the last ten nights of Ramadan, and the two Eids. Each carries a short explanation and a reference checked against its text. The list is held in `data/` and is settled with the reviewer.
+- Days whose observance the schools dispute are not marked as days of worship (see Decisions needed).
+- A reader can switch on reminders for the marked days on the device (feature 23) and, where push is on, from the server (feature 24). Nothing new is stored on the server beyond the chosen reminder kinds.
+- The home page's Today panel names today's Islamic day when there is one, linking to the calendar.
+- The page is in the sitemap and linked from Tools.
+
+**Tests**
+- A month with no marked day shows the grid and no list.
+- The 10th of Muharram is marked as 'Ashura, with its reference.
+- Every month shows the white days, and they fall on the 13th, 14th and 15th.
+- Moving forward twelve months returns to the same Hijri month a year later, and the Gregorian dates match `firstDayOfHijriMonth`.
+- The first day of Ramadan shown matches the Ramadan countdown and the Eid page.
+- Every marked day carries a reference that is a verse that exists or a hadith that links.
+- A reminder for 'Arafah, switched on, is scheduled for the morning of 9 Dhul Hijjah and for no other day.
+- With reminders off, nothing is scheduled and nothing is sent to the server.
+- The page notes that dates depend on the sighting of the moon.
+- A user opens the calendar, moves to Dhul Hijjah, reads about the day of 'Arafah and switches on its reminder.
+
+**Done when:** The calendar matches a published Hijri calendar to within a day for twelve months, every marked day has been read by the reviewer Zubair named, and an 'Arafah reminder has arrived on a real phone.
+
+### 41. Jumu'ah companion
+
+**What it does:** Helps a reader keep the sunnahs of Friday, with a Friday page and optional Friday reminders.
+
+**How it works**
+- A page, `/jumuah`, sets out the sunnahs of Friday, each with a reference checked against its text: for example ghusl, going early, sending many blessings on the Prophet ﷺ, the hour in which supplication is answered, and reciting Surah al-Kahf. A sunnah whose evidence could not be verified in a collection the library holds says so, and is not presented as certain.
+- It explains the Friday prayer itself: who it is due on, the adhan and the khutbah, listening in silence, and the two rak'at, linking to the adhan page and the prayer guide.
+- Where the schools differ (for example on who must attend), both positions are shown.
+- The reader can enter the time of the khutbah at their own mosque, kept on the device only. The site does not guess it, because it differs from mosque to mosque.
+- Friday reminders, each switched on separately: Surah al-Kahf, blessings on the Prophet ﷺ, and a reminder before the khutbah time the reader entered. They use the reminders of features 23 and 24; push sends only the chosen kinds and the khutbah time.
+- On a Friday, the Today panel shows a Jumu'ah tile linking to the page.
+- The page is in the sitemap and linked from the prayer page's guides.
+
+**Tests**
+- On a day other than Friday, no Friday tile is shown and no Friday reminder is scheduled.
+- On a Friday, the Today panel shows the Jumu'ah tile.
+- With a khutbah time of 13:15 and the reminder on, a reminder is scheduled before 13:15 that Friday and on no other day.
+- With no khutbah time entered, that reminder cannot be switched on and says why.
+- A khutbah time that is not a time is refused, and stored data that is corrupt is ignored.
+- Every sunnah carries a reference, and every unverified one says so on the page.
+- Every point where the schools differ shows both positions.
+- Push, when on, holds only the chosen reminder kinds and the khutbah time, and switching it off deletes them.
+- The page reads in a second language with the same Arabic and references.
+- A user enters their mosque's khutbah time, switches on the reminders, and on Friday receives the al-Kahf reminder in the morning and the khutbah reminder before it starts.
+
+**Done when:** The reminders have arrived on a real phone on a Friday, and the page has been read by the reviewer Zubair named.
+
+## Games
+
+### 42. Games
+
+**What it does:** Adds two games for learning while playing: "Who am I?", a guessing game about the prophets, and Kalimah, a daily Qur'anic word puzzle to share on WhatsApp.
+
+**How it works**
+- A games page, `/games`, lists both, linked from Tools. Scores and streaks stay on the device; there are no accounts and no leaderboard.
+- Games score knowledge only. Nothing about a reader's prayers, fasts or other worship is ever scored or shown in a game.
+- Every fact in a game is a scholarly claim, so it carries a reference checked against its source, and the games await review like any other content.
+- **Who am I?** One of the 25 prophets is chosen. Clues are shown one at a time, drawn from that prophet's story (feature 36), each with its verse or hadith. The reader guesses from the list of prophets; fewer clues means a higher score. The answer links to the prophet's story. The game is text only: prophets are never drawn or pictured in any way.
+- Clues are held in `data/` beside each story, written from the story's own verified sections, and ordered from hardest to easiest. A prophet about whom the Qur'an says little has fewer clues; nothing is added to fill them out.
+- **Kalimah.** One Qur'anic word a day, the same for everyone that day, chosen with the local day key. The reader has six tries; after each, the letters are marked as right, in the word, or not in the word. When finished, the word is shown in its verse with the verse's reference and translation, linking to it.
+- The result is shared as a grid of squares that gives nothing away, with a link to the game, through the share feature (feature 22).
+- Whether Kalimah is played in Arabic letters or in transliteration, and who the games are for, are decisions for Zubair (see Decisions needed). The word list is held in `data/`, each word with its verse, and every word is checked against the Qur'an dataset.
+- The games page and both games are in the sitemap. Two named actions, "who am I finished" and "kalimah finished", are added to the anonymous usage statistics, carrying no guess, answer or score.
+
+**Tests**
+- A new player sees the games page with both games and no score.
+- In Who am I?, the first clue alone is shown, and each further clue appears only when asked for.
+- A right guess after one clue scores more than a right guess after three.
+- Every clue for every prophet carries a reference, and every Qur'an reference is a verse that exists.
+- No game page contains an image of a person.
+- In Kalimah, two players on the same day get the same word, and the next day a different one.
+- A guess marks each letter right, present or absent, including a word with a repeated letter.
+- After six wrong tries, the game ends and shows the word in its verse.
+- The shared result shows the grid and the link, and not the word.
+- A game in progress survives a reload, and the next day starts a new game.
+- Stored scores that are missing or corrupt are ignored and the game still opens.
+- The usage statistics carry no guess, answer or score.
+- A user plays Kalimah, solves it in four tries, shares the grid to WhatsApp, then plays Who am I? and guesses Nuh from the second clue.
+
+**Done when:** Both games are live, every clue and word has been checked against its source and read by the reviewer Zubair named, and a shared Kalimah result has been opened from WhatsApp on a real phone.
 
 ## Insight
 
@@ -1125,6 +1276,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Zubair goes through the two lists below, confirms or changes each decision, and carries out each outstanding check.
 - A decision that is reversed is changed in the feature it belongs to, and that feature's tests are updated.
 - A feature left unticked in the progress list is ticked once its outstanding check is done.
+- A feature marked *(parked)* in the progress list is built but has its check deferred by Zubair's decision; it does not block this feature.
 
 **Decisions to confirm**
 
@@ -1213,13 +1365,13 @@ Tests are written in plain English and ordered the same way under every feature:
 | 17 | 24 | On a real Android phone and an installed iPhone app, with the app fully closed, confirm a reminder arrives within two minutes of Maghrib and opens the tracker. Then switch push off and confirm the record is gone from the `push-subscriptions` store. Then tick feature 24 **Done, 13 October 2026.** |
 | 18 | 27 | Once Yoruba text exists: on a real Android phone and a real iPhone, confirm letters with tone marks and under-dots (for example ẹ̀, ọ́, ṣ) display as single, correctly formed letters in headings, body text and buttons |
 | 19 | 28 | Once Hausa text exists: on a real Android phone and a real iPhone, confirm the hooked letters ɓ, ɗ, ƙ and ƴ display as single, correctly formed letters in headings, body text and buttons |
-| 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 |
+| 20 | 29 | Look at every page in a right-to-left language at phone (360px) and desktop widths and confirm nothing is misaligned or clipped and nothing scrolls sideways. To try it before a real one exists, add a temporary entry with `dir: 'rtl'` and `complete: true` to `src/locales/index.js` (the tests do this with a made-up Arabic). Then tick feature 29 **Parked, 17 October 2026: deferred until a right-to-left language is planned.** |
 | 21 | 30 | Read the Eid page on a phone at 360px wide, and confirm the countdown against the announced date as each of the next four Eids approaches (calculated: 9 March 2027, 17 May 2027, 27 February 2028 and 5 May 2028; a published calendar gives 9 March, 16 May, 26 February and 5 May, so two of the four differ by a day) **Page read on a phone, 13 October 2026; the dates are still to confirm as each Eid approaches.** |
 | 22 | 31 | Read the Qurbani page on a phone at 360px wide and try the shares helper with the on-screen keyboard **Done, 13 October 2026.** |
 | 23 | 32 | Read the list of prophets and the story of Ibrahim on a phone at 360px wide **Done, 13 October 2026.** |
 | 24 | 33 | On a phone, open Ibrahim's page, step through the five stops on the map and in the list, then turn the network off on the installed app and confirm the map still shows **Done, 13 October 2026: the stops were stepped through on a phone and the map showed in flight mode.** |
 
-**Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked.
+**Done when:** Every row above is marked confirmed, changed or carried out, and every feature in the progress list is ticked or parked.
 
 ---
 
@@ -1238,3 +1390,8 @@ Each of these blocks the feature named. A proposed default is given where there 
 | Which statistics service? | 34 | **Decided:** GoatCounter: open source, no cookies, counts named actions, free for non-commercial sites |
 | Are visitors asked first? | 34 | **Decided:** No banner. Nothing identifying is collected; Do Not Track is honoured and an opt-out switch is offered |
 | Who reviews translations and new religious content? | 27, 28, 36 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer. **13 October 2026:** Zubair ticked 30 to 32 while still looking for a reviewer; the prophets' stories are verified under feature 36, and the Eid and Qurbani reviews stay open under Final |
+| How are prayer times shown for a place in another timezone? | 38 | State the clock the times are shown in (the device's). Showing the place's own time needs its timezone: from a lookup service (a new outside address and a privacy note) or chosen by the user |
+| Which days does the calendar mark? | 40 | Only days with a sunnah in authentic sources. Days whose observance the schools dispute (such as the Mawlid or the 15th of Sha'ban) are not marked as days of worship |
+| Is reciting Surah al-Kahf on Friday included? | 41 | Yes, with its source named and a note on its grading, settled with the reviewer |
+| Who are the games for? | 42 | Adults and older children together: no timer, gentle scoring |
+| Is Kalimah played in Arabic letters or in transliteration? | 42 | Arabic letters, with an on-screen Arabic keyboard, since it teaches the Qur'an's own words |

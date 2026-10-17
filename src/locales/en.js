@@ -135,6 +135,23 @@ export default {
       about: 'About',
     },
   },
+  hijri: {
+    date: '{day} {month} {year} AH',
+    months: {
+      1: 'Muharram',
+      2: 'Ṣafar',
+      3: 'Rabīʿ al-Awwal',
+      4: 'Rabīʿ al-Thāni',
+      5: 'Jumādā al-Ūlā',
+      6: 'Jumādā al-Ākhirah',
+      7: 'Rajab',
+      8: 'Shaʿbān',
+      9: 'Ramaḍān',
+      10: 'Shawwāl',
+      11: 'Dhū al-Qaʿdah',
+      12: 'Dhū al-Ḥijjah',
+    },
+  },
   prayerGuides: {
     breadcrumb: 'Breadcrumb',
     prayer: 'Prayer',
@@ -455,6 +472,9 @@ export default {
     },
   },
   prayer: {
+    distanceKm: '{distance} km',
+    deviceClock:
+      'Times are shown in this device’s time. For a place in another time zone, they are not that place’s local time.',
     prayerTimesTool: 'Prayer Times Tool',
     todaySPrayerTimes: "Today's prayer times",
     enterYourLocationToGetAccurate:
