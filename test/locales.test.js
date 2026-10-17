@@ -34,7 +34,7 @@ const TESTISH = {
   dir: 'ltr',
   complete: true,
   messages: {
-    siteNav: { about: 'Uber uns', menu: { home: 'Heim' }, pillars: { zakat: { name: 'Zakah' } } },
+    siteNav: { about: 'Uber uns', menu: { home: 'Heim' }, links: { tools: 'Werkzeuge' } },
     zakat: { currency: 'Währung', nisabMethod: 'Nisab-Methode', due: 'Zakat ist fällig:' },
     common: { days: '{n} Tage | {n} Tag | {n} Tage', language: 'Sprache' },
   },

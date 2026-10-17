@@ -28,11 +28,11 @@
               <div class="stat-lbl">{{ c('header.pillarsCovered') }}</div>
             </div>
             <div>
-              <div class="stat-num">{{ hijri.monthName.split(' ')[0] }}</div>
+              <div class="stat-num">{{ hijri.monthName }}</div>
               <div class="stat-lbl">{{ c('header.ahToday', { a: hijri.year }) }}</div>
             </div>
             <div>
-              <div class="stat-num">{{ inRamadan ? '🌙' : daysLeft + 'd' }}</div>
+              <div class="stat-num">{{ inRamadan ? '🌙' : $t('common.days', daysLeft) }}</div>
               <div class="stat-lbl">
                 {{ inRamadan ? c('header.ramadanMubarak') : c('header.untilRamadan') }}
               </div>

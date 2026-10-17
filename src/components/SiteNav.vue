@@ -20,31 +20,24 @@
         >
       </RouterLink>
 
-      <!-- Desktop pillar nav -->
-      <nav class="nav-pillars" :aria-label="$t('siteNav.fivePillarsNavigation')">
+      <nav class="nav-pillars" :aria-label="$t('siteNav.mainNavigation')">
         <RouterLink
-          v-for="p in pillars"
-          :key="p.to"
-          :to="p.to"
+          v-for="link in mainLinks"
+          :key="link.to"
+          :to="link.to"
           class="nav-pill"
-          :aria-label="$t('siteNav.pillars.' + p.key + '.label')"
+          active-class="active"
         >
-          <span class="nav-pill-icon" aria-hidden="true">{{ p.icon }}</span>
-          <span class="nav-pill-label">{{ $t('siteNav.pillars.' + p.key + '.name') }}</span>
+          <span class="nav-pill-icon" aria-hidden="true">{{ link.icon }}</span>
+          <span class="nav-pill-label">{{ $t('siteNav.links.' + link.key) }}</span>
         </RouterLink>
       </nav>
 
-      <!-- Desktop right links -->
       <div class="nav-right">
-        <RouterLink to="/adhkar" class="nav-tools-btn">{{ $t('siteNav.adhkar') }}</RouterLink>
-        <RouterLink to="/duas" class="nav-tools-btn">{{ $t('siteNav.duas') }}</RouterLink>
-        <RouterLink to="/tracker" class="nav-tools-btn">{{ $t('siteNav.tracker') }}</RouterLink>
-        <RouterLink to="/tasbih" class="nav-tools-btn">{{ $t('siteNav.tasbih') }}</RouterLink>
-        <RouterLink to="/inheritance" class="nav-tools-btn">{{
-          $t('siteNav.inheritance')
-        }}</RouterLink>
         <LanguageSwitcher />
-        <RouterLink to="/about" class="nav-tools-btn">{{ $t('siteNav.about') }}</RouterLink>
+        <RouterLink to="/about" class="nav-tools-btn" active-class="active">{{
+          $t('siteNav.about')
+        }}</RouterLink>
         <a
           :href="GITHUB_REPO"
           target="_blank"
@@ -122,129 +115,16 @@ import { RouterLink } from 'vue-router'
 const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 const menuOpen = ref(false)
 
-const pillars = [
-  {
-    to: '/faith',
-    key: 'faith',
-    icon: '☪️',
-  },
-  {
-    to: '/prayer',
-    key: 'prayer',
-    icon: '🕌',
-  },
-  {
-    to: '/zakat',
-    key: 'zakat',
-    icon: '✦',
-  },
-  {
-    to: '/fasting',
-    key: 'fasting',
-    icon: '🌙',
-  },
-  {
-    to: '/hajj',
-    key: 'hajj',
-    icon: '🕋',
-  },
-  {
-    to: '/hadith',
-    key: 'hadith',
-    icon: '📖',
-  },
+const mainLinks = [
+  { to: '/pillars', key: 'pillars', icon: '🕋' },
+  { to: '/tools', key: 'tools', icon: '🧭' },
+  { to: '/hadith', key: 'hadith', icon: '📖' },
+  { to: '/prophets', key: 'prophets', icon: '📜' },
 ]
 
 const allLinks = [
-  {
-    to: '/',
-    key: 'home',
-    icon: '🏠',
-  },
-  {
-    to: '/faith',
-    key: 'faith',
-    icon: '☪️',
-  },
-  {
-    to: '/prayer',
-    key: 'prayer',
-    icon: '🕌',
-  },
-  {
-    to: '/zakat',
-    key: 'zakat',
-    icon: '✦',
-  },
-  {
-    to: '/fasting',
-    key: 'fasting',
-    icon: '🌙',
-  },
-  {
-    to: '/hajj',
-    key: 'hajj',
-    icon: '🕋',
-  },
-  {
-    to: '/hadith',
-    key: 'hadith',
-    icon: '📖',
-  },
-  {
-    to: '/hadith/books',
-    key: 'hadithBooks',
-    icon: '📚',
-  },
-  {
-    to: '/adhkar',
-    key: 'adhkar',
-    icon: '📿',
-  },
-  {
-    to: '/duas',
-    key: 'duas',
-    icon: '🤲',
-  },
-  {
-    to: '/eid',
-    key: 'eid',
-    icon: '🌙',
-  },
-  {
-    to: '/qurbani',
-    key: 'qurbani',
-    icon: '🐑',
-  },
-  {
-    to: '/prophets',
-    key: 'prophets',
-    icon: '📜',
-  },
-  {
-    to: '/tracker',
-    key: 'tracker',
-    icon: '✅',
-  },
-  {
-    to: '/tasbih',
-    key: 'tasbih',
-    icon: '🔢',
-  },
-  {
-    to: '/inheritance',
-    key: 'inheritance',
-    icon: '⚖️',
-  },
-  {
-    to: '/about',
-    key: 'about',
-    icon: 'ℹ️',
-  },
-  {
-    to: '/changelog',
-    key: 'changelog',
-    icon: '📋',
-  },
+  { to: '/', key: 'home', icon: '🏠' },
+  ...mainLinks,
+  { to: '/about', key: 'about', icon: 'ℹ️' },
 ]
 </script>

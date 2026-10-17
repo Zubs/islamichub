@@ -62,11 +62,14 @@ export function hitUrl(endpoint, hit) {
     params.set('r', source)
   }
 
-  params.set('e', action ? '1' : '0')
+  params.set('e', action ? 'true' : 'false')
 
   params.set('s', String(screenWidth))
 
-  params.set('b', random)
+  // GoatCounter reads `b` as a bot score, where 0 is a person, and `rnd` as the cache breaker
+  params.set('b', '0')
+
+  params.set('rnd', random)
 
   return `${endpoint}?${params.toString()}`
 }

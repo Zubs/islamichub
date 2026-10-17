@@ -111,6 +111,9 @@ netlify.toml            Build, SPA redirect, security and cache headers
 - Prices are requested by the Zakat page when it opens, once per visit; no other page requests them.
 - Route changes use an `out-in` fade keyed on `route.path`.
 - Navigation scrolls to the top instantly, except on back/forward, where the saved position is restored.
+- The navigation bar holds four destinations (Pillars, Tools, Hadith, Prophets), About, the language switcher when more
+  than one language is offered, and GitHub. The phone menu lists the same with Home. The footer lists the same four
+  under "Explore", and About, Changelog, GitHub and "Report an issue" under "Project".
 
 ### Server-side code
 
@@ -145,7 +148,11 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/`                                       | `home`              | HomeView              |
 | `/faith`                                  | `faith`             | FaithView             |
 | `/faith/articles`                         | `articles-of-faith` | ArticlesOfFaithView   |
+| `/pillars`                                | `pillars`           | PillarsView           |
+| `/tools`                                  | `tools`             | ToolsView             |
 | `/prayer`                                 | `prayer`            | PrayerView            |
+| `/prayer/adhan`                           | `adhan`             | AdhanView             |
+| `/prayer/how-to-pray`                     | `how-to-pray`       | SalahStepsView        |
 | `/zakat`                                  | `zakat`             | ZakatView             |
 | `/fasting`                                | `fasting`           | FastingView           |
 | `/hajj`                                   | `hajj`              | HajjView              |
@@ -185,6 +192,25 @@ Requirements:
 
 - Arabic text is marked `lang="ar"`, rendered right-to-left in the Arabic typeface.
 - Every verse and hadith shows its reference (surah:ayah, or collection + Arabic-edition number).
+
+- `/pillars` introduces the five pillars with the hadith that names them (Sahih Bukhari 8, Sahih Muslim 16), a card
+  for each pillar linking to its guide, why fasting is listed before Hajj, and links to the articles of faith, Eid,
+  Qurbani and the prophets.
+- `/tools` lists every tool in four groups (prayer, remembrance, wealth, fasting and study), each linking to its page.
+- The prayer page opens with a row of links to its own parts, then "Guides to the prayer" linking to the two guides
+  below, the tracker, adhkar after the prayer, the Eid prayer and duas, then the times and Qibla tools, "Why the prayer
+  matters" (Qur'an 29:45, 2:238, 20:14, Sahih Bukhari 527 and 528), the five prayers, conditions and questions.
+- `/prayer/adhan` covers what the adhan is, how the first adhan began (Sahih Bukhari 604, Abu Dawud 499), its words
+  and the iqamah phrase by phrase with how many times each is said, what to say while it is called and after it, the
+  time between the two calls, its reward and two questions. It awaits review by a scholar.
+- `/prayer/how-to-pray` takes the reader through a prayer of two rak'at in 14 steps. Each step has a drawing of the
+  position (`PrayerFigure.vue`: faceless, side-on, facing the Qibla, drawn inline so it works offline) and the words
+  said in it in Arabic, transliteration and translation with their source. It then covers prayers of three and four
+  rak'at and shows both positions on raising the hands. It awaits review by a scholar.
+- Both guides are drawn by `ContentSections` from `data/adhanSections.js` and `data/salahStepsSections.js`, using two
+  section kinds added for them: `phrases` (a numbered list of Arabic phrases with a count) and `step` (a figure with
+  its recitations, numbered in order). The Arabic of the verses is from an open Qur'an dataset; the Arabic of the
+  supplications is copied from the hadiths cited beside them, and every reference was checked against its text.
 
 ### 5.1a Today panel (home page)
 
@@ -801,6 +827,8 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
   with "Forget my location". It never reaches a server of ours.
 - Financial and family details entered into calculators do not leave the device.
 - Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
+  Each hit sends `b=0` (GoatCounter's bot score: a person) and a random `rnd` to defeat caching. A tool action is sent
+  as an event whose path and title are the action's name.
 - Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.
 - **The one thing a server stores about a user** is the push record, and only for a user who switches on "Also notify
   me when the app is closed": the push subscription, coordinates rounded to two decimal places (about 1 km), timezone,

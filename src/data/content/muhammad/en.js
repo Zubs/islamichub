@@ -42,4 +42,3 @@ export default {
     p2: 'During the Farewell Pilgrimage upon the plain of ‘Arafat, Allah revealed the culminating decree of Islam: "This day I have perfected for you your religion and completed My favor upon you and have approved for you Islam as your religion" (Qur’an 5:3). Allah confirmed that He sent His Messenger with guidance and the religion of truth to manifest it over all religion (Qur’an 48:28, Qur’an 48:29).',
   },
 }
-

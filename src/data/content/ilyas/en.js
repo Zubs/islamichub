@@ -35,4 +35,3 @@ export default {
     translation: 'Peace upon Ilyasin.',
   },
 }
-

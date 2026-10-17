@@ -57,27 +57,10 @@
         </div>
 
         <div class="footer-col">
-          <div class="footer-col-title">{{ $t('siteFooter.fivePillars') }}</div>
-          <RouterLink v-for="p in pillars" :key="p.to" :to="p.to">{{
-            $t('siteFooter.pillars.' + p.key)
+          <div class="footer-col-title">{{ $t('siteFooter.explore') }}</div>
+          <RouterLink v-for="link in exploreLinks" :key="link.to" :to="link.to">{{
+            $t('siteFooter.links.' + link.key)
           }}</RouterLink>
-        </div>
-
-        <div class="footer-col">
-          <div class="footer-col-title">{{ $t('siteFooter.tools') }}</div>
-          <RouterLink to="/zakat">{{ $t('siteFooter.zakatCalculator') }}</RouterLink>
-          <RouterLink to="/prayer">{{ $t('siteFooter.prayerTimes') }}</RouterLink>
-          <RouterLink to="/prayer">{{ $t('siteFooter.qiblaFinder') }}</RouterLink>
-          <RouterLink to="/inheritance">{{ $t('siteFooter.inheritanceCalculator') }}</RouterLink>
-          <RouterLink to="/fasting">{{ $t('siteFooter.ramadanTracker') }}</RouterLink>
-          <RouterLink to="/adhkar">{{ $t('siteFooter.adhkar') }}</RouterLink>
-          <RouterLink to="/duas">{{ $t('siteFooter.duas') }}</RouterLink>
-          <RouterLink to="/tracker">{{ $t('siteFooter.prayerTracker') }}</RouterLink>
-          <RouterLink to="/tasbih">{{ $t('siteFooter.tasbihCounter') }}</RouterLink>
-          <RouterLink to="/hadith/books">{{ $t('siteFooter.hadithLibrary') }}</RouterLink>
-          <RouterLink to="/eid">{{ $t('siteFooter.eid') }}</RouterLink>
-          <RouterLink to="/qurbani">{{ $t('siteFooter.qurbani') }}</RouterLink>
-          <RouterLink to="/prophets">{{ $t('siteFooter.prophets') }}</RouterLink>
         </div>
 
         <div class="footer-col">
@@ -90,12 +73,6 @@
           <a :href="GITHUB_REPO + '/issues'" target="_blank" rel="noopener noreferrer">{{
             $t('siteFooter.reportAnIssue')
           }}</a>
-          <a
-            :href="GITHUB_REPO + '/blob/main/CONTRIBUTING.md'"
-            target="_blank"
-            rel="noopener noreferrer"
-            >{{ $t('siteFooter.contribute') }}</a
-          >
         </div>
       </div>
 
@@ -133,13 +110,11 @@ import { RouterLink } from 'vue-router'
 
 const GITHUB_REPO = 'https://github.com/Zubs/islamichub'
 
-const pillars = [
-  { to: '/faith', key: 'faith' },
-  { to: '/prayer', key: 'prayer' },
-  { to: '/zakat', key: 'zakat' },
-  { to: '/fasting', key: 'fasting' },
-  { to: '/hajj', key: 'hajj' },
+const exploreLinks = [
+  { to: '/pillars', key: 'pillars' },
+  { to: '/tools', key: 'tools' },
   { to: '/hadith', key: 'hadith' },
+  { to: '/prophets', key: 'prophets' },
 ]
 
 const socials = [

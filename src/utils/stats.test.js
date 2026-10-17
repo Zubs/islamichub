@@ -104,7 +104,7 @@ describe('stats utils', () => {
     it('includes exactly the expected fields and no others', () => {
       const url = hitUrl(endpoint, baseHit)
       const params = new URLSearchParams(url.split('?')[1])
-      expect([...params.keys()].sort()).toEqual(['b', 'e', 'p', 'r', 's', 't'])
+      expect([...params.keys()].sort()).toEqual(['b', 'e', 'p', 'r', 'rnd', 's', 't'])
     })
 
     it('drops query string from path', () => {
@@ -125,16 +125,16 @@ describe('stats utils', () => {
       expect(params.has('r')).toBe(false)
     })
 
-    it('sets e=1 for an action', () => {
+    it('sets e=true for an action', () => {
       const url = hitUrl(endpoint, { ...baseHit, action: true })
       const params = new URLSearchParams(url.split('?')[1])
-      expect(params.get('e')).toBe('1')
+      expect(params.get('e')).toBe('true')
     })
 
-    it('sets e=0 for a page view', () => {
+    it('sets e=false for a page view', () => {
       const url = hitUrl(endpoint, { ...baseHit, action: false })
       const params = new URLSearchParams(url.split('?')[1])
-      expect(params.get('e')).toBe('0')
+      expect(params.get('e')).toBe('false')
     })
 
     it('escapes characters that need escaping', () => {
@@ -148,10 +148,11 @@ describe('stats utils', () => {
       expect(params.get('p')).toBe('/adhkar/morning')
     })
 
-    it('includes the random value as b', () => {
+    it('marks the hit as from a person and sends the random value as rnd', () => {
       const url = hitUrl(endpoint, { ...baseHit, random: 'xyz789' })
       const params = new URLSearchParams(url.split('?')[1])
-      expect(params.get('b')).toBe('xyz789')
+      expect(params.get('b')).toBe('0')
+      expect(params.get('rnd')).toBe('xyz789')
     })
   })
 

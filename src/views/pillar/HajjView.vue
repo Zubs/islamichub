@@ -314,28 +314,11 @@ useSeo('hajj')
 useScrollReveal()
 
 const activeDay = ref(0)
-const currentDay = ref({
-  tab: 'Day 8',
-  title: 'Day 8 — Yawm al-Tarwiyah (8 Dhul Hijjah)',
-  rites: [
-    {
-      name: 'Ihram',
-      desc: 'Enter the state of ritual consecration at the Miqat. Men wear two white unstitched cloths. Women wear modest everyday clothing. Make the intention and recite the Talbiyah: "Labbayk Allahumma labbayk..."',
-    },
-    {
-      name: 'Travel to Mina',
-      desc: 'Proceed to the valley of Mina, approximately 8km from Masjid al-Haram. Spend the night in Mina — this is Sunnah, not obligatory.',
-    },
-    {
-      name: 'Prayers in Mina',
-      desc: 'Pray Dhuhr, Asr, Maghrib, Isha, and Fajr in Mina (shortened but not combined, per majority scholars).',
-    },
-  ],
-})
-
 const conditions = computed(() => list('conditions'))
 
 const days = computed(() => list('days'))
+
+const currentDay = computed(() => days.value[activeDay.value])
 
 const umrahRites = computed(() => list('umrahRites'))
 
@@ -343,6 +326,5 @@ const faqs = computed(() => list('faqs'))
 
 const showRitesForDay = (dayIndex) => {
   activeDay.value = dayIndex
-  currentDay.value = days[dayIndex]
 }
 </script>

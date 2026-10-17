@@ -1031,6 +1031,7 @@ Tests are written in plain English and ordered the same way under every feature:
 - Each new story is added to the sitemap. A journey (feature 33) is added only where the sources name the places or historians identify them, and is labelled as Ibrahim's is.
 - Once all 25 are written, a reviewer named by Zubair reads every story, Ibrahim's and the five journey texts included. Their corrections are made, and their name and the date are recorded with each story.
 - This feature carries the review that features 32 and 33 were waiting for. The points left open for the reviewer on Ibrahim's story (the son in the dream, the order of events, whose translation of the verses is used, the stops of the journey) are settled here.
+- Built: all 24 remaining stories are written (pull requests 19, 20 and 24), each with a sections file, a content file, an entry in `data/prophetStories.js`, `story: true` and a sitemap entry. "The people they were sent to" is still empty for Idris, Ishaq, Ya'qub, Ayyub, Dhul-Kifl, Dawud, Sulayman, Al-Yasa', Zakariyya and Yahya. Outstanding: the review by a reviewer Zubair names, with their name and the date recorded on each story. Until then the feature stays unticked.
 
 **Tests**
 - All 25 prophets in the list link to a story, and none shows "Story not yet written".

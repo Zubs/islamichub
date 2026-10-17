@@ -44,4 +44,3 @@ export default {
       'O Dawud, indeed We have made you a successor upon the earth, so judge between the people in truth and do not follow [your own] desire, as it will lead you astray from the way of Allah.',
   },
 }
-

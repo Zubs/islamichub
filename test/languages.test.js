@@ -218,7 +218,7 @@ describe('a complete Yoruba', () => {
   it('shows no interface text in English in the navigation and footer', async () => {
     const { wrapper } = await open('/yo/tasbih')
     const labels = [
-      ...wrapper.findAll('.nav-tools-btn').map((link) => link.text()),
+      ...wrapper.findAll('.nav-pill, .nav-tools-btn').map((link) => link.text()),
       ...wrapper.findAll('.site-footer a').map((link) => link.text()),
     ].filter((text) => /[A-Za-z]{3}/.test(text) && !/GitHub|Zubair|Yusuf|IslamicHub/.test(text))
 

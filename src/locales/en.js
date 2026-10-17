@@ -89,105 +89,71 @@ export default {
     hub: 'Hub',
     freeIslamicEducationAndToolsFor:
       'Free Islamic education and tools for the Muslim community — prayer times, Zakat calculator, Qibla finder, inheritance calculator, and scholarly guides for all Five Pillars.',
-    fivePillars: 'Five Pillars',
-    tools: 'Tools',
-    zakatCalculator: 'Zakat Calculator',
-    prayerTimes: 'Prayer Times',
-    qiblaFinder: 'Qibla Finder',
-    inheritanceCalculator: 'Inheritance Calculator',
-    ramadanTracker: 'Ramadan Tracker',
-    adhkar: 'Adhkar',
-    duas: 'Duas',
-    prayerTracker: 'Prayer Tracker',
-    tasbihCounter: 'Tasbih Counter',
-    hadithLibrary: 'Hadith Library',
+    explore: 'Explore',
+    links: {
+      pillars: 'The Five Pillars',
+      tools: 'Tools',
+      hadith: 'Hadith',
+      prophets: 'Prophets',
+    },
     project: 'Project',
     aboutTeam: 'About & Team',
     changelog: 'Changelog',
     githubRepository: 'GitHub Repository',
     reportAnIssue: 'Report an issue',
-    contribute: 'Contribute',
     '2026IslamichubBuiltBy': '© 2026 IslamicHub — Built by',
     zubair: 'Zubair',
     text: '&',
     yusuf: 'Yusuf',
     disclaimerIslamichubIsAnEducationalAnd:
       'Disclaimer: IslamicHub is an educational and guidance tool — not a fatwa or formal religious ruling. Prayer times are calculated astronomically and may differ from local mosque announcements. For personal religious rulings, consult a qualified Islamic scholar (mufti). Built with sincerity for the Muslim community.',
-    pillars: {
-      faith: 'Faith (Shahada)',
-      prayer: 'Prayer (Salah)',
-      zakat: 'Zakat',
-      fasting: 'Fasting (Sawm)',
-      hajj: 'Hajj',
-      hadith: 'Hadith',
-    },
     onGithub: 'IslamicHub on GitHub',
-    eid: 'The Two Eids',
-    qurbani: 'Qurbani',
-    prophets: 'Prophets',
   },
   siteNav: {
     islamichubHome: 'IslamicHub home',
     islamic: 'Islamic',
     hub: 'Hub',
-    fivePillarsNavigation: 'Five Pillars navigation',
-    adhkar: '📿 Adhkar',
-    duas: '🤲 Duas',
-    tracker: '✅ Tracker',
-    tasbih: '🔢 Tasbih',
-    inheritance: '⚖️ Inheritance',
+    mainNavigation: 'Main navigation',
     about: 'About',
     islamichubOnGithub: 'IslamicHub on GitHub',
     github: 'GitHub',
     toggleNavigationMenu: 'Toggle navigation menu',
     navigationMenu: 'Navigation menu',
     viewSourceOnGithub: 'View source on GitHub',
-    pillars: {
-      faith: {
-        name: 'Faith',
-        label: 'Faith — Shahada',
-      },
-      prayer: {
-        name: 'Prayer',
-        label: 'Prayer — Salah and prayer times',
-      },
-      zakat: {
-        name: 'Zakat',
-        label: 'Zakat calculator',
-      },
-      fasting: {
-        name: 'Fasting',
-        label: 'Fasting — Sawm and Ramadan',
-      },
-      hajj: {
-        name: 'Hajj',
-        label: 'Hajj — Pilgrimage guide',
-      },
-      hadith: {
-        name: 'Hadith',
-        label: 'Hadith — Prophetic tradition and library',
-      },
+    links: {
+      pillars: 'Pillars',
+      tools: 'Tools',
+      hadith: 'Hadith',
+      prophets: 'Prophets',
     },
     menu: {
       home: 'Home',
-      faith: 'Faith (Shahada)',
-      prayer: 'Prayer (Salah) & Prayer Times',
-      zakat: 'Zakat Calculator',
-      fasting: 'Fasting (Sawm) & Ramadan',
-      hajj: 'Hajj — Pilgrimage Guide',
-      hadith: 'Hadith — Prophetic Tradition',
-      hadithBooks: 'Hadith Library',
-      adhkar: 'Adhkar',
-      duas: 'Duas for Everyday Situations',
-      tracker: 'Prayer Tracker',
-      tasbih: 'Tasbih Counter',
-      inheritance: "Inheritance (Fara'id) Calculator",
-      about: 'About & Contributors',
-      changelog: 'Changelog',
-      eid: 'The Two Eids',
-      qurbani: 'Qurbani',
+      pillars: 'The Five Pillars',
+      tools: 'Tools',
+      hadith: 'Hadith',
       prophets: 'Prophets',
+      about: 'About',
     },
+  },
+  prayerGuides: {
+    breadcrumb: 'Breadcrumb',
+    prayer: 'Prayer',
+    adhan: 'The adhan',
+    howToPray: 'How to pray',
+  },
+  contentSections: {
+    step: 'Step {n}',
+    times: '× {n}',
+  },
+  prayerFigure: {
+    takbir: 'Standing with both hands raised for the takbir',
+    standing: 'Standing with the right hand over the left',
+    bowing: 'Bowing with the back level and the hands on the knees',
+    rising: 'Standing upright again after the bow',
+    prostrating: 'Prostrating with the forehead, nose, hands, knees and toes on the ground',
+    sitting: 'Sitting on the left foot with the hands on the thighs',
+    tashahhud: 'Sitting for the tashahhud with the right forefinger raised',
+    taslim: 'Sitting and turning the head to the right and then the left for the salam',
   },
   statsOptOut: {
     donTCountMyVisits: "Don't count my visits",
@@ -805,6 +771,26 @@ export default {
       description:
         "Learn about the Shahada, the first pillar of Islam — Tawhid, the seven conditions, Risala, and all three dimensions of divine oneness, with Qur'anic verses and Hadith.",
     },
+    pillars: {
+      title: "The Five Pillars of Islam — Shahada, Salah, Zakat, Sawm and Hajj {'|'} IslamicHub",
+      description:
+        'What the five pillars of Islam are, the hadith that names them, and a guide to each: the testimony of faith, prayer, Zakat, the fast of Ramadan and Hajj.',
+    },
+    tools: {
+      title: "Islamic Tools — Prayer Times, Zakat, Adhkar, Tasbih and More {'|'} IslamicHub",
+      description:
+        'Every free IslamicHub tool in one place: prayer times and Qibla, prayer tracker, adhkar, duas, tasbih counter, Zakat and inheritance calculators, and the Ramadan tracker.',
+    },
+    adhan: {
+      title: "The Adhan — Words, Meaning and How It Began {'|'} IslamicHub",
+      description:
+        'The call to prayer in Arabic with transliteration and meaning, the iqamah, the story of the first adhan, and what to say when you hear it, with every hadith referenced.',
+    },
+    'how-to-pray': {
+      title: "How to Pray Salah Step by Step, with Illustrations {'|'} IslamicHub",
+      description:
+        'Each position of the prayer illustrated, with what to recite in Arabic, transliteration and translation: takbir, al-Fatihah, ruku‘, sujud, tashahhud and salam.',
+    },
     prayer: {
       title: "Prayer Times, Qibla Direction & Salah Guide {'|'} IslamicHub",
       description:
@@ -862,7 +848,7 @@ export default {
     prophets: {
       title: "The Prophets Named in the Qur'an — Their Stories and Verses {'|'} IslamicHub",
       description:
-        "The 25 prophets named in the Qur'an, each with the verses that name him, and their stories told from the Qur'an and authentic hadith, beginning with Ibrahim.",
+        "The 25 prophets named in the Qur'an, each with the verses that name him, and their stories told from the Qur'an and authentic hadith.",
     },
   },
   about: {
@@ -895,7 +881,7 @@ export default {
   prophets: {
     badge: 'The Prophets',
     title: "The prophets named in the Qur'an",
-    lead: "The Qur'an names twenty-five prophets, peace be upon them all. Each is listed here with verses that name him. Their stories are being written one at a time, from the Qur'an and authentic hadith only.",
+    lead: "The Qur'an names twenty-five prophets, peace be upon them all. Each is listed here with verses that name him and his story, told from the Qur'an and authentic hadith only.",
     namedIn: 'Named in',
     readStory: 'Read the story of {name}',
     storyComing: 'Story not yet written',

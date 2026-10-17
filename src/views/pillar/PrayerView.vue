@@ -27,8 +27,34 @@
         class="anim-target"
       />
 
+      <nav class="on-this-page" :aria-label="c('onThisPage.label')">
+        <a v-for="link in onThisPage" :key="link" :href="'#' + link">{{
+          c('onThisPage.' + link)
+        }}</a>
+      </nav>
+
+      <section id="guides" class="prayer-section">
+        <span class="eyebrow">{{ c('guides.eyebrow') }}</span
+        ><UntranslatedNote v-if="untranslated('guides')" />
+        <h2 class="section-title prayer-section-title">{{ c('guides.title') }}</h2>
+        <p class="prose prayer-section-intro">{{ c('guides.intro') }}</p>
+        <ul class="prayer-guides">
+          <li v-for="guide in guides" :key="guide.to">
+            <RouterLink :to="guide.to" class="tool-card">
+              <span class="tc-icon" aria-hidden="true">{{ guide.icon }}</span>
+              <span>
+                <span class="tc-name">{{ guide.name }}</span>
+                <span class="tc-desc">{{ guide.text }}</span>
+              </span>
+            </RouterLink>
+          </li>
+        </ul>
+      </section>
+
+      <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
+
       <!-- ── PRAYER TIMES TOOL ─────────────────────────────── -->
-      <div style="margin-top: 2.5rem">
+      <div id="times" class="prayer-section">
         <span class="eyebrow">{{ $t('prayer.prayerTimesTool') }}</span>
         <h2
           class="section-title"
@@ -181,7 +207,7 @@
 
       <!-- ── QIBLA ────────────────────────────────────────── -->
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-      <span class="eyebrow">{{ $t('prayer.qiblaFinder') }}</span>
+      <span id="qibla" class="eyebrow prayer-anchor">{{ $t('prayer.qiblaFinder') }}</span>
       <h2
         class="section-title"
         style="font-size: clamp(1.5rem, 2.5vw, 1.9rem); margin-bottom: 0.75rem"
@@ -327,8 +353,26 @@
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
-      <!-- Educational -->
-      <span class="eyebrow">{{ c('understandingSalah.understandingSalah') }}</span
+      <section id="importance">
+        <span class="eyebrow">{{ c('importance.eyebrow') }}</span
+        ><UntranslatedNote v-if="untranslated('importance')" />
+        <h2 class="section-title prayer-section-title">{{ c('importance.title') }}</h2>
+        <QuranBlock
+          arabic="اتْلُ مَا أُوحِيَ إِلَيْكَ مِنَ الْكِتَابِ وَأَقِمِ الصَّلَاةَ ۖ إِنَّ الصَّلَاةَ تَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنْكَرِ ۗ وَلَذِكْرُ اللَّهِ أَكْبَرُ ۗ وَاللَّهُ يَعْلَمُ مَا تَصْنَعُونَ"
+          reference="Qur'an 29:45"
+          :translation="c('importance.recite')"
+          :note="c('importance.reciteNote')"
+        />
+        <ul class="prayer-points">
+          <li v-for="n in 4" :key="n"><HadithRef :text="c('importance.i' + n)" /></li>
+        </ul>
+      </section>
+
+      <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
+
+      <span id="prayers" class="eyebrow prayer-anchor">{{
+        c('understandingSalah.understandingSalah')
+      }}</span
       ><UntranslatedNote v-if="untranslated('understandingSalah')" />
       <h2 class="section-title" style="font-size: clamp(1.5rem, 2.5vw, 1.9rem)">
         {{ c('understandingSalah.theFiveDailyPrayers') }}
@@ -385,7 +429,9 @@
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
 
-      <span class="eyebrow">{{ c('conditionsStructure.conditionsStructure') }}</span
+      <span id="conditions" class="eyebrow prayer-anchor">{{
+        c('conditionsStructure.conditionsStructure')
+      }}</span
       ><UntranslatedNote v-if="untranslated('conditionsStructure')" />
       <h2
         class="section-title"
@@ -447,7 +493,9 @@
       </div>
 
       <div class="divider-kufic" aria-hidden="true"><span class="divider-kufic-icon"></span></div>
-      <FaqList :faqs="faqs" />
+      <div id="questions" class="prayer-anchor">
+        <FaqList :faqs="faqs" />
+      </div>
 
       <div class="cta-strip anim-target" style="margin-top: 2.5rem">
         <GeoPattern />
@@ -481,6 +529,7 @@ import ReminderSettings from '@/components/ReminderSettings.vue'
 import HadithBlock from '@/components/HadithBlock.vue'
 import QuranBlock from '@/components/QuranBlock.vue'
 import FaqList from '@/components/FaqList.vue'
+import HadithRef from '@/components/HadithRef.vue'
 import {
   calcPrayerTimes,
   getCurrentPrayer,
@@ -657,9 +706,85 @@ const shurut = computed(() => list('shurut'))
 const arkan = computed(() => list('arkan'))
 
 const faqs = computed(() => list('faqs'))
+
+const guides = computed(() => list('guides'))
+
+const onThisPage = ['guides', 'times', 'qibla', 'importance', 'prayers', 'conditions', 'questions']
 </script>
 
 <style scoped>
+.on-this-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+.on-this-page a {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--green);
+  text-decoration: none;
+}
+
+.on-this-page a:hover {
+  background: var(--green-light);
+}
+
+.prayer-section {
+  margin-top: var(--space-10);
+}
+
+#guides,
+#times,
+#importance,
+.prayer-anchor {
+  scroll-margin-top: calc(var(--nav-height) + var(--space-4));
+}
+
+.prayer-section-title {
+  font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+  margin-bottom: var(--space-3);
+}
+
+.prayer-section-intro {
+  margin-bottom: var(--space-5);
+}
+
+.prayer-guides {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.prayer-guides > li {
+  display: flex;
+}
+
+.prayer-guides .tool-card {
+  flex: 1;
+}
+
+.prayer-guides .tc-name,
+.prayer-guides .tc-desc {
+  display: block;
+}
+
+.prayer-points {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding-inline-start: var(--space-6);
+  line-height: 1.7;
+  color: var(--ink);
+}
+
 .remember-row {
   display: flex;
   align-items: center;

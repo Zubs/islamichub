@@ -8,6 +8,10 @@ export const SITE_URL = 'https://islamichub.xyz'
 
 // Pages with fixed titles and descriptions; their text is in the message file under `seo`.
 const PAGE_KEYS = [
+  'pillars',
+  'tools',
+  'adhan',
+  'how-to-pray',
   'eid',
   'qurbani',
   'prophets',

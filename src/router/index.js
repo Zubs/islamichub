@@ -111,9 +111,29 @@ export const routes = [
     component: () => import('@/views/pillar/ArticlesOfFaithView.vue'),
   },
   {
+    path: '/pillars',
+    name: 'pillars',
+    component: () => import('@/views/PillarsView.vue'),
+  },
+  {
+    path: '/tools',
+    name: 'tools',
+    component: () => import('@/views/tools/ToolsView.vue'),
+  },
+  {
     path: '/prayer',
     name: 'prayer',
     component: () => import('@/views/pillar/PrayerView.vue'),
+  },
+  {
+    path: '/prayer/adhan',
+    name: 'adhan',
+    component: () => import('@/views/pillar/AdhanView.vue'),
+  },
+  {
+    path: '/prayer/how-to-pray',
+    name: 'how-to-pray',
+    component: () => import('@/views/pillar/SalahStepsView.vue'),
   },
   {
     path: '/zakat',

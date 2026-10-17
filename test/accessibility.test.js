@@ -137,6 +137,10 @@ describe('Feature 37: Accessibility and loading fixes', () => {
       '/eid',
       '/qurbani',
       '/prophets',
+      '/pillars',
+      '/tools',
+      '/prayer/adhan',
+      '/prayer/how-to-pray',
     ]
 
     it.each(pages)('heading levels on %s go down one step at a time, footer included', async (path) => {
