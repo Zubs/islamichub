@@ -203,6 +203,7 @@
             <div class="prayer-sub">{{ p.key === 'sunrise' ? $t('prayer.notAPrayer') : '' }}</div>
           </div>
         </div>
+        <p v-if="prayerTimes" class="prayer-clock-note">{{ $t('prayer.deviceClock') }}</p>
       </div>
 
       <!-- ── QIBLA ────────────────────────────────────────── -->
@@ -332,7 +333,11 @@
             <div
               style="font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1"
             >
-              {{ qiblaDist !== null ? qiblaDist.toLocaleString() + ' km' : '—' }}
+              {{
+                qiblaDist !== null
+                  ? $t('prayer.distanceKm', { distance: formatNumber(qiblaDist) })
+                  : '—'
+              }}
             </div>
           </div>
           <div
@@ -523,7 +528,7 @@ import { useZakatStore } from '@/stores/zakat.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
 import { isValidCoordinates } from '@/utils/prayerSettings.js'
 import { track } from '@/composables/useStats.js'
-import { t } from '@/i18n.js'
+import { t, formatNumber } from '@/i18n.js'
 import GeoPattern from '@/components/GeoPattern.vue'
 import ReminderSettings from '@/components/ReminderSettings.vue'
 import HadithBlock from '@/components/HadithBlock.vue'
@@ -537,6 +542,7 @@ import {
   getTimezoneOffset,
 } from '@/utils/prayer.js'
 import { calcQibla, bearingToLabel, distanceToMakkah } from '@/utils/qibla.js'
+import { dayKey } from '@/utils/day.js'
 
 const { c, list, untranslated } = useContent('prayer', content)
 
@@ -629,6 +635,37 @@ async function locate() {
 }
 
 // ── Calculate prayer times + Qibla ────────────────────────────
+const MINUTE_MS = 60000
+let timesDay = null
+
+function refreshTimes() {
+  const { lat: latV, lng: lngV } = shownLocation.value
+  prayerTimes.value = calcPrayerTimes(
+    latV,
+    lngV,
+    new Date(),
+    getTimezoneOffset(),
+    method.value,
+    asrMethod.value,
+  )
+}
+
+function tick() {
+  const now = new Date()
+  if (dayKey(now) !== timesDay) {
+    timesDay = dayKey(now)
+    refreshTimes()
+  }
+
+  const times = prayerTimes.value
+  currentPrayer.value = getCurrentPrayer(times, now)
+  const next = getNextPrayer(times, now)
+  nextPrayer.value = next
+  const h = Math.floor(next.minsRemaining / 60)
+  const m = next.minsRemaining % 60
+  countdown.value =
+    h > 0 ? t('common.hoursMinutes', { hours: h, minutes: m }) : t('common.minutes', { minutes: m })
+}
 function calculate() {
   if (showTimes()) {
     track('prayer times shown')
@@ -645,27 +682,12 @@ function showTimes() {
 
   shownLocation.value = { lat: latV, lng: lngV }
 
-  const tz = getTimezoneOffset()
-  const times = calcPrayerTimes(latV, lngV, new Date(), tz, method.value, asrMethod.value)
-  prayerTimes.value = times
-  currentPrayer.value = getCurrentPrayer(times)
+  timesDay = dayKey()
+  refreshTimes()
 
-  // Countdown
   clearInterval(countdownTimer)
-
-  function tick() {
-    const next = getNextPrayer(times)
-    nextPrayer.value = next
-    const h = Math.floor(next.minsRemaining / 60)
-    const m = next.minsRemaining % 60
-    countdown.value =
-      h > 0
-        ? t('common.hoursMinutes', { hours: h, minutes: m })
-        : t('common.minutes', { minutes: m })
-  }
-
   tick()
-  countdownTimer = setInterval(tick, 60000)
+  countdownTimer = setInterval(tick, MINUTE_MS)
 
   // Qibla
   const bearing = calcQibla(latV, lngV)
@@ -713,6 +735,13 @@ const onThisPage = ['guides', 'times', 'qibla', 'importance', 'prayers', 'condit
 </script>
 
 <style scoped>
+.prayer-clock-note {
+  margin-top: var(--space-3);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .on-this-page {
   display: flex;
   flex-wrap: wrap;

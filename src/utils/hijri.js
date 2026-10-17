@@ -1,17 +1,4 @@
-const HIJRI_MONTHS = [
-  'Muharram',
-  'Ṣafar',
-  'Rabīʿ al-Awwal',
-  'Rabīʿ al-Thāni',
-  'Jumādā al-Ūlā',
-  'Jumādā al-Ākhirah',
-  'Rajab',
-  'Shaʿbān',
-  'Ramaḍān',
-  'Shawwāl',
-  'Dhū al-Qaʿdah',
-  'Dhū al-Ḥijjah',
-]
+import { dayKey } from '@/utils/day.js'
 
 export function toHijri(date = new Date()) {
   // Algorithm by Khalid Shaukat
@@ -36,16 +23,8 @@ export function toHijri(date = new Date()) {
   const hMonth = (((K % 12) + 12) % 12) + 1
   const hYear = Math.floor(K / 12) + 1
 
-  return {
-    day: hDay,
-    month: hMonth,
-    year: hYear,
-    monthName: HIJRI_MONTHS[hMonth - 1],
-    formatted: `${hDay} ${HIJRI_MONTHS[hMonth - 1]} ${hYear} AH`,
-  }
+  return { day: hDay, month: hMonth, year: hYear }
 }
-
-export { HIJRI_MONTHS }
 
 const HIJRI_EPOCH_JD = 1948438.5
 const MEAN_LUNAR_MONTH_DAYS = 29.53059
@@ -71,24 +50,23 @@ export function firstDayOfHijriMonth(year, month) {
   return start
 }
 
-/** Days remaining until Ramadan */
-export function daysToRamadan() {
-  const today = toHijri(new Date())
-  if (today.month < 9) {
-    // Count remaining days in current month + months to Ramadan
-    const daysLeft = 30 - today.day // approx
-    const monthsLeft = 9 - today.month - 1
-    return daysLeft + monthsLeft * 29.5
+const RAMADAN = 9
+
+function dateOf(day) {
+  const [year, month, date] = day.split('-').map(Number)
+  return new Date(year, month - 1, date)
+}
+
+// Local days from `today` (a day key) to the first day of the next Ramadan; 0 during Ramadan.
+export function daysToRamadan(today = dayKey()) {
+  const now = dateOf(today)
+  const hijri = toHijri(now)
+  if (hijri.month === RAMADAN) {
+    return 0
   }
 
-  if (today.month === 9) {
-    return 0
-  } // It's Ramadan!
-
-  // Past Ramadan — count to next year's
-  const daysLeft = 30 - today.day
-  const monthsLeft = 12 - today.month + 8 // to month 9 next year
-  return Math.round(daysLeft + monthsLeft * 29.5)
+  const year = hijri.month < RAMADAN ? hijri.year : hijri.year + 1
+  return Math.round((firstDayOfHijriMonth(year, RAMADAN) - now) / DAY_MS)
 }
 
 /** Is it currently Ramadan? */

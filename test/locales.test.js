@@ -247,6 +247,49 @@ describe('with a second language', () => {
     expect(t('common.days', 2)).toBe('2 Tage')
   })
 
+  it.each([
+    ['its own name for the month', new Date(2026, 9, 17, 9), 'Jumada I (xx)'],
+    ['the English name for a month it lacks', new Date(2026, 11, 25, 9), 'Rajab'],
+  ])('shows the Hijri month on the home page with %s', async (_, date, month) => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(date)
+    offline()
+    addLocale({
+      ...TESTISH,
+      messages: { ...TESTISH.messages, hijri: { months: { 5: 'Jumada I (xx)' } } },
+    })
+    const { wrapper } = await open('/xx/')
+    vi.useRealTimers()
+
+    expect(wrapper.find('.hero-stats').text()).toContain(month)
+    expect(wrapper.text()).not.toMatch(/hijri\.months/)
+  })
+
+  it('writes the home page date in the language and its format', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2026, 9, 17, 9))
+    offline()
+    addLocale(TESTISH)
+    const { wrapper } = await open('/xx/')
+    vi.useRealTimers()
+
+    expect(wrapper.find('.hero-section').text()).toContain('Samstag, 17. Oktober')
+    expect(wrapper.find('.hero-section').text()).not.toContain('Saturday')
+  })
+
+  it('formats the Qibla distance for the language', async () => {
+    offline()
+    addLocale({ ...TESTISH, messages: { ...TESTISH.messages, prayer: { distanceKm: '{distance} Kilometer' } } })
+    const { wrapper } = await open('/xx/prayer')
+    const [lat, lng] = wrapper.findAll('input[type="number"]')
+    await lat.setValue(51.5074)
+    await lng.setValue(-0.1278)
+    await wrapper.find('.btn-primary').trigger('click')
+
+    expect(wrapper.text()).toMatch(/\d\.\d{3} Kilometer/)
+    expect(wrapper.text()).not.toMatch(/\d,\d{3} km/)
+  })
+
   it('keeps the reader in their language when they follow a link inside the site', async () => {
     addLocale(TESTISH)
     const { router } = await open('/xx/tasbih')

@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { nextTick } from 'vue'
 import PrayerView from './PrayerView.vue'
+import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
 import { mountPage as mountView } from '../../../test/mountPage.js'
+import { setTimezone, resetTimezone } from '../../../test/timezone.js'
 
 async function mountPage() {
   return (await mountView(PrayerView, { path: '/prayer' })).wrapper
@@ -206,5 +209,97 @@ describe('Prayer page saved settings', () => {
     expect(shownTimes(wrapper)[0]).toMatch(/^\d{2}:\d{2}$/)
     expect(wrapper.text()).toContain('cannot be remembered')
     expect(button(wrapper, 'Remember this location')).toBeUndefined()
+  })
+})
+
+describe('Prayer page while it stays open', () => {
+  const LONDON = [51.5074, -0.1278]
+  const MINUTE_MS = 60000
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  function timesOn(date) {
+    return calcPrayerTimes(...LONDON, date, getTimezoneOffset(), 'MWL', 'standard')
+  }
+
+  function at(date, time) {
+    const [hours, mins] = time.split(':').map(Number)
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, mins)
+  }
+
+  it('highlights Asr within a minute of its time beginning', async () => {
+    const day = new Date(2026, 2, 20)
+    const asr = at(day, timesOn(day).asr)
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(asr.getTime() - MINUTE_MS))
+    const wrapper = await mountPage()
+    await calculateFor(wrapper, ...LONDON)
+    expect(wrapper.find('.prayer-card.current').attributes('id')).toBe('pc-dhuhr')
+
+    vi.advanceTimersByTime(2 * MINUTE_MS)
+    await nextTick()
+
+    expect(wrapper.find('.prayer-card.current').attributes('id')).toBe('pc-asr')
+    expect(wrapper.text()).toContain('Maghrib')
+    wrapper.unmount()
+  })
+
+  it("shows the new day's times after local midnight", async () => {
+    const first = new Date(2026, 2, 20)
+    const second = new Date(2026, 2, 21)
+    const order = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']
+    const expected = (date) => order.map((key) => timesOn(date)[key])
+    expect(expected(second)).not.toEqual(expected(first))
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 2, 20, 23, 59, 30))
+    const wrapper = await mountPage()
+    await calculateFor(wrapper, ...LONDON)
+    expect(shownTimes(wrapper)).toEqual(expected(first))
+
+    vi.advanceTimersByTime(MINUTE_MS)
+    await nextTick()
+
+    expect(shownTimes(wrapper)).toEqual(expected(second))
+    wrapper.unmount()
+  })
+
+  it('stops updating when the reader leaves the page', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 2, 20, 14, 0))
+    const started = vi.spyOn(globalThis, 'setInterval')
+    const cleared = vi.spyOn(globalThis, 'clearInterval')
+    const wrapper = await mountPage()
+    await calculateFor(wrapper, ...LONDON)
+    const intervals = started.mock.results.map((result) => result.value)
+    expect(intervals.length).toBeGreaterThan(0)
+
+    wrapper.unmount()
+
+    const stopped = cleared.mock.calls.map(([id]) => id)
+    expect(intervals.every((id) => stopped.includes(id))).toBe(true)
+  })
+})
+
+describe('Prayer page clock note', () => {
+  afterEach(() => {
+    resetTimezone()
+  })
+
+  it('is not shown before a location is given', async () => {
+    const wrapper = await mountPage()
+
+    expect(wrapper.find('.prayer-clock-note').exists()).toBe(false)
+  })
+
+  it("shows Makkah's times in Lagos time on a Lagos phone, and says so", async () => {
+    setTimezone('Africa/Lagos', '2026-10-17T08:00:00Z')
+    const wrapper = await mountPage()
+
+    await calculateFor(wrapper, 21.4225, 39.8262)
+
+    expect(wrapper.find('#pc-dhuhr .prayer-time').text()).toBe('10:06')
+    expect(wrapper.find('.prayer-clock-note').text()).toContain('this device’s time')
   })
 })

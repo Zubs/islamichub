@@ -114,6 +114,10 @@ netlify.toml            Build, SPA redirect, security and cache headers
 - The navigation bar holds four destinations (Pillars, Tools, Hadith, Prophets), About, the language switcher when more
   than one language is offered, and GitHub. The phone menu lists the same with Home. The footer lists the same four
   under "Explore", and About, Changelog, GitHub and "Report an issue" under "Project".
+- The navigation highlights the section of the current page, in the bar and the phone menu, with `aria-current`:
+  `navSection` in `utils/navigation.js` maps a path (without its language prefix) to Pillars (`/pillars` and the five
+  pillar pages and their sub-pages), Tools (`/tools` and the tool pages it lists, other than pillar pages), Hadith or
+  Prophets, or to none. A test keeps the Tools list in step with the `/tools` page.
 
 ### Server-side code
 
@@ -212,6 +216,13 @@ Requirements:
   its recitations, numbered in order). The Arabic of the verses is from an open Qur'an dataset; the Arabic of the
   supplications is copied from the hadiths cited beside them, and every reference was checked against its text.
 
+### 5.0 Home page header
+
+The header shows the date in the reader's language and format, the Hijri month in full and the year, and the days to
+Ramadan (or a Ramadan greeting), all from a `now` value refreshed every minute and when the tab becomes visible, so a
+page left open moves on at local midnight. The countdown is `daysToRamadan`, shared with the Fasting page. Hijri month
+names and the Hijri date pattern live in the message files under `hijri`.
+
 ### 5.1a Today panel (home page)
 
 `TodayPanel.vue` sits near the top of the home page and shows the user's day from the stores that already hold it: the
@@ -243,8 +254,14 @@ Computed locally by `utils/prayer.js` from latitude, longitude, date, UTC offset
   schools) or `hanafi` (shadow factor 2). An unknown option falls back to `standard`. The Prayer page has a selector
   for it beside the calculation method; changing either recalculates times that are already shown. The Fasting page
   is unaffected.
-- **Next prayer:** `getNextPrayer` returns the next upcoming time and minutes remaining; after Isha it returns
-  tomorrow's Fajr. The countdown must recompute on each tick rather than cache the first value.
+- **Next prayer:** `getNextPrayer(times, now)` returns the next upcoming time and minutes remaining; after Isha it
+  returns tomorrow's Fajr. `getCurrentPrayer(times, now)` gives the prayer whose time has begun. Both take the moment
+  as an optional argument for testing.
+- **While open,** the Prayer page ticks every minute: it recomputes the current prayer, the next prayer and the
+  countdown, and when the local day changes it works out the new day's times. The interval stops when the page closes.
+- **Clock:** times are shown in the device's timezone whatever coordinates are entered, and the page says so under
+  the times ("Times are shown in this device's time…"). Showing a place's own local time is not built (see
+  `Features.md`, Decisions needed). The Qibla distance is formatted for the reader's language.
 - **Location** comes from the browser Geolocation API (10 s timeout), reverse-geocoded to a place name via Nominatim.
   If permission is denied, the user is told to enter coordinates manually.
 - **Coordinates** are accepted from −90 to 90 latitude and −180 to 180 longitude.
@@ -308,9 +325,10 @@ Nothing entered into the calculator is persisted or transmitted.
 
 ### 5.5 Fasting (`/fasting`)
 
-- Current Hijri date from `utils/hijri.js` (arithmetic approximation; may differ from a sighted calendar by a day or
+- Current Hijri date from `utils/hijri.js`, with the month name from the message files (arithmetic approximation; may differ from a sighted calendar by a day or
   so).
-- Days until Ramadan, or an "it is Ramadan" state when the Hijri month is 9.
+- Days until Ramadan, or an "it is Ramadan" state when the Hijri month is 9. `daysToRamadan(day)` counts local days
+  to the first of Ramadan given by `firstDayOfHijriMonth`, the calendar the Eid page uses, so the two always agree.
 - Suhoor and Iftar times derived from Fajr and Maghrib for the user's location, with a fasting-progress bar.
 
 **Fasting tracker.** `FastingTracker.vue`, on the Fasting page, records one status per local day in `fasting-log`
