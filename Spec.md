@@ -133,12 +133,14 @@ Server-side code lives in `netlify/functions/` and is added only where a feature
 - **`push.js`** serves `/api/push`. `POST` saves or replaces one record per device in the Netlify Blobs store
   `push-subscriptions`, keyed by the SHA-256 of the subscription's endpoint; `DELETE` with the endpoint removes it.
   `lib/pushRecords.js` validates the request (at most 4 KB; an https endpoint and keys; a possible location; a known
-  method, Asr method, timezone and reminders) and rounds the coordinates to two decimal places itself, whatever was
-  sent. A record holds the subscription, rounded coordinates, timezone, the two methods, the chosen reminders and
+  method, Asr method, timezone and reminders; a khutbah time, if sent, that is a 24-hour time) and rounds the
+  coordinates to two decimal places itself, whatever was sent. A record holds the subscription, rounded coordinates,
+  timezone, the two methods, the chosen reminders, the khutbah time only while the khutbah reminder is chosen, and
   which reminders were sent on which local day. Nothing else.
 - **`push-send.js`** runs every minute. For each record it works out the device's local time with `Intl` and its prayer
-  times with `utils/prayer.js`, and sends a push for each chosen reminder that is 0 to 3 minutes past its time and not
-  yet sent that day. A subscription the push service answers 404 or 410 for is deleted. `lib/webPush.js` builds the
+  times with `utils/prayer.js`, and sends a push for each chosen reminder that applies on its local day (an Islamic
+  day by `utils/islamicDays.js`, a Friday by its own clock) and is 0 to 3 minutes past its time and not yet sent that
+  day. The reminders come from `remindersFor` in `utils/reminders.js`, the same list the device uses. A subscription the push service answers 404 or 410 for is deleted. `lib/webPush.js` builds the
   VAPID token and encrypts the payload (RFC 8291) with Node's `crypto`; no push library is used.
 
 Still open: proxying and caching metal prices and exchange rates, and optional sync of streaks and totals across devices.
@@ -178,6 +180,8 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/games/quiz`                             | `quiz`              | QuizView              |
 | `/games/who-am-i`                         | `who-am-i`          | WhoAmIView            |
 | `/games/kalimah`                          | `kalimah`           | KalimahView           |
+| `/calendar`                               | `calendar`          | CalendarView          |
+| `/jumuah`                                 | `jumuah`            | JumuahView            |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
 | `/about`                                  | `about`             | AboutView             |
@@ -232,7 +236,8 @@ names and the Hijri date pattern live in the message files under `hijri`.
 `TodayPanel.vue` sits near the top of the home page and shows the user's day from the stores that already hold it: the
 next prayer and its countdown (from `prayer-settings`, with the same functions as the Prayer page), today's five prayers
 and their statuses, the adhkar categories completed today, today's tasbih total across all phrases, the daily hadith,
-and, in Ramadan only, today's fast. Each tile links to its full page; the next-prayer tile links to the tracker. A part
+in Ramadan only, today's fast, on a day the calendar marks, the name of that Islamic day (linking to `/calendar`),
+and on a Friday a Jumu'ah tile with the khutbah time if one is entered (linking to `/jumuah`). Each tile links to its full page; the next-prayer tile links to the tracker. A part
 with nothing to show offers a way to start, and a visitor with no saved location is pointed to the Prayer page. The
 panel stores nothing and makes no request. A minute tick updates the countdown and resets the panel at local midnight.
 Its grid is one column on a narrow screen.
@@ -590,6 +595,36 @@ source script.
 - Finishing a quiz, a round of Who am I? or a day's Kalimah is counted as a named action (once per day for Kalimah),
   with no answer, guess or score.
 
+### 5.7g Islamic calendar (`/calendar`)
+
+The Hijri calendar month by month, awaiting scholarly review.
+
+- `utils/islamicDays.js` builds a month from `firstDayOfHijriMonth` to the day before the next month's first day, so
+  the calendar always agrees with the home page, the Ramadan countdown and the Eid page. The month shown is in the
+  address (`?m=1448-12`); an address it cannot read shows the current month. The grid is Monday first, with the
+  Gregorian date in each day and today outlined. The page says dates can differ by a day with the moon's sighting.
+- Only days with a sunnah in authentic sources are marked (Zubair's decision, 17 October 2026), from
+  `data/islamicDays.js`: the day of 'Arafah, Tasu'a and 'Ashura, the first ten days of Dhul Hijjah, the white days
+  (13th to 15th), Mondays and Thursdays, the last ten nights of Ramadan, and the two Eids. Disputed days are not
+  marked. Each kind's name and explanation, citing its references with the grade of any hadith outside the two
+  Sahihs, are in `data/content/calendar/en.js`.
+- Below the grid each kind that falls in the month is listed once with all its dates; choosing a marked day brings its
+  entry into view. A reminders section has a switch for each kind (see 6c). Linked from Tools.
+
+### 5.7h Jumu'ah (`/jumuah`)
+
+The sunnahs of Friday and the Friday prayer, awaiting scholarly review: `data/jumuahSections.js` and
+`data/content/jumuah/en.js`, drawn by `ContentSections`.
+
+- The day's virtue, Qur'an 62:9, the sunnahs (ghusl, going early, blessings on the Prophet ﷺ, the hour of answered
+  supplication), Surah al-Kahf, the prayer (the adhan, listening in silence, two rak'at, Qur'an 62:10), who must attend,
+  and how many must be present, where the Hanafi, Maliki and Shafi'i/Hanbali positions are shown with their evidence.
+- The hadith on reading al-Kahf on Friday is in al-Hakim and al-Bayhaqi, which the library does not hold; it is named
+  in plain text, marked as not checked against the site's sources and left for the reviewer. Sahih Muslim 809, on the
+  surah's first ten verses, is cited beside it.
+- The reader can enter their mosque's khutbah time (`stores/jumuah.js`, under `khutbah-time`, a 24-hour `"HH:MM"`); a
+  value that is not a time is refused. Below it are the Friday reminder switches. Linked from the prayer page's guides.
+
 ### 5.8 Tasbih counter (`/tasbih`)
 
 Six preset phrases from `data/tasbihPhrases.js`, each with Arabic, transliteration, translation, and a default target:
@@ -681,13 +716,14 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `tasbih-totals`          | `{ "YYYY-MM-DD": { [phraseId]: count } }`     | tasbih store  |
 | `stats-opt-out`          | `"1"` when opted out, absent otherwise        | useStats      |
 | `locale`                 | The code of the language the user chose       | i18n          |
-| `reminder-settings`      | `{ enabled, push, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar" } }` | reminders store |
+| `reminder-settings`      | `{ enabled, push, items: { fajr, dhuhr, asr, maghrib, isha, "morning-adhkar", "evening-adhkar", arafah, ashura, "dhul-hijjah", "white-days", "monday-thursday", "last-ten", eid, kahf, salawat, khutbah } }` | reminders store |
 | `fasting-log`            | `{ "YYYY-MM-DD": "fasted" \| "missed" \| "made-up" \| "voluntary" }` | fasting store |
 | `ramadan-starts`         | `{ "<Hijri year>": "YYYY-MM-DD" }`, only dates the user set | fasting store |
 | `salah-log`              | `{ "YYYY-MM-DD": { fajr: "on-time" \| "late" \| "missed", … } }` | salah store |
 | `adhkar-progress`        | `{ day: "YYYY-MM-DD", counts: { [dhikrId]: count } }`; restored only on the same local day | adhkar store |
 | `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |
 | `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
+| `khutbah-time`           | `"HH:MM"`, the reader's mosque's khutbah time   | jumuah store  |
 | `quiz-best`              | best quiz score, 0 to 10                      | games store   |
 | `quiz-seen`              | ids of quiz questions already asked           | games store   |
 | `quiz-attempt`           | `{ questions, orders, answers, position, finished, level }`; `level` is absent on attempts begun before levels and read as normal | games store |
@@ -743,7 +779,18 @@ Rules:
   asks for notification permission; anything but "granted" turns it off again with a note on allowing it. With no saved
   location the switch is disabled, and with no notification support the section says so.
 - `stores/reminders.js` keeps the choices under `reminder-settings`. `utils/reminders.js` holds the list and
-  `dueReminders(items, times, now)`, which gives only the switched-on reminders still ahead today.
+  `dueReminders(items, times, now, khutbah)`, which gives only the switched-on reminders still ahead today. Each entry
+  belongs to a switch (`item`), follows a prayer or the khutbah time by a number of minutes, and may apply only on some
+  days (`on`). Settings saved before a switch existed read with it off.
+- **Islamic days.** Each kind on the calendar has one switch, on the calendar page, giving two reminders: 20 minutes
+  after Isha on the evening before the kind begins, and 20 minutes after Fajr on each of its days. They open
+  `/calendar`.
+- **Friday.** Three switches on the Friday page: Surah al-Kahf (20 minutes after Fajr), blessings on the Prophet ﷺ (20
+  minutes after Asr) and the khutbah (30 minutes before the entered time, disabled until one is entered). They open
+  `/jumuah`.
+- `ReminderSwitches.vue` shows a page's switches. Switching one on while reminders are off asks for permission and turns
+  reminders on with only that switch; with no saved location it points to the Prayer page. The Prayer page's settings
+  keep the prayer and adhkar switches, the master switch and push.
 - `useReminders.js`, started from `App.vue`, sets one timer per due reminder and one for the next local midnight, and
   reschedules when the reminder settings or the saved prayer settings change. Notifications are shown through the
   service worker's registration, or `new Notification` where there is none, and carry the page to open: the tracker for

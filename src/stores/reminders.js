@@ -3,9 +3,11 @@ import { ref, computed } from 'vue'
 import { parseReminderSettings } from '@/utils/reminders.js'
 import { pushRequestBody, applicationServerKey, pushAvailability } from '@/utils/push.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
+import { useJumuahStore } from '@/stores/jumuah.js'
 
 const SETTINGS_KEY = 'reminder-settings' // { enabled, push, items: { fajr, dhuhr, … } }
 const PUSH_ADDRESS = '/api/push'
+const PRAYERS = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
 
 function isInstalled() {
   return window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true
@@ -45,7 +47,9 @@ export const useRemindersStore = defineStore('reminders', () => {
     }
   }
 
-  async function turnOn() {
+  // Asks for permission and turns reminders on. When no switch is on yet, `firstItems` are
+  // switched on: the five prayers from the Prayer page, or the one chosen elsewhere.
+  async function turnOn(firstItems = PRAYERS) {
     if (!supported.value) {
       return false
     }
@@ -55,8 +59,8 @@ export const useRemindersStore = defineStore('reminders', () => {
     const items = { ...settings.value.items }
     const noneChosen = !Object.values(items).some(Boolean)
     if (granted && noneChosen) {
-      for (const prayer of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
-        items[prayer] = true
+      for (const item of firstItems) {
+        items[item] = true
       }
     }
 
@@ -89,6 +93,7 @@ export const useRemindersStore = defineStore('reminders', () => {
           saved,
           settings.value.items,
           Intl.DateTimeFormat().resolvedOptions().timeZone,
+          useJumuahStore().khutbahTime,
         ),
       ),
     })

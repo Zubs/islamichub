@@ -1,4 +1,4 @@
-import { dayKey } from '@/utils/day.js'
+import { dayKey } from './day.js'
 
 export function toHijri(date = new Date()) {
   // Algorithm by Khalid Shaukat

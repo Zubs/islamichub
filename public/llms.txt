@@ -26,6 +26,8 @@
 - [Prayer Tracker](https://islamichub.xyz/tracker): Daily, weekly, and monthly prayer tracking on-device
 - [Tasbih](https://islamichub.xyz/tasbih): Digital tasbih counter with vibration feedback and daily totals
 - [Prophets](https://islamichub.xyz/prophets): The 25 prophets named in the Quran with their stories, and Ibrahim's journey map
+- [Islamic calendar](https://islamichub.xyz/calendar): Hijri months beside Gregorian dates, with the days that carry a sunnah marked and referenced
+- [Jumu’ah](https://islamichub.xyz/jumuah): The sunnahs of Friday and the Friday prayer, with references and optional Friday reminders
 - [Eid](https://islamichub.xyz/eid): Guide to Eid al-Fitr and Eid al-Adha with next-Eid countdown
 - [Qurbani](https://islamichub.xyz/qurbani): Eid al-Adha sacrifice guide with shares helper
 - [About](https://islamichub.xyz/about): Project mission, methodology, open source info, and privacy settings

@@ -1,12 +1,11 @@
 import { createHash } from 'node:crypto'
 import { calcPrayerTimes, PRAYER_METHODS, ASR_SHADOW_FACTORS } from '../../../src/utils/prayer.js'
-import { REMINDERS } from '../../../src/utils/reminders.js'
+import { REMINDER_ITEMS, remindersFor, isClockTime } from '../../../src/utils/reminders.js'
 
 export const MAX_REQUEST_BYTES = 4096
 const LATE_LIMIT_MINUTES = 3
 const COORDINATE_PLACES = 2
 const KEY = /^[A-Za-z0-9_-]{16,200}$/
-const REMINDER_KEYS = REMINDERS.map((reminder) => reminder.key)
 
 export function recordId(endpoint) {
   return createHash('sha256').update(endpoint).digest('hex')
@@ -54,12 +53,13 @@ export function validateRecord(body) {
     PRAYER_METHODS.includes(body.method) &&
     Object.hasOwn(ASR_SHADOW_FACTORS, body.asrMethod) &&
     body.items !== null &&
-    typeof body.items === 'object'
+    typeof body.items === 'object' &&
+    (body.khutbah === undefined || isClockTime(body.khutbah))
   if (!acceptable) {
     return null
   }
 
-  const items = REMINDER_KEYS.filter((key) => body.items[key] === true)
+  const items = REMINDER_ITEMS.filter((key) => body.items[key] === true)
   if (!items.length) {
     return null
   }
@@ -75,6 +75,7 @@ export function validateRecord(body) {
     method: body.method,
     asrMethod: body.asrMethod,
     items,
+    ...(body.khutbah && items.includes('khutbah') ? { khutbah: body.khutbah } : {}),
     sent: {},
   }
 }
@@ -122,17 +123,17 @@ export function remindersDue(record, instant = new Date()) {
     record.asrMethod,
   )
 
-  return REMINDERS.filter((reminder) => record.items.includes(reminder.key))
-    .filter((reminder) => {
-      const [hours, minutes] = times[reminder.follows].split(':').map(Number)
+  return remindersFor((item) => record.items.includes(item), times, local.date, record.khutbah)
+    .filter(({ reminder, time }) => {
+      const [hours, minutes] = time.split(':').map(Number)
       const late = local.minutes - (hours * 60 + minutes + reminder.delay)
       return late >= 0 && late <= LATE_LIMIT_MINUTES && record.sent?.[reminder.key] !== local.day
     })
-    .map((reminder) => ({
+    .map(({ reminder }) => ({
       key: reminder.key,
       day: local.day,
       path: reminder.path,
-      title: reminder.delay ? reminder.label.split(' (')[0] : `${reminder.label} prayer`,
-      body: reminder.delay ? 'Time for your adhkar.' : `It is time for ${reminder.label}.`,
+      title: reminder.title,
+      body: reminder.body,
     }))
 }

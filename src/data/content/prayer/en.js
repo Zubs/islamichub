@@ -69,6 +69,12 @@ export default {
         text: 'The words of the call to prayer and the iqamah, how the first adhan began, and what to say when you hear it.',
       },
       {
+        to: '/jumuah',
+        icon: '🕋',
+        name: 'Jumu‘ah',
+        text: 'The sunnahs of Friday and the Friday prayer, with reminders for the day and before your mosque’s khutbah.',
+      },
+      {
         to: '/tracker',
         icon: '✅',
         name: 'Prayer tracker',

@@ -5,8 +5,9 @@ export function roundCoordinate(value) {
   return Math.round(value * factor) / factor
 }
 
-// What the server is sent when push is turned on or the settings change. Nothing else leaves the device.
-export function pushRequestBody(subscription, saved, items, timezone) {
+// What the server is sent when push is turned on or the settings change. Nothing else leaves the
+// device; the khutbah time is sent only while its reminder is on.
+export function pushRequestBody(subscription, saved, items, timezone, khutbah = null) {
   return {
     subscription: { endpoint: subscription.endpoint, keys: subscription.keys },
     lat: roundCoordinate(saved.lat),
@@ -15,6 +16,7 @@ export function pushRequestBody(subscription, saved, items, timezone) {
     method: saved.method,
     asrMethod: saved.asrMethod,
     items,
+    ...(items.khutbah && khutbah ? { khutbah } : {}),
   }
 }
 

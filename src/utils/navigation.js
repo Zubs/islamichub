@@ -1,7 +1,7 @@
 // The four sections of the main navigation. The tool pages mirror the groups of the /tools page;
 // src/utils/navigation.test.js fails if the two drift apart.
 const SECTIONS = {
-  pillars: ['/pillars', '/faith', '/prayer', '/zakat', '/fasting', '/hajj'],
+  pillars: ['/pillars', '/faith', '/prayer', '/jumuah', '/zakat', '/fasting', '/hajj'],
   tools: [
     '/tools',
     '/tracker',
@@ -11,6 +11,7 @@ const SECTIONS = {
     '/inheritance',
     '/qurbani',
     '/games',
+    '/calendar',
   ],
   hadith: ['/hadith'],
   prophets: ['/prophets'],

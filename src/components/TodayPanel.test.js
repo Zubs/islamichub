@@ -10,6 +10,7 @@ import { useAdhkarStore } from '@/stores/adhkar.js'
 import { useTasbihStore } from '@/stores/tasbih.js'
 import { calcPrayerTimes, getNextPrayer, getTimezoneOffset } from '@/utils/prayer.js'
 import { mountPage } from '../../test/mountPage.js'
+import { firstDayOfHijriMonth } from '@/utils/hijri.js'
 
 const LAGOS = { lat: 6.5244, lng: 3.3792, name: 'Lagos', method: 'MWL', asrMethod: 'standard' }
 
@@ -187,6 +188,45 @@ describe('TodayPanel', () => {
     expect(JSON.parse(localStorage.getItem('adhkar-completion-log'))['2026-04-10']).toEqual([
       'morning',
     ])
+  })
+
+  it('names the day of ‘Arafah on 9 Dhul Hijjah, linking to the calendar', async () => {
+    const first = firstDayOfHijriMonth(1448, 12)
+    at(new Date(first.getFullYear(), first.getMonth(), first.getDate() + 8, 9))
+    const wrapper = await open()
+
+    expect(part(wrapper, 'islamic-day').text()).toContain('The day of ‘Arafah')
+    expect(part(wrapper, 'islamic-day').attributes('href')).toBe('/calendar')
+  })
+
+  it('shows no Islamic day on an ordinary day', async () => {
+    const first = firstDayOfHijriMonth(1448, 3)
+    const ordinary = [2, 3, 4, 5, 6, 7, 8, 9]
+      .map((day) => new Date(first.getFullYear(), first.getMonth(), first.getDate() + day, 9))
+      .find((date) => ![1, 4].includes(date.getDay()))
+    at(ordinary)
+    const wrapper = await open()
+
+    expect(part(wrapper, 'islamic-day').exists()).toBe(false)
+  })
+
+  it('shows the Jumu‘ah tile on a Friday, with the khutbah time once entered', async () => {
+    at(new Date(2026, 9, 23, 9))
+    let wrapper = await open()
+    expect(part(wrapper, 'jumuah').text()).toContain('Today is Friday')
+    expect(part(wrapper, 'jumuah').attributes('href')).toBe('/jumuah')
+
+    localStorage.setItem('khutbah-time', '"13:15"')
+    wrapper = await open()
+    expect(part(wrapper, 'jumuah').text()).toContain('Khutbah at 13:15')
+    localStorage.clear()
+  })
+
+  it('shows no Jumu‘ah tile on a Thursday', async () => {
+    at(new Date(2026, 9, 22, 9))
+    const wrapper = await open()
+
+    expect(part(wrapper, 'jumuah').exists()).toBe(false)
   })
 
   it('stacks into one column on a narrow screen without a breakpoint', async () => {

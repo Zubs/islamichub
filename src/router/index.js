@@ -136,6 +136,16 @@ export const routes = [
     component: () => import('@/views/games/WhoAmIView.vue'),
   },
   {
+    path: '/calendar',
+    name: 'calendar',
+    component: () => import('@/views/CalendarView.vue'),
+  },
+  {
+    path: '/jumuah',
+    name: 'jumuah',
+    component: () => import('@/views/JumuahView.vue'),
+  },
+  {
     path: '/tools',
     name: 'tools',
     component: () => import('@/views/tools/ToolsView.vue'),
