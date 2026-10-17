@@ -111,6 +111,7 @@
           </p>
           <p>{{ $t('games.kalimah.verse') }}</p>
           <QuranBlock
+            :animate="false"
             :arabic="word.verseArabic"
             :reference="word.reference"
             :translation="word.translation"

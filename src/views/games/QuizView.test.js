@@ -53,6 +53,7 @@ describe('prophets quiz', () => {
       expect(wrapper.find('.quiz-evidence').text()).toContain(question.reference.split(' · ')[0])
       if (question.verse) {
         expect(wrapper.find('.quiz-feedback [lang="ar"]').text()).toBe(question.verse.verseArabic)
+        expect(wrapper.find('.quiz-feedback .quran-block').classes()).not.toContain('anim-target')
       }
       await next(wrapper)
     }

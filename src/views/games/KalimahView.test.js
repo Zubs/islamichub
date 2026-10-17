@@ -90,6 +90,7 @@ describe('Kalimah', () => {
     expect(wrapper.find('.kalimah-message').text()).toBe('Solved in 2 of 6 tries.')
     expect(wrapper.find('.kalimah-word').text()).toBe(word.arabic)
     expect(wrapper.find('.kalimah-end').text()).toContain(word.reference)
+    expect(wrapper.find('.kalimah-end .quran-block').classes()).not.toContain('anim-target')
     expect(wrapper.find('.kalimah-keyboard').exists()).toBe(false)
 
     const saved = JSON.parse(localStorage.getItem(GAME_KEYS.kalimahGame))

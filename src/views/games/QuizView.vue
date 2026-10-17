@@ -50,6 +50,7 @@
             }}</span>
           </p>
           <QuranBlock
+            :animate="false"
             v-if="current.verse"
             :arabic="current.verse.verseArabic"
             :reference="current.verse.reference"
