@@ -4,23 +4,24 @@
     <p class="prose">{{ intro }}</p>
 
     <svg
+      v-if="placed.length"
       class="journey-map"
-      :viewBox="`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`"
+      :viewBox="`${view.x} ${view.y} ${view.width} ${view.height}`"
       role="group"
-      :aria-label="$t('journey.map', stops.length)"
+      :aria-label="$t('journey.map', placed.length)"
     >
       <rect class="journey-sea" :width="MAP_WIDTH" :height="MAP_HEIGHT" />
       <path class="journey-land" :d="REGION_LAND" />
       <path v-if="route" class="journey-route" :d="route" />
       <g
-        v-for="(stop, index) in placed"
+        v-for="stop in placed"
         :key="stop.id"
         class="journey-marker"
         :class="{ selected: stop.id === selected }"
-        :transform="`translate(${stop.x} ${stop.y})`"
+        :transform="`translate(${stop.x} ${stop.y}) scale(${view.scale})`"
         role="button"
         tabindex="0"
-        :aria-label="$t('journey.stop', { n: index + 1, name: stop.name })"
+        :aria-label="$t('journey.stop', { n: stop.number, name: stop.name })"
         :aria-pressed="stop.id === selected ? 'true' : 'false'"
         @click="select(stop.id)"
         @keydown.enter.prevent="select(stop.id)"
@@ -28,7 +29,7 @@
       >
         <circle class="journey-reach" :r="MARKER_REACH" />
         <circle class="journey-dot" r="7" />
-        <text class="journey-dot-number" y="2.6" aria-hidden="true">{{ index + 1 }}</text>
+        <text class="journey-dot-number" y="2.6" aria-hidden="true">{{ stop.number }}</text>
       </g>
     </svg>
 
@@ -49,11 +50,18 @@
           <span class="journey-number">{{ index + 1 }}</span>
           {{ stop.name }}
         </button>
+        <span v-if="stop.kind" class="badge">{{ $t('journey.kind.' + stop.kind) }}</span>
         <span class="badge" :class="stop.known === 'scripture' ? 'badge-green' : 'badge-gold'">{{
           $t('journey.known.' + stop.known)
         }}</span>
+        <span v-if="stop.source" class="journey-source">{{
+          $t('journey.source', { source: stop.source })
+        }}</span>
         <p class="journey-text"><HadithRef :text="stop.text" /></p>
         <span class="journey-ref"><HadithRef :text="stop.reference" /></span>
+        <span v-if="stop.lat === undefined" class="journey-unplaced">{{
+          $t('journey.notOnMap')
+        }}</span>
       </li>
     </ol>
   </section>
@@ -63,18 +71,34 @@
 import { ref, computed } from 'vue'
 import HadithRef from './HadithRef.vue'
 import { REGION_LAND } from '@/data/regionMap.js'
-import { MAP_WIDTH, MAP_HEIGHT, MARKER_REACH, project, routePath } from '@/utils/journey.js'
+import {
+  MAP_WIDTH,
+  MAP_HEIGHT,
+  MARKER_REACH,
+  project,
+  routePath,
+  viewFor,
+} from '@/utils/journey.js'
 
-// A journey as a map and a list of the same stops: [{ id, lat, lon, known, reference, name, text }].
+// Places as a map and a list: [{ id, lat, lon, known, reference, name, text }]. A place with no
+// coordinates is listed but not drawn. `joined` draws a line through the places in order, for a
+// journey whose order the sources give.
 const props = defineProps({
   stops: { type: Array, required: true },
+  joined: { type: Boolean, default: false },
   title: { type: String, required: true },
   intro: { type: String, default: '' },
 })
 
 const selected = ref(null)
-const placed = computed(() => props.stops.map((stop) => ({ ...stop, ...project(stop) })))
-const route = computed(() => routePath(props.stops))
+const placed = computed(() =>
+  props.stops
+    .map((stop, index) => ({ ...stop, number: index + 1 }))
+    .filter((stop) => stop.lat !== undefined && stop.lon !== undefined)
+    .map((stop) => ({ ...stop, ...project(stop) })),
+)
+const route = computed(() => (props.joined ? routePath(placed.value) : ''))
+const view = computed(() => viewFor(placed.value))
 
 function select(id) {
   selected.value = id
@@ -83,6 +107,13 @@ function select(id) {
 </script>
 
 <style scoped>
+.journey-source,
+.journey-unplaced {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .journey {
   margin-top: var(--space-10);
 }
@@ -106,17 +137,20 @@ function select(id) {
   fill: var(--green-light);
 }
 
+/* Lines keep their width on screen however far the map is zoomed. */
 .journey-land {
   fill: var(--cream);
   stroke: var(--border);
-  stroke-width: 0.6;
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
 }
 
 .journey-route {
   fill: none;
   stroke: var(--gold);
-  stroke-width: 1.4;
-  stroke-dasharray: 4 3;
+  stroke-width: 2.5px;
+  stroke-dasharray: 8 6;
+  vector-effect: non-scaling-stroke;
 }
 
 .journey-marker {

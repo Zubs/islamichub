@@ -174,6 +174,10 @@ Still open: proxying and caching metal prices and exchange rates, and optional s
 | `/prophets/:slug`                         | `prophet`           | ProphetView           |
 | `/qurbani`                                | `qurbani`           | QurbaniView           |
 | `/tracker`                                | `tracker`           | TrackerView           |
+| `/games`                                  | `games`             | GamesView             |
+| `/games/quiz`                             | `quiz`              | QuizView              |
+| `/games/who-am-i`                         | `who-am-i`          | WhoAmIView            |
+| `/games/kalimah`                          | `kalimah`           | KalimahView           |
 | `/tasbih`                                 | `tasbih`            | TasbihView            |
 | `/inheritance`                            | `inheritance`       | InheritanceView       |
 | `/about`                                  | `about`             | AboutView             |
@@ -518,23 +522,73 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
   (`data/muhammadSections.js`, `data/content/muhammad/en.js`).
   `ProphetView` draws them with `ContentSections`, with the page's own title and description, a breadcrumb, and links to
   the previous and next prophet (`storyNeighbours` in `utils/prophets.js`).
-- Stories draw on the Qur'an and authentic hadith in Sahih al-Bukhari only, and say where they are silent.
+- Stories draw on the Qur'an and on hadith in Sahih al-Bukhari and Sahih Muslim; a hadith from another collection is used
+  only with its grade stated in the same section. Each story tells everything its prophet's verses say, in the order of
+  his life, and says plainly where the sources are silent; prophets of whom the Qur'an says little (Idris, Dhul-Kifl,
+  Al-Yasa', Ilyas) have short stories rather than filled-out ones. Each sections file also exports `passages`, the
+  Qur'an passages the story covers, and a test checks every one is cited. Quotations follow Saheeh International with
+  the prophets' names in their Arabic form.
+- `scripts/check-sources.mjs` compares the Arabic of every quoted verse with the fawazahmed0 Qur'an dataset and checks
+  every cited hadith exists, and lists any unmapped Sahih Muslim number (see `CONTRIBUTING.md`).
 - The Arabic of each verse was taken from an open Qur'an dataset, not typed. A test checks that every Qur'an reference
   in the list and in each story is a verse that exists (`test/fixtures/ayahCounts.json`), that every section carries a
   reference and that every verse block has Arabic, translation and reference.
 - **Honorifics:** a prophet is followed by "peace be upon him" at first mention in a story, and عليه السلام is shown
   in the page header; the Prophet Muhammad is followed by ﷺ.
 - Names and what is said of each prophet's people translate through `useDataTranslations('prophets')`.
-- **Journey:** a story can carry a journey (`journey` in `data/prophetStories.js`): stops with an id, coordinates, a
-  reference and `known`, which is `scripture` when the Qur'an or a hadith names the place and `historians` when the
-  sources tell what happened and historians identify where. Each stop's name and text are in the story's content file
-  under `journey`. `JourneyMap.vue` draws the stops, numbered and joined in order, on an SVG of the region
-  (`data/regionMap.js`, one path made from Natural Earth's public-domain outline; `utils/journey.js` holds the
-  projection), and lists them below with name, label, text and reference. Choosing a stop on the map highlights it in
+- **Places:** a story can carry places (`data/<slug>Places.js`, registered in `data/prophetStories.js`): each with an
+  id, a `kind` (born, lived, sent, travelled or died), a reference, `known` (`scripture` when the Qur'an or a hadith
+  names the place, `historians` when the sources tell what happened and historians identify where) and, when the place
+  can be pinned, coordinates. A file that exports `journey = true` (Ibrahim, Yusuf, Ya'qub) is a journey, drawn joined
+  in order. Each place's name and text are in the story's content file under `places`. 18 prophets have places; Adam,
+  Idris, Ishaq, Ayyub, Ilyas, Dhul-Kifl and Al-Yasa' have none, and their page says the sources do not name where they
+  lived. Every place identified by historians is listed in the Final table of `Features.md` for the reviewer.
+- `JourneyMap.vue` draws the places, numbered, on an SVG of the region from the eastern Mediterranean to southern
+  Arabia (`data/regionMap.js`, made by `scripts/make-region-map.mjs` from Natural Earth's public-domain outline;
+  `utils/journey.js` holds the projection and `viewFor`, which zooms the map to a prophet's places (wider around a single place) while keeping its
+  proportions). It lists them below with name, kind, source label, text and reference; a place without coordinates
+  (such as Ta'if and Badr) is listed and says it is not shown on the map. Choosing a place on the map highlights it in
   the list and the other way round; markers are keyboard buttons with a 44px touch target at 360px wide. Nothing is
-  requested from any map service, so it works offline. A prophet with no journey shows nothing.
+  requested from any map service, so it works offline.
 - Ibrahim's journey is Ur, Harran, Canaan, Egypt and Makkah. Only Makkah is marked as named in the Qur'an; the other
   four are marked as identified by historians, and each text says what the sources do and do not name.
+
+### 5.7f Games (`/games`, `/games/quiz`, `/games/who-am-i`, `/games/kalimah`)
+
+Three games for adults and older children, awaiting scholarly review. No timer, no accounts and no leaderboard; scores
+stay on the device (`stores/games.js`). Games score knowledge only, never worship, and are text only: no prophet is
+drawn or pictured. Every question, clue and word carries a reference, checked by `test/games.test.js` and by the
+source script.
+
+- **`/games`** lists the three games with the player's best result on this device. It is linked from the Tools page.
+- **Every game** opens on an intro (`components/GameIntro.vue`): how to play, a choice of Easy, Normal or Hard
+  (remembered per game under `game-levels`, Normal by default) and Start. A game in progress (a quiz attempt, or the
+  day's Kalimah once a guess is made) opens where it was left instead. While playing, "Quit to games" returns to
+  `/games`; a quit quiz attempt is discarded. At the end the result can be shared as text with the game's link and an
+  invitation to play, through `ShareButton` (`textOnly`), never giving away a word, a guess or the prophet.
+- **Prophets quiz** (`data/games/quiz.js`, `utils/quiz.js`): 318 questions on the lives of the prophets, at least two
+  per prophet, each with four answers, its reference (a verse, shown in Arabic and translation, or a hadith link) and a
+  level: 92 easy (the best-known events), 87 normal and 139 hard (numbers, verse numbers, what hadiths add). An attempt
+  is ten questions of the chosen level drawn at random from those not yet seen (`drawAtLevel`), until every question
+  of the level has been seen; answers are shuffled. The evidence is shown after each answer, and the end shows the score, the best score and the questions
+  missed. An attempt in progress survives a reload.
+- **Who am I?** (`data/games/whoAmI.js`, `utils/whoAmI.js`): clues about one of the 25 prophets, shown one at a
+  time, hardest first (easiest first on Easy). The player picks from the 25 names and has three guesses (two on Hard);
+  the round is lost when they run out. A right guess scores 50, less 10 for each extra clue and 5 for each wrong
+  guess. Each round ends by showing every clue with its reference and a link to the story. A game is a run of rounds,
+  each with a prophet not yet played in it, that goes on until a round is lost (`startRun`, `addRound`); the end shows
+  how many were named, the total points and rounds, and the day's best run (`bestOfDay`), with Share and Play again.
+- **Kalimah** (`data/games/kalimah.js`, `utils/kalimah.js`): one word of the Qur'an a day, the same on every device,
+  chosen from the date alone (`wordFor`, by days since 1 October 2026). 374 words, each in base letters only (no hamza
+  or alif maqsura), with one plain a–z transliteration, its meaning and the verse it comes from. The player chooses
+  Arabic letters (an on-screen Arabic keyboard, right to left) or transliteration (a Latin keyboard, or the device's
+  keyboard), on the intro; the choice is remembered, and is fixed for the day once a guess is made. Easy shows the
+  word's meaning as a hint; Hard does not mark tried letters on the keyboard; the word is the same at every level. Six tries; letters are marked
+  right, present or absent, with repeated letters counted correctly, and the keyboard is coloured the same way (green in place, gold elsewhere, dark grey not in the word). The end shows the word in its verse. The result is
+  shared as text only: the day, the tries, the mode, the level, a grid of squares, an invitation and the link, never the
+  word or a guess.
+- Finishing a quiz, a round of Who am I? or a day's Kalimah is counted as a named action (once per day for Kalimah),
+  with no answer, guess or score.
 
 ### 5.8 Tasbih counter (`/tasbih`)
 
@@ -634,6 +688,14 @@ All persistence is currently `localStorage`. There are no cookies and no remote 
 | `adhkar-progress`        | `{ day: "YYYY-MM-DD", counts: { [dhikrId]: count } }`; restored only on the same local day | adhkar store |
 | `zakat-prices`           | `{ usdPerOunce, rates, date }` as last fetched | zakat store   |
 | `prayer-settings`        | `{ lat, lng, name, method, asrMethod }`, only after the user chooses "Remember this location" | prayerSettings store |
+| `quiz-best`              | best quiz score, 0 to 10                      | games store   |
+| `quiz-seen`              | ids of quiz questions already asked           | games store   |
+| `quiz-attempt`           | `{ questions, orders, answers, position, finished, level }`; `level` is absent on attempts begun before levels and read as normal | games store |
+| `game-levels`            | `{ quiz?, whoAmI?, kalimah? }`, each `"easy"`, `"normal"` or `"hard"` | games store |
+| `who-am-i-best`          | best Who am I? game total (before runs, the best single round, which a run's total never falls below) | games store |
+| `who-am-i-today`         | `{ day: "YYYY-MM-DD", points, rounds, correct }`, the day's best run | games store |
+| `kalimah-mode`           | `"arabic"` or `"latin"`                       | games store   |
+| `kalimah-game`           | `{ day: "YYYY-MM-DD", guesses, won, counted }`; a game from another day is replaced | games store |
 
 Rules:
 
@@ -664,6 +726,7 @@ Rules:
   share sheet with the image. Otherwise the button opens a panel with "Save image", "Share on WhatsApp"
   (`https://wa.me/?text=…`) and "Copy link". Text too long for a card is shared as text and a link. A cancelled share
   sheet does nothing. Nothing is uploaded and no request is made.
+- An item with `textOnly: true` is shared as text and a link, with no card; Kalimah shares its grid this way.
 - Adhkar and dua cards have `id` anchors, so a shared link opens the page at that item.
 - The router reads `src` from an arriving address, counts the visit under it, and replaces the address without it.
 - `netlify/edge-functions/link-preview.js` runs on `/hadith/books/*`, `/duas/*` and `/adhkar/*` and rewrites the served
@@ -844,7 +907,7 @@ Stylesheet responsibilities: `tokens.css` (variables), `base.css` (reset, typogr
   the user chooses to remember it, in which case it is saved on the device only (`prayer-settings`) and can be removed
   with "Forget my location". It never reaches a server of ours.
 - Financial and family details entered into calculators do not leave the device.
-- Anonymous usage statistics (page views, referring site name, and five named tool actions) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
+- Anonymous usage statistics (page views, referring site name, and eight named actions: five tool actions and one for finishing each game) are sent to GoatCounter, a cookieless statistics service, only on the live site and only when configured. Do Not Track and Global Privacy Control are honoured; an opt-out switch is on the About page.
   Each hit sends `b=0` (GoatCounter's bot score: a person) and a random `rnd` to defeat caching. A tool action is sent
   as an event whose path and title are the action's name.
 - Nothing a visitor enters (amounts, coordinates, heirs, search text) is ever included in a counting request.

@@ -44,7 +44,7 @@ The site SHALL record where a visit came from as the referring site's host name,
 - **THEN** the source is recorded as the tag's value, and the tag is removed from the address shown in the browser
 
 ### Requirement: A fixed list of actions is counted by name
-The site SHALL count each of these actions when it happens: prayer times shown, a Zakat result reached, an inheritance result reached, an adhkar category completed, and a tasbih target reached. A name outside this list MUST be refused.
+The site SHALL count each of these actions when it happens: prayer times shown, a Zakat result reached, an inheritance result reached, an adhkar category completed, a tasbih target reached, a Who am I? game finished, a Kalimah game finished, and a Prophets quiz attempt finished. A name outside this list MUST be refused.
 
 #### Scenario: Prayer times shown
 - **WHEN** a visitor has prayer times calculated for a location
@@ -61,6 +61,14 @@ The site SHALL count each of these actions when it happens: prayer times shown, 
 #### Scenario: A tasbih target reached
 - **WHEN** a visitor's count reaches the target
 - **THEN** the tasbih action is recorded once, and taps past the target record nothing
+
+#### Scenario: A game finished
+- **WHEN** a visitor finishes a Who am I? game, a Kalimah game or a quiz attempt
+- **THEN** that game's action is recorded once, carrying no guess, answer, word or score
+
+#### Scenario: Kalimah finished twice in a day
+- **WHEN** a visitor reloads a Kalimah game they have already finished that day
+- **THEN** nothing further is recorded
 
 #### Scenario: An unknown name
 - **WHEN** code asks to count a name that is not in the list

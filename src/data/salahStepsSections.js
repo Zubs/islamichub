@@ -51,6 +51,7 @@ export default [
       {
         arabic: 'أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ',
         reference: "Qur'an 16:98",
+        derived: true,
       },
       {
         arabic:

@@ -1,50 +1,67 @@
-// The story of Shu’ayb in English. Sections and keys follow data/shuaybSections.js: `p1`, `p2`
-// are a section's paragraphs. It draws on the Qur'an and on hadith in Sahih al-Bukhari only.
+// The story of Shu'ayb in English. Sections and keys follow data/shuaybSections.js: `p1`, `p2` are
+// a section's paragraphs. It draws on the Qur'an. Quotations of the Qur'an follow Saheeh
+// International.
 export default {
   header: {
-    title: 'Shu’ayb',
-    lead: 'The eloquent prophet sent to Madyan and the companions of the Thicket, who warned his people against commercial dishonesty, highway robbery, and idolatry with clarity, sincerity, and unwavering faith.',
+    title: 'Shu‘ayb',
+    lead: 'The prophet sent to Madyan, a prosperous trading people who cheated in weight and measure, who called them to give full measure and seek forgiveness, and was saved when the earthquake took them.',
     description:
-      'The story of the Prophet Shu’ayb from the Qur’an and authentic hadith: his preaching to Madyan, calling for honest weights and measures, enduring their mockery and threats, and the destruction of the oppressors, with every verse referenced.',
+      'The story of the Prophet Shu‘ayb from the Qur’an: the people of Madyan, his call to honest measure, their answer and threats, their destruction, and the companions of the thicket, with every verse referenced.',
   },
-  mission: {
-    eyebrow: 'The call',
-    title: 'Sent to Madyan and the Thicket',
-    p1: 'Shu’ayb, peace be upon him, was raised by Allah from among the people of Madyan and sent to them as well as the dwellers of the lush woodland known as the companions of the Thicket (Qur’an 7:85, Qur’an 26:176, Qur’an 26:177). He summoned them to the worship of Allah alone: "O my people, worship Allah; you have no deity other than Him. There has come to you clear evidence from your Lord" (Qur’an 7:85, Qur’an 11:84).',
-    p2: 'Situated along the trade routes between the Hijaz and the Levant, Madyan possessed flourishing commerce, yet they indulged in widespread economic corruption and cheated travelers in trade. Shu’ayb demanded honest dealing: "Give full measure and weight with justice and do not deprive people of their due, and do not commit abuse on the earth, causing corruption" (Qur’an 11:85, Qur’an 29:36).',
+  people: {
+    eyebrow: 'His people',
+    title: 'The people of Madyan',
+    p1: '"And to [the people of] Madyan [We sent] their brother Shu‘ayb. He said, \'O my people, worship Allah; you have no deity other than Him\'" (Qur’an 7:85, Qur’an 11:84). He told them to "expect the Last Day and do not commit abuse on the earth, spreading corruption" (Qur’an 29:36).',
   },
-  missionVerse: {
+  measure: {
+    eyebrow: 'His call',
+    title: 'Full measure and weight',
+    p1: 'Their sin was in trade: "So fulfill the measure and weight and do not deprive people of their due." He told them not to sit on every road threatening those who believed and turning them from Allah’s way, and to remember how few they had been before Allah increased them (Qur’an 7:85, Qur’an 7:86).',
+    p2: '"Indeed, I see you in prosperity," he said, "but indeed, I fear for you the punishment of an all-encompassing Day. And O my people, give full measure and weight in justice and do not deprive the people of their due." "What remains [lawful] from Allah is best for you, if you would be believers" (Qur’an 11:84, Qur’an 11:85, Qur’an 11:86, Qur’an 26:181, Qur’an 26:182, Qur’an 26:183).',
+  },
+  measureVerse: {
     translation:
-      'And to Madyan [We sent] their brother Shu’ayb. He said: "O my people, worship Allah; you have no deity other than Him. And do not decrease from the measure and the scale. Indeed, I see you in prosperity, but indeed, I fear for you the punishment of an all-encompassing Day."',
+      'And O my people, give full measure and weight in justice and do not deprive the people of their due and do not commit abuse on the earth, spreading corruption.',
   },
-  integrity: {
-    eyebrow: 'Fair dealing',
-    title: 'What remains from Allah',
-    p1: 'Shu’ayb impressed upon his people that lawful earning blessed by Allah is far more enduring than wealth amassed by fraud: "What remains from Allah is better for you if you should be believers, and I am not a guardian over you" (Qur’an 11:86, Qur’an 26:181, Qur’an 26:182). In the sunnah, the Prophet Muhammad ﷺ emphasized this timeless principle: "If both parties speak the truth and make things clear, their transaction will be blessed; and if they conceal and tell lies, the blessing of their transaction will be wiped out" (Sahih Bukhari 2079).',
-    p2: 'Arrogant in their affluence, the prominent men sneered at his moral guidance, saying mockingly: "O Shu’ayb, does your prayer command you that we should leave what our fathers worship or that we should not do with our wealth what we please?" (Qur’an 11:87).',
+  answer: {
+    eyebrow: 'Their answer',
+    title: '"Does your prayer command you?"',
+    p1: 'They said, "O Shu‘ayb, does your prayer command you that we should leave what our fathers worship or not do with our wealth what we please?" (Qur’an 11:87).',
+    p2: 'He answered, "I do not intend to differ from you in that which I have forbidden you; I only intend reform as much as I am able. And my success is not but through Allah. Upon him I have relied, and to Him I return," and warned them of what had struck the peoples of Nuh, Hud, Salih and Lut, telling them to ask forgiveness, "Indeed, my Lord is Merciful and Affectionate" (Qur’an 11:88, Qur’an 11:89, Qur’an 11:90).',
+    p3: 'They said, "If not for your family, we would have stoned you." He said, "O my people, is my family more respected for power by you than Allah?" and, "Work according to your position; indeed, I am working. You are going to know" (Qur’an 11:91, Qur’an 11:92, Qur’an 11:93).',
   },
-  integrityVerse: {
+  answerVerse: {
     translation:
-      'What remains from Allah is better for you if you should be believers, and I am not a guardian over you.',
+      'He said, "O my people, have you considered: if I am upon clear evidence from my Lord and He has provided me with a good provision from Him...? And I do not intend to differ from you in that which I have forbidden you; I only intend reform as much as I am able. And my success is not but through Allah. Upon him I have relied, and to Him I return."',
   },
-  admonition: {
-    eyebrow: 'Reformation',
-    title: 'Intending only reform',
-    p1: 'Shu’ayb answered their sarcasm with gentle dignity and firm conviction, expressing his sole motivation: "I only intend reform as much as I am able. And my success is not but through Allah. Upon Him I have relied, and to Him I return" (Qur’an 11:88).',
-    p2: 'He cautioned them to reflect upon the fate of earlier rebel generations: "And O my people, let not my defiance cause you to commit crime so that there befalls you the like of what befell the people of Nuh or the people of Hud or the people of Salih. And the people of Lut are not far off from you" (Qur’an 11:89). He begged them to ask forgiveness of their Lord, for He is merciful and loving (Qur’an 11:90).',
+  threat: {
+    eyebrow: 'Their threat',
+    title: '"We will surely evict you"',
+    p1: 'He told them that if some believed and some did not, they should be patient "until Allah judges between us" (Qur’an 7:87). The arrogant chiefs said, "We will surely evict you, O Shu‘ayb, and those who have believed with you from our city, or you must return to our religion" (Qur’an 7:88).',
+    p2: 'He said, "We would have invented against Allah a lie if we returned to your religion after Allah had saved us from it." They told their people, "If you should follow Shu‘ayb, indeed, you would then be losers" (Qur’an 7:89, Qur’an 7:90).',
   },
-  admonitionVerse: {
-    translation:
-      'He said: "O my people, have you considered: if I am upon clear evidence from my Lord and He has provided me with a good provision from Himself...? And I do not intend to differ from you in that which I forbid you; I only intend reform as much as I am able. And my success is not but through Allah. Upon Him I have relied, and to Him I return."',
+  punishment: {
+    eyebrow: 'The punishment',
+    title: 'As though they had never lived there',
+    p1: '"So the earthquake seized them, and they became within their home [corpses] fallen prone. Those who denied Shu‘ayb - it was as though they had never resided there" (Qur’an 7:91, Qur’an 7:92, Qur’an 29:37). Allah saved Shu‘ayb and those who believed with him, and the shriek seized the wrongdoers: "Then, away with Madyan as Thamud was taken away" (Qur’an 11:94, Qur’an 11:95).',
+    p2: 'He turned from them and said, "O my people, I had certainly conveyed to you the messages of my Lord and advised you, so how could I grieve for a disbelieving people?" (Qur’an 7:93).',
   },
-  destruction: {
-    eyebrow: 'Retribution',
-    title: 'The earthquake and the canopy',
-    p1: 'Rather than repent, the elders threatened to stone Shu’ayb or drive him and his followers into exile unless they returned to their pagan ways (Qur’an 7:88, Qur’an 11:91). Turning away from their threats, Shu’ayb placed his cause before the Almighty: "Our Lord, judge between us and our people in truth, and You are the best of those who give judgment" (Qur’an 7:89).',
-    p2: 'Divine punishment descended swiftly. A devastating earthquake and an overwhelming blast struck Madyan, while the companions of the Thicket were engulfed by the scorching shadow of the canopy (Qur’an 7:91, Qur’an 11:94, Qur’an 26:189). Shu’ayb and the believers were saved by Allah’s mercy, while the ruined dwellings of Madyan were left desolate, as if they had never lived there (Qur’an 11:95, Qur’an 7:92). Reminding Muslims of the solemn lesson of such ruins, the Prophet Muhammad ﷺ warned never to enter the dwellings of destroyed wrongdoers except weeping (Sahih Bukhari 3380); centuries later, Musa would find safe sanctuary in Madyan (Sahih Bukhari 2684).',
+  thicket: {
+    eyebrow: 'The companions of the thicket',
+    title: 'The day of the black cloud',
+    p1: 'The Qur’an also tells of Shu‘ayb and "the companions of the thicket": he called them to give full measure and weigh with an even balance, and they said, "You are only of those affected by magic," and asked for fragments of the sky to fall on them (Qur’an 26:176, Qur’an 26:177, Qur’an 26:178, Qur’an 26:179, Qur’an 26:180, Qur’an 26:185, Qur’an 26:186, Qur’an 26:187, Qur’an 26:188). "So the punishment of the day of the black cloud seized them" (Qur’an 26:189), and their ruins lie "on a clear highway" (Qur’an 15:78, Qur’an 15:79).',
+    p2: 'The commentators differ on whether the companions of the thicket were the people of Madyan or a second people to whom Shu‘ayb was sent; the Qur’an does not say, and the story takes no side.',
   },
-  destructionVerse: {
-    translation:
-      'So the earthquake seized them, and they became within their home [corpses] fallen prone.',
+  musa: {
+    eyebrow: 'Madyan and Musa',
+    title: 'The old man of Madyan',
+    p1: 'When Musa fled to Madyan, he married the daughter of an old man there and served him for years (Qur’an 28:23, Qur’an 28:27). The Qur’an does not name that man. Some commentators identify him with Shu‘ayb and others do not, and the story takes no side.',
+  },
+  places: {
+    title: 'Places in the life of Shu‘ayb',
+    intro: 'The Qur’an names Madyan, the people to whom Shu‘ayb was sent.',
+    madyanName: 'Madyan',
+    madyanText:
+      'Shu‘ayb was sent "to [the people of] Madyan" (Qur’an 7:85). The Qur’an names it; historians place it in the north-west of Arabia, east of the Gulf of Aqaba, where the marker stands.',
   },
 }

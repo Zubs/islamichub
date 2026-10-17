@@ -2,7 +2,16 @@
 // src/utils/navigation.test.js fails if the two drift apart.
 const SECTIONS = {
   pillars: ['/pillars', '/faith', '/prayer', '/zakat', '/fasting', '/hajj'],
-  tools: ['/tools', '/tracker', '/adhkar', '/duas', '/tasbih', '/inheritance', '/qurbani'],
+  tools: [
+    '/tools',
+    '/tracker',
+    '/adhkar',
+    '/duas',
+    '/tasbih',
+    '/inheritance',
+    '/qurbani',
+    '/games',
+  ],
   hadith: ['/hadith'],
   prophets: ['/prophets'],
 }

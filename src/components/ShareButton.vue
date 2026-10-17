@@ -11,7 +11,7 @@
       :aria-label="$t('shareButton.shareOptions')"
     >
       <img v-if="imageUrl" class="share-preview" :src="imageUrl" alt="" />
-      <p v-else class="share-note">
+      <p v-else-if="!item.textOnly" class="share-note">
         {{ $t('shareButton.thisTextIsTooLongFor') }}
       </p>
       <div class="share-actions">

@@ -97,6 +97,12 @@ describe('prophets data', () => {
   })
 })
 
+const SECTION_FILES = import.meta.glob('/src/data/*Sections.js', { eager: true })
+
+function passagesOf(slug) {
+  return SECTION_FILES[`/src/data/${slug}Sections.js`]?.passages ?? []
+}
+
 describe.each(Object.entries(PROPHET_STORIES))('the story of %s', (slug, { sections, content }) => {
   it.each(sections)('section $id carries a reference that exists', (section) => {
     const listed = [
@@ -126,6 +132,17 @@ describe.each(Object.entries(PROPHET_STORIES))('the story of %s', (slug, { secti
     }
   })
 
+  it('cites every passage of the Qur’an listed for the prophet', () => {
+    const cited = quranRefsIn(JSON.stringify(sections) + JSON.stringify(content))
+    for (const passage of passagesOf(slug)) {
+      const [, surah, first, last] = passage.match(/(\d+):(\d+)(?:-(\d+))?/).map(Number)
+      const covered = cited.some(
+        (ref) => ref.surah === surah && ref.ayah >= first && ref.ayah <= (last || first),
+      )
+      expect(covered, `${slug}: ${passage}`).toBe(true)
+    }
+  })
+
   it('has words for every section, and a translation for every verse', () => {
     for (const section of sections) {
       const words = content[section.id]
@@ -145,11 +162,15 @@ describe.each(Object.entries(PROPHET_STORIES))('the story of %s', (slug, { secti
     expect(content.header.title && content.header.lead && content.header.description).toBeTruthy()
   })
 
-  it('draws on the Qur’an and Sahih al-Bukhari only', () => {
-    const cited = hadithRefsIn(JSON.stringify(sections) + JSON.stringify(content))
+  it('draws on the Qur’an and the two Sahih collections, giving the grade of any other hadith in its section', () => {
+    const sahih = ['sahih-bukhari', 'sahih-muslim']
 
-    expect(cited.length).toBeGreaterThan(0)
-    expect(cited.every((reference) => reference.book === 'sahih-bukhari')).toBe(true)
+    for (const [id, words] of Object.entries(content)) {
+      const text = JSON.stringify(words)
+      for (const reference of hadithRefsIn(text).filter(({ book }) => !sahih.includes(book))) {
+        expect(text, `${slug}.${id}: ${reference.text}`).toMatch(/graded/)
+      }
+    }
   })
 
   it('shows every verse block with Arabic, translation and reference', async () => {
@@ -172,6 +193,27 @@ describe.each(Object.entries(PROPHET_STORIES))('the story of %s', (slug, { secti
     expect(seo.title).toContain(getProphet(slug).name)
     expect(seo.descriptions[0]).toBe(content.header.description)
     expect(seo.canonicals).toEqual([`https://islamichub.xyz/prophets/${slug}`])
+  })
+})
+
+describe('the people each prophet was sent to', () => {
+  it('is shown for every prophet whose people a verse names, and for no other', () => {
+    // Checked against the Qur'an on 17 October 2026: no verse names a people for these nine.
+    const withoutPeople = [
+      'idris',
+      'ishaq',
+      'yaqub',
+      'ayyub',
+      'dhul-kifl',
+      'sulayman',
+      'al-yasa',
+      'zakariyya',
+      'yahya',
+    ]
+
+    expect(PROPHETS.filter((prophet) => !prophet.people).map((prophet) => prophet.slug)).toEqual(
+      withoutPeople,
+    )
   })
 })
 
@@ -290,5 +332,25 @@ describe('prophet pages in the app', () => {
     )
     expect(wrapper.find('.prophet-breadcrumb').text()).toContain('Abraham')
     expect(wrapper.find('#makkah a.hadith-ref').text()).toBe('Sahih Bukhari 3364')
+  })
+})
+
+describe('the places of a prophet', () => {
+  it('shows the map and the list when he has places', async () => {
+    const { wrapper } = await openApp('/prophets/ibrahim')
+
+    expect(wrapper.find('.journey-map').exists()).toBe(true)
+    expect(wrapper.find('.prophet-places-unknown').exists()).toBe(false)
+  })
+
+  it('says his places are not known, with no map, when he has none', async () => {
+    const without = Object.entries(PROPHET_STORIES).find(([, story]) => !story.places)
+    if (!without) {
+      return
+    }
+    const { wrapper } = await openApp(`/prophets/${without[0]}`)
+
+    expect(wrapper.find('.journey-map').exists()).toBe(false)
+    expect(wrapper.find('.prophet-places-unknown').text()).toContain('not known')
   })
 })

@@ -62,7 +62,7 @@ export default {
     whereAVisitCameFromThe: "Where a visit came from (the referring site's name only, e.g.,",
     neverTheFullUrl: '— never the full URL)',
     fiveNamedActionsPrayerTimesShown:
-      'Five named actions: prayer times shown, a Zakat result reached, an inheritance result reached, an adhkar category completed, and a tasbih target reached',
+      'Eight named actions: prayer times shown, a Zakat result reached, an inheritance result reached, an adhkar category completed, a tasbih target reached, and a round of Who am I?, a game of Kalimah or a prophets quiz finished, with no answer or score',
     whatIsNeverSent: 'What is never sent:',
     anyAmountWeightCoordinatePlaceName:
       'Any amount, weight, coordinate, place name, heir, search text, or other input you enter',

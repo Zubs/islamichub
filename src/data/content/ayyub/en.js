@@ -1,46 +1,51 @@
-// The story of Ayyub in English. Sections and keys follow data/ayyubSections.js: `p1`, `p2`
-// are a section's paragraphs. It draws on the Qur'an and on hadith in Sahih al-Bukhari only.
+// The story of Ayyub in English. Sections and keys follow data/ayyubSections.js: `p1`, `p2` are a
+// section's paragraphs. It draws on the Qur'an and on hadith in Sahih al-Bukhari only. Quotations
+// of the Qur'an follow Saheeh International.
 export default {
   header: {
     title: 'Ayyub',
-    lead: 'The paragon of patience, an exemplary servant of Allah who bore the loss of health, family, and wealth without complaint, turning constantly to his Lord until divine mercy restored him manifold.',
+    lead: 'The prophet tried with hardship and loss, who called on his Lord without complaint, and was healed with a spring at his feet and given back his family and as many again.',
     description:
-      'The story of the Prophet Ayyub from the Qur’an and authentic hadith: his severe trials, his renowned supplication, the healing spring, the gentle fulfillment of his oath, and the golden locusts, with every verse referenced.',
+      'The story of the Prophet Ayyub from the Qur’an and Sahih al-Bukhari: his trial, his prayer, the spring that healed him, the return of his family, his oath, and the golden locusts, with every verse referenced.',
+  },
+  who: {
+    eyebrow: 'Who he was',
+    title: 'An excellent servant',
+    p1: 'Ayyub, peace be upon him, is named among the prophets to whom Allah revealed and whom He guided (Qur’an 4:163, Qur’an 6:84). Allah says, "And remember Our servant Ayyub," and, "Indeed, We found him patient, an excellent servant. Indeed, he was one repeatedly turning back [to Allah]" (Qur’an 38:41, Qur’an 38:44).',
   },
   trial: {
-    eyebrow: 'Adversity',
-    title: 'A severe test of faith',
-    p1: 'Ayyub, peace be upon him, was a righteous prophet counted in the Qur’an among the noble messengers granted divine guidance and inspiration (Qur’an 4:163, Qur’an 6:84). Allah tested him through long years of hardship: his vast flocks and wealth perished, his children passed away, and a severe illness afflicted his body.',
-    p2: 'Despite his agony and desertion by all except his devoted wife, Ayyub never complained of Allah’s decree or voiced discontent. Instead, he channeled his suffering into a model of dignified prayer: "Indeed, adversity has touched me, and You are the most merciful of the merciful" (Qur’an 21:83).',
+    eyebrow: 'His trial',
+    title: '"Adversity has touched me"',
+    p1: 'Ayyub was tried with adversity. He called to his Lord, "Indeed, adversity has touched me, and you are the Most Merciful of the merciful" (Qur’an 21:83).',
+    p2: 'He also said, "Indeed, Satan has touched me with hardship and torment" (Qur’an 38:41). The Qur’an does not say what the illness was or how long it lasted.',
   },
-  supplicationVerse: {
+  trialVerse: {
     translation:
-      'And [mention] Ayyub, when he called to his Lord: "Indeed, adversity has touched me, and You are the most merciful of the merciful."',
+      'And [mention] Ayyub, when he called to his Lord, "Indeed, adversity has touched me, and you are the Most Merciful of the merciful."',
   },
   relief: {
-    eyebrow: 'Divine mercy',
-    title: 'The miraculous spring',
-    p1: 'When the appointed term of trial concluded, Ayyub called upon his Lord from the depth of his distress (Qur’an 38:41). Allah responded immediately to his servant and commanded him: "Strike [the ground] with your foot; this is a [spring for] a cool bath and a drink" (Qur’an 38:42).',
-    p2: 'When Ayyub struck the ground, a miraculous cool spring welled up. He bathed in its water and drank from it, and every trace of disease and pain was completely cured. Allah restored his full family to him and granted him twice as many as before, as a special mercy from His presence and a timeless reminder for all worshippers (Qur’an 21:84, Qur’an 38:43).',
-  },
-  reliefVerse: {
-    translation:
-      '[So he was told]: "Strike [the ground] with your foot; this is a [spring for] a cool bath and a drink."',
+    eyebrow: 'His relief',
+    title: 'A spring at his feet',
+    p1: 'He was told, "Strike [the ground] with your foot; this is a [spring for] a cool bath and drink" (Qur’an 38:42).',
+    p2: '"So We responded to him and removed what afflicted him of adversity. And We gave him [back] his family and the like thereof with them as mercy from Us and a reminder for the worshippers [of Allah]" (Qur’an 21:84, Qur’an 38:43).',
   },
   oath: {
-    eyebrow: 'Excellence',
-    title: 'The bundle of grass and praise',
-    p1: 'During his severe illness, Ayyub had sworn an oath in a moment of distress to strike his faithful wife one hundred times. Because she had served him with tender loyalty throughout the years of trial, Allah provided a gentle way out of his oath that honored his word while sparing his wife any injury: "And take in your hand a bundle of thin grass and strike with it and do not break your oath" (Qur’an 38:44).',
-    p2: 'Allah praised Ayyub’s unwavering steadfastness with the highest accolade: "Indeed, We found him patient, an excellent servant. Indeed, he was one repeatedly turning [to Allah]" (Qur’an 38:44).',
+    eyebrow: 'His oath',
+    title: '"Do not break your oath"',
+    p1: 'Allah told him, "And take in your hand a bunch [of grass] and strike with it and do not break your oath" (Qur’an 38:44). The Qur’an does not say what the oath was, and the commentators differ over it.',
   },
-  patienceVerse: {
+  oathVerse: {
     translation:
-      'Indeed, We found him patient, an excellent servant. Indeed, he was one repeatedly turning [to Allah].',
+      '[We said], "And take in your hand a bunch [of grass] and strike with it and do not break your oath." Indeed, We found him patient, an excellent servant. Indeed, he was one repeatedly turning back [to Allah].',
   },
-  blessing: {
-    eyebrow: 'Abundance',
-    title: 'Shower of gold and eternal lesson',
-    p1: 'Following his recovery, Allah showered Ayyub with direct heavenly blessings. The Prophet Muhammad ﷺ related: "While Ayyub was taking a bath naked, a swarm of golden locusts fell upon him, and he started collecting them in his garment. His Lord called to him: ‘O Ayyub! Did I not make you rich enough not to need what you see?’ He replied: ‘Yes, O Lord, but I cannot do without Your blessings!’" (Sahih Bukhari 279, Sahih Bukhari 3391).',
-    p2: 'Ayyub’s enduring story demonstrates that afflictions are not signs of divine displeasure, but purifying trials for the righteous that expiate sins and elevate ranks in the Hereafter (Sahih Bukhari 5641).',
+  gold: {
+    eyebrow: 'The golden locusts',
+    title: '"I cannot dispense with Your blessing"',
+    p1: 'The Prophet ﷺ said that while Ayyub was bathing, a swarm of golden locusts fell on him and he began gathering them in his garment. His Lord called him, "O Ayyub! Have I not made you rich enough to need what you see?" He said, "Yes, O Lord! But I cannot dispense with your Blessing" (Sahih Bukhari 3391, Sahih Bukhari 279).',
+  },
+  silent: {
+    eyebrow: 'What the sources do not say',
+    title: 'A reminder for the worshippers',
+    p1: 'The Qur’an and the authentic hadith do not say where Ayyub lived, who his people were, or the details of his illness and loss. What they give is his patience, his prayer and his relief, "a reminder for the worshippers" (Qur’an 21:84).',
   },
 }

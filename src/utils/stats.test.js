@@ -10,6 +10,9 @@ describe('stats utils', () => {
         'inheritance result reached',
         'adhkar category completed',
         'tasbih target reached',
+        'who am i finished',
+        'kalimah finished',
+        'quiz finished',
       ])
     })
   })

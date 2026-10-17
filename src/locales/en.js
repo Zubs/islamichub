@@ -152,6 +152,120 @@ export default {
       12: 'Dhū al-Ḥijjah',
     },
   },
+  games: {
+    badge: 'Games',
+    title: 'Learn while you play',
+    lead: 'Three games on the prophets and the words of the Qur’an. Every question, clue and word comes with its verse or hadith.',
+    note: 'Scores stay on this device; there are no accounts and no leaderboard. The content of the games awaits review by a scholar.',
+    noResult: 'Not played yet',
+    howToPlay: 'How to play',
+    level: 'Level',
+    levels: { easy: 'Easy', normal: 'Normal', hard: 'Hard' },
+    start: 'Start',
+    quit: 'Quit to games',
+    quiz: {
+      name: 'Prophets quiz',
+      text: 'Ten questions on the lives of the prophets, drawn at random from a bank of three hundred, each answer shown with its evidence.',
+      best: 'Best: {score} of 10',
+      lead: 'Ten questions on the lives of the prophets. After each answer you will see the verse or hadith it rests on.',
+      progress: 'Question {n} of {total}',
+      right: 'Right.',
+      wrong: 'Not quite.',
+      rightAnswer: 'The answer is: {answer}',
+      evidence: 'Evidence:',
+      next: 'Next question',
+      finish: 'See your score',
+      score: 'You scored {score} of 10',
+      missed: 'Questions to look at again',
+      allRight: 'You answered every question right.',
+      again: 'Play again',
+      rules: {
+        r1: 'You get ten questions on the lives of the prophets, each with four answers to choose from.',
+        r2: 'After each answer you see the verse or hadith it rests on.',
+        r3: 'At the end you see your score and the questions to look at again. A question is not asked again until you have seen all the others at its level.',
+      },
+      levels: {
+        easy: 'The best-known events of their lives.',
+        normal: 'What a regular reader of their stories will know.',
+        hard: 'Details: numbers, verse numbers and what hadiths add.',
+      },
+      share:
+        'I scored {score} of 10 in the Prophets quiz on IslamicHub ({level}). Can you beat it?',
+    },
+    whoAmI: {
+      name: 'Who am I?',
+      text: 'Clues about one prophet at a time. Name as many in a row as you can.',
+      best: 'Best game: {score} points',
+      lead: 'Clues about a prophet, revealed one at a time. Name him, then the next, and see how many you can name in a row.',
+      question: 'Who am I?',
+      nextClue: 'Another clue ({n} of {total} shown)',
+      giveUp: 'Show me',
+      guess: 'Your guess:',
+      won: 'Yes, {name}.',
+      lost: 'It was {name}.',
+      score: '{score} points',
+      readStory: 'Read the story of {name}',
+      next: 'Next prophet',
+      again: 'Play again',
+      status: '{level} · Prophet {n} · {points} points',
+      correct:
+        'You did not name any prophets this time | You answered 1 correctly | You answered {n} correctly',
+      total: '{points} points in one round | {points} points in {rounds} rounds',
+      today:
+        'Today’s best: {points} points in one round | Today’s best: {points} points in {rounds} rounds',
+      rules: {
+        r1: 'A prophet is chosen and you see one clue about him, with more clues when you ask.',
+        r2: 'Pick his name from the list. You have three guesses (two on Hard).',
+        r3: 'Name him and the next prophet follows. Each scores 50 points, less 10 for each extra clue and 5 for each wrong guess. The game ends at the first prophet you cannot name.',
+      },
+      levels: {
+        easy: 'The easiest clue comes first. Three guesses.',
+        normal: 'The hardest clue comes first. Three guesses.',
+        hard: 'The hardest clue comes first. Two guesses.',
+      },
+      guessesLeft: 'No guesses left | One guess left | {n} guesses left',
+      share:
+        'Who am I? on IslamicHub stumped me on the first prophet ({level}). Can you name more? | I named 1 prophet in Who am I? on IslamicHub ({level}), {points} points. Can you name more? | I named {n} prophets in a row in Who am I? on IslamicHub ({level}), {points} points. Can you beat it?',
+    },
+    kalimah: {
+      name: 'Kalimah',
+      text: 'A word from the Qur’an each day, the same for everyone. Six tries, in Arabic letters or in transliteration.',
+      notPlayed: 'Not played today',
+      played: 'Played today',
+      solved: 'Solved today in {n} tries | Solved today in {n} try | Solved today in {n} tries',
+      lead: 'One word from the Qur’an each day, the same for everyone. Guess it in six tries, then see the verse it comes from.',
+      modeLabel: 'Type the word in',
+      modes: { arabic: 'Arabic letters', latin: 'Transliteration' },
+      letters: 'Today’s word has {n} letters.',
+      try: 'Try {n}',
+      marks: {
+        right: 'in the right place',
+        present: 'in the word, in another place',
+        absent: 'not in the word',
+      },
+      keyboard: 'Keyboard',
+      enter: 'Enter',
+      delete: 'Delete',
+      tooShort: 'Type all {n} letters, then press Enter.',
+      won: 'Solved in {n} of {total} tries.',
+      lost: 'Not this time. Here is today’s word.',
+      verse: 'It comes in this verse:',
+      tomorrow: 'A new word tomorrow.',
+      shareTitle: 'Kalimah {day}: {result}/{total}, {mode}, {level}',
+      invite: 'Can you find today’s word?',
+      rules: {
+        r1: 'Guess today’s word from the Qur’an in six tries. Everyone gets the same word, and a new one comes each day.',
+        r2: 'After each guess, a green letter is in the right place, a gold letter is in the word in another place, and a grey letter is not in the word.',
+        r3: 'Type in Arabic letters or in transliteration. Your choice stays for the day once you have made a guess.',
+      },
+      levels: {
+        easy: 'The word’s meaning is shown as a hint.',
+        normal: 'No hint.',
+        hard: 'No hint, and the keyboard does not mark the letters you have tried.',
+      },
+      hint: 'Hint: it means “{meaning}”.',
+    },
+  },
   prayerGuides: {
     breadcrumb: 'Breadcrumb',
     prayer: 'Prayer',
@@ -801,6 +915,26 @@ export default {
       description:
         'Every free IslamicHub tool in one place: prayer times and Qibla, prayer tracker, adhkar, duas, tasbih counter, Zakat and inheritance calculators, and the Ramadan tracker.',
     },
+    kalimah: {
+      title: "Kalimah — A Daily Word from the Qur’an {'|'} IslamicHub",
+      description:
+        'A free daily word game: guess a word of the Qur’an in six tries, in Arabic letters or in transliteration, then read the verse it comes from.',
+    },
+    'who-am-i': {
+      title: "Who Am I? — Guess the Prophet from Clues {'|'} IslamicHub",
+      description:
+        'A free guessing game: name the prophet from clues revealed one at a time, each clue drawn from his story with its verse or hadith.',
+    },
+    quiz: {
+      title: "Prophets Quiz — Ten Questions on the Lives of the Prophets {'|'} IslamicHub",
+      description:
+        'A free quiz on the lives of the prophets: ten questions drawn at random from three hundred, each answer shown with the verse or hadith it rests on.',
+    },
+    games: {
+      title: "Islamic Games — Prophets Quiz, Who Am I? and Kalimah {'|'} IslamicHub",
+      description:
+        'Three free games for learning: a quiz on the lives of the prophets, a guessing game with clues from their stories, and a daily word from the Qur’an. Every answer comes with its verse or hadith.',
+    },
     adhan: {
       title: "The Adhan — Words, Meaning and How It Began {'|'} IslamicHub",
       description:
@@ -913,14 +1047,26 @@ export default {
     previous: '← {name}',
     next: '{name} →',
     sources:
-      "This story is told from the Qur'an and authentic hadith only. Where they are silent, it says so.",
+      "This story is told from the Qur'an and authentic hadith only. Where they are silent, it says so. Quotations of the Qur'an follow Saheeh International, with the prophets' names in their Arabic form.",
+    placesTitle: 'Places',
+    placesUnknown:
+      "The Qur'an and authentic hadith do not say where he was born or lived, and no place is identified for him here, so his places are not known.",
   },
   journey: {
-    map: 'Map of the journey, {n} stops | Map of the journey, {n} stop | Map of the journey, {n} stops',
-    stop: 'Stop {n}: {name}',
+    map: 'Map of {n} places | Map of {n} place | Map of {n} places',
+    stop: 'Place {n}: {name}',
     known: {
       scripture: "Named in the Qur'an or hadith",
       historians: 'Place identified by historians',
     },
+    kind: {
+      born: 'Born here',
+      lived: 'Lived here',
+      sent: 'Sent here',
+      travelled: 'Journeyed here',
+      died: 'Died here',
+    },
+    source: 'Identified by: {source}',
+    notOnMap: 'It is not shown on the map.',
   },
 }
