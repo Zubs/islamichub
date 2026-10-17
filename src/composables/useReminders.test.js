@@ -9,7 +9,12 @@ import ReminderSettings from '@/components/ReminderSettings.vue'
 import { scheduleReminders, startReminders, stopReminders } from './useReminders.js'
 import { useRemindersStore } from '@/stores/reminders.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
-import { REMINDERS, dueReminders, parseReminderSettings, nextMidnight } from '@/utils/reminders.js'
+import {
+  REMINDER_ITEMS,
+  dueReminders,
+  parseReminderSettings,
+  nextMidnight,
+} from '@/utils/reminders.js'
 import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
 
 const LAGOS = { lat: 6.5244, lng: 3.3792, name: 'Lagos', method: 'MWL', asrMethod: 'standard' }
@@ -120,7 +125,7 @@ describe('reminder settings', () => {
     const settings = parseReminderSettings(null)
 
     expect(settings.enabled).toBe(false)
-    expect(Object.keys(settings.items)).toEqual(REMINDERS.map((reminder) => reminder.key))
+    expect(Object.keys(settings.items)).toEqual(REMINDER_ITEMS)
     expect(Object.values(settings.items).every((on) => on === false)).toBe(true)
   })
 
@@ -212,6 +217,30 @@ describe('reminders', () => {
     expect(shown).toHaveLength(1)
     expect(shown[0].title).toBe('Maghrib prayer')
     expect(shown[0].options.data.path).toBe('/tracker')
+  })
+
+  it('schedule the khutbah reminder on a Friday from the time kept on the device, opening the Friday page', async () => {
+    at(new Date(2026, 9, 23, 6, 0))
+    localStorage.clear()
+    fresh({ settings: { enabled: true, items: { khutbah: true } } })
+    localStorage.setItem('khutbah-time', '"13:15"')
+    setActivePinia(createPinia())
+
+    expect(scheduleReminders()).toBe(1)
+    await vi.advanceTimersByTimeAsync((12 * 60 + 45 - 6 * 60) * 60000)
+
+    expect(shown).toHaveLength(1)
+    expect(shown[0].title).toBe('Jumu‘ah')
+    expect(shown[0].options.data.path).toBe('/jumuah')
+  })
+
+  it('schedule no Friday reminder on a Thursday', () => {
+    at(new Date(2026, 9, 22, 6, 0))
+    fresh({ settings: { enabled: true, items: { kahf: true, salawat: true, khutbah: true } } })
+    localStorage.setItem('khutbah-time', '"13:15"')
+    setActivePinia(createPinia())
+
+    expect(scheduleReminders()).toBe(0)
   })
 
   it('schedule only the prayers still to come at midday', () => {

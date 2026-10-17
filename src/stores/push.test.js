@@ -98,6 +98,15 @@ describe('push request', () => {
     expect(validateRecord(body)).toMatchObject({ lat: 6.52, lng: 3.38, items: ['fajr'] })
   })
 
+  it('sends the khutbah time only while the khutbah reminder is on', () => {
+    const subscription = { endpoint: ENDPOINT, keys: KEYS }
+    const on = pushRequestBody(subscription, LAGOS, { khutbah: true }, 'Africa/Lagos', '13:15')
+    const off = pushRequestBody(subscription, LAGOS, { fajr: true }, 'Africa/Lagos', '13:15')
+
+    expect(on.khutbah).toBe('13:15')
+    expect(off).not.toHaveProperty('khutbah')
+  })
+
   it('turns the public key into the bytes the browser asks for', () => {
     const key = applicationServerKey(
       'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U',

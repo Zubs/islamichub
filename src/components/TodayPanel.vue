@@ -60,6 +60,27 @@
         }}</span>
       </RouterLink>
 
+      <RouterLink
+        v-if="islamicDays.length"
+        to="/calendar"
+        class="today-tile"
+        data-part="islamic-day"
+      >
+        <span class="today-label">{{ $t('todayPanel.islamicDay') }}</span>
+        <span class="today-value">{{ islamicDays.join(' · ') }}</span>
+        <span class="today-note">{{ $t('todayPanel.readAboutTheDay') }}</span>
+      </RouterLink>
+
+      <RouterLink v-if="isFriday" to="/jumuah" class="today-tile" data-part="jumuah">
+        <span class="today-label">{{ $t('todayPanel.jumuah') }}</span>
+        <span class="today-value">{{
+          jumuah.khutbahTime
+            ? $t('todayPanel.khutbahAt', { time: jumuah.khutbahTime })
+            : $t('todayPanel.fridayToday')
+        }}</span>
+        <span class="today-note">{{ $t('todayPanel.fridaySunnahs') }}</span>
+      </RouterLink>
+
       <RouterLink v-if="inRamadan" to="/fasting" class="today-tile" data-part="fasting">
         <span class="today-label">{{ $t('todayPanel.todaySFast') }}</span>
         <span class="today-value">{{ fastLabel }}</span>
@@ -82,6 +103,10 @@ import { useSalahStore } from '@/stores/salah.js'
 import { useAdhkarStore } from '@/stores/adhkar.js'
 import { useTasbihStore } from '@/stores/tasbih.js'
 import { useFastingStore } from '@/stores/fasting.js'
+import { useJumuahStore } from '@/stores/jumuah.js'
+import { useContent } from '@/composables/useContent.js'
+import calendarContent from '@/data/content/calendar/en.js'
+import { kindsOn } from '@/utils/islamicDays.js'
 import { ADHKAR_CATEGORIES } from '@/data/adhkar.js'
 import { SALAH_PRAYERS, loggedCount as countLogged } from '@/utils/salah.js'
 import { ramadanYearOf } from '@/utils/fasting.js'
@@ -90,12 +115,15 @@ import { dayKey } from '@/utils/day.js'
 import { t, formatDate } from '@/i18n.js'
 
 const MINUTE_MS = 60000
+const FRIDAY = 5
 
 const settings = usePrayerSettingsStore()
 const salah = useSalahStore()
 const adhkar = useAdhkarStore()
 const tasbih = useTasbihStore()
 const fasting = useFastingStore()
+const jumuah = useJumuahStore()
+const { c: calendarText } = useContent('calendar', calendarContent)
 
 const prayers = SALAH_PRAYERS
 const categories = ADHKAR_CATEGORIES
@@ -153,6 +181,13 @@ const adhkarDone = computed(() =>
 const tasbihTotal = computed(() =>
   Object.values(tasbih.totals[today.value] ?? {}).reduce((sum, count) => sum + count, 0),
 )
+
+const islamicDays = computed(() =>
+  kindsOn(now.value).map((kind) =>
+    calendarText(kind.label ? `${kind.key}.${kind.label}` : `${kind.key}.name`),
+  ),
+)
+const isFriday = computed(() => now.value.getDay() === FRIDAY)
 
 const inRamadan = computed(() => ramadanYearOf(today.value, fasting.starts) !== null)
 const fastLabel = computed(() => t(`common.fastStatus.${fasting.statusOf(today.value) ?? 'none'}`))

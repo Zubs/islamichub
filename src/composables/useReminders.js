@@ -1,6 +1,7 @@
 import { watch } from 'vue'
 import { useRemindersStore } from '@/stores/reminders.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
+import { useJumuahStore } from '@/stores/jumuah.js'
 import { dueReminders, nextMidnight } from '@/utils/reminders.js'
 import { calcPrayerTimes, getTimezoneOffset } from '@/utils/prayer.js'
 import { t } from '@/i18n.js'
@@ -54,7 +55,7 @@ export function scheduleReminders({ open = () => {}, now = new Date() } = {}) {
     saved.method,
     saved.asrMethod,
   )
-  const due = dueReminders(reminders.settings.items, times, now)
+  const due = dueReminders(reminders.settings.items, times, now, useJumuahStore().khutbahTime)
   for (const reminder of due) {
     timers.push(
       setTimeout(
@@ -73,18 +74,20 @@ export function scheduleReminders({ open = () => {}, now = new Date() } = {}) {
 export function startReminders(open) {
   const reminders = useRemindersStore()
   const prayerSettings = usePrayerSettingsStore()
+  const jumuah = useJumuahStore()
   watch(
     [
       () => reminders.active,
       () => reminders.pushOn,
       () => reminders.settings.items,
       () => prayerSettings.saved,
+      () => jumuah.khutbahTime,
     ],
     () => scheduleReminders({ open }),
     { immediate: true, deep: true },
   )
   watch(
-    [() => reminders.settings.items, () => prayerSettings.saved],
+    [() => reminders.settings.items, () => prayerSettings.saved, () => jumuah.khutbahTime],
     () => reminders.syncPushRecord(),
     {
       deep: true,

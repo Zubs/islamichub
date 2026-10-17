@@ -7,7 +7,7 @@ Delivers prayer and adhkar reminders when the app is closed, for users who choos
 ## Requirements
 
 ### Requirement: Push is opt-in and stores the minimum
-With push off, no request SHALL be sent to the server and nothing SHALL be stored there. Turning push on SHALL store one record for the device holding only: the push subscription, latitude and longitude rounded to two decimal places, the timezone, the calculation method, the Asr method and the chosen reminders. No name, email, account or precise location SHALL be stored.
+With push off, no request SHALL be sent to the server and nothing SHALL be stored there. Turning push on SHALL store one record for the device holding only: the push subscription, latitude and longitude rounded to two decimal places, the timezone, the calculation method, the Asr method, the chosen reminders and, only when the khutbah reminder is chosen, the khutbah time. No name, email, account or precise location SHALL be stored.
 
 #### Scenario: Push off
 - **WHEN** push is off
@@ -21,6 +21,10 @@ With push off, no request SHALL be sent to the server and nothing SHALL be store
 - **WHEN** the user changes the calculation method or a reminder switch while push is on
 - **THEN** the stored record is updated and the next push uses the new time
 
+#### Scenario: Khutbah time
+- **WHEN** push is on and the khutbah reminder is off
+- **THEN** the stored record holds no khutbah time
+
 ### Requirement: The stored record can be deleted
 Turning push off, or choosing "Forget my location", SHALL delete the device's record from the server. A subscription the push service reports as gone SHALL be deleted after the first failed send.
 
@@ -33,7 +37,7 @@ Turning push off, or choosing "Forget my location", SHALL delete the device's re
 - **THEN** its record is deleted
 
 ### Requirement: A reminder is sent at the device's own prayer time, once
-Every minute the server SHALL work out each stored device's prayer times in that device's timezone, with the same calculation the site uses, and send a push for each chosen reminder whose time has arrived. A reminder SHALL be sent once for its day. A reminder more than three minutes late SHALL NOT be sent.
+Every minute the server SHALL work out each stored device's prayer times in that device's timezone, with the same calculation the site uses, and send a push for each chosen reminder whose time has arrived. Islamic day reminders SHALL use the same Hijri dates the site shows, and Friday reminders SHALL use the device's own day of the week and, for the khutbah reminder, its khutbah time. A reminder SHALL be sent once for its day. A reminder more than three minutes late SHALL NOT be sent.
 
 #### Scenario: Two devices
 - **WHEN** two devices have different locations and timezones
@@ -51,8 +55,16 @@ Every minute the server SHALL work out each stored device's prayer times in that
 - **WHEN** the function did not run for ten minutes
 - **THEN** it does not send the reminders it missed
 
+#### Scenario: 'Arafah from the server
+- **WHEN** a device has only the 'Arafah reminder on
+- **THEN** it receives a push after Isha on 8 Dhul Hijjah and after Fajr on 9 Dhul Hijjah, by its own clock, and no other
+
+#### Scenario: Khutbah from the server
+- **WHEN** a device's khutbah time is 13:15 and its khutbah reminder is on
+- **THEN** it receives a push at 12:45 on Friday by its own clock
+
 ### Requirement: Requests to the server are checked
-A subscription request that is malformed, oversized, or holds an impossible location, an unknown method or an unknown timezone SHALL be rejected and nothing stored.
+A subscription request that is malformed, oversized, or holds an impossible location, an unknown method, an unknown timezone or a khutbah time that is not a time of day SHALL be rejected and nothing stored.
 
 #### Scenario: Malformed
 - **WHEN** a request lacks a subscription endpoint or keys, or is not valid JSON
@@ -62,8 +74,12 @@ A subscription request that is malformed, oversized, or holds an impossible loca
 - **WHEN** a request is larger than the limit
 - **THEN** it is rejected
 
+#### Scenario: Bad khutbah time
+- **WHEN** a request holds a khutbah time of "25:99"
+- **THEN** it is rejected
+
 ### Requirement: The user is told what push needs and stores
-The settings SHALL say what is stored on the server when push is on. On an iPhone where the app is not installed, the push switch SHALL be disabled with an explanation. In a browser without push support the switch SHALL not be offered. The privacy text on the site SHALL state exactly what is stored and how to delete it.
+The settings SHALL say what is stored on the server when push is on. On an iPhone where the app is not installed, the push switch SHALL be disabled with an explanation. In a browser without push support the switch SHALL not be offered. The privacy text on the site SHALL state exactly what is stored, including the khutbah time when its reminder is chosen, and how to delete it.
 
 #### Scenario: iPhone, not installed
 - **WHEN** the site is open in Safari on an iPhone and is not installed
@@ -71,7 +87,7 @@ The settings SHALL say what is stored on the server when push is on. On an iPhon
 
 #### Scenario: Reading the settings
 - **WHEN** the push switch is shown
-- **THEN** it says the rounded location, timezone, methods and chosen reminders are kept on the server until push is turned off
+- **THEN** it says the rounded location, timezone, methods, chosen reminders and any khutbah time are kept on the server until push is turned off
 
 ### Requirement: A push opens the right page
 A push reminder SHALL show the prayer's name and open the tracker when tapped; an adhkar reminder SHALL open its adhkar category.

@@ -58,7 +58,7 @@ export default {
       'On iPhone, notifications for a closed app only work once IslamicHub is installed. Tap Share, then “Add to Home Screen”, and turn this on from the installed app.',
     thisCouldNotBeTurnedOn: 'This could not be turned on. Check your connection and try again.',
     turningThisOnStoresOnOur:
-      'Turning this on stores, on our server, what is needed to send the reminder at the right time: your location rounded to about 1 km, your timezone, your calculation and Asr methods, and the reminders you chose. No name, email or account. Turning it off, or “Forget my location”, deletes it.',
+      'Turning this on stores, on our server, what is needed to send the reminder at the right time: your location rounded to about 1 km, your timezone, your calculation and Asr methods, the reminders you chose, and your mosque’s khutbah time if you chose the reminder before it. No name, email or account. Turning it off, or “Forget my location”, deletes it.',
     thisBrowserCannotReceiveNotificationsWhen:
       'This browser cannot receive notifications when the app is closed.',
     items: {
@@ -151,6 +151,39 @@ export default {
       11: 'Dhū al-Qaʿdah',
       12: 'Dhū al-Ḥijjah',
     },
+  },
+  calendar: {
+    previous: 'Previous month',
+    next: 'Next month',
+    month: '{month} {year} AH',
+    backToToday: 'Back to this month',
+    marked: 'Marked days this month',
+    remindersTitle: 'Reminders for these days',
+    remindersIntro:
+      'Choose the days you want to be reminded of: the evening before, after Isha, and on the day, after Fajr.',
+  },
+  reminderSwitches: {
+    unsupported: 'This browser cannot show notifications, so reminders are not available here.',
+    needsLocation:
+      'Reminders are timed from your prayer times, so remember a location on the Prayer page first.',
+    toPrayerPage: 'Go to the Prayer page',
+    when: 'Reminders arrive while IslamicHub is open or in the background, or when it is closed if you turned that on on the Prayer page.',
+  },
+  jumuah: {
+    adhanLink: 'The adhan',
+    howToPrayLink: 'How to pray',
+    khutbahTime: 'When does the khutbah begin at your mosque?',
+    save: 'Save',
+    savedTime: 'Saved: the khutbah begins at {time}.',
+    cleared: 'The khutbah time has been removed.',
+    notATime: 'That is not a time of day. Enter it as hours and minutes, such as 13:15.',
+    remindersTitle: 'Friday reminders',
+    reminders: {
+      kahf: 'Surah al-Kahf, on Friday morning after Fajr',
+      salawat: 'Blessings on the Prophet ﷺ, on Friday afternoon after Asr',
+      khutbah: '30 minutes before the khutbah',
+    },
+    needsTime: 'Enter your mosque’s khutbah time above first.',
   },
   games: {
     badge: 'Games',
@@ -291,6 +324,12 @@ export default {
     whenOnIslamichubSendsNoUsage: 'When on, IslamicHub sends no usage statistics for this device.',
   },
   todayPanel: {
+    islamicDay: 'On the Islamic calendar',
+    readAboutTheDay: 'Read about the day',
+    jumuah: 'Jumu‘ah',
+    fridayToday: 'Today is Friday',
+    khutbahAt: 'Khutbah at {time}',
+    fridaySunnahs: 'The sunnahs of Friday',
     today: 'Today',
     nextPrayer: 'Next prayer',
     inAt: 'in {a} · at {b}',
@@ -863,6 +902,74 @@ export default {
       title: 'Evening adhkar',
       body: 'Time for your adhkar.',
     },
+    'arafah-eve': {
+      title: 'Tomorrow: The day of ‘Arafah',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'arafah-day': {
+      title: 'Today: The day of ‘Arafah',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'ashura-eve': {
+      title: 'Tomorrow: Tasu‘a and ‘Ashura',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'ashura-day': {
+      title: 'Today: Tasu‘a and ‘Ashura',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'dhul-hijjah-eve': {
+      title: 'Tomorrow: The first ten days of Dhul Hijjah',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'dhul-hijjah-day': {
+      title: 'Today: The first ten days of Dhul Hijjah',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'white-days-eve': {
+      title: 'Tomorrow: The white days',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'white-days-day': {
+      title: 'Today: The white days',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'monday-thursday-eve': {
+      title: 'Tomorrow: Mondays and Thursdays',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'monday-thursday-day': {
+      title: 'Today: Mondays and Thursdays',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'last-ten-eve': {
+      title: 'Tomorrow: The last ten nights of Ramadan',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'last-ten-day': {
+      title: 'Today: The last ten nights of Ramadan',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'eid-eve': {
+      title: 'Tomorrow: The two Eids',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    'eid-day': {
+      title: 'Today: The two Eids',
+      body: 'Tap to read about it. Calendar dates can differ by a day.',
+    },
+    kahf: {
+      title: 'Surah al-Kahf',
+      body: 'It is Friday: a reminder to read Surah al-Kahf.',
+    },
+    salawat: {
+      title: 'Blessings on the Prophet ﷺ',
+      body: 'It is Friday: send many blessings on the Prophet ﷺ.',
+    },
+    khutbah: {
+      title: 'Jumu‘ah',
+      body: 'The khutbah begins in 30 minutes.',
+    },
   },
   seo: {
     hadith: {
@@ -914,6 +1021,16 @@ export default {
       title: "Islamic Tools — Prayer Times, Zakat, Adhkar, Tasbih and More {'|'} IslamicHub",
       description:
         'Every free IslamicHub tool in one place: prayer times and Qibla, prayer tracker, adhkar, duas, tasbih counter, Zakat and inheritance calculators, and the Ramadan tracker.',
+    },
+    calendar: {
+      title: "Islamic Calendar — Hijri Months and the Days of the Islamic Year {'|'} IslamicHub",
+      description:
+        'The Hijri calendar month by month beside the Gregorian dates, with the day of ‘Arafah, ‘Ashura, the white days and the other days that carry a sunnah, each with its evidence and an optional reminder.',
+    },
+    jumuah: {
+      title: "Jumu’ah — The Sunnahs of Friday and the Friday Prayer {'|'} IslamicHub",
+      description:
+        'The sunnahs of Friday with their evidence, Surah al-Kahf, the Friday prayer and who it is due on, and optional Friday reminders, including one before your mosque’s khutbah.',
     },
     kalimah: {
       title: "Kalimah — A Daily Word from the Qur’an {'|'} IslamicHub",

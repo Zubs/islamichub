@@ -28,6 +28,7 @@ import {
 import { handlePushRequest } from '../netlify/functions/push.js'
 import { sendDueReminders } from '../netlify/functions/push-send.js'
 import { calcPrayerTimes } from '@/utils/prayer.js'
+import { firstDayOfHijriMonth } from '@/utils/hijri.js'
 
 function keyPair() {
   const ecdh = createECDH('prime256v1')
@@ -230,6 +231,15 @@ describe('validateRecord', () => {
     )
   })
 
+  it('keeps the khutbah time only while the khutbah reminder is chosen', () => {
+    expect(validateRecord(body({ items: { khutbah: true }, khutbah: '13:15' })).khutbah).toBe(
+      '13:15',
+    )
+    expect(validateRecord(body({ items: { fajr: true }, khutbah: '13:15' }))).not.toHaveProperty(
+      'khutbah',
+    )
+  })
+
   it('keeps nothing else the client sends', () => {
     const record = validateRecord(body({ name: 'Zubair', email: 'a@b.c', place: 'Ikeja' }))
 
@@ -258,6 +268,7 @@ describe('validateRecord', () => {
     ['an unknown timezone', body({ timezone: 'Mars/Olympus' })],
     ['no reminders chosen', body({ items: { fajr: false } })],
     ['reminders that are not a record', body({ items: null })],
+    ['a khutbah time that is not a time', body({ items: { khutbah: true }, khutbah: '25:99' })],
   ])('rejects %s', (name, payload) => {
     expect(validateRecord(payload)).toBeNull()
   })
@@ -337,6 +348,66 @@ describe('remindersDue', () => {
     expect(remindersDue(record, instantOf(record, 'fajr', 20))).toMatchObject([
       { key: 'morning-adhkar', path: '/adhkar/morning', title: 'Morning adhkar' },
     ])
+  })
+})
+
+// The instant at which a device's local clock reads `time` on a local date.
+function instantAt(record, date, time) {
+  const midday = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12))
+  const offset = localTime(midday, record.timezone).offsetHours
+  const [hours, minutes] = time.split(':').map(Number)
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes) -
+      offset * 3600000,
+  )
+}
+
+function prayerTime(record, date, prayer, plusMinutes) {
+  const midday = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12))
+  const offset = localTime(midday, record.timezone).offsetHours
+  const times = calcPrayerTimes(record.lat, record.lng, date, offset, record.method, record.asrMethod)
+  const [hours, minutes] = times[prayer].split(':').map(Number)
+  const total = hours * 60 + minutes + plusMinutes
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
+}
+
+describe('Islamic day and Friday reminders from the server', () => {
+  const first = firstDayOfHijriMonth(1448, 12)
+  const eighth = new Date(first.getFullYear(), first.getMonth(), first.getDate() + 7)
+  const ninth = new Date(first.getFullYear(), first.getMonth(), first.getDate() + 8)
+  const lagos = validateRecord(body({ items: { arafah: true } }))
+  const tokyo = validateRecord(
+    body({ lat: 35.68, lng: 139.69, timezone: 'Asia/Tokyo', items: { arafah: true } }),
+  )
+
+  it.each([
+    ['Lagos', lagos],
+    ['Tokyo', tokyo],
+  ])('sends ‘Arafah after Isha on the 8th and after Fajr on the 9th by the clock in %s', (_, record) => {
+    const eve = instantAt(record, eighth, prayerTime(record, eighth, 'isha', 20))
+    const day = instantAt(record, ninth, prayerTime(record, ninth, 'fajr', 20))
+
+    expect(remindersDue(record, eve)).toMatchObject([
+      { key: 'arafah-eve', path: '/calendar', title: 'Tomorrow: The day of ‘Arafah' },
+    ])
+    expect(remindersDue(record, day)).toMatchObject([
+      { key: 'arafah-day', title: 'Today: The day of ‘Arafah' },
+    ])
+    expect(remindersDue(record, instantAt(record, ninth, prayerTime(record, ninth, 'isha', 20)))).toEqual(
+      [],
+    )
+  })
+
+  it('sends the khutbah reminder at 12:45 on Friday by the device’s clock, once', () => {
+    const record = validateRecord(body({ items: { khutbah: true }, khutbah: '13:15' }))
+    const friday = new Date(2026, 9, 23)
+    const due = remindersDue(record, instantAt(record, friday, '12:45'))
+
+    expect(due).toMatchObject([{ key: 'khutbah', day: '2026-10-23', path: '/jumuah' }])
+    expect(
+      remindersDue({ ...record, sent: { khutbah: '2026-10-23' } }, instantAt(record, friday, '12:46')),
+    ).toEqual([])
+    expect(remindersDue(record, instantAt(record, new Date(2026, 9, 22), '12:45'))).toEqual([])
   })
 })
 

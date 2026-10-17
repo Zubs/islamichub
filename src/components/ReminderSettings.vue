@@ -75,11 +75,11 @@
 import { ref } from 'vue'
 import { useRemindersStore } from '@/stores/reminders.js'
 import { usePrayerSettingsStore } from '@/stores/prayerSettings.js'
-import { REMINDERS } from '@/utils/reminders.js'
+import { PRAYER_ITEMS } from '@/utils/reminders.js'
 
 const reminders = useRemindersStore()
 const prayerSettings = usePrayerSettingsStore()
-const list = REMINDERS
+const list = PRAYER_ITEMS.map((key) => ({ key }))
 const refused = ref(false)
 const pushBusy = ref(false)
 const pushFailed = ref(false)

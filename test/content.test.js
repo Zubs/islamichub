@@ -44,6 +44,8 @@ const CONTENT_VIEWS = {
   tools: 'src/views/tools/ToolsView.vue',
   adhan: 'src/views/pillar/AdhanView.vue',
   salahSteps: 'src/views/pillar/SalahStepsView.vue',
+  calendar: 'src/views/CalendarView.vue',
+  jumuah: 'src/views/JumuahView.vue',
 }
 const STORY_PAGES = [
   'adam',

@@ -1159,10 +1159,12 @@ Tests are written in plain English and ordered the same way under every feature:
 - Moving forward twelve months returns to the same Hijri month a year later, and the Gregorian dates match `firstDayOfHijriMonth`.
 - The first day of Ramadan shown matches the Ramadan countdown and the Eid page.
 - Every marked day carries a reference that is a verse that exists or a hadith that links.
-- A reminder for 'Arafah, switched on, is scheduled for the morning of 9 Dhul Hijjah and for no other day.
+- A reminder for 'Arafah, switched on, is scheduled after Isha on 8 Dhul Hijjah and after Fajr on 9 Dhul Hijjah, and on no other day (Zubair chose both, 17 October 2026).
 - With reminders off, nothing is scheduled and nothing is sent to the server.
 - The page notes that dates depend on the sighting of the moon.
 - A user opens the calendar, moves to Dhul Hijjah, reads about the day of 'Arafah and switches on its reminder.
+
+- Built (change `islamic-calendar-and-jumuah`): `/calendar` with the seven kinds of day in `data/islamicDays.js`, each explained with checked references; a switch for each kind giving a reminder the evening before and on the day, on the device and through push; the Today panel names the day. Outstanding: the twelve-month comparison, the review and the reminder on a real phone, so the feature stays unticked.
 
 **Done when:** The calendar matches a published Hijri calendar to within a day for twelve months, every marked day has been read by the reviewer Zubair named, and an 'Arafah reminder has arrived on a real phone.
 
@@ -1190,6 +1192,8 @@ Tests are written in plain English and ordered the same way under every feature:
 - Push, when on, holds only the chosen reminder kinds and the khutbah time, and switching it off deletes them.
 - The page reads in a second language with the same Arabic and references.
 - A user enters their mosque's khutbah time, switches on the reminders, and on Friday receives the al-Kahf reminder in the morning and the khutbah reminder before it starts.
+
+- Built (change `islamic-calendar-and-jumuah`): `/jumuah` with the sunnahs, al-Kahf (its source outside the library, marked unverified), the prayer and the positions on how many must be present; the khutbah time under `khutbah-time`; reminders for al-Kahf after Fajr, blessings after Asr and 30 minutes before the khutbah; the Today panel's Friday tile. Outstanding: the reminders on a real phone on a Friday and the review, so the feature stays unticked.
 
 **Done when:** The reminders have arrived on a real phone on a Friday, and the page has been read by the reviewer Zubair named.
 
@@ -1373,6 +1377,11 @@ Tests are written in plain English and ordered the same way under every feature:
 | 79 | 42 | Are the Kalimah words' meanings, transliterations and verses right? (`data/games/kalimah.js`) | 374 words in base letters only. Each was found in the open Qur'an dataset, and its verse was chosen as the first where the Saheeh International translation carries the given meaning; the meanings and the one transliteration of each word were written by the builder, not taken from a dictionary. A few words are shown as verbs because the Qur'an uses them only so (fakkara, fariha, kasaba) | Correct `meaning`, `transliteration` or the verse in `data/games/kalimah.js`; keep each word's `id` |
 | 80 | 42 | Are the 318 quiz questions and 93 Who am I? clues right? (`data/games/quiz.js`, `data/games/whoAmI.js`) | Written from the verified stories; every reference exists and its Arabic matches the dataset, but whether each question and its wrong answers are fair is for the reviewer | Correct the item in place; keep its `id` |
 | 81 | 42 | Are the quiz levels right? (`data/games/quiz.js`) | Each question was tagged by the builder: easy for the best-known events, hard for numbers, verse numbers and what hadiths add, normal for the rest (92, 87 and 139) | Change a question's `level`; keep at least 50 at each level |
+| 82 | 40 | Are the calendar's days and their explanations right? (`data/islamicDays.js`, `data/content/calendar/en.js`) | Seven kinds, each checked against the datasets. Sahih Bukhari 969 was not used for the first ten of Dhul Hijjah because its Arabic does not name them; Abu Dawud 2438 and Al-Tirmidhi 757 are cited with al-Albani's grades. Grades are those given in the open hadith dataset | Change a kind's rule or references in `data/islamicDays.js` and its words in the content file |
+| 83 | 40 | Should the Hijri date be adjustable by a day to match local sighting? | Not built: every date on the site follows the calculation, and the calendar and reminders say dates can differ by a day | A setting would change the home page, the Ramadan countdown, the Eid page, the calendar and the reminders together; a later feature |
+| 84 | 41 | The hadith on reading al-Kahf on Friday (`data/content/jumuah/en.js`, `kahf`) | Named as recorded by al-Hakim and al-Bayhaqi from Abu Sa‘id al-Khudri, with al-Albani's reported grading, from general knowledge: these collections are not in the site's sources, so the page says it could not be checked | The reviewer confirms the source, wording and grading, and the note is reworded |
+| 85 | 41 | Who holds which minimum for the Friday prayer? (`data/content/jumuah/en.js`, `number`) | Hanafi: three besides the imam; Maliki: twelve; Shafi‘i and Hanbali: forty. The evidence cited (Qur'an 62:9, Sahih Bukhari 936, Abu Dawud 1069) was checked; the attribution of each view to its school is from general knowledge | Correct the positions in the content file |
+| 86 | 40, 41 | When do the new reminders arrive? (`src/utils/reminders.js`) | Islamic days: 20 minutes after Isha the evening before and 20 minutes after Fajr on the day. Friday: al-Kahf 20 minutes after Fajr, blessings 20 minutes after Asr, the khutbah 30 minutes before the entered time | Change the entry's `follows` and `delay` |
 
 **Checks only Zubair can do**
 
@@ -1423,7 +1432,7 @@ Each of these blocks the feature named. A proposed default is given where there 
 | Are visitors asked first? | 34 | **Decided:** No banner. Nothing identifying is collected; Do Not Track is honoured and an opt-out switch is offered |
 | Who reviews translations and new religious content? | 27, 28, 36 | Ask Zubair when the feature is reached. These features cannot be ticked without a named reviewer. **13 October 2026:** Zubair ticked 30 to 32 while still looking for a reviewer; the prophets' stories are verified under feature 36, and the Eid and Qurbani reviews stay open under Final |
 | How are prayer times shown for a place in another timezone? | 38 | State the clock the times are shown in (the device's). Showing the place's own time needs its timezone: from a lookup service (a new outside address and a privacy note) or chosen by the user |
-| Which days does the calendar mark? | 40 | Only days with a sunnah in authentic sources. Days whose observance the schools dispute (such as the Mawlid or the 15th of Sha'ban) are not marked as days of worship |
-| Is reciting Surah al-Kahf on Friday included? | 41 | Yes, with its source named and a note on its grading, settled with the reviewer |
+| Which days does the calendar mark? | 40 | **Decided, 17 October 2026:** Only days with a sunnah in authentic sources. Days whose observance the schools dispute (such as the Mawlid or the 15th of Sha'ban) are not marked as days of worship |
+| Is reciting Surah al-Kahf on Friday included? | 41 | **Decided, 17 October 2026:** Yes, with its source named and a note on its grading, settled with the reviewer |
 | Who are the games for? | 42 | **Decided:** Adults and older children together: no timer, gentle scoring |
 | Is Kalimah played in Arabic letters or in transliteration? | 42 | **Decided:** Both; the player chooses Arabic letters, on an on-screen Arabic keyboard, or transliteration, and the choice is remembered |

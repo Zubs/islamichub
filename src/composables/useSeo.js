@@ -12,6 +12,8 @@ const PAGE_KEYS = [
   'quiz',
   'who-am-i',
   'kalimah',
+  'calendar',
+  'jumuah',
   'pillars',
   'tools',
   'adhan',

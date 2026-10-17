@@ -90,6 +90,12 @@ export default {
     ],
     fasting: [
       {
+        to: '/calendar',
+        icon: '🗓️',
+        name: 'Islamic calendar',
+        text: 'The Hijri months beside the dates you know, with ‘Arafah, ‘Ashura, the white days and other days of sunnah marked.',
+      },
+      {
         to: '/fasting',
         icon: '🌙',
         name: 'Ramadan tracker',
