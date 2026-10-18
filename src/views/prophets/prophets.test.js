@@ -285,6 +285,13 @@ describe('prophet pages in the app', () => {
     expect(wrapper.find('.page-header [lang="ar"]').text()).toContain('عليه السلام')
   })
 
+  it('shows the ﷺ honorific for the Prophet Muhammad and عليه السلام for other prophets', async () => {
+    const { wrapper } = await openApp('/prophets/muhammad')
+
+    expect(wrapper.find('.page-header [lang="ar"]').text()).toContain('ﷺ')
+    expect(wrapper.find('.page-header [lang="ar"]').text()).not.toContain('عليه السلام')
+  })
+
   it('takes a reader from the story to the source of a hadith', async () => {
     const { wrapper } = await openApp('/prophets/ibrahim')
     const link = wrapper.find('#makkah a.hadith-ref')

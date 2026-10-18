@@ -141,6 +141,12 @@ describe('Feature 37: Accessibility and loading fixes', () => {
       '/tools',
       '/prayer/adhan',
       '/prayer/how-to-pray',
+      '/calendar',
+      '/jumuah',
+      '/games',
+      '/games/quiz',
+      '/games/kalimah',
+      '/games/who-am-i',
     ]
 
     it.each(pages)('heading levels on %s go down one step at a time, footer included', async (path) => {
@@ -223,6 +229,39 @@ describe('Feature 37: Accessibility and loading fixes', () => {
       expect(content).toContain('https://islamichub.xyz/faith')
       expect(content).toContain('https://islamichub.xyz/prayer')
       expect(content).toContain('https://islamichub.xyz/zakat')
+    })
+  })
+
+  describe('Quiz accessibility', () => {
+    it('answers have radiogroup semantics, each answer button is role radio, and submission is announced', async () => {
+      const { wrapper } = await mountPage(App, { path: '/games/quiz' })
+      const startBtn = wrapper.find('.game-intro-start')
+      if (startBtn.exists()) {
+        await startBtn.trigger('click')
+      }
+
+      const radiogroup = wrapper.find('.quiz-answers[role="radiogroup"]')
+      expect(radiogroup.exists()).toBe(true)
+      expect(radiogroup.attributes('aria-label')).toBeTruthy()
+
+      const radios = wrapper.findAll('.quiz-answer[role="radio"]')
+      expect(radios.length).toBe(4)
+      for (const radio of radios) {
+        expect(radio.attributes('aria-checked')).toBe('false')
+      }
+
+      await radios[0].trigger('click')
+      expect(radios[0].attributes('aria-checked')).toBe('true')
+
+      const submit = wrapper.find('.quiz-submit')
+      expect(submit.exists()).toBe(true)
+      expect(submit.element.disabled).toBe(false)
+
+      await submit.trigger('click')
+      const verdict = wrapper.find('.quiz-verdict')
+      expect(verdict.exists()).toBe(true)
+
+      wrapper.unmount()
     })
   })
 })
