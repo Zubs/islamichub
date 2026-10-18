@@ -29,6 +29,8 @@ async function answer(wrapper, right) {
   const button = wrapper.findAll('.quiz-answer').find((each) => each.text() === wanted)
   await button.trigger('click')
   await nextTick()
+  await wrapper.find('.quiz-submit').trigger('click')
+  await nextTick()
   return question
 }
 
@@ -40,6 +42,42 @@ async function next(wrapper) {
 describe('prophets quiz', () => {
   afterEach(() => {
     localStorage.clear()
+  })
+
+  it('requires submitting an answer before revealing whether it is right or wrong', async () => {
+    const wrapper = await open()
+    const submitBtn = wrapper.find('.quiz-submit')
+
+    expect(submitBtn.exists()).toBe(true)
+    expect(submitBtn.element.disabled).toBe(true)
+    expect(wrapper.find('.quiz-feedback').exists()).toBe(false)
+
+    const answers = wrapper.findAll('.quiz-answer')
+    expect(answers).toHaveLength(4)
+
+    await answers[0].trigger('click')
+    await nextTick()
+
+    expect(answers[0].classes()).toContain('is-selected')
+    expect(answers[0].attributes('aria-checked')).toBe('true')
+    expect(answers[0].classes()).not.toContain('is-right')
+    expect(answers[0].classes()).not.toContain('is-wrong')
+    expect(wrapper.find('.quiz-feedback').exists()).toBe(false)
+    expect(submitBtn.element.disabled).toBe(false)
+
+    await answers[1].trigger('click')
+    await nextTick()
+
+    expect(answers[0].classes()).not.toContain('is-selected')
+    expect(answers[1].classes()).toContain('is-selected')
+    expect(wrapper.find('.quiz-feedback').exists()).toBe(false)
+
+    await submitBtn.trigger('click')
+    await nextTick()
+
+    expect(wrapper.find('.quiz-feedback').exists()).toBe(true)
+    expect(wrapper.find('.quiz-submit').exists()).toBe(false)
+    expect(wrapper.findAll('.quiz-answer').every((btn) => btn.element.disabled)).toBe(true)
   })
 
   it('asks ten different questions, showing the evidence after each, then the score', async () => {

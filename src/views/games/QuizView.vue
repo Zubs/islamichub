@@ -28,19 +28,32 @@
           $t('games.quiz.progress', { n: attempt.position + 1, total: questions.length })
         }}</span>
         <h2 class="quiz-question">{{ current.question }}</h2>
-        <ul class="quiz-answers">
+        <ul class="quiz-answers" role="radiogroup" :aria-label="current.question">
           <li v-for="index in attempt.orders[attempt.position]" :key="index">
             <button
               type="button"
               class="quiz-answer"
               :class="answerClass(index)"
               :disabled="answered"
+              role="radio"
+              :aria-checked="selected === index"
               @click="choose(index)"
             >
               {{ current.answers[index] }}
             </button>
           </li>
         </ul>
+
+        <div v-if="!answered" class="quiz-submit-bar">
+          <button
+            type="button"
+            class="btn btn-primary quiz-submit"
+            :disabled="selected === null"
+            @click="submit"
+          >
+            {{ $t('games.quiz.submit') }}
+          </button>
+        </div>
 
         <div v-if="answered" class="quiz-feedback">
           <p class="quiz-verdict" :class="chosenRight ? 'right' : 'wrong'">
@@ -91,7 +104,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useSeo } from '@/composables/useSeo.js'
@@ -136,11 +149,13 @@ function begin() {
     finished: false,
     level,
   }
+  selected.value = null
   playing.value = true
 }
 
 function quit() {
   playing.value = false
+  selected.value = null
   store.quizAttempt = null
   router.push('/games')
 }
@@ -166,9 +181,18 @@ const shareable = computed(() => ({
   }),
 }))
 
+const selected = ref(chosen.value ?? null)
+
+watch(
+  () => attempt.value?.position,
+  () => {
+    selected.value = chosen.value ?? null
+  },
+)
+
 function answerClass(index) {
   if (!answered.value) {
-    return ''
+    return selected.value === index ? 'is-selected' : ''
   }
   if (index === current.value.right) {
     return 'is-right'
@@ -178,11 +202,18 @@ function answerClass(index) {
 
 function choose(index) {
   if (!answered.value) {
-    store.quizAttempt.answers[attempt.value.position] = index
+    selected.value = index
+  }
+}
+
+function submit() {
+  if (selected.value !== null && !answered.value) {
+    store.quizAttempt.answers[attempt.value.position] = selected.value
   }
 }
 
 function next() {
+  selected.value = null
   if (!isLast.value) {
     store.quizAttempt.position += 1
     return
@@ -244,22 +275,37 @@ function next() {
 
 .quiz-answer {
   width: 100%;
+  min-height: 48px;
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius);
   background: var(--cream);
   color: var(--ink);
   font: inherit;
   text-align: start;
   cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
 }
 
 .quiz-answer:hover:not(:disabled) {
   border-color: var(--green);
 }
 
+.quiz-answer:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
 .quiz-answer:disabled {
   cursor: default;
+}
+
+.quiz-answer.is-selected {
+  border-color: var(--green);
+  background: var(--cream-dark);
+  font-weight: 600;
 }
 
 .quiz-answer.is-right {
@@ -271,6 +317,15 @@ function next() {
 .quiz-answer.is-wrong {
   border-color: var(--red);
   color: var(--red);
+}
+
+.quiz-submit-bar {
+  margin-top: var(--space-4);
+}
+
+.quiz-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .quiz-feedback {

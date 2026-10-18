@@ -507,8 +507,8 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
 - `data/prophets.js` lists the 25 prophets in order, each with a slug, name, Arabic name, `mentions` (verses that name
   him) and, where the Qur'an states it, `people` (what it says of those he was sent to) with `peopleRefs`. `story: true`
   marks a prophet whose story is written. Every reference was checked against the text of the Qur'an.
-- `/prophets` shows all 25. A prophet with a story links to it; one without is shown with his references, "Story not
-  yet written" and no link. `/prophets/:slug` is guarded: an unknown prophet, or one without a story, shows the 404 page.
+- `/prophets` shows all 25. All 25 prophets link to their written stories; the fallback state ("Story not
+  yet written") is retained in the UI component for any future unwritten stories. `/prophets/:slug` is guarded: an unknown prophet, or one without a story, shows the 404 page.
 - A story is written as sections, like the Eid page. `data/prophetStories.js` maps a slug to its structure and English
   words; all 25 prophets have written stories: Adam (`data/adamSections.js`, `data/content/adam/en.js`), Idris
   (`data/idrisSections.js`, `data/content/idris/en.js`), Nuh (`data/nuhSections.js`, `data/content/nuh/en.js`), Hud
@@ -525,8 +525,9 @@ The prophets named in the Qur'an and their stories, awaiting scholarly review.
   Zakariyya (`data/zakariyyaSections.js`, `data/content/zakariyya/en.js`), Yahya (`data/yahyaSections.js`,
   `data/content/yahya/en.js`), ‘Isa (`data/isaSections.js`, `data/content/isa/en.js`), and Muhammad
   (`data/muhammadSections.js`, `data/content/muhammad/en.js`).
-  `ProphetView` draws them with `ContentSections`, with the page's own title and description, a breadcrumb, and links to
-  the previous and next prophet (`storyNeighbours` in `utils/prophets.js`).
+  `ProphetView` draws them with `ContentSections`, with the page's own title and description, a breadcrumb, links to
+  the previous and next prophet (`storyNeighbours` in `utils/prophets.js`), and an Arabic header badge showing `ﷺ` for
+  Muhammad and `عليه السلام` for other prophets.
 - Stories draw on the Qur'an and on hadith in Sahih al-Bukhari and Sahih Muslim; a hadith from another collection is used
   only with its grade stated in the same section. Each story tells everything its prophet's verses say, in the order of
   his life, and says plainly where the sources are silent; prophets of whom the Qur'an says little (Idris, Dhul-Kifl,
@@ -575,8 +576,9 @@ source script.
   per prophet, each with four answers, its reference (a verse, shown in Arabic and translation, or a hadith link) and a
   level: 92 easy (the best-known events), 87 normal and 139 hard (numbers, verse numbers, what hadiths add). An attempt
   is ten questions of the chosen level drawn at random from those not yet seen (`drawAtLevel`), until every question
-  of the level has been seen; answers are shuffled. The evidence is shown after each answer, and the end shows the score, the best score and the questions
-  missed. An attempt in progress survives a reload.
+  of the level has been seen; answers are shuffled. The player selects an answer and submits it before the right or wrong
+  verdict and evidence are revealed, and the end shows the score, the best score and the questions missed. An attempt in
+  progress survives a reload.
 - **Who am I?** (`data/games/whoAmI.js`, `utils/whoAmI.js`): clues about one of the 25 prophets, shown one at a
   time, hardest first (easiest first on Easy). The player picks from the 25 names and has three guesses (two on Hard);
   the round is lost when they run out. A right guess scores 50, less 10 for each extra clue and 5 for each wrong

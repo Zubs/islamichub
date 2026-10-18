@@ -20,7 +20,7 @@
           <RouterLink :to="game.to" class="card games-card">
             <span class="games-icon" aria-hidden="true">{{ game.icon }}</span>
             <span class="games-body">
-              <span class="games-name">{{ $t(`games.${game.key}.name`) }}</span>
+              <h2 class="games-name">{{ $t(`games.${game.key}.name`) }}</h2>
               <span class="games-text">{{ $t(`games.${game.key}.text`) }}</span>
               <span class="games-result">{{ game.result }}</span>
             </span>
@@ -128,6 +128,7 @@ const games = computed(() => [
   font-family: var(--serif);
   font-size: 1.35rem;
   font-weight: 600;
+  margin: 0;
 }
 
 .games-text {

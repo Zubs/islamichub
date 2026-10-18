@@ -206,6 +206,7 @@ export default {
       wrong: 'Not quite.',
       rightAnswer: 'The answer is: {answer}',
       evidence: 'Evidence:',
+      submit: 'Submit answer',
       next: 'Next question',
       finish: 'See your score',
       score: 'You scored {score} of 10',

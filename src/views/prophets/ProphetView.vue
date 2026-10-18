@@ -7,7 +7,7 @@
       <div class="page-header-inner">
         <div class="pillar-num-badge" style="background: var(--gold-light); color: var(--gold)">
           {{ $t('prophets.badge') }} ·
-          <span lang="ar">{{ prophet.arabic }} {{ HONORIFIC }}</span>
+          <span lang="ar">{{ prophet.arabic }} {{ honorific }}</span>
         </div>
         <h1>{{ c('header.title') }}</h1>
         <p>{{ c('header.lead') }}</p>
@@ -74,9 +74,8 @@ import { PROPHET_STORIES } from '@/data/prophetStories.js'
 import { storyNeighbours } from '@/utils/prophets.js'
 import { t } from '@/i18n.js'
 
-const HONORIFIC = 'عليه السلام'
-
 const slug = useRoute().params.slug
+const honorific = computed(() => (slug === 'muhammad' ? 'ﷺ' : 'عليه السلام'))
 const story = PROPHET_STORIES[slug]
 const { c, untranslated } = useContent(slug, story.content)
 const { localized } = useDataTranslations('prophets')
